@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/wzdorowa/jQuery-slider/issues"
   },
-  "homepage": "https://github.com/wzdorowa/jQuery-slider#readme"
+  "homepage": "https://github.com/wzdorowa/jQuery-slider#readme",
+  "dependencies": {
+    "pug": "^2.0.4"
+  }
 }
