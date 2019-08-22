@@ -1,0 +1,95 @@
+.range-filter {
+    width: 250px;
+    margin: 30px;
+}
+.range {
+   position: relative;
+   height: 20px;
+   padding: 0;
+   margin: 0;
+}
+.flipper {
+    display: block;
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    cursor: pointer;
+    top: -8px;
+    z-index: 2;
+    padding: 8px;
+    background: no-repeat 50%;
+}
+.flipper.m-left {
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
+    left: calc(1.85185 - 8px);
+}
+.flipper.m-right {
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
+    left: calc(100% - 22px);
+}
+.fill {
+    display: block;
+    background: #ccc;
+    position: relative;
+    height: 10px;
+    border-radius: 5px;
+    top: 0px;
+}
+.fill-in {
+    display: block;
+    height: 3px;
+    background: #1183c6 linear-gradient(270deg, #26b7eb, #1183c6);
+    position: absolute;
+    top: 0;
+}
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+    width: 100%;
+}
+.input-item {
+    display: flex;
+    box-sizing: border-box;
+
+    width: 49%;
+    margin: 0;
+}
+.input-field {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    height: 35px;
+    padding: 0 10px 0 10px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    margin: 0;
+}
+.label {
+    width: 24px;
+    line-height: 22px;
+    color: #9b9b9b;
+    text-align: right;
+
+    margin: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 5px;
+}
+.input {
+    width: 100%;
+    padding: 8px 0;
+    color: #202020;
+    border: none;
+    vertical-align: baseline;
+    outline: none;
+}
