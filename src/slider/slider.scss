@@ -38,7 +38,8 @@
 }
 .fill {
     display: block;
-    background: #ccc;
+    background: #b3d4fc;
+    opacity: 0.3;
     position: relative;
     height: 10px;
     border-radius: 5px;
@@ -47,7 +48,7 @@
 .fill-in {
     display: block;
     height: 3px;
-    background: #1183c6 linear-gradient(270deg, #26b7eb, #1183c6);
+    background: #9b9b9b;
     position: absolute;
     top: 0;
 }
