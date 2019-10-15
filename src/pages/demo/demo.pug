@@ -27,4 +27,36 @@ html
                                 .label до
                                 input.input(type="text")
                 .slider-config
+                    h1.title-config Панель конфигурации
+                    .field-group-tooltip
+                        h2.title-field-group-tooltip Вид
+                        label.field-group-tooltip-container__filter
+                            input.field-group-tooltip-container__content.visually-hidden(type='radio', name='field-group-tooltip-container__content', checked)
+                            span.field-group-tooltip-container__indicator
+                            span.field-group-tooltip-container__description Горизонтальный
+                        label.field-group-tooltip-container__filter
+                            input.rfield-group-tooltip-container__content.visually-hidden(type='radio', name='field-group-tooltip-container__content')
+                            span.field-group-tooltip-container__indicator
+                            span.field-group-tooltip-container__description Вертикальный
+                    .field-group-numberValues
+                        h2.title-field-group-numberValues Количество значений
+                        label.field-group-numberValues-container__filter
+                            input.field-group-numberValues-container__content.visually-hidden(type='radio', name='field-group-numberValues-container__content', checked)
+                            span.field-group-numberValues-container__indicator
+                            span.field-group-numberValues-container__description Одиночное значение
+                        label.field-group-numberValues-container__filter
+                            input.field-group-numberValues-container__content.visually-hidden(type='radio', name='field-group-numberValues-container__content')
+                            span.field-group-numberValues-container__indicator
+                            span.field-group-numberValues-container__description Интервал
+                            input.field-group-numberValues-container__content(type='text', name='field-group-numberValues-container__content')
+                    .field-group-tooltip
+                        h2.title-field-group-tooltip Наличие тултипа
+                        label.field-group-tooltip-container__filter
+                            input.field-group-tooltip-container__content.visually-hidden(type='radio', name='field-group-tooltip-container__content', checked)
+                            span.field-group-tooltip-container__indicator
+                            span.field-group-tooltip-container__description Нужен
+                        label.field-group-tooltip-container__filter
+                            input.field-group-tooltip-container__content.visually-hidden(type='radio', name='field-group-tooltip-container__content')
+                            span.field-group-tooltip-container__indicator
+                            span.field-group-tooltip-container__description Не нужен
         block scripts
