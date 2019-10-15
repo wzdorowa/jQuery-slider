@@ -12,5 +12,19 @@ html
             script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js")
     body
         block content
-            +slider()
+            .slider-container
+                .slider-ui
+                    .tooltip
+                        span.tooltiptext 0
+                    +slider()
+                    .input-container
+                        .input-item
+                            .input-field
+                                .label от
+                                input.input(type="text")
+                        .input-item
+                            .input-field
+                                .label до
+                                input.input(type="text")
+                .slider-config
         block scripts

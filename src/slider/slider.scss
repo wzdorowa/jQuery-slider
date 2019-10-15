@@ -1,6 +1,5 @@
 .range-filter {
-    width: 250px;
-    margin: 30px;
+    width: 100%;
 }
 .range {
    position: relative;
@@ -51,47 +50,4 @@
     background: #9b9b9b;
     position: absolute;
     top: 0;
-}
-.input-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 7px;
-    width: 100%;
-}
-.input-item {
-    display: flex;
-    box-sizing: border-box;
-
-    width: 49%;
-    margin: 0;
-}
-.input-field {
-    display: flex;
-    position: relative;
-    overflow: hidden;
-    height: 35px;
-    padding: 0 10px 0 10px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    margin: 0;
-}
-.label {
-    width: 24px;
-    line-height: 22px;
-    color: #9b9b9b;
-    text-align: right;
-
-    margin: 0;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 5px;
-}
-.input {
-    width: 100%;
-    padding: 8px 0;
-    color: #202020;
-    border: none;
-    vertical-align: baseline;
-    outline: none;
 }
