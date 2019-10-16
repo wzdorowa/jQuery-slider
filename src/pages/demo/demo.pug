@@ -31,9 +31,15 @@ html
                     h1.title-config Панель конфигурации
                     .field-group-tooltip
                         h2.title-field-group-tooltip Вид
+                        +radio-button('Горизонтальный', 'view', 'checked')
+                        +radio-button('Вертикальный', 'view')
                     .field-group-numberValues
                         h2.title-field-group-numberValues Количество значений
-                            input.field-group-numberValues-container__content(type='text', name='field-group-numberValues-container__content')
+                        +radio-button('Одно значение', 'numberValues')
+                        +radio-button('Интервал', 'numberValues', 'checked')
+                        input.field-group-numberValues-container__content(type='text')
                     .field-group-tooltip
                         h2.title-field-group-tooltip Наличие тултипа
+                        +radio-button('Нужен', 'tooltip', 'checked')
+                        +radio-button('Не нужен', 'tooltip')
         block scripts
