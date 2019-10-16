@@ -1,6 +1,6 @@
-include ../../slider/slider.pug;
-include ../../elements/radio-button/radio-button.pug;
-include ../../elements/checkbox-button/checkbox-button.pug;
+include ../../../src/slider/slider.pug
+include ../../elements/radio-button/radio-button.pug
+include ../../elements/checkbox-button/checkbox-button.pug
 
 doctype html
 html
@@ -43,6 +43,5 @@ html
                         h2.title-field-group Размер шага:
                         input.field-group-stepSize-container__content(type='text', value='1')
                     .field-group-tooltip
-                        h2.title-field-group Наличие тултипа:
-                        input(type="checkbox")
+                        +checkbox-button('Наличие тултипа', 'checked')
         block scripts

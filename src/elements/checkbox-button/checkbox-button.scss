@@ -1,6 +1,5 @@
 .checkbox-button-container {
-    font-family: 'Montserrat';
-    font-style: normal;
+    font-family: 'Fire Sans';
     font-weight: normal;
     font-size: 14px;
     line-height: 20px;
@@ -23,16 +22,15 @@
     border-radius: 4px;
 }
 .checkbox-button-container__value {
-	font-family: 'Montserrat';
-    font-style: normal;
+	font-family: 'Fire Sans';
     font-weight: normal;
-    font-size: 12.75px;
-	line-height: 18px;
+    font-size: 15px;
+	line-height: 20px;
 	
     padding-left: 28px;
 }
 .checkbox-button-container__description {
-	font-family: 'Montserrat';
+	font-family: 'Fire Sans';
     font-style: normal;
     font-weight: normal;
     font-size: 10.9px;
@@ -42,7 +40,7 @@
 	padding-top: 5px;
 }
 .checkbox-button-container__filter input[type="checkbox"]:checked + .checkbox-button-container__indicator {
-    border: 1px solid #BC9CFF;
+    border: 1px solid #b3d4fc;
 }
 .checkbox-button-container__filter input[type="checkbox"]:checked + .checkbox-button-container__indicator::before {
     content: "";
@@ -51,15 +49,15 @@
     top: 4px;
     left: 4px;
 
-    width: 5px;
-    height: 3.5px;
-    border-top: 2px solid #BC9CFF;
-    border-right: 2px solid #BC9CFF;
+    width: 7px;
+    height: 5px;
+    border-top: 2px solid #b3d4fc;
+    border-right: 2px solid #b3d4fc;
 
     transform: rotate(135deg); 
 }
 .checkbox-button-container__value_weight-bold {
-    font-family: 'Montserrat';
+    font-family: 'Fire Sans';
     font-style: normal;
     font-weight: bold;
     font-size: 12.7px;
