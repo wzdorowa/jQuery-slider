@@ -22,7 +22,7 @@
     padding-right: 20px;
 }
 .radio-button-container__filter input[type="radio"]:checked + .radio-button-container__indicator {
-    border: 1px solid #BC9CFF;
+    border: 1px solid rgba(31, 32, 65, 0.25);
 }
 .radio-button-container__filter input[type="radio"]:checked + .radio-button-container__indicator::before {
     content: "";
@@ -33,7 +33,7 @@
 
     width: 12px;
     height: 12px;
-    background: linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%);
+    background: #b3d4fc;
     border-radius: 10px;
 }
 .visually-hidden:not(:focus):not(:active),

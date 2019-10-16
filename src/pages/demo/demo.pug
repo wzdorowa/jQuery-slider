@@ -18,30 +18,30 @@ html
                     .tooltip
                         span.tooltiptext 0
                     +slider()
-                    .input-container
-                        .input-item
-                            .input-field
-                                .label от
-                                input.input(type="text")
-                        .input-item
-                            .input-field
-                                .label до
-                                input.input(type="text")
                 .slider-config
-                    h1.title-config Панель конфигурации
                     .field-group-view
                         h2.title-field-group Вид:
                         .buttons-group
                             +radio-button('Горизонтальный', 'view', 'checked')
                             +radio-button('Вертикальный', 'view')
+                    .field-group-rangeOfValues
+                        h2.title-field-group Интервал значений:
+                        .input-container
+                            .input-item
+                                .input-field
+                                    .label от
+                                    input.input(type="text")
+                            .input-item
+                                .input-field
+                                    .label до
+                                    input.input(type="text")
                     .field-group-numberValues
                         h2.title-field-group Количество значений:
-                        +radio-button('Одно значение', 'numberValues')
-                        +radio-button('Интервал', 'numberValues', 'checked')
-                        input.field-group-numberValues-container__content(type='text', placeholder='Введите числовое значение')
+                        input.field-group-numberValues-container__content(type='text', value='2')
                     .field-group-tooltip
                         h2.title-field-group Наличие тултипа:
-                        .buttons-group
-                            +radio-button('Нужен', 'tooltip', 'checked')
-                            +radio-button('Не нужен', 'tooltip')
+                        input(type="checkbox")
+                    .field-group-stepSize
+                        h2.title-field-group Размер шага:
+                        input.field-group-stepSize-container__content(type='text', value='1')
         block scripts
