@@ -1,5 +1,6 @@
-include ../../slider/slider.pug
-include ../../elements/radio-button/radio-button.pug
+include ../../slider/slider.pug;
+include ../../elements/radio-button/radio-button.pug;
+include ../../elements/checkbox-button/checkbox-button.pug;
 
 doctype html
 html
@@ -38,10 +39,10 @@ html
                     .field-group-numberValues
                         h2.title-field-group Количество значений:
                         input.field-group-numberValues-container__content(type='text', value='2')
-                    .field-group-tooltip
-                        h2.title-field-group Наличие тултипа:
-                        input(type="checkbox")
                     .field-group-stepSize
                         h2.title-field-group Размер шага:
                         input.field-group-stepSize-container__content(type='text', value='1')
+                    .field-group-tooltip
+                        h2.title-field-group Наличие тултипа:
+                        input(type="checkbox")
         block scripts
