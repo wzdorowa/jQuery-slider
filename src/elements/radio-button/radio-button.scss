@@ -1,10 +1,10 @@
 .radio-button-container__filter {
     position: relative;
 
-    font-family: 'Montserrat';
+    font-family: 'Fire Sans';
     font-style: normal;
     font-weight: normal;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 20px;
 
     color: rgba(31, 32, 65, 0.5);
@@ -19,6 +19,7 @@
 }
 .radio-button-container__description {
     padding-left: 27px;
+    padding-right: 20px;
 }
 .radio-button-container__filter input[type="radio"]:checked + .radio-button-container__indicator {
     border: 1px solid #BC9CFF;
@@ -27,11 +28,11 @@
     content: "";
 
     position: absolute;
-    top: 2.5px;
+    top: 3px;
     left: 3px;
 
-    width: 11px;
-    height: 11px;
+    width: 12px;
+    height: 12px;
     background: linear-gradient(180deg, #BC9CFF 0%, #8BA4F9 100%);
     border-radius: 10px;
 }

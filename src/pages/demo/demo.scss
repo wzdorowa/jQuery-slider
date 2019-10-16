@@ -80,11 +80,15 @@
 }
 .slider-config {
     width: 350px;
+    min-height: 350px;
     box-sizing: border-box;
     margin: 30px;
     padding: 10px;
     border: 1px solid #eee;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .title-config {
     font-family: 'Fire Sans';
@@ -101,4 +105,34 @@
     margin: 0;
     color: grey;
     border-bottom: 1px solid #eee;
+}
+.field-group-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 60px;
+}
+.field-group-numberValues {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100px;
+}
+.field-group-tooltip {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 60px;
+}
+.buttons-group {
+    display: flex;
+}
+.field-group-numberValues-container__content {
+    border: 1px solid rgba(31, 32, 65, 0.2);
+}
+.field-group-numberValues-container__content::placeholder {
+    font-family: 'Fire Sans';
+    font-size: 12px;
+    color: grey;
+    opacity: 0.3;
 }
