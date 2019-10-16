@@ -29,17 +29,17 @@ html
                                 input.input(type="text")
                 .slider-config
                     h1.title-config Панель конфигурации
-                    .field-group-tooltip
-                        h2.title-field-group-tooltip Вид
+                    .field-group-view
+                        h2.title-field-group Вид:
                         +radio-button('Горизонтальный', 'view', 'checked')
                         +radio-button('Вертикальный', 'view')
                     .field-group-numberValues
-                        h2.title-field-group-numberValues Количество значений
+                        h2.title-field-group Количество значений:
                         +radio-button('Одно значение', 'numberValues')
                         +radio-button('Интервал', 'numberValues', 'checked')
                         input.field-group-numberValues-container__content(type='text')
                     .field-group-tooltip
-                        h2.title-field-group-tooltip Наличие тултипа
+                        h2.title-field-group Наличие тултипа:
                         +radio-button('Нужен', 'tooltip', 'checked')
                         +radio-button('Не нужен', 'tooltip')
         block scripts

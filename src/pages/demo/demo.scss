@@ -5,6 +5,7 @@
 .slider-ui {
     width: 350px;
     margin: 30px;
+    box-sizing: border-box;
 }
 .tooltip {
     position: relative;
@@ -79,5 +80,25 @@
 }
 .slider-config {
     width: 350px;
+    box-sizing: border-box;
     margin: 30px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+.title-config {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 30px;
+    margin: 0;
+    color: grey;
+    border-bottom: 1px solid grey;
+}
+.title-field-group {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 20px;
+    margin: 0;
+    color: grey;
+    border-bottom: 1px solid #eee;
 }
