@@ -14,11 +14,15 @@
     border-bottom: 1px dotted #b3d4fc; /* If you want dots under the hoverable text */
     margin-bottom: 25px;
 }
-.tooltip .tooltiptext {
+.tooltiptext {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 15px;
+
     width: 25px;
     background-color: #b3d4fc;
     opacity: 0.7;
-    color: black;
+    color: white;
     text-align: center;
     padding: 5px 0;
     border-radius: 5px;
@@ -61,6 +65,10 @@
     margin: 0;
 }
 .label {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 15px;
+
     width: 24px;
     line-height: 22px;
     color: #9b9b9b;
