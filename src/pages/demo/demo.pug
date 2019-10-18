@@ -37,16 +37,12 @@ html
                                     .label до
                                     input.input(type="text")        
                     .field-group-rangeOfValues
-                        h2.title-field-group Интервал значений ползунков:
-                        .input-container
-                            .input-item
-                                .input-field
-                                    .label ползунок 1
-                                    input.input(type="text", value="0")
-                            .input-item
-                                .input-field
-                                    .label ползунок 2
-                                    input.input(type="text", value="100")
+                        h2.title-field-group Текущее состояние ползунков:
+                        ol
+                            li
+                                input.input-rangeOfValues(type="text", value="0")
+                            li
+                                input.input-rangeOfValues(type="text", value="100")
                     .field-group-numberValues
                         h2.title-field-group Количество ползунков:
                         input.field-group-numberValues-container__content(type='text', value='2')
