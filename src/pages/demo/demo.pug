@@ -25,8 +25,8 @@ html
                         .buttons-group
                             +radio-button('Горизонтальный', 'view', 'checked')
                             +radio-button('Вертикальный', 'view')
-                    .field-group-rangeOfValues
-                        h2.title-field-group Интервал значений:
+                    .field-group-valuesMinMax
+                        h2.title-field-group Минимальное и максимальное значения слайдера:
                         .input-container
                             .input-item
                                 .input-field
@@ -35,9 +35,20 @@ html
                             .input-item
                                 .input-field
                                     .label до
-                                    input.input(type="text")
+                                    input.input(type="text")        
+                    .field-group-rangeOfValues
+                        h2.title-field-group Интервал значений ползунков:
+                        .input-container
+                            .input-item
+                                .input-field
+                                    .label ползунок 1
+                                    input.input(type="text", value="0")
+                            .input-item
+                                .input-field
+                                    .label ползунок 2
+                                    input.input(type="text", value="100")
                     .field-group-numberValues
-                        h2.title-field-group Количество значений:
+                        h2.title-field-group Количество ползунков:
                         input.field-group-numberValues-container__content(type='text', value='2')
                     .field-group-stepSize
                         h2.title-field-group Размер шага:

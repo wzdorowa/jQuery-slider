@@ -69,10 +69,10 @@
     font-weight: 400;
     font-size: 15px;
 
-    width: 24px;
+    width: 100px;
     line-height: 22px;
     color: #9b9b9b;
-    text-align: right;
+    text-align: left;
 
     margin: 0;
     margin-top: auto;
@@ -80,7 +80,7 @@
     margin-right: 5px;
 }
 .input {
-    width: 100%;
+    width: 50%;
     padding: 8px 0;
     color: #202020;
     border: none;
@@ -89,7 +89,7 @@
 }
 .slider-config {
     width: 350px;
-    min-height: 350px;
+    min-height: 420px;
     box-sizing: border-box;
     margin: 30px;
     padding: 10px;
@@ -144,6 +144,12 @@
     padding-left: 10px;
     border: 1px solid #eee;
     border-radius: 2px;
+}
+.field-group-valuesMinMax {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100px;
 }
 .field-group-rangeOfValues {
     display: flex;
