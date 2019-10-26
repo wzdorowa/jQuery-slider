@@ -43,7 +43,13 @@ class Model {
         }
     }
     setStepValue(value) {
+        if (value <= 0){
+            this.currentConfig.step = 1;
+        } else if (value >= this.currentConfig.max) {
+            this.currentConfig.step = this.currentConfig.max;
+        } else {
         this.currentConfig.step = value;
+        }
     }
     setTulipValue(value) {
         if(value === 'true') {
