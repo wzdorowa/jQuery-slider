@@ -34,7 +34,13 @@ class Model {
         }
     }
     setAmountValue(value) {
+        if (value <= 0) {
+            this.currentConfig.amount = 1;
+        } else if (value >= 10) {
+            this.currentConfig.amount = 10;
+        } else {
         this.currentConfig.amount = value;
+        }
     }
     setStepValue(value) {
         this.currentConfig.step = value;
