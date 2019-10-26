@@ -11,6 +11,7 @@ class Model {
             tultip = true;
         };
         this.currentConfig {};
+        this.eventObserver {};
     }
     setMinValue(value) {
         this.currentConfig.min = value;
