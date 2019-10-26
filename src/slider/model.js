@@ -19,9 +19,9 @@ class Model {
         this.currentConfig.max = value;
     }
     setStateValue(arr) {
-        this.currentConfig.state[0] = arr[0];
-        this.currentConfig.state[1] = arr[1];
-        // и т.д. (написать нормальную реализацию через цикл)
+        for (let i = 0; i < arr.length; i++) {
+            this.currentConfig.state[i] = arr[i];
+        }
     }
     // написать нормальные значения для сравнения в условных конструкциях
     setOrientationValue(value) {
