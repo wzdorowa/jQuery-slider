@@ -9,21 +9,15 @@ class View {
 
     slider = document.getElementById('my-slider');
 
-    /* каким-то образом получить данные о количестве ползунков слайдера */
+    /* каким-то образом получить данные о количестве ползунков слайдера 
+    из модели amount = currentConfig.amount*/
 
-    /* тут должна быть функция, которая будет создавать необходимое
-    количество тачей основываясь на полученных данных о их количестве, что-то типа такой: 
-    function getListContent() {
-        let result = [];
-
-        for(let i=1; i<=3; i++) {
-            let li = document.createElement('li');
-            li.append(i);
-            result.push(li);
+    /* функция, которая будет создавать необходимое количество ползунков основываясь 
+    на полученных данных о их количестве, что-то типа такой: */
+    createSlider(slider) {
+        for(let i = 1; i <= amount; i++) {
+            document.slider.append(sliderTouch);
         }
-
-        return result;
-        }
-*/
-    document.slider.append(sliderTouch);
+        document.slider.append(sliderLine);
+    }
 }
