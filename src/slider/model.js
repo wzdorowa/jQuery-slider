@@ -22,6 +22,14 @@ class Model {
         for (let i = 0; i < arr.length; i++) {
             this.currentConfig.state[i] = arr[i];
         }
+        for (let i = 0; i < arr.length; i++) {
+            if (this.currentConfig.state[i] > this.currentConfig.state[i + 1]) {
+                this.currentConfig.state[i] = this.currentConfig.state[i + 1];
+            }
+            if (this.currentConfig.state[i] < this.currentConfig.state[i - 1]) {
+                this.currentConfig.state[i] = this.currentConfig.state[i - 1];
+            }
+        }
     }
     // написать нормальные значения для сравнения в условных конструкциях
     setOrientationValue(value) {
