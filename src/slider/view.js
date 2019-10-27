@@ -1,13 +1,16 @@
 class View {
-    sliderTouch = document.createElement('div');
-    sliderTouch.className = "slider-touch";
-    sliderTouch.innerHTML = "<span></span>";
+    // дописать this туда куда нужно в конструкторе
+    constructor() {
+        sliderTouch = document.createElement('div');
+        sliderTouch.className = "slider-touch";
+        sliderTouch.innerHTML = "<span></span>";
+        
+        sliderLine = document.createElement('div');
+        sliderLine.className = "slider-line";
+        sliderLine.innerHTML = "<span></span>";
 
-    sliderLine = document.createElement('div');
-    sliderLine.className = "slider-line";
-    sliderLine.innerHTML = "<span></span>";
-
-    slider = document.getElementById('my-slider');
+        slider = document.getElementById('my-slider');
+    }
 
     /* каким-то образом получить данные о количестве ползунков слайдера 
     из модели amount = currentConfig.amount*/
