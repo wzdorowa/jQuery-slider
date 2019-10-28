@@ -1,15 +1,15 @@
 class View {
     // дописать this туда куда нужно в конструкторе
-    constructor() {
-        sliderTouch = document.createElement('div');
-        sliderTouch.className = "slider-touch";
-        sliderTouch.innerHTML = "<span></span>";
+    constructor(id) {
+        this.sliderTouch = document.createElement('div');
+        this.sliderTouch.className = "slider-touch";
+        this.sliderTouch.innerHTML = "<span></span>";
         
-        sliderLine = document.createElement('div');
-        sliderLine.className = "slider-line";
-        sliderLine.innerHTML = "<span></span>";
+        this.sliderLine = document.createElement('div');
+        this.sliderLine.className = "slider-line";
+        this.sliderLine.innerHTML = "<span></span>";
 
-        slider = document.getElementById('my-slider');
+        this.slider = id;
     }
 
     /* каким-то образом получить данные о количестве ползунков слайдера 
