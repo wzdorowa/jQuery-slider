@@ -41,10 +41,10 @@ class View {
     }
     /* функция setValuesSliderTouch устанавливает полученное значение
      для каждой из кнопок-ползунков */
-    setValueSliderTouch(value) {
-        let ratio = ((value - min)/(max - min));
+    setValueSliderTouch(arrValue) {
         let elements = slider.querySelector(".slider-touch");
         for(let i = 0; i <= elements.length; i++) {
+            let ratio = ((arrValue[i] - min)/(max - min));
             elements[i].style.left = Math.ceil(ratio * (slider.offsetWidth - (elements[i].offsetWidth + this.normolizeFact))) + 'px';
             this.sliderLine.style.marginLeft = elements[i].offsetLeft + 'px';
             this.sliderLine.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
