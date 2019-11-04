@@ -31,13 +31,23 @@ class View {
     -найти все кнопки-ползунки внутри слайдера */ 
     reset(slider) {
         let elements = slider.querySelector(".slider-touch");
-        let sumNormlizeFact = 0;
+        let sumNormolizeFact = 0;
         for(let i = 0; i <= elements.length; i++) {
-            elements[i].style.left = this.normolizeFact + sumNormlizeFact + 'px';
+            elements[i].style.left = this.normolizeFact + sumNormolizeFact + 'px';
             sumNormlizeFact + this.normolizeFact;
         }
         sliderLine.style.marginLeft = '0px';
         sliderLine.style.width = (slider.offsetWidth - (elements[elements.length - 1].offsetWidth)) + 'px';
     }
-
+    /* функция setValuesSliderTouch устанавливает полученное значение
+     для каждой из кнопок-ползунков */
+    setValueSliderTouch(value) {
+        let ratio = ((value - min)/(max - min));
+        let elements = slider.querySelector(".slider-touch");
+        for(let i = 0; i <= elements.length; i++) {
+            elements[i].style.left = Math.ceil(ratio * (slider.offsetWidth - (elements[i].offsetWidth + this.normolizeFact))) + 'px';
+            this.sliderLine.style.marginLeft = elements[i].offsetLeft + 'px';
+            this.sliderLine.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
+        }
+    }
 }
