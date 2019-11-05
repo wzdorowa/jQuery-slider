@@ -1,3 +1,5 @@
+import {Controller} from './controller.js';
+
 export class Model {
     constructor () {
         this.initialConfig {

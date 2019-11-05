@@ -1,3 +1,5 @@
+import {Controller} from './controller.js';
+
 export class View {
     // дописать this туда куда нужно в конструкторе
     constructor(id) {
