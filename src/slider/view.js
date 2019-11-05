@@ -1,4 +1,4 @@
-class View {
+export class View {
     // дописать this туда куда нужно в конструкторе
     constructor(id) {
         this.sliderTouch = document.createElement('div');
@@ -25,7 +25,6 @@ class View {
         }
         document.slider.append(sliderLine);
     }
-
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.
     -найти все кнопки-ползунки внутри слайдера */ 
