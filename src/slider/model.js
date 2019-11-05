@@ -2,18 +2,18 @@ import {Controller} from './controller.js';
 
 export class Model {
     constructor () {
-        this.initialConfig {
-            min = 0;
-            max =  100;
-            state = [10, 50];
-            horizontal = true;
-            vertical = false;
-            amount = 2;
-            step = 1;
-            tultip = true;
+        this.initialConfig = {
+            min: 0,
+            max: 100,
+            state: [10, 50],
+            horizontal: true,
+            vertical: false,
+            amount: 2,
+            step: 1,
+            tultip: true,
         };
-        this.currentConfig {};
-        this.eventObserver {};
+        this.currentConfig = {};
+        this.eventObserver = {};
     }
     setMinValue(value) {
         this.currentConfig.min = value;
