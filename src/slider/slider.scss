@@ -1,4 +1,19 @@
-.range-filter {
+.js-slider-test {
+    display: block;
+	position: relative;
+	height: 36px;
+    width: 100%;
+    user-select:none;
+}
+.slider-touch {
+    display: block;
+    position: absolute;
+    height: 36px;
+    width: 36px;
+    padding: 6px;
+    z-index: 2;
+}
+/*.range-filter {
     width: 100%;
     margin-bottom: 5px;
 }
@@ -51,4 +66,4 @@
     background: #9b9b9b;
     position: absolute;
     top: 0;
-}
+}*/

@@ -6,13 +6,12 @@ export class View {
         console.log('view created', this, element)
         this.sliderTouch = document.createElement('div');
         this.sliderTouch.className = "slider-touch";
-        this.sliderTouch.innerHTML = "<span></span>";
+
+        this.sliderSpan = document.createElement('span');
+        this.sliderSpan.className = "slider-span";
         
         this.sliderLine = document.createElement('div');
         this.sliderLine.className = "slider-line";
-        this.sliderLine.innerHTML = "<span></span>";
-
-        this.slider = element;
 
         /*this.normolizeFact = sliderTouch.offsetWidth;)*/
     }
@@ -22,11 +21,11 @@ export class View {
 
     /* функция, которая будет создавать необходимое количество ползунков основываясь 
         на полученных данных о их количестве, что-то типа такой: */
-    createSlider(slider) {
+    createSlider(element) {
         for(let i = 1; i <= amount; i++) {
-            document.slider.append(sliderTouch);
+            document.element.append(sliderTouch);
         }
-        document.slider.append(sliderLine);
+        document.element.append(sliderLine);
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.
