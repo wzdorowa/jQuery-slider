@@ -23,9 +23,11 @@ export class View {
         на полученных данных о их количестве, что-то типа такой: */
     createSlider(element) {
         for(let i = 1; i <= amount; i++) {
-            document.element.append(sliderTouch);
+            document.element.append(this.sliderTouch);
+            document.sliderTouch.append(this.sliderSpan);
         }
         document.element.append(sliderLine);
+        document.sliderLine.append(this.sliderSpan);
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.
