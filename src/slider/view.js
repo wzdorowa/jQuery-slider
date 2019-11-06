@@ -2,7 +2,8 @@ import {Controller} from './controller.js';
 
 export class View {
     // дописать this туда куда нужно в конструкторе
-    constructor(id) {
+    constructor(element) {
+        console.log('view created', this, element)
         this.sliderTouch = document.createElement('div');
         this.sliderTouch.className = "slider-touch";
         this.sliderTouch.innerHTML = "<span></span>";
@@ -11,9 +12,9 @@ export class View {
         this.sliderLine.className = "slider-line";
         this.sliderLine.innerHTML = "<span></span>";
 
-        this.slider = id;
+        this.slider = element;
 
-        this.normolizeFact = sliderTouch.offsetWidth;
+        /*this.normolizeFact = sliderTouch.offsetWidth;)*/
     }
 
     /* каким-то образом получить данные о количестве ползунков слайдера 
