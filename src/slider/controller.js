@@ -1,9 +1,6 @@
-import {Model} from './model.js';
-import {View} from './view.js';
-
 export class Controller {
-    constructor(element) {
+    constructor(element, model, view) {
         console.log('controller created', this, element),
-        this.events = {}
+        view.createSlider()
     }
 }
