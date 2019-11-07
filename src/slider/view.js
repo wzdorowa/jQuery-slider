@@ -6,11 +6,8 @@ export class View {
         console.log('view created', this, element),
         this.sliderTouches = [],
         this.sliderSpans =[],
-        
-        this.sliderLine = document.createElement('div'),
-        this.sliderLine.className = "slider-line",
 
-        this.slider = element;
+        this.slider = element,
 
         /*this.normolizeFact = sliderTouch.offsetWidth;)*/
     }
@@ -37,8 +34,11 @@ export class View {
             this.sliderTouches[i].append(this.sliderSpans[i]);
             console.log(this.sliderSpans.length);
         }
+        sliderLine = document.createElement('div');
+        sliderLine.className = "slider-line";
+        
         this.slider.append(this.sliderLine);
-        this.sliderLine.append(this.sliderSpan);
+        sliderLine.append(this.sliderSpan);
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.
