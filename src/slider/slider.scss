@@ -21,6 +21,17 @@
     border: 1px solid #A4A4A4;
     border-radius: 50%;
 }
+.slider-line {
+    position: absolute;
+    width: calc("100% - 36px");
+    left: 18px;
+    top: 16px;
+    height: 4px;
+    border-radius: 4px;
+    background: #F0F0F0;
+    z-index: 0;
+    overflow: hidden;
+}
 /*.range-filter {
     width: 100%;
     margin-bottom: 5px;
