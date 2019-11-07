@@ -27,6 +27,7 @@ export class View {
 
             this.sliderSpan = document.createElement('span'),
             this.sliderSpan.className = "slider-span";
+            this.sliderSpans.push(this.sliderSpan);
         }
         for(let i = 0; i <= this.sliderTouches.length -1; i++) {
             this.slider.append(this.sliderTouches[i]);
