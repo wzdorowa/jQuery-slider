@@ -32,6 +32,12 @@
     z-index: 0;
     overflow: hidden;
 }
+.slider-line-span {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: orange;
+}
 /*.range-filter {
     width: 100%;
     margin-bottom: 5px;
