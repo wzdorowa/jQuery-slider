@@ -7,7 +7,7 @@ export class View {
         this.sliderTouches = [],
         this.sliderSpans =[],
 
-        this.slider = element,
+        this.slider = element
 
         /*this.normolizeFact = sliderTouch.offsetWidth;)*/
     }
@@ -20,11 +20,11 @@ export class View {
         for(let i = 1; i <= amount; i++) {
             sliderTouch = document.createElement('div'),
             sliderTouch.className = "slider-touch",
-            this.sliderTouches.push(this.sliderTouch);
+            this.sliderTouches.push(sliderTouch);
 
             sliderSpan = document.createElement('span'),
             sliderSpan.className = "slider-span";
-            this.sliderSpans.push(this.sliderSpan);
+            this.sliderSpans.push(sliderSpan);
         }
         for(let i = 0; i < this.sliderTouches.length; i++) {
             this.slider.append(this.sliderTouches[i]);
