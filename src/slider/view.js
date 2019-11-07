@@ -5,6 +5,7 @@ export class View {
     constructor(element) {
         console.log('view created', this, element),
         this.sliderTouches = [],
+        this.sliderSpans =[],
 
         this.sliderSpan = document.createElement('span'),
         this.sliderSpan.className = "slider-span",
