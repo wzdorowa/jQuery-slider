@@ -19,19 +19,23 @@ export class View {
     из модели amount = currentConfig.amount*/
 
     createSlider(slider) {
-        let amount = 4; //  TODO remove mock
+        let amount = 3; //  TODO remove mock
         for(let i = 1; i <= amount; i++) {
-            this.sliderTouch = document.createElement('div'),
-            this.sliderTouch.className = "slider-touch",
+            sliderTouch = document.createElement('div'),
+            sliderTouch.className = "slider-touch",
             this.sliderTouches.push(this.sliderTouch);
 
-            this.sliderSpan = document.createElement('span'),
-            this.sliderSpan.className = "slider-span";
+            sliderSpan = document.createElement('span'),
+            sliderSpan.className = "slider-span";
             this.sliderSpans.push(this.sliderSpan);
         }
-        for(let i = 0; i <= this.sliderTouches.length -1; i++) {
+        for(let i = 0; i < this.sliderTouches.length; i++) {
             this.slider.append(this.sliderTouches[i]);
-            console.log(i);
+            console.log(this.sliderTouches.length);
+        }
+        for(let i = 0; i <= this.sliderSpans.length; i++) {
+            this.sliderTouches[i].append(this.sliderSpans[i]);
+            console.log(this.sliderSpans.length);
         }
         this.slider.append(this.sliderLine);
         this.sliderLine.append(this.sliderSpan);
