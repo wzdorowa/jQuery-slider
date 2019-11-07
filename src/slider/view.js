@@ -36,9 +36,12 @@ export class View {
         }
         sliderLine = document.createElement('div');
         sliderLine.className = "slider-line";
+
+        sliderLineSpan = document.createElement('span'),
+        sliderLineSpan.className = "slider-line-span";
         
         this.slider.append(this.sliderLine);
-        sliderLine.append(this.sliderSpan);
+        sliderLine.append(this.sliderLineSpan);
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.
