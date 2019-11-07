@@ -5,7 +5,6 @@ export class View {
     constructor(element) {
         console.log('view created', this, element),
         this.sliderTouches = [],
-        this.sliderSpans =[],
 
         this.slider = element
 
@@ -18,30 +17,24 @@ export class View {
     createSlider(slider) {
         let amount = 3; //  TODO remove mock
         for(let i = 1; i <= amount; i++) {
-            sliderTouch = document.createElement('div'),
-            sliderTouch.className = "slider-touch",
+            const sliderTouch = document.createElement('div');
+            sliderTouch.className = "slider-touch";
             this.sliderTouches.push(sliderTouch);
 
-            sliderSpan = document.createElement('span'),
+            const sliderSpan = document.createElement('span');
             sliderSpan.className = "slider-span";
-            this.sliderSpans.push(sliderSpan);
+
+            sliderTouch.append(sliderSpan);
+            this.slider.append(sliderTouch);
         }
-        for(let i = 0; i < this.sliderTouches.length; i++) {
-            this.slider.append(this.sliderTouches[i]);
-            console.log(this.sliderTouches.length);
-        }
-        for(let i = 0; i <= this.sliderSpans.length; i++) {
-            this.sliderTouches[i].append(this.sliderSpans[i]);
-            console.log(this.sliderSpans.length);
-        }
-        sliderLine = document.createElement('div');
+        const sliderLine = document.createElement('div');
         sliderLine.className = "slider-line";
 
-        sliderLineSpan = document.createElement('span'),
+        const sliderLineSpan = document.createElement('span');
         sliderLineSpan.className = "slider-line-span";
         
-        this.slider.append(this.sliderLine);
-        sliderLine.append(this.sliderLineSpan);
+        this.slider.append(sliderLine);
+        sliderLine.append(sliderLineSpan);
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.

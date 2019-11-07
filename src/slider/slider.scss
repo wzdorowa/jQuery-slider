@@ -6,6 +6,7 @@
     user-select:none;
 }
 .slider-touch {
+    box-sizing: border-box;
     display: block;
     position: absolute;
     height: 36px;
@@ -22,15 +23,16 @@
     border-radius: 50%;
 }
 .slider-line {
+    box-sizing: border-box;
     position: absolute;
-    width: calc("100% - 36px");
+    width: calc(100% - 36px);
     left: 18px;
     top: 16px;
     height: 4px;
     border-radius: 4px;
-    background: #F0F0F0;
+    background: grey;
     z-index: 0;
-    overflow: hidden;
+    //overflow: hidden;
 }
 .slider-line-span {
     display: block;
