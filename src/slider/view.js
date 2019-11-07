@@ -6,9 +6,6 @@ export class View {
         console.log('view created', this, element),
         this.sliderTouches = [],
         this.sliderSpans =[],
-
-        this.sliderSpan = document.createElement('span'),
-        this.sliderSpan.className = "slider-span",
         
         this.sliderLine = document.createElement('div'),
         this.sliderLine.className = "slider-line",
@@ -27,6 +24,9 @@ export class View {
             this.sliderTouch = document.createElement('div'),
             this.sliderTouch.className = "slider-touch",
             this.sliderTouches.push(this.sliderTouch);
+
+            this.sliderSpan = document.createElement('span'),
+            this.sliderSpan.className = "slider-span";
         }
         for(let i = 0; i <= this.sliderTouches.length -1; i++) {
             this.slider.append(this.sliderTouches[i]);
