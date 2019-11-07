@@ -3,15 +3,14 @@ import {Controller} from './controller.js';
 export class View {
     // дописать this туда куда нужно в конструкторе
     constructor(element) {
-        console.log('view created', this, element)
-        this.sliderTouch = document.createElement('div');
-        this.sliderTouch.className = "slider-touch";
+        console.log('view created', this, element),
+        this.sliderTouches = [],
 
-        this.sliderSpan = document.createElement('span');
-        this.sliderSpan.className = "slider-span";
+        this.sliderSpan = document.createElement('span'),
+        this.sliderSpan.className = "slider-span",
         
-        this.sliderLine = document.createElement('div');
-        this.sliderLine.className = "slider-line";
+        this.sliderLine = document.createElement('div'),
+        this.sliderLine.className = "slider-line",
 
         this.slider = element;
 
@@ -21,13 +20,16 @@ export class View {
     /* каким-то образом получить данные о количестве ползунков слайдера 
     из модели amount = currentConfig.amount*/
 
-    /* функция, которая будет создавать необходимое количество ползунков основываясь 
-        на полученных данных о их количестве, что-то типа такой: */
     createSlider(slider) {
-        const amount = 5; //  TODO remove mock
+        let amount = 4; //  TODO remove mock
         for(let i = 1; i <= amount; i++) {
-            this.slider.append(this.sliderTouch);
-            this.sliderTouch.append(this.sliderSpan);
+            this.sliderTouch = document.createElement('div'),
+            this.sliderTouch.className = "slider-touch",
+            this.sliderTouches.push(this.sliderTouch);
+        }
+        for(let i = 0; i <= this.sliderTouches.length -1; i++) {
+            this.slider.append(this.sliderTouches[i]);
+            console.log(i);
         }
         this.slider.append(this.sliderLine);
         this.sliderLine.append(this.sliderSpan);
