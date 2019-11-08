@@ -22,19 +22,14 @@ export class View {
         let amount = 3; //  TODO remove mock
         for(let i = 1; i <= amount; i++) {
             const sliderTouch = this.createElement('div', 'slider-touch');
-            this.sliderTouches.push(sliderTouch);
-
-            const sliderSpan = document.createElement('span');
-            sliderSpan.className = "slider-span";
+            const sliderSpan = this.createElement('span', 'slider-span');
 
             sliderTouch.append(sliderSpan);
             this.slider.append(sliderTouch);
+            this.sliderTouches.push(sliderTouch);
         }
-        const sliderLine = document.createElement('div');
-        sliderLine.className = "slider-line";
-
-        const sliderLineSpan = document.createElement('span');
-        sliderLineSpan.className = "slider-line-span";
+        const sliderLine = this.createElement('div', 'slider-line');
+        const sliderLineSpan = this.createElement('span', 'slider-line-span');
         
         this.slider.append(sliderLine);
         sliderLine.append(sliderLineSpan);
