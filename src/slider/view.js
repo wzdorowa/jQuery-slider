@@ -42,14 +42,16 @@ export class View {
     -найти все кнопки-ползунки внутри слайдера */ 
     reset() {
         const normolizeFact = this.setNormolizeFact();
-        console.log(normolizeFact);
+        const sliderLineSpan = $(".slider-line-span");
+        console.log(sliderLineSpan);
         let elements = this.sliderTouches;
-        console.log(elements);
+
         for(let i = 1; i < elements.length; i++) {
             elements[i].style.left = (normolizeFact * i) + 'px';
         }
-        sliderLine.style.marginLeft = '0px';
-        sliderLine.style.width = (slider.offsetWidth - (elements[elements.length - 1].offsetWidth)) + 'px';
+
+        sliderLineSpan[0].style.marginLeft = '0px';
+        sliderLineSpan[0].style.width = ((elements.length - 1) * normolizeFact) + 'px';
     }
     /* функция setValuesSliderTouch устанавливает полученное значение
      для каждой из кнопок-ползунков */
