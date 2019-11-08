@@ -38,11 +38,10 @@ export class View {
         return normolizeFact;
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
-    на начальные настройки по умолчанию.
-    -найти все кнопки-ползунки внутри слайдера */ 
+    на начальные настройки по умолчанию.*/
     reset() {
         const normolizeFact = this.setNormolizeFact();
-        const sliderLineSpan = $(".slider-line-span");
+        const sliderLineSpan = $(this.slider).find(".slider-line-span");
         console.log(sliderLineSpan);
         let elements = this.sliderTouches;
 
@@ -52,7 +51,7 @@ export class View {
         elements[elements.length - 1].style.left = (this.slider.offsetWidth - normolizeFact) + 'px';
 
         sliderLineSpan[0].style.marginLeft = '0px';
-        sliderLineSpan[0].style.width = ((elements.length - 1) * normolizeFact) + 'px';
+        sliderLineSpan[0].style.width = (this.slider.offsetWidth - normolizeFact) + 'px';
     }
     /* функция setValuesSliderTouch устанавливает полученное значение
      для каждой из кнопок-ползунков */
