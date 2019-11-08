@@ -7,8 +7,6 @@ export class View {
         this.sliderTouches = [],
 
         this.slider = element
-
-        /*this.normolizeFact = sliderTouch.offsetWidth;)*/
     }
 
     /* каким-то образом получить данные о количестве ползунков слайдера 
@@ -18,7 +16,7 @@ export class View {
         element.className = className;
         return element;
     }
-    createSlider(slider) {
+    createSlider() {
         let amount = 3; //  TODO remove mock
         for(let i = 1; i <= amount; i++) {
             const sliderTouch = this.createElement('div', 'slider-touch');
@@ -34,15 +32,22 @@ export class View {
         this.slider.append(sliderLine);
         sliderLine.append(sliderLineSpan);
     }
+    setNormolizeFact() {
+        const sliderTouch = slider.querySelector('slider-touch');
+        const normolizeFact = sliderTouch.offsetWidth;
+        return normolizeFact;
+    }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.
     -найти все кнопки-ползунки внутри слайдера */ 
     reset(slider) {
+        const normolizeFact = this.setNormolizeFact();
+        console.log(normolizeFact);
         let elements = slider.querySelector(".slider-touch");
         let sumNormolizeFact = 0;
         for(let i = 0; i <= elements.length; i++) {
-            elements[i].style.left = this.normolizeFact + sumNormolizeFact + 'px';
-            sumNormlizeFact + this.normolizeFact;
+            elements[i].style.left = normolizeFact + sumNormolizeFact + 'px';
+            sumNormlizeFact + normolizeFact;
         }
         sliderLine.style.marginLeft = '0px';
         sliderLine.style.width = (slider.offsetWidth - (elements[elements.length - 1].offsetWidth)) + 'px';
