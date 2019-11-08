@@ -13,12 +13,15 @@ export class View {
 
     /* каким-то образом получить данные о количестве ползунков слайдера 
     из модели amount = currentConfig.amount*/
-
+    createElement(teg, className) {
+        const element = document.createElement(teg);
+        element.className = className;
+        return element;
+    }
     createSlider(slider) {
         let amount = 3; //  TODO remove mock
         for(let i = 1; i <= amount; i++) {
-            const sliderTouch = document.createElement('div');
-            sliderTouch.className = "slider-touch";
+            const sliderTouch = this.createElement('div', 'slider-touch');
             this.sliderTouches.push(sliderTouch);
 
             const sliderSpan = document.createElement('span');
