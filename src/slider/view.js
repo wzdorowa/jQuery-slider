@@ -33,21 +33,20 @@ export class View {
         sliderLine.append(sliderLineSpan);
     }
     setNormolizeFact() {
-        const sliderTouch = slider.querySelector('slider-touch');
-        const normolizeFact = sliderTouch.offsetWidth;
+        const sliderTouch = $(".slider-touch");
+        const normolizeFact = sliderTouch[0].clientWidth;
         return normolizeFact;
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
     на начальные настройки по умолчанию.
     -найти все кнопки-ползунки внутри слайдера */ 
-    reset(slider) {
+    reset() {
         const normolizeFact = this.setNormolizeFact();
         console.log(normolizeFact);
-        let elements = slider.querySelector(".slider-touch");
-        let sumNormolizeFact = 0;
-        for(let i = 0; i <= elements.length; i++) {
-            elements[i].style.left = normolizeFact + sumNormolizeFact + 'px';
-            sumNormlizeFact + normolizeFact;
+        let elements = this.sliderTouches;
+        console.log(elements);
+        for(let i = 1; i < elements.length; i++) {
+            elements[i].style.left = (normolizeFact * i) + 'px';
         }
         sliderLine.style.marginLeft = '0px';
         sliderLine.style.width = (slider.offsetWidth - (elements[elements.length - 1].offsetWidth)) + 'px';
