@@ -49,6 +49,7 @@ export class View {
         for(let i = 1; i < elements.length; i++) {
             elements[i].style.left = (normolizeFact * i) + 'px';
         }
+        elements[elements.length - 1].style.left = (this.slider.offsetWidth - normolizeFact) + 'px';
 
         sliderLineSpan[0].style.marginLeft = '0px';
         sliderLineSpan[0].style.width = ((elements.length - 1) * normolizeFact) + 'px';
