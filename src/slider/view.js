@@ -23,6 +23,7 @@ export class View {
             const sliderSpan = this.createElement('span', 'slider-span');
             const sliderTooltip = this.createElement('div', 'slider-tooltip');
             const sliderTooltipText = this.createElement('span', 'slider-tooltip-text');
+            sliderTooltipText.innerHTML = 0;
 
             sliderTouch.append(sliderSpan);
             sliderTouch.append(sliderTooltip);
