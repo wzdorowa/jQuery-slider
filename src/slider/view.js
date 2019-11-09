@@ -22,9 +22,10 @@ export class View {
             const sliderTouch = this.createElement('div', 'slider-touch');
             const sliderSpan = this.createElement('span', 'slider-span');
             const sliderTooltip = this.createElement('div', 'slider-tooltip');
+            const sliderTooltipText = this.createElement('span', 'slider-tooltip-text');
 
-            sliderTouch.append(sliderTooltip);
             sliderTouch.append(sliderSpan);
+            sliderTouch.append(sliderTooltip);
             this.slider.append(sliderTouch);
             this.sliderTouches.push(sliderTouch);
         }
