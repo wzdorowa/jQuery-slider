@@ -17,10 +17,11 @@ export class View {
         return element;
     }
     createSlider() {
-        let amount = 3; //  TODO remove mock
+        let amount = 4; //  TODO remove mock
         for(let i = 1; i <= amount; i++) {
             const sliderTouch = this.createElement('div', 'slider-touch');
             const sliderSpan = this.createElement('span', 'slider-span');
+            const sliderTooltip = this.createElement('div', 'slider-tooltip');
 
             sliderTouch.append(sliderSpan);
             this.slider.append(sliderTouch);
