@@ -1,7 +1,8 @@
 .js-slider-test {
     display: block;
     position: relative;
-	height: 76px;
+    height: 36px;
+    margin-top: 36px;
     width: 100%;
     user-select:none;
 }
@@ -61,6 +62,7 @@
  
     /* Position the tooltip text - see examples below! */
     position: absolute;
+    top: -60px;
     z-index: 1;
 }
 .slider-tooltip .slider-tooltip-text::after {
@@ -73,57 +75,3 @@
     border-style: solid;
     border-color: #b3d4fc transparent transparent transparent;
 }
-/*.range-filter {
-    width: 100%;
-    margin-bottom: 5px;
-}
-.range {
-   position: relative;
-   height: 20px;
-   padding: 0;
-   margin: 0;
-   margin-top: 15px;
-}
-.flipper {
-    display: block;
-    width: 8px;
-    height: 8px;
-    position: absolute;
-    cursor: pointer;
-    top: -8px;
-    z-index: 2;
-    padding: 8px;
-    background: no-repeat 50%;
-}
-.flipper.m-left {
-    background: #fff;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
-    left: calc(1.85185 - 8px);
-}
-.flipper.m-right {
-    background: #fff;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
-    left: calc(100% - 22px);
-}
-.fill {
-    display: block;
-    background: #b3d4fc;
-    opacity: 0.3;
-    position: relative;
-    height: 10px;
-    border-radius: 5px;
-    top: 0px;
-}
-.fill-in {
-    display: block;
-    height: 3px;
-    background: #9b9b9b;
-    position: absolute;
-    top: 0;
-}*/
