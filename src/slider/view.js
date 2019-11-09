@@ -26,6 +26,7 @@ export class View {
 
             sliderTouch.append(sliderSpan);
             sliderTouch.append(sliderTooltip);
+            sliderTooltip.append(sliderTooltipText);
             this.slider.append(sliderTouch);
             this.sliderTouches.push(sliderTouch);
         }
