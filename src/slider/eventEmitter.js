@@ -1,3 +1,5 @@
+import {Controller} from './controller.js';
+
 export class EventEmitter {
     constructor() {
         this.handlersByEvent = {};
