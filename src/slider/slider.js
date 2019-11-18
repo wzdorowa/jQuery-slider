@@ -1,6 +1,7 @@
 import {Model} from './model.js';
 import {View} from './view.js';
 import {Controller} from './controller.js';
+import {EventEmitter} from '.eventEmitter.js';
 
 (function($){
     $.fn.slider = function(){
