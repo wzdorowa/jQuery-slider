@@ -3,5 +3,6 @@ export class Controller {
         console.log('controller created', this, element),
         view.createSlider(),
         view.reset()
+        
     }
 }

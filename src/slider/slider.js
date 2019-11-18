@@ -8,6 +8,7 @@ import {Controller} from './controller.js';
         elements.forEach((element, index) => {
             let view = new View(element);
             let model = new Model();
+            let emitter = new EventEmitter();
             new Controller(element, model, view);
             console.log(index);
         });
