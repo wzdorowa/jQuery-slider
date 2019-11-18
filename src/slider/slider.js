@@ -1,7 +1,7 @@
 import {Model} from './model.js';
 import {View} from './view.js';
 import {Controller} from './controller.js';
-import {EventEmitter} from '.eventEmitter.js';
+import {EventEmitter} from './eventEmitter.js';
 
 (function($){
     $.fn.slider = function(){
@@ -10,7 +10,7 @@ import {EventEmitter} from '.eventEmitter.js';
             let view = new View(element);
             let model = new Model();
             let emitter = new EventEmitter();
-            new Controller(element, model, view);
+            new Controller(element, model, view, emitter);
             console.log(index);
         });
     }
