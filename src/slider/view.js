@@ -2,11 +2,14 @@ import {Controller} from './controller.js';
 
 export class View {
     // дописать this туда куда нужно в конструкторе
-    constructor(element) {
+    constructor(element, eventEmitter) {
         console.log('view created', this, element),
         this.sliderTouches = [],
 
-        this.slider = element
+        this.slider = element,
+        this.emitter = eventEmitter,
+
+        this.emitter.subscribe('model:state-changed', (initialConfig) => {this.createSlider(initialConfig.amount)})
     }
 
     /* каким-то образом получить данные о количестве ползунков слайдера 
@@ -16,8 +19,7 @@ export class View {
         element.className = className;
         return element;
     }
-    createSlider() {
-        let amount = 4; //  TODO remove mock
+    createSlider(amount) {
         for(let i = 1; i <= amount; i++) {
             const sliderTouch = this.createElement('div', 'slider-touch');
             const sliderSpan = this.createElement('span', 'slider-span');

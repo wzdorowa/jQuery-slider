@@ -7,10 +7,10 @@ import {EventEmitter} from './eventEmitter.js';
     $.fn.slider = function(){
         const elements = Array.from(this);
         elements.forEach((element, index) => {
-            let view = new View(element);
-            let model = new Model();
-            let emitter = new EventEmitter();
-            new Controller(element, model, view, emitter);
+            let eventEmitter = new EventEmitter();
+            let view = new View(element, eventEmitter);
+            let model = new Model(eventEmitter);
+            new Controller(element, model, view);
             console.log(index);
         });
     }
