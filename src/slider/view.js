@@ -80,4 +80,7 @@ export class View {
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
+    setTooltipsValues(arrTooltipValues) {
+        
+    }
 }

@@ -10,7 +10,8 @@ export class Model {
             vertical: false,
             amount: 4,
             step: 1,
-            tultip: true,
+            tooltip: true,
+            tooltipsValues: [],
         };
         this.currentConfig = {};
 
