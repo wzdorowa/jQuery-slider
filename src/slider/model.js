@@ -11,7 +11,6 @@ export class Model {
             amount: 4,
             step: 1,
             tooltip: true,
-            tooltipsValues: [],
         };
         this.currentConfig = {};
 
