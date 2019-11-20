@@ -15,6 +15,7 @@ export class View {
             this.createSlider(initialConfig.amount);
             //this.reset();
             this.setValueSliderTouch(initialConfig.min, initialConfig.max, initialConfig.state);
+            this.setTooltipsValues(initialConfig.state);
             })
     }
 
@@ -81,9 +82,12 @@ export class View {
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
+    /* функция setTooltipsValues устанавливает значения ползунков
+     в соответствующие им тултипы  */
     setTooltipsValues(arrState) {
+        console.log(this.elementsSliderTooltipText);
         for(let i = 0; i < arrState.length; i++) {
-
+            this.elementsSliderTooltipText[i].innerHTML = arrState[i];
         }
     }
 }
