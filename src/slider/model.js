@@ -5,7 +5,7 @@ export class Model {
         this.state = {
             min: 0,
             max: 100,
-            state: [10, 20, 40, 70],
+            state: [5, 20, 40, 70],
             horizontal: true,
             vertical: false,
             amount: 4,

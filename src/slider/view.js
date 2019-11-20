@@ -12,7 +12,6 @@ export class View {
         this.emitter = eventEmitter,
 
         this.emitter.subscribe('model:state-changed', (state) => {
-            console.log('вызвана');
             if(!this.isCreatedSlider) {
                 this.createSlider(state.amount);
                 this.isCreatedSlider = true;
@@ -87,6 +86,31 @@ export class View {
     setTooltipsValues(arrState) {
         for(let i = 0; i < arrState.length; i++) {
             this.elementsSliderTooltipText[i].innerHTML = arrState[i];
+        }
+    }
+    calculateValue(step, min, max) {
+        const normolizeFact = this.setNormolizeFact();
+        let initialValue = this.elementSliderLineSpan.offsetWidth - normolizeFact;
+        let elements = this.sliderTouches;
+
+        let newValue = (this.elementSliderLineSpan.offsetWidth - normolizeFact) / initialValue;
+        let minValue = this.elementSliderLineSpan.offsetLeft / initialValue;
+        let maxValue = minValue + newValue;
+
+        minValue = minValue * (max - min) + min;
+        maxValue = maxValue * (max - min) + min;
+
+        if (step > 0) {
+            let multi = Math.floor((minValue / step));
+            minValue = step * multi;
+      
+            multi = Math.floor((maxValue / step));
+            maxValue = step * multi;
+        }
+        // link events
+        for(let i = 0; i < elements.length; i++) {
+            elements[i].addEventListener('mousedown', onStart);
+            elements[i].addEventListener('touchstart', onStart);
         }
     }
 }
