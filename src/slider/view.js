@@ -7,15 +7,20 @@ export class View {
         this.sliderTouches = [],
         this.elementSliderLineSpan,
         this.elementsSliderTooltipText =[],
+        this.isCreatedSlider = false,
 
         this.emitter = eventEmitter,
 
-        this.emitter.subscribe('model:state-changed', (initialConfig) => {
-            this.createSlider(initialConfig.amount);
+        this.emitter.subscribe('model:state-changed', (state) => {
+            console.log('вызвана');
+            if(!this.isCreatedSlider) {
+                this.createSlider(state.amount);
+                this.isCreatedSlider = true;
+            }
             //this.reset();
-            this.setValueSliderTouch(initialConfig.min, initialConfig.max, initialConfig.state);
-            this.setTooltipsValues(initialConfig.state);
-            })
+            this.setValueSliderTouch(state.min, state.max, state.state);
+            this.setTooltipsValues(state.state);
+        })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
     createElement(teg, className) {

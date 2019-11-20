@@ -2,7 +2,7 @@ import {Controller} from './controller.js';
 
 export class Model {
     constructor (eventEmitter) {
-        this.initialConfig = {
+        this.state = {
             min: 0,
             max: 100,
             state: [10, 20, 40, 70],
@@ -15,7 +15,7 @@ export class Model {
         this.currentConfig = {};
 
         this.emitter = eventEmitter;
-        this.emitter.emit('model:state-changed', this.initialConfig)
+        this.emitter.emit('model:state-changed', this.state)
     }
     setMinValue(value) {
         this.currentConfig.min = value;
