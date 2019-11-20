@@ -7,6 +7,7 @@ export class View {
         this.slider = element,
         this.sliderTouches = [],
         this.elementSliderLineSpan,
+        this.elementsSliderTooltipText =[],
 
         this.emitter = eventEmitter,
 
@@ -30,13 +31,13 @@ export class View {
             const sliderSpan = this.createElement('span', 'slider-span');
             const sliderTooltip = this.createElement('div', 'slider-tooltip');
             const sliderTooltipText = this.createElement('span', 'slider-tooltip-text');
-            sliderTooltipText.innerHTML = 0;
 
             sliderTouch.append(sliderSpan);
             sliderTouch.append(sliderTooltip);
             sliderTooltip.append(sliderTooltipText);
             this.slider.append(sliderTouch);
             this.sliderTouches.push(sliderTouch);
+            this.elementsSliderTooltipText.push(sliderTooltipText);
         }
         const sliderLine = this.createElement('div', 'slider-line');
         const sliderLineSpan = this.createElement('span', 'slider-line-span');
@@ -80,9 +81,9 @@ export class View {
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
-    setTooltipsValues(arrState, arrTooltipValues) {
+    setTooltipsValues(arrState) {
         for(let i = 0; i < arrState.length; i++) {
-            
+
         }
     }
 }
