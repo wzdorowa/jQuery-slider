@@ -1,7 +1,6 @@
 import {Controller} from './controller.js';
 
 export class View {
-    // дописать this туда куда нужно в конструкторе
     constructor(element, eventEmitter) {
         console.log('view created', this, element),
         this.slider = element,
@@ -18,14 +17,13 @@ export class View {
             this.setTooltipsValues(initialConfig.state);
             })
     }
-
-    /* каким-то образом получить данные о количестве ползунков слайдера 
-    из модели amount = currentConfig.amount*/
+    /* функция CreateElement создает необходимый элемент с заданным классом */
     createElement(teg, className) {
         const element = document.createElement(teg);
         element.className = className;
         return element;
     }
+    /* функция CreateSlider создает основную html-структуру слайдера */
     createSlider(amount) {
         for(let i = 1; i <= amount; i++) {
             const sliderTouch = this.createElement('div', 'slider-touch');
@@ -57,7 +55,6 @@ export class View {
     reset() {
         const normolizeFact = this.setNormolizeFact();
         const sliderLineSpan = $(this.slider).find(".slider-line-span");
-        console.log(sliderLineSpan);
         let elements = this.sliderTouches;
 
         for(let i = 1; i < elements.length; i++) {
@@ -73,11 +70,9 @@ export class View {
     setValueSliderTouch(min, max, arrState) {
         const normolizeFact = this.setNormolizeFact();
         let elements = this.sliderTouches;
-        console.log(elements);
         for(let i = 0; i < elements.length; i++) {
             let ratio = ((arrState[i] - min)/(max - min));
             elements[i].style.left = Math.ceil(ratio * (this.slider.offsetWidth - (elements[i].offsetWidth + normolizeFact))) + 'px';
-            console.log(elements[i].style.left);
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -85,7 +80,6 @@ export class View {
     /* функция setTooltipsValues устанавливает значения ползунков
      в соответствующие им тултипы  */
     setTooltipsValues(arrState) {
-        console.log(this.elementsSliderTooltipText);
         for(let i = 0; i < arrState.length; i++) {
             this.elementsSliderTooltipText[i].innerHTML = arrState[i];
         }
