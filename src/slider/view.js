@@ -4,12 +4,17 @@ export class View {
     // дописать this туда куда нужно в конструкторе
     constructor(element, eventEmitter) {
         console.log('view created', this, element),
-        this.sliderTouches = [],
-
         this.slider = element,
+        this.sliderTouches = [],
+        this.elementSliderLineSpan,
+
         this.emitter = eventEmitter,
 
-        this.emitter.subscribe('model:state-changed', (initialConfig) => {this.createSlider(initialConfig.amount)})
+        this.emitter.subscribe('model:state-changed', (initialConfig) => {
+            this.createSlider(initialConfig.amount);
+            //this.reset();
+            this.setValueSliderTouch(initialConfig.min, initialConfig.max, initialConfig.state);
+            })
     }
 
     /* каким-то образом получить данные о количестве ползунков слайдера 
@@ -38,6 +43,7 @@ export class View {
         
         this.slider.append(sliderLine);
         sliderLine.append(sliderLineSpan);
+        this.elementSliderLineSpan = sliderLineSpan;
     }
     setNormolizeFact() {
         const sliderTouch = $(".slider-touch");
@@ -62,13 +68,16 @@ export class View {
     }
     /* функция setValuesSliderTouch устанавливает полученное значение
      для каждой из кнопок-ползунков */
-    setValueSliderTouch(arrValue) {
-        let elements = slider.querySelector(".slider-touch");
-        for(let i = 0; i <= elements.length; i++) {
-            let ratio = ((arrValue[i] - min)/(max - min));
-            elements[i].style.left = Math.ceil(ratio * (slider.offsetWidth - (elements[i].offsetWidth + this.normolizeFact))) + 'px';
-            this.sliderLine.style.marginLeft = elements[i].offsetLeft + 'px';
-            this.sliderLine.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
+    setValueSliderTouch(min, max, arrState) {
+        const normolizeFact = this.setNormolizeFact();
+        let elements = this.sliderTouches;
+        console.log(elements);
+        for(let i = 0; i < elements.length; i++) {
+            let ratio = ((arrState[i] - min)/(max - min));
+            elements[i].style.left = Math.ceil(ratio * (this.slider.offsetWidth - (elements[i].offsetWidth + normolizeFact))) + 'px';
+            console.log(elements[i].style.left);
         }
+        this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
+        this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
 }

@@ -5,15 +5,15 @@ export class Model {
         this.initialConfig = {
             min: 0,
             max: 100,
-            state: [10, 50],
+            state: [10, 20, 40, 70],
             horizontal: true,
             vertical: false,
-            amount: 5,
+            amount: 4,
             step: 1,
             tultip: true,
         };
         this.currentConfig = {};
-        
+
         this.emitter = eventEmitter;
         this.emitter.emit('model:state-changed', this.initialConfig)
     }
