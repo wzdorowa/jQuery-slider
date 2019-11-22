@@ -133,10 +133,44 @@ export class View {
     
         this.startX = eventTouch.pageX - this.x;
         this.selectedTouch = this;
-        
+
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', onStop);
         document.addEventListener('touchmove', onMove);
         document.addEventListener('touchend', onStop);
     }
+    onMove(event) {
+        let elements = this.sliderTouches;
+        let eventTouch = event;
+        let maxX = this.slider.offsetWidth - elements[elements -1].offsetWidth;
+    
+        if (event.touches) {
+          eventTouch = event.touches[0];
+        }
+    
+        this.x = eventTouch.pageX - this.startX;
+        
+        if (this.selectedTouch === elements[i]) {
+          if(this.x > (elements[elements.length -1].offsetLeft - this.selectedTouch.offsetWidth + 10)) {
+            this.x = (elements[elements.length -1].offsetLeft - this.selectedTouch.offsetWidth + 10)
+          } else if(this.x < 0) {
+            this.x = 0;
+          }
+          this.selectedTouch.style.left = this.x + 'px';
+        } else if (this.selectedTouch === elements[elements.length -1]) {
+          if(this.x < (elements[0].offsetLeft + elements[0].offsetWidth - 10)) {
+            this.x = (elements[0].offsetLeft + elements[0].offsetWidth - 10)
+          } else if(this.x > maxX) {
+            this.x = maxX;
+          }
+          this.selectedTouch.style.left = x + 'px';
+        }
+        
+        // update line span
+        this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
+        this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
+        
+        // write new value
+        calculateValue();
+      }
 }
