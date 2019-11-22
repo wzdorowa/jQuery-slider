@@ -173,4 +173,15 @@ export class View {
         // write new value
         calculateValue();
       }
+      onStop(event) {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onStop);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', onStop);
+        
+        this.selectedTouch = null;
+    
+        // write new value
+        calculateValue();
+      }
 }
