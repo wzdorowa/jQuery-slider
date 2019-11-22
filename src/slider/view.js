@@ -8,6 +8,9 @@ export class View {
         this.elementSliderLineSpan,
         this.elementsSliderTooltipText =[],
         this.isCreatedSlider = false,
+        this.startX = 0;
+        this.x = 0;
+        this.selectedTouch = null;
 
         this.emitter = eventEmitter,
 
@@ -112,5 +115,28 @@ export class View {
             elements[i].addEventListener('mousedown', onStart);
             elements[i].addEventListener('touchstart', onStart);
         }
+    }
+    onStart(event) {
+        // Prevent default dragging of selected content
+        event.preventDefault();
+        let eventTouch = event;
+    
+        if (event.touches) {
+          eventTouch = event.touches[0];
+        }
+        
+        for(let i = 0; i < this.sliderTouches[i]; i++) {
+            if(this === this.sliderTouches[i]) {
+                this.x = this.sliderTouches[i].offsetLeft;
+            }
+        }
+    
+        this.startX = eventTouch.pageX - this.x;
+        this.selectedTouch = this;
+        
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onStop);
+        document.addEventListener('touchmove', onMove);
+        document.addEventListener('touchend', onStop);
     }
 }
