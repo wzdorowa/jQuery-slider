@@ -10,7 +10,7 @@ export class View {
         this.isCreatedSlider = false,
         this.startX = 0;
         this.maxX = 0;
-        this.x = 0;
+        this.currentX = 0;
 
         this.emitter = eventEmitter,
 
@@ -22,7 +22,7 @@ export class View {
             //this.reset();
             this.setValueSliderTouch(state.min, state.max, state.state);
             this.setTooltipsValues(state.state);
-            this.eventDispatcher(state.step, state.min, state.max);
+            this.eventDispatcher(state.state, state.min, state.max);
         })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
@@ -81,6 +81,7 @@ export class View {
         for(let i = 0; i < elements.length; i++) {
             let ratio = ((arrState[i] - min)/(max - min));
             elements[i].style.left = Math.ceil(ratio * (this.slider.offsetWidth - (elements[i].offsetWidth + normolizeFact))) + 'px';
+            console.log("ширина элемента:" + elements[i].style.left);
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -92,42 +93,33 @@ export class View {
             this.elementsSliderTooltipText[i].innerHTML = arrState[i];
         }
     }
-    /* функция calculateValue рассчитывает текущее значение ползунка */
-    calculateValue(step, min, max) {
+    /* функция calculateValue рассчитывает текущее значение ползунка. 
+    нужно высчитать из this.currentX текущеее значение ползунка которое
+    необходимо будет передать в state.state модели через eventEmitter.
+    при изменении this.currentX вызвать calculateValue из которой вернуть
+    текущее преобразованное значение ползунка в emitter.emit, а в модели в 
+    subscribe вызвать обработчик, который это значение запишет в state.state
+    */
+    calculateValue(i, state, min, max) {
         const normolizeFact = this.setNormolizeFact();
-        let initialValue = this.elementSliderLineSpan.offsetWidth - normolizeFact;
-        console.log("initialValue:" + initialValue);
+        let elements = this.sliderTouches;
 
-        let newValue = (this.elementSliderLineSpan.offsetWidth - normolizeFact) / initialValue;
-        let minValue = this.elementSliderLineSpan.offsetLeft / initialValue;
-        console.log("minValue:" + minValue);
-        let maxValue = minValue + newValue;
-        console.log("maxValue:" + maxValue);
+        let currentState = state;
+        let ratio = (this.currentX * (this.slider.offsetWidth - (elements[i].offsetWidth + normolizeFact)));
+        let currentValueX = ratio * (max - min);
+        currentState[i] = currentValueX;
+        return currentState; 
 
-        minValue = minValue * (max - min) + min;
-        console.log("minValue:" + minValue);
-        maxValue = maxValue * (max - min) + min;
-        console.log("maxValue:" + maxValue);
-
-        if (step > 0) {
-            let multi = Math.floor((minValue / step));
-            minValue = step * multi;
-            console.log("minValue:" + minValue);
-      
-            multi = Math.floor((maxValue / step));
-            maxValue = step * multi;
-            console.log("maxValue:" + maxValue);
-        }
     }
-    eventDispatcher() {
+    eventDispatcher(state, min, max) {
         let elements = this.sliderTouches;
         // link events
         for(let i = 0; i < elements.length; i++) {
-            elements[i].addEventListener('mousedown', event => this.onStart(event, i));
-            elements[i].addEventListener('touchstart', event => this.onStart(event, i));
+            elements[i].addEventListener('mousedown', event => this.onStart(state, min, max,event, i));
+            elements[i].addEventListener('touchstart', event => this.onStart(state, min, max, event, i));
         }
     }
-    onStart(event, i) {
+    onStart(state, min, max, event, i) {
         // Prevent default dragging of selected content
         event.preventDefault();
         let elements = this.sliderTouches;
@@ -137,52 +129,52 @@ export class View {
 
         let eventTouch = event;
         
-        this.x = target.offsetLeft;
-        console.log("this.x:" + this.x);
-        this.startX = eventTouch.pageX - this.x;
+        this.currentX = target.offsetLeft;
+        console.log("this.x:" + this.currentX);
+        this.startX = eventTouch.pageX - this.currentX;
         console.log("eventTouch.pageX:" + eventTouch.pageX);
         console.log("startX:" + this.startX);
+        this.maxX = this.startX + this.slider.offsetWidth;
+        console.log("sliderWidth:" + this.slider.offsetWidth);
+        console.log("maxX:" + this.maxX);
 
-        document.addEventListener('mousemove', event => this.onMove(event, i));
-        document.addEventListener('touchmove', event => this.onMove(event, i));
+        document.addEventListener('mousemove', event => this.onMove(state, min, max, event, i));
+        document.addEventListener('touchmove', event => this.onMove(state, min, max, event, i));
     }
-    onMove(event, i, step, min, max) {
+    onMove(state, min, max, event, i) {
         console.log(i);
         let elements = this.sliderTouches;
         let eventTouch = event;
         console.log(eventTouch);
-        this.maxX = this.startX + this.slider.offsetWidth;
-        console.log("sliderWidth:" + this.slider.offsetWidth);
-        console.log("maxX:" + this.maxX);
     
-        this.x = eventTouch.pageX - this.startX;
-        console.log("this.x(из onMove)" + this.x);
+        this.currentX = eventTouch.pageX - this.startX;
+        console.log("this.currentX(из onMove)" + this.currentX);
         if (i === 0) {
-            if(this.x > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.x = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
+            if(this.currentX > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.currentX = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
             }
-            if (this.x < this.startX) {
-                this.x = this.startX;
+            if (this.currentX < this.startX) {
+                this.currentX = this.startX;
             }
-            this.target.style.left = this.x + 'px';
+            this.target.style.left = this.currentX + 'px';
         }
         if (i > 0 && i < elements.length[i - 1]) {
-            if(this.x > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.x = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
+            if(this.currentX > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.currentX = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
             } 
-            if (this.x < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.x = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
+            if (this.currentX < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.currentX = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
             }
-            this.target.style.left = this.x + 'px';
+            this.target.style.left = this.currentX + 'px';
         }
         if (i = elements.length[i - 1]) {
-            if (this.x < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.x = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
+            if (this.currentX < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.currentX = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
             } 
-            if(this.x > maxX) {
-                this.x = maxX;
+            if(this.currentX > maxX) {
+                this.currentX = maxX;
             }
-            this.target.style.left = this.x + 'px';
+            this.target.style.left = this.currentX + 'px';
         }
         
         // update line span
@@ -190,20 +182,20 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
         
         // write new value
-        this.calculateValue(step, min, max);
+        this.calculateValue(state, min, max, event, i);
 
-        document.addEventListener('mouseup', event => this.onStop(event, i));
-        document.addEventListener('touchend', event => this.onStop(event, i));
+        document.addEventListener('mouseup', event => this.onStop(state, min, max, event, i));
+        document.addEventListener('touchend', event => this.onStop(state, min, max, event, i));
       }
-      onStop(event, i, step, min, max) {
-        document.removeEventListener('mousemove', event => this.onMove(event, i));
-        document.removeEventListener('mouseup', event => this.onStop(event, i));
-        document.removeEventListener('touchmove', event => this.onMove(event, i));
-        document.removeEventListener('touchend', event => this.onStop(event, i));
+      onStop(state, min, max, event, i) {
+        document.removeEventListener('mousemove', event => this.onMove(state, min, max, event, i));
+        document.removeEventListener('mouseup', event => this.onStop(state, min, max, event, i));
+        document.removeEventListener('touchmove', event => this.onMove(state, min, max, event, i));
+        document.removeEventListener('touchend', event => this.onStop(state, min, max, event, i));
         
         this.target = null;
     
         // write new value
-        this.calculateValue(step, min, max);
+        //this.calculateValue(step, min, max);
       }
 }
