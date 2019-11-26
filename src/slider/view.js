@@ -9,8 +9,8 @@ export class View {
         this.elementsSliderTooltipText =[],
         this.isCreatedSlider = false,
         this.startX = 0;
+        this.maxX = 0;
         this.x = 0;
-        this.selectedTouch = null;
 
         this.emitter = eventEmitter,
 
@@ -22,6 +22,7 @@ export class View {
             //this.reset();
             this.setValueSliderTouch(state.min, state.max, state.state);
             this.setTooltipsValues(state.state);
+            this.eventDispatcher(state.step, state.min, state.max);
         })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
@@ -91,79 +92,97 @@ export class View {
             this.elementsSliderTooltipText[i].innerHTML = arrState[i];
         }
     }
+    /* функция calculateValue рассчитывает текущее значение ползунка */
     calculateValue(step, min, max) {
         const normolizeFact = this.setNormolizeFact();
         let initialValue = this.elementSliderLineSpan.offsetWidth - normolizeFact;
-        let elements = this.sliderTouches;
+        console.log("initialValue:" + initialValue);
 
         let newValue = (this.elementSliderLineSpan.offsetWidth - normolizeFact) / initialValue;
         let minValue = this.elementSliderLineSpan.offsetLeft / initialValue;
+        console.log("minValue:" + minValue);
         let maxValue = minValue + newValue;
+        console.log("maxValue:" + maxValue);
 
         minValue = minValue * (max - min) + min;
+        console.log("minValue:" + minValue);
         maxValue = maxValue * (max - min) + min;
+        console.log("maxValue:" + maxValue);
 
         if (step > 0) {
             let multi = Math.floor((minValue / step));
             minValue = step * multi;
+            console.log("minValue:" + minValue);
       
             multi = Math.floor((maxValue / step));
             maxValue = step * multi;
+            console.log("maxValue:" + maxValue);
         }
+    }
+    eventDispatcher() {
+        let elements = this.sliderTouches;
         // link events
         for(let i = 0; i < elements.length; i++) {
-            elements[i].addEventListener('mousedown', onStart);
-            elements[i].addEventListener('touchstart', onStart);
+            elements[i].addEventListener('mousedown', event => this.onStart(event, i));
+            elements[i].addEventListener('touchstart', event => this.onStart(event, i));
         }
     }
-    onStart(event) {
+    onStart(event, i) {
         // Prevent default dragging of selected content
         event.preventDefault();
-        let eventTouch = event;
-    
-        if (event.touches) {
-          eventTouch = event.touches[0];
-        }
-        
-        for(let i = 0; i < this.sliderTouches[i]; i++) {
-            if(this === this.sliderTouches[i]) {
-                this.x = this.sliderTouches[i].offsetLeft;
-            }
-        }
-    
-        this.startX = eventTouch.pageX - this.x;
-        this.selectedTouch = this;
+        let elements = this.sliderTouches;
 
-        document.addEventListener('mousemove', onMove);
-        document.addEventListener('mouseup', onStop);
-        document.addEventListener('touchmove', onMove);
-        document.addEventListener('touchend', onStop);
+        let target = elements[i];
+        console.log(target);
+
+        let eventTouch = event;
+        
+        this.x = target.offsetLeft;
+        console.log("this.x:" + this.x);
+        this.startX = eventTouch.pageX - this.x;
+        console.log("eventTouch.pageX:" + eventTouch.pageX);
+        console.log("startX:" + this.startX);
+
+        document.addEventListener('mousemove', event => this.onMove(event, i));
+        document.addEventListener('touchmove', event => this.onMove(event, i));
     }
-    onMove(event) {
+    onMove(event, i, step, min, max) {
+        console.log(i);
         let elements = this.sliderTouches;
         let eventTouch = event;
-        let maxX = this.slider.offsetWidth - elements[elements -1].offsetWidth;
-    
-        if (event.touches) {
-          eventTouch = event.touches[0];
-        }
+        console.log(eventTouch);
+        this.maxX = this.startX + this.slider.offsetWidth;
+        console.log("sliderWidth:" + this.slider.offsetWidth);
+        console.log("maxX:" + this.maxX);
     
         this.x = eventTouch.pageX - this.startX;
-        
-        if (this.selectedTouch === elements[i]) {
-          if(this.x > (elements[elements.length -1].offsetLeft - this.selectedTouch.offsetWidth + 10)) {
-            this.x = (elements[elements.length -1].offsetLeft - this.selectedTouch.offsetWidth + 10)
-          } else if(this.x < 0) {
-            this.x = 0;
-          }
-          this.selectedTouch.style.left = this.x + 'px';
-        } else if (this.selectedTouch === elements[elements.length -1]) {
-          if(this.x < (elements[0].offsetLeft + elements[0].offsetWidth - 10)) {
-            this.x = (elements[0].offsetLeft + elements[0].offsetWidth - 10)
-          } else if(this.x > maxX) {
-            this.x = maxX;
-          }
-          this.selectedTouch.style.left = x + 'px';
+        console.log("this.x(из onMove)" + this.x);
+        if (i === 0) {
+            if(this.x > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.x = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
+            }
+            if (this.x < this.startX) {
+                this.x = this.startX;
+            }
+            this.target.style.left = this.x + 'px';
+        }
+        if (i > 0 && i < elements.length[i - 1]) {
+            if(this.x > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.x = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
+            } 
+            if (this.x < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.x = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
+            }
+            this.target.style.left = this.x + 'px';
+        }
+        if (i = elements.length[i - 1]) {
+            if (this.x < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
+                this.x = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
+            } 
+            if(this.x > maxX) {
+                this.x = maxX;
+            }
+            this.target.style.left = this.x + 'px';
         }
         
         // update line span
@@ -171,17 +190,20 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
         
         // write new value
-        calculateValue();
+        this.calculateValue(step, min, max);
+
+        document.addEventListener('mouseup', event => this.onStop(event, i));
+        document.addEventListener('touchend', event => this.onStop(event, i));
       }
-      onStop(event) {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onStop);
-        document.removeEventListener('touchmove', onMove);
-        document.removeEventListener('touchend', onStop);
+      onStop(event, i, step, min, max) {
+        document.removeEventListener('mousemove', event => this.onMove(event, i));
+        document.removeEventListener('mouseup', event => this.onStop(event, i));
+        document.removeEventListener('touchmove', event => this.onMove(event, i));
+        document.removeEventListener('touchend', event => this.onStop(event, i));
         
-        this.selectedTouch = null;
+        this.target = null;
     
         // write new value
-        calculateValue();
+        this.calculateValue(step, min, max);
       }
 }
