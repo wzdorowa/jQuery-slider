@@ -56,6 +56,7 @@ export class View {
     setNormolizeFact() {
         const sliderTouch = $(".slider-touch");
         const normolizeFact = sliderTouch[0].clientWidth;
+        console.log("normolizeFact:" + normolizeFact);
         return normolizeFact;
     }
     /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
@@ -81,7 +82,7 @@ export class View {
         for(let i = 0; i < elements.length; i++) {
             let ratio = ((arrState[i] - min)/(max - min));
             elements[i].style.left = Math.ceil(ratio * (this.slider.offsetWidth - (elements[i].offsetWidth + normolizeFact))) + 'px';
-            console.log("ширина элемента:" + elements[i].style.left);
+            console.log("ширина элемента:" + elements[i].offsetWidth);
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -93,33 +94,15 @@ export class View {
             this.elementsSliderTooltipText[i].innerHTML = arrState[i];
         }
     }
-    /* функция calculateValue рассчитывает текущее значение ползунка. 
-    нужно высчитать из this.currentX текущеее значение ползунка которое
-    необходимо будет передать в state.state модели через eventEmitter.
-    при изменении this.currentX вызвать calculateValue из которой вернуть
-    текущее преобразованное значение ползунка в emitter.emit, а в модели в 
-    subscribe вызвать обработчик, который это значение запишет в state.state
-    */
-    calculateValue(i, state, min, max) {
-        const normolizeFact = this.setNormolizeFact();
-        let elements = this.sliderTouches;
-
-        let currentState = state;
-        let ratio = (this.currentX * (this.slider.offsetWidth - (elements[i].offsetWidth + normolizeFact)));
-        let currentValueX = ratio * (max - min);
-        currentState[i] = currentValueX;
-        return currentState; 
-
-    }
-    eventDispatcher(state, min, max) {
+    eventDispatcher(arrState, min, max) {
         let elements = this.sliderTouches;
         // link events
         for(let i = 0; i < elements.length; i++) {
-            elements[i].addEventListener('mousedown', event => this.onStart(state, min, max,event, i));
-            elements[i].addEventListener('touchstart', event => this.onStart(state, min, max, event, i));
+            elements[i].addEventListener('mousedown', event => this.onStart(arrState, min, max, event, i));
+            elements[i].addEventListener('touchstart', event => this.onStart(arrState, min, max, event, i));
         }
     }
-    onStart(state, min, max, event, i) {
+    onStart(arrState, min, max, event, i) {
         // Prevent default dragging of selected content
         event.preventDefault();
         let elements = this.sliderTouches;
@@ -138,43 +121,45 @@ export class View {
         console.log("sliderWidth:" + this.slider.offsetWidth);
         console.log("maxX:" + this.maxX);
 
-        document.addEventListener('mousemove', event => this.onMove(state, min, max, event, i));
-        document.addEventListener('touchmove', event => this.onMove(state, min, max, event, i));
+        document.addEventListener('mousemove', event => this.onMove(arrState, min, max, event, i, target));
+        document.addEventListener('touchmove', event => this.onMove(arrState, min, max, event, i, target));
     }
-    onMove(state, min, max, event, i) {
+    onMove(arrState, min, max, event, i, target) {
         console.log(i);
         let elements = this.sliderTouches;
+        console.log(elements[i]);
         let eventTouch = event;
         console.log(eventTouch);
     
         this.currentX = eventTouch.pageX - this.startX;
         console.log("this.currentX(из onMove)" + this.currentX);
         if (i === 0) {
-            if(this.currentX > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.currentX = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
+            if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth + 10)) {
+                this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth + 10);
             }
             if (this.currentX < this.startX) {
                 this.currentX = this.startX;
             }
-            this.target.style.left = this.currentX + 'px';
+            target.style.left = this.currentX + 'px';
         }
-        if (i > 0 && i < elements.length[i - 1]) {
-            if(this.currentX > (elements[i +1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.currentX = (elements[i + 1].offsetLeft - this.target.offsetWidth + 10);
+        if (i > 0 && i < elements.length - 1) {
+            if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth + 10)) {
+                console.log(target);
+                this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth + 10);
             } 
-            if (this.currentX < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.currentX = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
+            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth + 10)) {
+                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth + 10);
             }
-            this.target.style.left = this.currentX + 'px';
+            target.style.left = this.currentX + 'px';
         }
-        if (i = elements.length[i - 1]) {
-            if (this.currentX < (elements[i - 1].offsetLeft - this.target.offsetWidth + 10)) {
-                this.currentX = (elements[i - 1].offsetLeft - this.target.offsetWidth + 10);
+        if (i === elements.length - 1) {
+            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth + 10)) {
+                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth + 10);
             } 
-            if(this.currentX > maxX) {
-                this.currentX = maxX;
+            if(this.currentX > this.maxX) {
+                this.currentX = this.maxX;
             }
-            this.target.style.left = this.currentX + 'px';
+            target.style.left = this.currentX + 'px';
         }
         
         // update line span
@@ -182,20 +167,40 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
         
         // write new value
-        this.calculateValue(state, min, max, event, i);
+        this.calculateValue(arrState, min, max, event, i);
 
-        document.addEventListener('mouseup', event => this.onStop(state, min, max, event, i));
-        document.addEventListener('touchend', event => this.onStop(state, min, max, event, i));
+        document.addEventListener('mouseup', event => this.onStop(arrState, min, max, event, i));
+        document.addEventListener('touchend', event => this.onStop(arrState, min, max, event, i));
       }
-      onStop(state, min, max, event, i) {
-        document.removeEventListener('mousemove', event => this.onMove(state, min, max, event, i));
-        document.removeEventListener('mouseup', event => this.onStop(state, min, max, event, i));
-        document.removeEventListener('touchmove', event => this.onMove(state, min, max, event, i));
-        document.removeEventListener('touchend', event => this.onStop(state, min, max, event, i));
+      onStop(arrState, min, max, event, i) {
+        document.removeEventListener('mousemove', event => this.onMove(arrState, min, max, event, i));
+        document.removeEventListener('mouseup', event => this.onStop(arrState, min, max, event, i));
+        document.removeEventListener('touchmove', event => this.onMove(arrState, min, max, event, i));
+        document.removeEventListener('touchend', event => this.onStop(arrState, min, max, event, i));
         
         this.target = null;
     
         // write new value
         //this.calculateValue(step, min, max);
       }
+      /* функция calculateValue рассчитывает текущее значение ползунка. 
+    нужно высчитать из this.currentX текущеее значение ползунка которое
+    необходимо будет передать в state.state модели через eventEmitter.
+    при изменении this.currentX вызвать calculateValue из которой вернуть
+    текущее преобразованное значение ползунка в emitter.emit, а в модели в 
+    subscribe вызвать обработчик, который это значение запишет в state.state
+    */
+    calculateValue(arrState, min, max, event, i) {
+        console.log("calculateValue i:" + i);
+        const normolizeFact = this.setNormolizeFact();
+        //let elements = this.sliderTouches;
+
+        let currentState = arrState;
+        console.log("currentState:" + currentState);
+        console.log("currentState[i]:" + currentState[i]);
+        let ratio = (this.currentX * (this.slider.offsetWidth - (normolizeFact * 2))); // оригинальное выражение во вторых скобках (elements[i].offsetWidth + normolizeFact)
+        let currentValueX = Math.floor(ratio * (max - min));
+        currentState[i] = currentValueX;
+        return currentState; 
+    }
 }
