@@ -5,6 +5,7 @@ export class View {
         console.log('view created', this, element),
         this.slider = element,
         this.sliderTouches = [],
+        this.elementSliderLine,
         this.elementSliderLineSpan,
         this.elementsSliderTooltipText =[],
         this.isCreatedSlider = false,
@@ -51,7 +52,9 @@ export class View {
         
         this.slider.append(sliderLine);
         sliderLine.append(sliderLineSpan);
+
         this.elementSliderLineSpan = sliderLineSpan;
+        this.elementSliderLine = sliderLine;
     }
     setNormolizeFact() {
         const sliderTouch = $(".slider-touch");
@@ -112,7 +115,9 @@ export class View {
         
         this.currentX = target.offsetLeft;
         this.startX = eventTouch.pageX - this.currentX;
-        this.maxX = this.startX + (this.elementSliderLineSpan.offsetWidth - (normolizeFact + (normolizeFact/2)));
+        console.log("startX:" + this.startX);
+        this.maxX = this.elementSliderLine.offsetWidth;
+        console.log("maxX:" + this.maxX);
 
         document.addEventListener('mousemove', event => this.onMove(arrState, min, max, event, i, target));
         document.addEventListener('touchmove', event => this.onMove(arrState, min, max, event, i, target));
@@ -124,11 +129,13 @@ export class View {
         let eventTouch = event;
         console.log(eventTouch);
     
+        console.log("currentX до:" + this.currentX);
         this.currentX = eventTouch.pageX - this.startX;
-        console.log("this.currentX(из onMove)" + this.currentX);
+        console.log("eventTouch.pageX:" + eventTouch.pageX);
+        console.log("currentX после:" + this.currentX);
         if (i === 0) {
-            if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth + 10)) {
-                this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth + 10);
+            if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth)) {
+                this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth);
             }
             if (this.currentX < this.startX) {
                 this.currentX = this.startX;
@@ -136,18 +143,18 @@ export class View {
             target.style.left = this.currentX + 'px';
         }
         if (i > 0 && i < elements.length - 1) {
-            if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth + 10)) {
+            if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth)) {
                 console.log(target);
-                this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth + 10);
+                this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth);
             } 
-            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth + 10)) {
-                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth + 10);
+            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth)) {
+                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth);
             }
             target.style.left = this.currentX + 'px';
         }
         if (i === elements.length - 1) {
-            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth + 10)) {
-                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth + 10);
+            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth * 2)) {
+                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth * 2);
             } 
             if(this.currentX > this.maxX) {
                 this.currentX = this.maxX;
