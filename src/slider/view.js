@@ -195,8 +195,8 @@ export class View {
         let currentState = arrState;
         console.log("currentState:" + currentState);
         console.log("currentState[i]:" + currentState[i]);
-        let ratio = (this.slider.offsetWidth / this.currentX); // оригинальное выражение во вторых скобках (elements[i].offsetWidth + normolizeFact)
-        let currentValueX = Math.floor(ratio * (max - min));
+        
+        let currentValueX = Math.floor(this.currentX / this.ratio);
         currentState[i] = currentValueX;
         return currentState; 
     }
