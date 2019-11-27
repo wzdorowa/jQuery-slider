@@ -77,12 +77,10 @@ export class View {
     /* функция setValuesSliderTouch устанавливает полученное значение
      для каждой из кнопок-ползунков */
     setValueSliderTouch(min, max, arrState) {
-        const normolizeFact = this.setNormolizeFact();
         let elements = this.sliderTouches;
         for(let i = 0; i < elements.length; i++) {
             let ratio = ((arrState[i] - min)/(max - min));
-            elements[i].style.left = Math.ceil(ratio * (this.slider.offsetWidth - (elements[i].offsetWidth + normolizeFact))) + 'px';
-            console.log("ширина элемента:" + elements[i].offsetWidth);
+            elements[i].style.left = Math.ceil(ratio * (this.slider.offsetWidth - elements[i].offsetWidth)) + 'px';
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -103,23 +101,18 @@ export class View {
         }
     }
     onStart(arrState, min, max, event, i) {
-        // Prevent default dragging of selected content
+        const normolizeFact = this.setNormolizeFact();
+
         event.preventDefault();
         let elements = this.sliderTouches;
 
         let target = elements[i];
-        console.log(target);
 
         let eventTouch = event;
         
         this.currentX = target.offsetLeft;
-        console.log("this.x:" + this.currentX);
         this.startX = eventTouch.pageX - this.currentX;
-        console.log("eventTouch.pageX:" + eventTouch.pageX);
-        console.log("startX:" + this.startX);
-        this.maxX = this.startX + this.slider.offsetWidth;
-        console.log("sliderWidth:" + this.slider.offsetWidth);
-        console.log("maxX:" + this.maxX);
+        this.maxX = this.startX + (this.elementSliderLineSpan.offsetWidth - (normolizeFact + (normolizeFact/2)));
 
         document.addEventListener('mousemove', event => this.onMove(arrState, min, max, event, i, target));
         document.addEventListener('touchmove', event => this.onMove(arrState, min, max, event, i, target));
