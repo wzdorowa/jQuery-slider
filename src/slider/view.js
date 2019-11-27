@@ -9,6 +9,7 @@ export class View {
         this.elementSliderLineSpan,
         this.elementsSliderTooltipText =[],
         this.isCreatedSlider = false,
+        this.ratio = null,
         this.startX = 0;
         this.maxX = 0;
         this.currentX = 0;
@@ -82,8 +83,8 @@ export class View {
     setValueSliderTouch(min, max, arrState) {
         let elements = this.sliderTouches;
         for(let i = 0; i < elements.length; i++) {
-            let ratio = ((arrState[i] - min)/(max - min));
-            elements[i].style.left = Math.ceil(ratio * (this.slider.offsetWidth - elements[i].offsetWidth)) + 'px';
+            this.ratio = (this.elementSliderLine.offsetWidth / (max - min));
+            elements[i].style.left = Math.ceil(this.ratio * arrState[i]) + 'px';
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -115,24 +116,17 @@ export class View {
         
         this.currentX = target.offsetLeft;
         this.startX = eventTouch.pageX - this.currentX;
-        console.log("startX:" + this.startX);
         this.maxX = this.elementSliderLine.offsetWidth;
-        console.log("maxX:" + this.maxX);
 
         document.addEventListener('mousemove', event => this.onMove(arrState, min, max, event, i, target));
         document.addEventListener('touchmove', event => this.onMove(arrState, min, max, event, i, target));
     }
     onMove(arrState, min, max, event, i, target) {
-        console.log(i);
         let elements = this.sliderTouches;
-        console.log(elements[i]);
         let eventTouch = event;
-        console.log(eventTouch);
     
-        console.log("currentX до:" + this.currentX);
         this.currentX = eventTouch.pageX - this.startX;
-        console.log("eventTouch.pageX:" + eventTouch.pageX);
-        console.log("currentX после:" + this.currentX);
+        console.log("currentX:" + this.currentX);
         if (i === 0) {
             if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth)) {
                 this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth);
@@ -166,18 +160,22 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
         
         // write new value
-        this.calculateValue(arrState, min, max, event, i);
+        this.calculateValue(arrState, min, max, event, i, target);
 
-        document.addEventListener('mouseup', event => this.onStop(arrState, min, max, event, i));
-        document.addEventListener('touchend', event => this.onStop(arrState, min, max, event, i));
+        document.addEventListener('mouseup', event => this.onStop(arrState, min, max, event, i, target));
+        document.addEventListener('touchend', event => this.onStop(arrState, min, max, event, i, target));
       }
-      onStop(arrState, min, max, event, i) {
-        document.removeEventListener('mousemove', event => this.onMove(arrState, min, max, event, i));
-        document.removeEventListener('mouseup', event => this.onStop(arrState, min, max, event, i));
-        document.removeEventListener('touchmove', event => this.onMove(arrState, min, max, event, i));
-        document.removeEventListener('touchend', event => this.onStop(arrState, min, max, event, i));
+      onStop(arrState, min, max, event, i, target) {
+        console.log("я вызвана");
+        document.removeEventListener('mousedown', event => this.onStart(arrState, min, max, event, i));
+        document.removeEventListener('touchstart', event => this.onStart(arrState, min, max, event, i));
+        document.removeEventListener('mousemove', event => this.onMove(arrState, min, max, event, i, target));
+        document.removeEventListener('mouseup', event => this.onStop(arrState, min, max, event, i, target));
+        document.removeEventListener('touchmove', event => this.onMove(arrState, min, max, event, i, target));
+        document.removeEventListener('touchend', event => this.onStop(arrState, min, max, event, i, target));
         
-        this.target = null;
+        target = null;
+        console.log("target:" + target);
     
         // write new value
         //this.calculateValue(step, min, max);
@@ -197,7 +195,7 @@ export class View {
         let currentState = arrState;
         console.log("currentState:" + currentState);
         console.log("currentState[i]:" + currentState[i]);
-        let ratio = (this.currentX * (this.slider.offsetWidth - (normolizeFact * 2))); // оригинальное выражение во вторых скобках (elements[i].offsetWidth + normolizeFact)
+        let ratio = (this.slider.offsetWidth / this.currentX); // оригинальное выражение во вторых скобках (elements[i].offsetWidth + normolizeFact)
         let currentValueX = Math.floor(ratio * (max - min));
         currentState[i] = currentValueX;
         return currentState; 
