@@ -10,9 +10,8 @@
     box-sizing: border-box;
     display: block;
     position: absolute;
-    height: 36px;
-    width: 36px;
-    padding: 6px;
+    height: 24px;
+    width: 24px;
     z-index: 2;
 }
 .slider-span {
@@ -26,9 +25,9 @@
 .slider-line {
     box-sizing: border-box;
     position: absolute;
-    width: calc(100% - 36px);
-    left: 18px;
-    top: 16px;
+    width: calc(100% - 24px);
+    left: 12px;
+    top: 12px;
     height: 4px;
     border-radius: 4px;
     background: grey;
