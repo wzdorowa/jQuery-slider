@@ -137,24 +137,23 @@ export class View {
             if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth)) {
                 this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth);
             }
-            if (this.currentX < this.startX) {
-                this.currentX = this.startX;
+            if (this.currentX < 0) {
+                this.currentX = 0;
             }
             target.style.left = this.currentX + 'px';
         }
         if (i > 0 && i < elements.length - 1) {
             if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth)) {
-                console.log(target);
                 this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth);
             } 
-            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth)) {
-                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth);
+            if (this.currentX < (elements[i - 1].offsetLeft + target.offsetWidth)) {
+                this.currentX = (elements[i - 1].offsetLeft + target.offsetWidth);
             }
             target.style.left = this.currentX + 'px';
         }
         if (i === elements.length - 1) {
-            if (this.currentX < (elements[i - 1].offsetLeft - target.offsetWidth * 2)) {
-                this.currentX = (elements[i - 1].offsetLeft - target.offsetWidth * 2);
+            if (this.currentX < (elements[i - 1].offsetLeft + target.offsetWidth)) {
+                this.currentX = (elements[i - 1].offsetLeft + target.offsetWidth);
             } 
             if(this.currentX > this.maxX) {
                 this.currentX = this.maxX;
