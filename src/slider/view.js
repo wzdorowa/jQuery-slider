@@ -20,12 +20,12 @@ export class View {
             console.log("я тут"); 
             if(!this.isCreatedSlider) {
                 this.createSlider(state.amount);
-                this.listenSliderTouchesEvents(state.state, state.min, state.max);
+                this.listenSliderTouchesEvents(state.sliderTouchsStates, state.min, state.max);
                 this.isCreatedSlider = true;
             }
             //this.reset();
-            this.setValueSliderTouch(state.min, state.max, state.state);
-            this.setTooltipsValues(state.state);
+            this.setValueSliderTouch(state.min, state.max, state.sliderTouchsStates);
+            this.setTooltipsValues(state.sliderTouchsStates);
         })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
@@ -79,33 +79,33 @@ export class View {
         sliderLineSpan[0].style.marginLeft = '0px';
         sliderLineSpan[0].style.width = (this.slider.offsetWidth - normolizeFact) + 'px';
     }
-    /* функция setValuesSliderTouch устанавливает полученное значение
+    /* функция setValuesSliderTouch устанавливает полученное по-умолчанию значение
      для каждой из кнопок-ползунков */
-    setValueSliderTouch(min, max, arrState) {
+    setValueSliderTouch(min, max, arrStates) {
         let elements = this.sliderTouches;
         for(let i = 0; i < elements.length; i++) {
             this.ratio = (this.elementSliderLine.offsetWidth / (max - min));
-            elements[i].style.left = Math.ceil(this.ratio * arrState[i]) + 'px';
+            elements[i].style.left = Math.ceil(this.ratio * arrStates[i]) + 'px';
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
     /* функция setTooltipsValues устанавливает значения ползунков
      в соответствующие им тултипы  */
-    setTooltipsValues(arrState) {
-        for(let i = 0; i < arrState.length; i++) {
-            this.elementsSliderTooltipText[i].innerHTML = arrState[i];
+    setTooltipsValues(arrStates) {
+        for(let i = 0; i < arrStates.length; i++) {
+            this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
         }
     }
-    listenSliderTouchesEvents(arrState, min, max) {
+    listenSliderTouchesEvents(arrStates, min, max) {
         let elements = this.sliderTouches;
         // link events
         for(let i = 0; i < elements.length; i++) {
-            elements[i].addEventListener('mousedown', event => this.onStart(arrState, min, max, event, i));
-            elements[i].addEventListener('touchstart', event => this.onStart(arrState, min, max, event, i));
+            elements[i].addEventListener('mousedown', event => this.onStart(arrStates, min, max, event, i));
+            elements[i].addEventListener('touchstart', event => this.onStart(arrStates, min, max, event, i));
         }
     }
-    onStart(arrState, min, max, event, i) {
+    onStart(arrStates, min, max, event, i) {
         const normolizeFact = this.setNormolizeFact();
 
         event.preventDefault();
@@ -119,7 +119,7 @@ export class View {
         this.startX = eventTouch.pageX - this.currentX;
         this.maxX = this.elementSliderLine.offsetWidth;
 
-        const handleMove = event => this.onMove(arrState, min, max, event, i, target);
+        const handleMove = event => this.onMove(arrStates, min, max, event, i, target);
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('touchmove', handleMove);
 
@@ -127,7 +127,7 @@ export class View {
         document.addEventListener('mouseup', handleStop);
         document.addEventListener('touchend', handleStop);
     }
-    onMove(arrState, min, max, event, i, target) {
+    onMove(arrStates, min, max, event, i, target) {
         let elements = this.sliderTouches;
         let eventTouch = event;
     
@@ -166,7 +166,7 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
         
         // write new value
-        const currentValue = this.calculateValue(arrState, min, max, event, i, target);
+        const currentValue = this.calculateValue(arrStates, min, max, event, i, target);
         const data = {
             currentValue: currentValue,
             index: i
@@ -186,8 +186,8 @@ export class View {
     текущее преобразованное значение ползунка в emitter.emit, а в модели в 
     subscribe вызвать обработчик, который это значение запишет в state.state
     */
-    calculateValue(arrState, min, max, event, i) {
-        let currentState = arrState;
+    calculateValue(arrStates, min, max, event, i) {
+        let currentState = arrStates;
         
         let currentValueX = Math.floor(this.currentX / this.ratio);
         currentState[i] = currentValueX;
