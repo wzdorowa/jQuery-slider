@@ -9,7 +9,7 @@ export class Model {
             horizontal: true,
             vertical: false,
             amount: 4,
-            step: 1,
+            step: 2,
             tooltip: true,
         };
         this.currentConfig = {};
