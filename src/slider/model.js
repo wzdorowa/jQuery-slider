@@ -5,7 +5,7 @@ export class Model {
         this.state = {
             min: 0,
             max: 100,
-            state: [0, 20, 40, 100],
+            sliderTouchsStates: [0, 20, 40, 100],
             horizontal: true,
             vertical: false,
             amount: 4,
