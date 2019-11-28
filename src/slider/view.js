@@ -17,15 +17,14 @@ export class View {
         this.emitter = eventEmitter,
 
         this.emitter.subscribe('model:state-changed', (state) => {
-            console.log("я тут"); 
             if(!this.isCreatedSlider) {
                 this.createSlider(state.amount);
                 this.setValueSliderTouch(state.min, state.max, state.sliderTouchsStates);
+                this.setTooltipsValues(state.sliderTouchsStates);
                 this.listenSliderTouchesEvents(state.sliderTouchsStates, state.min, state.max);
                 this.isCreatedSlider = true;
             }
             //this.reset();
-            this.setTooltipsValues(state.sliderTouchsStates);
         })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
@@ -95,7 +94,6 @@ export class View {
     setTooltipsValues(arrStates) {
         for(let i = 0; i < arrStates.length; i++) {
             this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
-            console.log('arrStates[i]:' + arrStates[i]);
         }
     }
     listenSliderTouchesEvents(arrStates, min, max) {
@@ -194,6 +192,5 @@ export class View {
     /* метод setCurrentTooltipValue устанавливает текущее значение в тултип ползунка */
     setCurrentTooltipValue(arrStates, min, max, event, i) {
         this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
-        console.log('arrStates[i]:' + arrStates[i]);
     }
 }
