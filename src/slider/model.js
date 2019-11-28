@@ -15,7 +15,11 @@ export class Model {
         this.currentConfig = {};
 
         this.emitter = eventEmitter;
-        this.emitter.emit('model:state-changed', this.state)
+        this.emitter.emit('model:state-changed', this.state);
+
+        this.emitter.subscribe('view:sliderTouchsStates-changed', (data) => {
+            
+        })
     }
     setMinValue(value) {
         this.currentConfig.min = value;
