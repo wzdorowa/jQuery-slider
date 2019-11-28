@@ -17,14 +17,15 @@ export class View {
         this.emitter = eventEmitter,
 
         this.emitter.subscribe('model:state-changed', (state) => {
+            console.log("я тут"); 
             if(!this.isCreatedSlider) {
                 this.createSlider(state.amount);
+                this.listenSliderTouchesEvents(state.state, state.min, state.max);
                 this.isCreatedSlider = true;
             }
             //this.reset();
             this.setValueSliderTouch(state.min, state.max, state.state);
             this.setTooltipsValues(state.state);
-            this.eventDispatcher(state.state, state.min, state.max);
         })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
@@ -96,7 +97,7 @@ export class View {
             this.elementsSliderTooltipText[i].innerHTML = arrState[i];
         }
     }
-    eventDispatcher(arrState, min, max) {
+    listenSliderTouchesEvents(arrState, min, max) {
         let elements = this.sliderTouches;
         // link events
         for(let i = 0; i < elements.length; i++) {
@@ -118,8 +119,13 @@ export class View {
         this.startX = eventTouch.pageX - this.currentX;
         this.maxX = this.elementSliderLine.offsetWidth;
 
-        document.addEventListener('mousemove', event => this.onMove(arrState, min, max, event, i, target));
-        document.addEventListener('touchmove', event => this.onMove(arrState, min, max, event, i, target));
+        const handleMove = event => this.onMove(arrState, min, max, event, i, target);
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('touchmove', handleMove);
+
+        const handleStop = event => this.onStop(handleMove, handleStop);
+        document.addEventListener('mouseup', handleStop);
+        document.addEventListener('touchend', handleStop);
     }
     onMove(arrState, min, max, event, i, target) {
         let elements = this.sliderTouches;
@@ -160,25 +166,18 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
         
         // write new value
-        this.calculateValue(arrState, min, max, event, i, target);
-
-        document.addEventListener('mouseup', event => this.onStop(arrState, min, max, event, i, target));
-        document.addEventListener('touchend', event => this.onStop(arrState, min, max, event, i, target));
+        const currentValue = this.calculateValue(arrState, min, max, event, i, target);
+        const data = {
+            currentValue: currentValue,
+            index: i
+        };
+        this.emitter.emit('view:state-changed', data)
       }
-      onStop(arrState, min, max, event, i, target) {
-        console.log("я вызвана");
-        document.removeEventListener('mousedown', event => this.onStart(arrState, min, max, event, i));
-        document.removeEventListener('touchstart', event => this.onStart(arrState, min, max, event, i));
-        document.removeEventListener('mousemove', event => this.onMove(arrState, min, max, event, i, target));
-        document.removeEventListener('mouseup', event => this.onStop(arrState, min, max, event, i, target));
-        document.removeEventListener('touchmove', event => this.onMove(arrState, min, max, event, i, target));
-        document.removeEventListener('touchend', event => this.onStop(arrState, min, max, event, i, target));
-        
-        target = null;
-        console.log("target:" + target);
-    
-        // write new value
-        //this.calculateValue(step, min, max);
+      onStop(handleMove, handleStop) {
+        document.removeEventListener('mousemove', handleMove);
+        document.removeEventListener('touchmove', handleMove);
+        document.removeEventListener('mouseup', handleStop);
+        document.removeEventListener('touchend', handleStop);
       }
       /* функция calculateValue рассчитывает текущее значение ползунка. 
     нужно высчитать из this.currentX текущеее значение ползунка которое
@@ -188,13 +187,7 @@ export class View {
     subscribe вызвать обработчик, который это значение запишет в state.state
     */
     calculateValue(arrState, min, max, event, i) {
-        console.log("calculateValue i:" + i);
-        const normolizeFact = this.setNormolizeFact();
-        //let elements = this.sliderTouches;
-
         let currentState = arrState;
-        console.log("currentState:" + currentState);
-        console.log("currentState[i]:" + currentState[i]);
         
         let currentValueX = Math.floor(this.currentX / this.ratio);
         currentState[i] = currentValueX;
