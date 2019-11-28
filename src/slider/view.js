@@ -132,7 +132,6 @@ export class View {
         let eventTouch = event;
     
         this.currentX = eventTouch.pageX - this.startX;
-        console.log("currentX:" + this.currentX);
         if (i === 0) {
             if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth)) {
                 this.currentX = (elements[i + 1].offsetLeft - target.offsetWidth);
@@ -187,10 +186,8 @@ export class View {
     subscribe вызвать обработчик, который это значение запишет в state.state
     */
     calculateValue(arrStates, min, max, event, i) {
-        let currentState = arrStates;
-        
         let currentValueX = Math.floor(this.currentX / this.ratio);
-        currentState[i] = currentValueX;
-        return currentState; 
+         
+        return currentValueX;
     }
 }

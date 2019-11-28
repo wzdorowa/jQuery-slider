@@ -18,7 +18,7 @@ export class Model {
         this.emitter.emit('model:state-changed', this.state);
 
         this.emitter.subscribe('view:sliderTouchsStates-changed', (data) => {
-            setCurrentSliderTouchsStatesValues(data.currentValue, data.index);
+            this.setCurrentSliderTouchsStatesValues(data.currentValue, data.index);
         });
     }
     setCurrentSliderTouchsStatesValues(value, index) {
