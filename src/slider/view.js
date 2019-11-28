@@ -10,9 +10,10 @@ export class View {
         this.elementsSliderTooltipText =[],
         this.isCreatedSlider = false,
         this.ratio = null,
-        this.startX = 0;
-        this.maxX = 0;
-        this.currentX = 0;
+        this.startX = 0,
+        this.maxX = 0,
+        this.currentX = 0,
+        this.currentValue,
 
         this.emitter = eventEmitter,
 
@@ -120,7 +121,7 @@ export class View {
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('touchmove', handleMove);
 
-        const handleStop = event => this.onStop(handleMove, handleStop);
+        const handleStop = event => this.onStop(handleMove, handleStop, arrStates, min, max, step, event, i, target);
         document.addEventListener('mouseup', handleStop);
         document.addEventListener('touchend', handleStop);
     }
@@ -129,11 +130,6 @@ export class View {
         let eventTouch = event;
     
         this.currentX = eventTouch.pageX - this.startX;
-        console.log('currentX:' + this.currentX);
-
-        let multi = Math.floor(this.currentX / step);
-        this.currentX = step * multi;
-        console.log('currentX * step:' + this.currentX);
 
         if (i === 0) {
             if(this.currentX > (elements[i + 1].offsetLeft - target.offsetWidth)) {
@@ -168,16 +164,18 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';
         
         // write new value
-        const currentValue = this.calculateValue(arrStates, min, max, step, event, i, target);
+        this.currentValue = this.calculateValue(arrStates, min, max, step, event, i, target);
         const data = {
-            currentValue: currentValue,
+            currentValue: this.currentValue,
             index: i
         };
         this.emitter.emit('view:sliderTouchsStates-changed', data);
 
         this.setCurrentTooltipValue(arrStates, min, max, step, event, i);
       }
-      onStop(handleMove, handleStop) {
+      onStop(handleMove, handleStop, arrStates, min, max, step, event, i, target) {
+        this.setValueAtStopSliderTouch(arrStates, min, max, step, event, i, target);
+
         document.removeEventListener('mousemove', handleMove);
         document.removeEventListener('touchmove', handleMove);
         document.removeEventListener('mouseup', handleStop);
@@ -190,8 +188,7 @@ export class View {
     текущее преобразованное значение ползунка в emitter.emit, а в модели в 
     subscribe вызвать обработчик, который это значение запишет в state.state
     */
-    calculateValue(arrStates, min, max, step, event, i) {
-        console.log('step:' + step)
+    calculateValue(arrStates, min, max, step, event, i, target) {
         let currentValueX = Math.floor(this.currentX / this.ratio);
         let multi = Math.floor(currentValueX / step);
         currentValueX = step * multi;
@@ -201,5 +198,8 @@ export class View {
     /* метод setCurrentTooltipValue устанавливает текущее значение в тултип ползунка */
     setCurrentTooltipValue(arrStates, min, max, step, event, i) {
         this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
+    }
+    setValueAtStopSliderTouch(arrStates, min, max, step, event, i, target) {
+        target.style.left = Math.ceil(this.ratio * this.currentValue) + 'px';
     }
 }
