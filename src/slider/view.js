@@ -179,7 +179,7 @@ export class View {
         document.removeEventListener('mouseup', handleStop);
         document.removeEventListener('touchend', handleStop);
       }
-      /* функция calculateValue рассчитывает текущее значение ползунка. 
+      /* метод calculateValue рассчитывает текущее значение ползунка. 
     нужно высчитать из this.currentX текущеее значение ползунка которое
     необходимо будет передать в state.state модели через eventEmitter.
     при изменении this.currentX вызвать calculateValue из которой вернуть
@@ -191,6 +191,7 @@ export class View {
 
         return currentValueX;
     }
+    /* метод setCurrentTooltipValue устанавливает текущее значение в тултип ползунка */
     setCurrentTooltipValue(arrStates, min, max, event, i) {
         this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
         console.log('arrStates[i]:' + arrStates[i]);
