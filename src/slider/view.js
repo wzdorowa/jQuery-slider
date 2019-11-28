@@ -20,11 +20,11 @@ export class View {
             console.log("я тут"); 
             if(!this.isCreatedSlider) {
                 this.createSlider(state.amount);
+                this.setValueSliderTouch(state.min, state.max, state.sliderTouchsStates);
                 this.listenSliderTouchesEvents(state.sliderTouchsStates, state.min, state.max);
                 this.isCreatedSlider = true;
             }
             //this.reset();
-            this.setValueSliderTouch(state.min, state.max, state.sliderTouchsStates);
             this.setTooltipsValues(state.sliderTouchsStates);
         })
     }
@@ -171,7 +171,7 @@ export class View {
             currentValue: currentValue,
             index: i
         };
-        this.emitter.emit('view:state-changed', data)
+        this.emitter.emit('view:sliderTouchsStates-changed', data);
       }
       onStop(handleMove, handleStop) {
         document.removeEventListener('mousemove', handleMove);
