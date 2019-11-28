@@ -90,11 +90,12 @@ export class View {
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
-    /* функция setTooltipsValues устанавливает значения ползунков
+    /* функция setTooltipsValues устанавливает значения по-умолчанию ползунков
      в соответствующие им тултипы  */
     setTooltipsValues(arrStates) {
         for(let i = 0; i < arrStates.length; i++) {
             this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
+            console.log('arrStates[i]:' + arrStates[i]);
         }
     }
     listenSliderTouchesEvents(arrStates, min, max) {
@@ -106,8 +107,6 @@ export class View {
         }
     }
     onStart(arrStates, min, max, event, i) {
-        const normolizeFact = this.setNormolizeFact();
-
         event.preventDefault();
         let elements = this.sliderTouches;
 
@@ -171,6 +170,8 @@ export class View {
             index: i
         };
         this.emitter.emit('view:sliderTouchsStates-changed', data);
+
+        this.setCurrentTooltipValue(arrStates, min, max, event, i);
       }
       onStop(handleMove, handleStop) {
         document.removeEventListener('mousemove', handleMove);
@@ -187,7 +188,11 @@ export class View {
     */
     calculateValue(arrStates, min, max, event, i) {
         let currentValueX = Math.floor(this.currentX / this.ratio);
-         
+
         return currentValueX;
+    }
+    setCurrentTooltipValue(arrStates, min, max, event, i) {
+        this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
+        console.log('arrStates[i]:' + arrStates[i]);
     }
 }
