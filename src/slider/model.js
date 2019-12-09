@@ -21,61 +21,55 @@ export class Model {
             this.setCurrentSliderTouchsStatesValues(data.currentValue, data.index);
         });
     }
+    setValuesFromTheNewConfig(newConfig) {
+        this.state.min = newConfig.min;
+        this.state.max = newConfig.max;
+
+        //установить новое количество ползунков//
+        if (newConfig.amount <= 0) {
+            this.state.amount = 1;
+        } else if (newConfig.amount >= 10) {
+            this.state.amount = 10;
+        } else {
+        this.cstate.amount = newConfig.amount;
+        }
+
+        //установить новые значения для ползунков//
+        for (let i = 0; i < newConfig.sliderTouchsStates.length; i++) {
+            this.state.sliderTouchsStates[i] = newConfig.sliderTouchsStates[i];
+
+            if (this.state.sliderTouchsStates[i] > this.state.sliderTouchsStates[i + 1]) {
+                this.state.sliderTouchsStates[i] = this.state.sliderTouchsStates[i + 1];
+            }
+            if (this.state.sliderTouchsStates[i] < this.state.sliderTouchsStates[i - 1]) {
+                this.state.sliderTouchsStates[i] = this.state.sliderTouchsStates[i - 1];
+            }
+        }
+
+        // установить новое значение для шага перемещения ползунков//
+        if (newConfig.step <= 0){
+            this.state.step = 1;
+        } else if (newConfig.step >= this.state.max) {
+            this.state.step = this.state.max;
+        } else {
+        this.state.step = newConfig.step;
+        }
+
+        //установить новое значение для поля tultip//
+        if(newConfig.tooltip === 'true') {
+            this.state.tooltip = true;
+        } else if(newConfig.tooltip === 'false') {
+            this.state.tultip = false;
+        }
+        
+        //установить новое значение для поля orientation//
+        if(newConfig.orientation === 'horizontal') {
+            this.state.orientation = 'horizontal';
+        } else if(newConfig.orientation === 'vertical') {
+            this.state.orientation = 'vertical';
+        }
+    }
     setCurrentSliderTouchsStatesValues(value, index) {
         this.state.sliderTouchsStates[index] = value;
-    }
-    setMinValue(value) {
-        this.currentConfig.min = value;
-    }
-    setMaxValue(value) {
-        this.currentConfig.max = value;
-    }
-    setStateValue(arr) {
-        for (let i = 0; i < arr.length; i++) {
-            this.currentConfig.state[i] = arr[i];
-        }
-        for (let i = 0; i < arr.length; i++) {
-            if (this.currentConfig.state[i] > this.currentConfig.state[i + 1]) {
-                this.currentConfig.state[i] = this.currentConfig.state[i + 1];
-            }
-            if (this.currentConfig.state[i] < this.currentConfig.state[i - 1]) {
-                this.currentConfig.state[i] = this.currentConfig.state[i - 1];
-            }
-        }
-    }
-    // написать нормальные значения для сравнения в условных конструкциях
-    setOrientationValue(value) {
-        if(value === horizontal) {
-            this.currentConfig.horizontal = true;
-            this.currentConfig.vertical = false;
-        } else if(value === vertical) {
-            this.currentConfig.horizontal = false;
-            this.currentConfig.vertical = true;
-        }
-    }
-    setAmountValue(value) {
-        if (value <= 0) {
-            this.currentConfig.amount = 1;
-        } else if (value >= 10) {
-            this.currentConfig.amount = 10;
-        } else {
-        this.currentConfig.amount = value;
-        }
-    }
-    setStepValue(value) {
-        if (value <= 0){
-            this.currentConfig.step = 1;
-        } else if (value >= this.currentConfig.max) {
-            this.currentConfig.step = this.currentConfig.max;
-        } else {
-        this.currentConfig.step = value;
-        }
-    }
-    setTulipValue(value) {
-        if(value === 'true') {
-            this.currentConfig.tultip = true;
-        } else if(value === 'false') {
-            this.currentConfig.tultip = false;
-        }
     }
 }
