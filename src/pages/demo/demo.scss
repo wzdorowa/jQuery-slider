@@ -6,6 +6,10 @@
 .slider-ui {
     width: 350px;
     margin: 30px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     box-sizing: border-box;
 }
 .tooltip {
@@ -97,6 +101,8 @@
     min-height: 420px;
     box-sizing: border-box;
     margin: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #eee;
     border-radius: 10px;
