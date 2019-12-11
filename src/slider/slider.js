@@ -12,6 +12,13 @@ import {EventEmitter} from './eventEmitter.js';
             let model = new Model(eventEmitter);
             new Controller(element, model, view);
             console.log(index);
+            // здесь привязываю какие-то данные//
+            element.pluginName = "SliderJS";
+
+            // здесь привязываю функцию, которая консоль ложит что-то//
+            element.displayInConsole = () => {
+                console.log('какой-то текст');
+            }
         });
     }
 })(jQuery);
