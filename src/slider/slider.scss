@@ -29,7 +29,7 @@
     width: calc(100% - 24px);
     left: 12px;
     top: 12px;
-    height: 4px;
+    height: 2px;
     border-radius: 4px;
     background: grey;
     z-index: 0;
@@ -37,7 +37,7 @@
 }
 .slider-line-span {
     display: block;
-    height: 100%;
+    height: 150%;
     width: 0%;
     background: #b3d4fc;
 }
