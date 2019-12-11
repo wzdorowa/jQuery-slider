@@ -6,8 +6,7 @@ export class Model {
             min: 0,
             max: 100,
             sliderTouchsStates: [0, 20, 40, 100],
-            horizontal: true,
-            vertical: false,
+            orientation: 'horizontal',
             amount: 4,
             step: 4,
             tooltip: true,
@@ -24,6 +23,7 @@ export class Model {
     setValuesFromTheNewConfig(newConfig) {
         this.state.min = newConfig.min;
         this.state.max = newConfig.max;
+        this.state.sliderTouchsStates = newConfig.sliderTouchsStates;
 
         //установить новое количество ползунков//
         if (newConfig.amount <= 0) {
@@ -31,19 +31,7 @@ export class Model {
         } else if (newConfig.amount >= 10) {
             this.state.amount = 10;
         } else {
-        this.cstate.amount = newConfig.amount;
-        }
-
-        //установить новые значения для ползунков//
-        for (let i = 0; i < newConfig.sliderTouchsStates.length; i++) {
-            this.state.sliderTouchsStates[i] = newConfig.sliderTouchsStates[i];
-
-            if (this.state.sliderTouchsStates[i] > this.state.sliderTouchsStates[i + 1]) {
-                this.state.sliderTouchsStates[i] = this.state.sliderTouchsStates[i + 1];
-            }
-            if (this.state.sliderTouchsStates[i] < this.state.sliderTouchsStates[i - 1]) {
-                this.state.sliderTouchsStates[i] = this.state.sliderTouchsStates[i - 1];
-            }
+        this.state.amount = newConfig.amount;
         }
 
         // установить новое значение для шага перемещения ползунков//

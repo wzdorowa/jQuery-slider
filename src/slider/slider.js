@@ -19,6 +19,11 @@ import {EventEmitter} from './eventEmitter.js';
             element.displayInConsole = () => {
                 console.log('какой-то текст');
             }
+
+            element.callMethodsetValuesFromTheNewConfig = (newConfig) => {
+                model.setValuesFromTheNewConfig(newConfig);
+                console.log(model.state);
+            }
         });
     }
 })(jQuery);
