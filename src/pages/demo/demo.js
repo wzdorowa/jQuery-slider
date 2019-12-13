@@ -67,6 +67,17 @@ $( () => {
             })
         }
 
+        // получить и передать новое значение размера шага введенного пользователем
+        // из панели конфигураций в объект newConfig
+        const stepSize = document.querySelector('.field-group-stepSize-container__content');
+
+        stepSize.addEventListener('blur', () => {
+            const getValue = stepSize.value;
+            console.log('getValue.stepSize' + getValue);
+
+            newConfig.step = getValue;
+            console.log('newConfig.step' + newConfig.step);
+        })
     });
 });
 
