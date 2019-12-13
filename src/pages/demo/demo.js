@@ -32,6 +32,15 @@ $( () => {
             newConfig.min = getValue; 
             console.log(newConfig.min);
         });
+        
+        maxValue.addEventListener('blur', () => {
+            const getValue = maxValue.value;
+            console.log(getValue);
+
+            newConfig.max = getValue; 
+            console.log(newConfig.max);
+        });
+
     });
 });
 
