@@ -51,7 +51,21 @@ $( () => {
 
             newConfig.amount = getValue;
             console.log('newConfig.amount' + newConfig.amount)
-        })
+        });
+
+        // получить и передать новые значения текущих состояний ползунков введенных пользователем
+        // из панели конфигураций в объект newConfig
+        const inputsSliderTouchs = document.querySelectorAll('.input-rangeOfValues');
+
+        for(let i = 0; i < inputsSliderTouchs.length; i++) {
+            inputsSliderTouchs[i].addEventListener('blur', () => {
+                const getValue = inputsSliderTouchs[i].value;
+                console.log('getValue.inputsSliderTouchs' + getValue);
+
+                newConfig.sliderTouchsStates[i] = getValue;
+                console.log('newConfig.sliderTouchsStates[i]' + newConfig.sliderTouchsStates[i])
+            })
+        }
 
     });
 });
