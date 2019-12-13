@@ -17,6 +17,21 @@ $( () => {
         };
         console.log(element.pluginName);
         element.callMethodsetValuesFromTheNewConfig(newConfig);
+
+        // получить и передать новые введеные пользователем мин и макс значения слайдера 
+        // из панели конфигураций в объект newConfig
+        const minMaxValues = document.querySelectorAll('.minMaxValue');
+        console.log(minMaxValues);
+        const minValue = minMaxValues[0];
+        const maxValue = minMaxValues[1];
+
+        minValue.addEventListener('blur', () => {
+            const getValue = minValue.value;
+            console.log(getValue);
+
+            newConfig.min = getValue; 
+            console.log(newConfig.min);
+        });
     });
 });
 
