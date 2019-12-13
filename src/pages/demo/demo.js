@@ -27,19 +27,31 @@ $( () => {
 
         minValue.addEventListener('blur', () => {
             const getValue = minValue.value;
-            console.log(getValue);
+            console.log('getValue.minValue' + getValue);
 
             newConfig.min = getValue; 
-            console.log(newConfig.min);
+            console.log('newConfig.min' + newConfig.min);
         });
         
         maxValue.addEventListener('blur', () => {
             const getValue = maxValue.value;
-            console.log(getValue);
+            console.log('getValue.maxValue' + getValue);
 
             newConfig.max = getValue; 
-            console.log(newConfig.max);
+            console.log('newConfig.max' + newConfig.max);
         });
+
+        // получить и передать новое значение количества ползунков введенное пользователем
+        // из панели конфигураций в объект newConfig
+        const amountSliderTouches = document.querySelector('.field-group-numberValues-container__content');
+
+        amountSliderTouches.addEventListener('blur', () => {
+            const getValue = amountSliderTouches.value;
+            console.log('getValue.amount' + getValue);
+
+            newConfig.amount = getValue;
+            console.log('newConfig.amount' + newConfig.amount)
+        })
 
     });
 });
