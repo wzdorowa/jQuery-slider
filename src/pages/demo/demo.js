@@ -41,6 +41,18 @@ $( () => {
             console.log('newConfig.max' + newConfig.max);
         });
 
+        // получить и передать новое значение количества ползунков введенное пользователем
+        // из панели конфигураций в объект newConfig
+        const amountSliderTouches = document.querySelector('.field-group-numberValues-container__content');
+
+        amountSliderTouches.addEventListener('blur', () => {
+            const getValue = amountSliderTouches.value;
+            console.log('getValue.amount' + getValue);
+
+            newConfig.amount = getValue;
+            console.log('newConfig.amount' + newConfig.amount)
+        });
+
         // получить и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций в объект newConfig
         const inputsSliderTouchs = document.querySelectorAll('.input-rangeOfValues');
