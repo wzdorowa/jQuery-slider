@@ -38,6 +38,10 @@ import {EventEmitter} from './eventEmitter.js';
                 model.setNewValueOrientation(value);
                 console.log(model.state);
             }
+            element.callMethodSetNewValueTooltip = (value) => {
+                model.setNewValueTooltip(value);
+                console.log(model.state);
+            }
 
             /*element.subscribeToStateModel = () => {
                 this.emitter.subscribe('model:state-changed', (state) => {

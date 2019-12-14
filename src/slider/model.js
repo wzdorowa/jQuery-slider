@@ -53,10 +53,11 @@ export class Model {
     }
     //установить новое значение для поля tultip//
     setNewValueTooltip(value) {
-        if(value === 'true') {
-            this.state.tooltip = true;
-        } else if(value === 'false') {
-            this.state.tultip = false;
+        if(value === true) {
+            this.state.tooltip = value;
+        }
+        if(value === false) {
+            this.state.tooltip = value;
         }
     }
     //установить новое значение для поля orientation//

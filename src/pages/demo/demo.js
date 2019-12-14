@@ -34,9 +34,6 @@ $( () => {
             }
             
         }
-
-        
-        console.log(element.pluginName);
         //element.callMethodsetValuesFromTheNewConfig(newConfig);
         //element.subscribeToStateModel();
 
@@ -96,6 +93,20 @@ $( () => {
                 element.callMethodSetNewValueOrientation(orientation);
             })
         };
+        // получить и передать новое значение наличия тултипа
+        const checkboxContainer = document.querySelector('.checkbox-button-container');
+        const checkboxInput = document.querySelector('.checkbox-button-container__content');
+
+        checkboxContainer.addEventListener('click', () => {
+            let checked = null;
+            if(checkboxInput.checked === true) {
+                checked = true;
+            }
+            if(checkboxInput.checked === false) {
+                checked = false;
+            }
+            element.callMethodSetNewValueTooltip(checked);
+        });
     });
 });
 
