@@ -11,7 +11,6 @@ export class Model {
             step: 4,
             tooltip: true,
         };
-        this.currentConfig = {};
 
         this.emitter = eventEmitter;
         this.emitter.emit('model:state-changed', this.state);
