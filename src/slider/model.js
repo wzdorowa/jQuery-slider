@@ -20,40 +20,51 @@ export class Model {
             this.setCurrentSliderTouchsStatesValues(data.currentValue, data.index);
         });
     }
-    setValuesFromTheNewConfig(newConfig) {
-        this.state.min = newConfig.min;
-        this.state.max = newConfig.max;
-        this.state.sliderTouchsStates = newConfig.sliderTouchsStates;
-
-        //установить новое количество ползунков//
-        if (newConfig.amount <= 0) {
+    //установить новое значение min//
+    setNewValueMin(min) {
+        this.state.min = min;
+    }
+    //установить новое значение max//
+    setNewValueMax(max) {
+        this.state.max = max;
+    }
+    //установить новое количество ползунков//
+    setNewValueAmount(amount) {
+        if (amount <= 0) {
             this.state.amount = 1;
-        } else if (newConfig.amount >= 10) {
+        } else if (amount >= 10) {
             this.state.amount = 10;
         } else {
-        this.state.amount = newConfig.amount;
+        this.state.amount = amount;
         }
-
-        // установить новое значение для шага перемещения ползунков//
-        if (newConfig.step <= 0){
+    }
+    // установить новое значение для состояния ползунка//
+    setNewValueSliderTouchsStates(touchValue, index) {
+        this.state.sliderTouchsStates[index] = touchValue;
+    }
+    // установить новое значение для шага перемещения ползунков//
+    setNewValueStep(step) {
+        if (step <= 0){
             this.state.step = 1;
-        } else if (newConfig.step >= this.state.max) {
+        } else if (step >= this.state.max) {
             this.state.step = this.state.max;
         } else {
-        this.state.step = newConfig.step;
+        this.state.step = step;
         }
-
-        //установить новое значение для поля tultip//
-        if(newConfig.tooltip === 'true') {
+    }
+    //установить новое значение для поля tultip//
+    setNewValueStepTooltip(value) {
+        if(value === 'true') {
             this.state.tooltip = true;
-        } else if(newConfig.tooltip === 'false') {
+        } else if(value === 'false') {
             this.state.tultip = false;
         }
-        
-        //установить новое значение для поля orientation//
-        if(newConfig.orientation === 'horizontal') {
+    }
+    //установить новое значение для поля orientation//
+    setNewValueStepOrientation(value) {
+        if(value === 'horizontal') {
             this.state.orientation = 'horizontal';
-        } else if(newConfig.orientation === 'vertical') {
+        } else if(value === 'vertical') {
             this.state.orientation = 'vertical';
         }
     }
