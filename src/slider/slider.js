@@ -13,8 +13,6 @@ import {EventEmitter} from './eventEmitter.js';
             new Controller(element, model, view);
             console.log(index);
             this.emitter = eventEmitter;
-            // здесь привязываю какие-то данные//
-            element.pluginName = "SliderJS";
 
             element.callMethodSetNewValueMin = (min) => {
                 model.setNewValueMin(min);
@@ -34,6 +32,10 @@ import {EventEmitter} from './eventEmitter.js';
             }
             element.callMethodSetNewValueStep = (step) => {
                 model.setNewValueStep(step);
+                console.log(model.state);
+            }
+            element.callMethodSetNewValueOrientation = (value) => {
+                model.setNewValueOrientation(value);
                 console.log(model.state);
             }
 

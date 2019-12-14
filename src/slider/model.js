@@ -52,7 +52,7 @@ export class Model {
         }
     }
     //установить новое значение для поля tultip//
-    setNewValueStepTooltip(value) {
+    setNewValueTooltip(value) {
         if(value === 'true') {
             this.state.tooltip = true;
         } else if(value === 'false') {
@@ -60,7 +60,7 @@ export class Model {
         }
     }
     //установить новое значение для поля orientation//
-    setNewValueStepOrientation(value) {
+    setNewValueOrientation(value) {
         if(value === 'horizontal') {
             this.state.orientation = 'horizontal';
         } else if(value === 'vertical') {

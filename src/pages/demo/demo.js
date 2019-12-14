@@ -83,7 +83,19 @@ $( () => {
         stepSize.addEventListener('blur', () => {
             const step = stepSize.value;
             element.callMethodSetNewValueStep(step);
-        })
+        });
+
+        // получить и передать новое значение ориентации слайдера
+        const orientationSlider = document.querySelectorAll('.radio-button-container');
+
+        for(let i = 0; i < orientationSlider.length; i++) {
+            orientationSlider[i].addEventListener('click', () => {
+                let orientation = '';
+                if(i === 0) { orientation = 'horizontal';}
+                if(i === 1) { orientation = 'vertical';}
+                element.callMethodSetNewValueOrientation(orientation);
+            })
+        };
     });
 });
 
