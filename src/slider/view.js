@@ -22,7 +22,7 @@ export class View {
             this.modelState = state;
             if(!this.isCreatedSlider) {
                 this.createSlider(state.amount);
-                this.setValueSliderTouch(state.min, state.max, state.sliderTouchsStates);
+                this.setValueSliderTouch(this.modelState);
                 this.setTooltipsValues(state.sliderTouchsStates);
                 this.listenSliderTouchesEvents(this.modelState);
                 this.isCreatedSlider = true;
@@ -62,12 +62,12 @@ export class View {
     }
     /* функция setValuesSliderTouch устанавливает полученное по-умолчанию значение
      для каждой из кнопок-ползунков */
-    setValueSliderTouch(min, max, arrStates) {
+    setValueSliderTouch(modelState) {
         let elements = this.sliderTouches;
-        this.coefficientPoint = (this.elementSliderLine.offsetWidth / (max - min));
+        this.coefficientPoint = (this.elementSliderLine.offsetWidth / (this.modelState.max - this.modelState.min));
 
         for(let i = 0; i < elements.length; i++) {
-            elements[i].style.left = Math.ceil(this.coefficientPoint * arrStates[i]) + 'px';
+            elements[i].style.left = Math.ceil(this.coefficientPoint * this.modelState.sliderTouchsStates[i]) + 'px';
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
