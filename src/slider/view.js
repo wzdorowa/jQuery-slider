@@ -14,10 +14,6 @@ export class View {
         this.maxX = 0,
         this.currentX = 0,
         this.currentValue,
-        this.data = {
-            currentValue: null,
-            index: null,
-        },
         this.modelState = {},
 
         this.emitter = eventEmitter,
