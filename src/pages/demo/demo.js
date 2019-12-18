@@ -23,7 +23,7 @@ $( () => {
 
             for(let i = 0; i < state.amount; i++) {
                 const rangeOfValuesItem = createElement('li', 'rangeOfValues-item', '', i+1);
-                const input = createElement('input', 'input-rangeOgValues', 'text', state.sliderTouchsStates[i]);
+                const input = createElement('input', 'input-rangeOgValues', 'text', state.touchsValues[i]);
 
                 rangeOfValuesItem.append(input);
                 rangeOfValuesList.append(rangeOfValuesItem);
@@ -64,7 +64,7 @@ $( () => {
         for(let i = 0; i < inputsSliderTouchs.length; i++) {
             inputsSliderTouchs[i].addEventListener('blur', () => {
                 const touchValue = inputsSliderTouchs[i].value;
-                element.setNewValueSliderTouchsStates(touchValue, i);
+                element.setNewValueTouchsValues(touchValue, i);
             })
         }
 

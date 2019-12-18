@@ -25,8 +25,8 @@ import {EventEmitter} from './eventEmitter.js';
                 model.setNewValueAmount(amount);
                 console.log(model.state);
             }
-            element.setNewValueSliderTouchsStates = (touchValue, index) => {
-                model.setNewValueSliderTouchsStates(touchValue, index);
+            element.setNewValueTouchsValues = (touchValue, index) => {
+                model.setNewValueTouchsValues(touchValue, index);
                 console.log(model.state);
             }
             element.setNewValueStep = (step) => {

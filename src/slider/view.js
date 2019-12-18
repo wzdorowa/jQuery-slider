@@ -27,7 +27,6 @@ export class View {
                 this.listenSliderTouchesEvents(this.modelState);
                 this.isCreatedSlider = true;
             }
-            //this.reset();
         })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
@@ -67,7 +66,7 @@ export class View {
         this.coefficientPoint = (this.elementSliderLine.offsetWidth / (this.modelState.max - this.modelState.min));
 
         for(let i = 0; i < elements.length; i++) {
-            elements[i].style.left = Math.ceil(this.coefficientPoint * this.modelState.sliderTouchsStates[i]) + 'px';
+            elements[i].style.left = Math.ceil(this.coefficientPoint * this.modelState.touchsValues[i]) + 'px';
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -75,8 +74,8 @@ export class View {
     /* функция setTooltipsValues устанавливает значения по-умолчанию ползунков
      в соответствующие им тултипы  */
     setTooltipsValues(modelState) {
-        for(let i = 0; i < this.modelState.sliderTouchsStates.length; i++) {
-            this.elementsSliderTooltipText[i].innerHTML = this.modelState.sliderTouchsStates[i];
+        for(let i = 0; i < this.modelState.touchsValues.length; i++) {
+            this.elementsSliderTooltipText[i].innerHTML = this.modelState.touchsValues[i];
         }
     }
     listenSliderTouchesEvents(modelState) {
@@ -154,7 +153,7 @@ export class View {
             this.currentValue = this.currentValue + modelState.step;
         }
 
-        this.emitter.emit('view:sliderTouchsStates-changed', {currentValue: this.currentValue, index: i});
+        this.emitter.emit('view:touchsValues-changed', {currentValue: this.currentValue, index: i});
 
         this.setCurrentTooltipValue(this.modelState, event, i);
       }
@@ -183,6 +182,6 @@ export class View {
     }
     /* метод setCurrentTooltipValue устанавливает текущее значение в тултип ползунка */
     setCurrentTooltipValue(modelState, event, i) {
-        this.elementsSliderTooltipText[i].innerHTML = modelState.sliderTouchsStates[i];
+        this.elementsSliderTooltipText[i].innerHTML = modelState.touchsValues[i];
     }
 }

@@ -5,7 +5,7 @@ export class Model {
         this.state = {
             min: 0,
             max: 100,
-            sliderTouchsStates: [0, 20, 40, 100],
+            touchsValues: [0, 20, 40, 100],
             orientation: 'horizontal',
             amount: 4,
             step: 4,
@@ -15,8 +15,8 @@ export class Model {
         this.emitter = eventEmitter;
         this.notifyStateChanged();
 
-        this.emitter.subscribe('view:sliderTouchsStates-changed', (data) => {
-            this.setCurrentSliderTouchsStatesValues(data.currentValue, data.index);
+        this.emitter.subscribe('view:touchsValues-changed', (data) => {
+            this.setCurrentTouchsValues(data.currentValue, data.index);
         });
     }
     notifyStateChanged() {
@@ -44,8 +44,8 @@ export class Model {
         this.notifyStateChanged();
     }
     // установить новое значение для состояния ползунка//
-    setNewValueSliderTouchsStates(touchValue, index) {
-        this.state.sliderTouchsStates[index] = touchValue;
+    setNewValueTouchsValues(touchValue, index) {
+        this.state.touchsValues[index] = touchValue;
         this.notifyStateChanged();
     }
     // установить новое значение для шага перемещения ползунков//
@@ -78,8 +78,8 @@ export class Model {
         }
         this.notifyStateChanged();
     }
-    setCurrentSliderTouchsStatesValues(value, index) {
-        this.state.sliderTouchsStates[index] = value;
+    setCurrentTouchsValues(value, index) {
+        this.state.touchsValues[index] = value;
         this.notifyStateChanged();
     }
 }
