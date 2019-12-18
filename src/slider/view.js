@@ -9,7 +9,7 @@ export class View {
         this.elementSliderLineSpan,
         this.elementsSliderTooltipText =[],
         this.isCreatedSlider = false,
-        this.ratio = null,
+        this.coefficientPoint = null,
         this.startX = 0,
         this.maxX = 0,
         this.currentX = 0,
@@ -68,10 +68,10 @@ export class View {
      для каждой из кнопок-ползунков */
     setValueSliderTouch(min, max, arrStates) {
         let elements = this.sliderTouches;
-        this.ratio = (this.elementSliderLine.offsetWidth / (max - min));
+        this.coefficientPoint = (this.elementSliderLine.offsetWidth / (max - min));
 
         for(let i = 0; i < elements.length; i++) {
-            elements[i].style.left = Math.ceil(this.ratio * arrStates[i]) + 'px';
+            elements[i].style.left = Math.ceil(this.coefficientPoint * arrStates[i]) + 'px';
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -151,22 +151,20 @@ export class View {
         
         // write new value
         this.currentValue = this.calculateValue(this.modelState, event, i, target);
-        this.data.currentValue = this.currentValue;
-        this.data.index = i;
 
-        const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.ratio);
+        const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.coefficientPoint);
+
         if (this.currentX > halfStep) {
             this.currentValue = this.currentValue + modelState.step;
+        }
 
-            this.data.currentValue = this.currentValue;
-        } 
-        this.emitter.emit('view:sliderTouchsStates-changed', this.data);
+        this.emitter.emit('view:sliderTouchsStates-changed', {currentValue: this.currentValue, index: i});
 
         this.setCurrentTooltipValue(this.modelState, event, i);
       }
       onStop(handleMove, handleStop, modelState, event, i, target) {
         this.setCurrentTooltipValue(this.modelState, event, i);
-        target.style.left = Math.ceil(this.ratio * this.currentValue) + 'px';
+        target.style.left = Math.ceil(this.coefficientPoint * this.currentValue) + 'px';
 
         document.removeEventListener('mousemove', handleMove);
         document.removeEventListener('touchmove', handleMove);
@@ -181,7 +179,7 @@ export class View {
     subscribe вызвать обработчик, который это значение запишет в state.state
     */
     calculateValue(modelState, event, i, target) {
-        let currentValueX = Math.floor(this.currentX / this.ratio);
+        let currentValueX = Math.floor(this.currentX / this.coefficientPoint);
         let multi = Math.floor(currentValueX / modelState.step);
         currentValueX = modelState.step * multi;
 
