@@ -28,7 +28,7 @@ export class View {
                 this.createSlider(state.amount);
                 this.setValueSliderTouch(state.min, state.max, state.sliderTouchsStates);
                 this.setTooltipsValues(state.sliderTouchsStates);
-                this.listenSliderTouchesEvents(state.sliderTouchsStates, state.min, state.max, state.step);
+                this.listenSliderTouchesEvents(this.modelState);
                 this.isCreatedSlider = true;
             }
             //this.reset();
@@ -70,27 +70,12 @@ export class View {
         console.log("normolizeFact:" + normolizeFact);
         return normolizeFact;
     }
-    /* функция reset устанавливает/сбрасывает настройки расположения ползунков 
-    на начальные настройки по умолчанию.*/
-    reset() {
-        const normolizeFact = this.setNormolizeFact();
-        const sliderLineSpan = $(this.slider).find(".slider-line-span");
-        let elements = this.sliderTouches;
-
-        for(let i = 1; i < elements.length; i++) {
-            elements[i].style.left = (normolizeFact * i) + 'px';
-        }
-        elements[elements.length - 1].style.left = (this.slider.offsetWidth - normolizeFact) + 'px';
-
-        sliderLineSpan[0].style.marginLeft = '0px';
-        sliderLineSpan[0].style.width = (this.slider.offsetWidth - normolizeFact) + 'px';
-    }
     /* функция setValuesSliderTouch устанавливает полученное по-умолчанию значение
      для каждой из кнопок-ползунков */
     setValueSliderTouch(min, max, arrStates) {
         let elements = this.sliderTouches;
         this.ratio = (this.elementSliderLine.offsetWidth / (max - min));
-        
+
         for(let i = 0; i < elements.length; i++) {
             elements[i].style.left = Math.ceil(this.ratio * arrStates[i]) + 'px';
         }
@@ -104,12 +89,7 @@ export class View {
             this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
         }
     }
-    listenSliderTouchesEvents(arrStates, min, max, step) {
-        this.modelState.min = min;
-        this.modelState.max = max;
-        this.modelState.step = step;
-        this.modelState.sliderTouchsStates = arrStates;
-
+    listenSliderTouchesEvents(modelState) {
         let elements = this.sliderTouches;
         // link events
         for(let i = 0; i < elements.length; i++) {
