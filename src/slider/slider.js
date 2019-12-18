@@ -7,47 +7,50 @@ import {EventEmitter} from './eventEmitter.js';
     $.fn.slider = function(){
         const elements = Array.from(this);
         elements.forEach((element, index) => {
-            let eventEmitter = new EventEmitter();
-            let view = new View(element, eventEmitter);
-            let model = new Model(eventEmitter);
+            const eventEmitter = new EventEmitter();
+            const view = new View(element, eventEmitter);
+            const model = new Model(eventEmitter);
             new Controller(element, model, view);
             console.log(index);
-            this.emitter = eventEmitter;
 
-            element.callMethodSetNewValueMin = (min) => {
+            element.setNewValueMin = (min) => {
                 model.setNewValueMin(min);
                 console.log(model.state);
             }
-            element.callMethodSetNewValueMax = (max) => {
+            element.setNewValueMax = (max) => {
                 model.setNewValueMax(max);
                 console.log(model.state);
             }
-            element.callMethodSetNewValueAmount = (amount) => {
+            element.setNewValueAmount = (amount) => {
                 model.setNewValueAmount(amount);
                 console.log(model.state);
             }
-            element.callMethodSetNewValueSliderTouchsStates = (touchValue, index) => {
+            element.setNewValueSliderTouchsStates = (touchValue, index) => {
                 model.setNewValueSliderTouchsStates(touchValue, index);
                 console.log(model.state);
             }
-            element.callMethodSetNewValueStep = (step) => {
+            element.setNewValueStep = (step) => {
                 model.setNewValueStep(step);
                 console.log(model.state);
             }
-            element.callMethodSetNewValueOrientation = (value) => {
+            element.setNewValueOrientation = (value) => {
                 model.setNewValueOrientation(value);
                 console.log(model.state);
             }
-            element.callMethodSetNewValueTooltip = (value) => {
+            element.setNewValueTooltip = (value) => {
                 model.setNewValueTooltip(value);
                 console.log(model.state);
             }
 
-            /*element.subscribeToStateModel = () => {
-                this.emitter.subscribe('model:state-changed', (state) => {
-                    createInput(state.amount);
+            element.subscribeToStateModel = (handler, isCreatedInput) => {
+                eventEmitter.subscribe('model:state-changed', (state) => {
+                    console.log(state);
+                    if(!isCreatedInput) {
+                        handler(state);
+                        isCreatedInput = true;
+                    }
                 })
-            }*/
+            }
         });
     }
 })(jQuery);

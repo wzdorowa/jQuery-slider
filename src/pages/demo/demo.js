@@ -6,36 +6,31 @@ $( () => {
 
     const elements = Array.from($('.js-slider-test'));
     console.log(elements);
+
     elements.forEach((element, index) => {
-        let eventEmitter = new EventEmitter();
-
-        const newConfig = {};
-
-        eventEmitter.emit('newConfig-changed', newConfig);
-        eventEmitter.subscribe('newConfig-changed', (newConfig) => {
-            createInput(newConfig.amount);
-        });
+        const isCreatedInput = false;
 
         const createElement = (teg, className, type, value) => {
             const element = document.createElement(teg);
             element.className = className;
             element.type = type;
             element.value = value;
+            return element;
         }
+
         const createInput = (state) => {
             const rangeOfValuesList = document.querySelector('.rangeOfValues-list');
-            console.log(rangeOfValuesList);
+
             for(let i = 0; i < state.amount; i++) {
-                const rangeOfValuesItem = createElement('li', 'rangeOfValues-item');
+                const rangeOfValuesItem = createElement('li', 'rangeOfValues-item', '', i+1);
                 const input = createElement('input', 'input-rangeOgValues', 'text', state.sliderTouchsStates[i]);
 
                 rangeOfValuesItem.append(input);
                 rangeOfValuesList.append(rangeOfValuesItem);
-            }
-            
+            } 
         }
-        //element.callMethodsetValuesFromTheNewConfig(newConfig);
-        //element.subscribeToStateModel();
+
+        element.subscribeToStateModel(createInput, isCreatedInput);
 
         // получить и передать новые введеные пользователем мин и макс значения слайдера 
         // из панели конфигураций в объект newConfig
@@ -45,12 +40,12 @@ $( () => {
 
         minValue.addEventListener('blur', () => {
             const min = minValue.value;
-            element.callMethodSetNewValueMin(min);
+            element.setNewValueMin(min);
         });
         
         maxValue.addEventListener('blur', () => {
             const max = maxValue.value;
-            element.callMethodSetNewValueMax(max);
+            element.setNewValueMax(max);
         });
 
         // получить и передать новое значение количества ползунков введенное пользователем
@@ -59,7 +54,7 @@ $( () => {
 
         amountSliderTouches.addEventListener('blur', () => {
             const amount = amountSliderTouches.value;
-            element.callMethodSetNewValueAmount(amount);
+            element.setNewValueAmount(amount);
         });
 
         // получить и передать новые значения текущих состояний ползунков введенных пользователем
@@ -69,7 +64,7 @@ $( () => {
         for(let i = 0; i < inputsSliderTouchs.length; i++) {
             inputsSliderTouchs[i].addEventListener('blur', () => {
                 const touchValue = inputsSliderTouchs[i].value;
-                element.callMethodSetNewValueSliderTouchsStates(touchValue, i);
+                element.setNewValueSliderTouchsStates(touchValue, i);
             })
         }
 
@@ -79,7 +74,7 @@ $( () => {
 
         stepSize.addEventListener('blur', () => {
             const step = stepSize.value;
-            element.callMethodSetNewValueStep(step);
+            element.setNewValueStep(step);
         });
 
         // получить и передать новое значение ориентации слайдера
@@ -90,7 +85,7 @@ $( () => {
                 let orientation = '';
                 if(i === 0) { orientation = 'horizontal';}
                 if(i === 1) { orientation = 'vertical';}
-                element.callMethodSetNewValueOrientation(orientation);
+                element.setNewValueOrientation(orientation);
             })
         };
         // получить и передать новое значение наличия тултипа
@@ -105,7 +100,7 @@ $( () => {
             if(checkboxInput.checked === false) {
                 checked = false;
             }
-            element.callMethodSetNewValueTooltip(checked);
+            element.setNewValueTooltip(checked);
         });
     });
 });

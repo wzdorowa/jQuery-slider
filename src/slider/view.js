@@ -23,6 +23,7 @@ export class View {
         this.emitter = eventEmitter,
 
         this.emitter.subscribe('model:state-changed', (state) => {
+            this.modelState = state;
             if(!this.isCreatedSlider) {
                 this.createSlider(state.amount);
                 this.setValueSliderTouch(state.min, state.max, state.sliderTouchsStates);
@@ -88,8 +89,9 @@ export class View {
      для каждой из кнопок-ползунков */
     setValueSliderTouch(min, max, arrStates) {
         let elements = this.sliderTouches;
+        this.ratio = (this.elementSliderLine.offsetWidth / (max - min));
+        
         for(let i = 0; i < elements.length; i++) {
-            this.ratio = (this.elementSliderLine.offsetWidth / (max - min));
             elements[i].style.left = Math.ceil(this.ratio * arrStates[i]) + 'px';
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';

@@ -13,19 +13,24 @@ export class Model {
         };
 
         this.emitter = eventEmitter;
-        this.emitter.emit('model:state-changed', this.state);
+        this.notifyStateChanged();
 
         this.emitter.subscribe('view:sliderTouchsStates-changed', (data) => {
             this.setCurrentSliderTouchsStatesValues(data.currentValue, data.index);
         });
     }
+    notifyStateChanged() {
+        this.emitter.emit('model:state-changed', this.state);
+    }
     //установить новое значение min//
     setNewValueMin(min) {
         this.state.min = min;
+        this.notifyStateChanged();
     }
     //установить новое значение max//
     setNewValueMax(max) {
         this.state.max = max;
+        this.notifyStateChanged();
     }
     //установить новое количество ползунков//
     setNewValueAmount(amount) {
@@ -36,10 +41,12 @@ export class Model {
         } else {
         this.state.amount = amount;
         }
+        this.notifyStateChanged();
     }
     // установить новое значение для состояния ползунка//
     setNewValueSliderTouchsStates(touchValue, index) {
         this.state.sliderTouchsStates[index] = touchValue;
+        this.notifyStateChanged();
     }
     // установить новое значение для шага перемещения ползунков//
     setNewValueStep(step) {
@@ -50,6 +57,7 @@ export class Model {
         } else {
         this.state.step = step;
         }
+        this.notifyStateChanged();
     }
     //установить новое значение для поля tultip//
     setNewValueTooltip(value) {
@@ -59,6 +67,7 @@ export class Model {
         if(value === false) {
             this.state.tooltip = value;
         }
+        this.notifyStateChanged();
     }
     //установить новое значение для поля orientation//
     setNewValueOrientation(value) {
@@ -67,8 +76,10 @@ export class Model {
         } else if(value === 'vertical') {
             this.state.orientation = 'vertical';
         }
+        this.notifyStateChanged();
     }
     setCurrentSliderTouchsStatesValues(value, index) {
         this.state.sliderTouchsStates[index] = value;
+        this.notifyStateChanged();
     }
 }
