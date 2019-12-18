@@ -21,9 +21,9 @@ export class View {
         this.emitter.subscribe('model:state-changed', (state) => {
             this.modelState = state;
             if(!this.isCreatedSlider) {
-                this.createSlider(state.amount);
+                this.createSlider(this.modelState);
                 this.setValueSliderTouch(this.modelState);
-                this.setTooltipsValues(state.sliderTouchsStates);
+                this.setTooltipsValues(this.modelState);
                 this.listenSliderTouchesEvents(this.modelState);
                 this.isCreatedSlider = true;
             }
@@ -37,8 +37,8 @@ export class View {
         return element;
     }
     /* функция CreateSlider создает основную html-структуру слайдера */
-    createSlider(amount) {
-        for(let i = 1; i <= amount; i++) {
+    createSlider(modelState) {
+        for(let i = 1; i <= this.modelState.amount; i++) {
             const sliderTouch = this.createElement('div', 'slider-touch');
             const sliderSpan = this.createElement('span', 'slider-span');
             const sliderTooltip = this.createElement('div', 'slider-tooltip');
@@ -74,9 +74,9 @@ export class View {
     }
     /* функция setTooltipsValues устанавливает значения по-умолчанию ползунков
      в соответствующие им тултипы  */
-    setTooltipsValues(arrStates) {
-        for(let i = 0; i < arrStates.length; i++) {
-            this.elementsSliderTooltipText[i].innerHTML = arrStates[i];
+    setTooltipsValues(modelState) {
+        for(let i = 0; i < this.modelState.sliderTouchsStates.length; i++) {
+            this.elementsSliderTooltipText[i].innerHTML = this.modelState.sliderTouchsStates[i];
         }
     }
     listenSliderTouchesEvents(modelState) {
