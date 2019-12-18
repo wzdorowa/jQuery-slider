@@ -64,12 +64,6 @@ export class View {
         this.elementSliderLineSpan = sliderLineSpan;
         this.elementSliderLine = sliderLine;
     }
-    setNormolizeFact() {
-        const sliderTouch = $(".slider-touch");
-        const normolizeFact = sliderTouch[0].clientWidth;
-        console.log("normolizeFact:" + normolizeFact);
-        return normolizeFact;
-    }
     /* функция setValuesSliderTouch устанавливает полученное по-умолчанию значение
      для каждой из кнопок-ползунков */
     setValueSliderTouch(min, max, arrStates) {
