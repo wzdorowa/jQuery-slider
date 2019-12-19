@@ -15,6 +15,10 @@ export class Model {
         this.emitter = eventEmitter;
         this.notifyStateChanged();
 
+        this.emitter.subscribe('view:amountTouches-changed', (touchsValues) => {
+            this.overwriteCurrentTouchsValues(touchsValues);
+        });
+
         this.emitter.subscribe('view:touchsValues-changed', (data) => {
             this.setCurrentTouchsValues(data.currentValue, data.index);
         });
@@ -76,6 +80,11 @@ export class Model {
         } else if(value === 'vertical') {
             this.state.orientation = 'vertical';
         }
+        this.notifyStateChanged();
+    }
+
+    overwriteCurrentTouchsValues(touchsValues) {
+        this.state.touchsValues = touchsValues;
         this.notifyStateChanged();
     }
     setCurrentTouchsValues(value, index) {
