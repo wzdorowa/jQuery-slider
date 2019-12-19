@@ -8,7 +8,7 @@ $( () => {
     console.log(elements);
 
     elements.forEach((element, index) => {
-        const isCreatedInput = false;
+        let isCreatedInput = false;
 
         const createElement = (teg, className, type, value) => {
             const element = document.createElement(teg);
@@ -23,14 +23,52 @@ $( () => {
 
             for(let i = 0; i < state.amount; i++) {
                 const rangeOfValuesItem = createElement('li', 'rangeOfValues-item', '', i+1);
-                const input = createElement('input', 'input-rangeOgValues', 'text', state.touchsValues[i]);
+                const input = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
 
                 rangeOfValuesItem.append(input);
                 rangeOfValuesList.append(rangeOfValuesItem);
             } 
+            if(!isCreatedInput) {
+                isCreatedInput = true;
+            }
         }
+        const changeAmountInputs = (state) => {
+            let amountInputs = Array.from(document.querySelectorAll('.input-rangeOfValues'));
+            console.log('вызвана changeAmountInputs');
+            console.log('amountInputs.length' + amountInputs.length);
+            console.log('state.touchsValues.length' + state.touchsValues.length);
+            if (amountInputs.length < state.touchsValues.length) {
+                console.log('я в условии amountInputs.length <');
+                const missingAmount = state.touchsValues.length - amountInputs.length;
+                console.log('missingAmount' + missingAmount);
+                const rangeOfValuesList = document.querySelector('.rangeOfValues-list');
 
-        element.subscribeToStateModel(createInput, isCreatedInput);
+                for (let i = 1; i <= missingAmount; i++) {
+                    const rangeOfValuesItem = createElement('li', 'rangeOfValues-item', '', i+1);
+                    const input = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
+    
+                    rangeOfValuesItem.append(input);
+                    rangeOfValuesList.append(rangeOfValuesItem); 
+                }
+            }
+            if (amountInputs.length > state.touchsValues.length) {
+                const excessAmount = amountInputs.length - state.touchsValues.length;
+                let allTouches = Array.from($('.rangeOfValues-list').find('.rangeOfValues-item'));
+
+                for (let i = 1; i <= excessAmount; i++) {
+                    allTouches[allTouches.length - 1].remove();
+                    allTouches.splice(-1, 1);
+                }
+                console.log(allTouches);
+            }
+        };
+        let modelState = element.getState();
+        createInput(modelState);
+
+        let amountInputs = Array.from(document.querySelectorAll('.input-rangeOfValues'));
+        
+
+        element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs);
 
         // получить и передать новые введеные пользователем мин и макс значения слайдера 
         // из панели конфигураций в объект newConfig
@@ -60,6 +98,7 @@ $( () => {
         // получить и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций в объект newConfig
         const inputsSliderTouchs = document.querySelectorAll('.input-rangeOfValues');
+        console.log(inputsSliderTouchs);
 
         for(let i = 0; i < inputsSliderTouchs.length; i++) {
             inputsSliderTouchs[i].addEventListener('blur', () => {
