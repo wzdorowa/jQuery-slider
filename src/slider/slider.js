@@ -13,17 +13,19 @@ import {EventEmitter} from './eventEmitter.js';
             new Controller(element, model, view);
             console.log(index);
 
+            element.getState = () => {
+                let modelState = model.state;
+                return modelState;
+            }
+
             element.setNewValueMin = (min) => {
                 model.setNewValueMin(min);
-                console.log(model.state);
             }
             element.setNewValueMax = (max) => {
                 model.setNewValueMax(max);
-                console.log(model.state);
             }
             element.setNewValueAmount = (amount) => {
                 model.setNewValueAmount(amount);
-                console.log(model.state);
             }
             element.setNewValueTouchsValues = (touchValue, index) => {
                 model.setNewValueTouchsValues(touchValue, index);
@@ -31,23 +33,27 @@ import {EventEmitter} from './eventEmitter.js';
             }
             element.setNewValueStep = (step) => {
                 model.setNewValueStep(step);
-                console.log(model.state);
             }
             element.setNewValueOrientation = (value) => {
                 model.setNewValueOrientation(value);
-                console.log(model.state);
             }
             element.setNewValueTooltip = (value) => {
                 model.setNewValueTooltip(value);
-                console.log(model.state);
             }
 
-            element.subscribeToStateModel = (handler, isCreatedInput) => {
+            element.subscribeToStateModel = (handler, isCreatedInput, amountInputs, changeAmountInputs) => {
                 eventEmitter.subscribe('model:state-changed', (state) => {
-                    console.log(state);
+                    console.log('вызвана: subscribeToStateModel');
+                    console.log(amountInputs.length);
+                    console.log(state.touchsValues.length);
                     if(!isCreatedInput) {
+                        console.log('я в условии: !isCreatedInput');
                         handler(state);
                         isCreatedInput = true;
+                    }
+                    if(amountInputs.length != state.touchsValues.length) {
+                        console.log('я в условии: amountInputs.length');
+                        changeAmountInputs(state);
                     }
                 })
             }
