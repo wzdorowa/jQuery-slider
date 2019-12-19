@@ -59,6 +59,8 @@ export class View {
                 this.slider.append(sliderTouch);
                 this.sliderTouches.push(sliderTouch);
                 this.elementsSliderTooltipText.push(sliderTooltipText);
+
+                this.setValueToNewTouch(modelState);
             }
         }
         if (this.sliderTouches.length > this.modelState.amount) {
@@ -78,6 +80,13 @@ export class View {
             }
             this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
         }
+    }
+    setValueToNewTouch(modelState) {
+        let allTouches = Array.from($(this.slider).find('.slider-touch'));
+        const indexNewTouch = allTouches.length - 1;
+
+        this.modelState.touchsValues[indexNewTouch] = (this.modelState.touchsValues[indexNewTouch -1] + (this.modelState.step * 2));
+        this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
     }
     /* функция CreateSlider создает основную html-структуру слайдера */
     createSlider(modelState) {
