@@ -22,11 +22,18 @@ export class View {
             this.modelState = state;
             if(!this.isCreatedSlider) {
                 this.createSlider(this.modelState);
-                this.setValueSliderTouch(this.modelState);
-                this.setTooltipsValues(this.modelState);
-                this.listenSliderTouchesEvents(this.modelState);
                 this.isCreatedSlider = true;
+
+                this.listenSliderTouchesEvents(this.modelState);
             }
+            console.log(this.sliderTouches.length);
+            console.log(this.modelState.amount);
+            if(this.sliderTouches.length != this.modelState.amount) {
+                this.changeAmountTouchs(this.modelState);
+                this.listenSliderTouchesEvents(this.modelState);
+            }
+            this.setValueSliderTouch(this.modelState);
+            this.setTooltipsValues(this.modelState);
         })
     }
     /* функция CreateElement создает необходимый элемент с заданным классом */
@@ -34,6 +41,43 @@ export class View {
         const element = document.createElement(teg);
         element.className = className;
         return element;
+    }
+    changeAmountTouchs(modelState) {
+        if (this.sliderTouches.length < this.modelState.amount) {
+            console.log('проверка в большую сторону');
+            const missingAmount = this.modelState.amount - this.sliderTouches.length;
+            console.log('missingAmount' + missingAmount);
+            for (let i = 1; i <= missingAmount; i++) {
+                const sliderTouch = this.createElement('div', 'slider-touch');
+                const sliderSpan = this.createElement('span', 'slider-span');
+                const sliderTooltip = this.createElement('div', 'slider-tooltip');
+                const sliderTooltipText = this.createElement('span', 'slider-tooltip-text');
+
+                sliderTouch.append(sliderSpan);
+                sliderTouch.append(sliderTooltip);
+                sliderTooltip.append(sliderTooltipText);
+                this.slider.append(sliderTouch);
+                this.sliderTouches.push(sliderTouch);
+                this.elementsSliderTooltipText.push(sliderTooltipText);
+            }
+        }
+        if (this.sliderTouches.length > this.modelState.amount) {
+            const excessAmount =  this.sliderTouches.length - this.modelState.amount;
+            let allTouches = Array.from($(this.slider).find('.slider-touch'));
+            console.log(allTouches);
+
+            for (let i = 1; i <= excessAmount; i++) {
+                allTouches[allTouches.length - i].remove();
+                console.log('1' + this.sliderTouches);
+                this.sliderTouches.splice(-1, 1);
+                console.log('2' + this.sliderTouches);
+                this.elementsSliderTooltipText.splice(-1, 1);
+                console.log(this.elementsSliderTooltipText);
+                this.modelState.touchsValues.splice(-1, 1);
+                console.log(this.modelState.touchsValues);
+            }
+            this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
+        }
     }
     /* функция CreateSlider создает основную html-структуру слайдера */
     createSlider(modelState) {
