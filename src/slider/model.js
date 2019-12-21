@@ -3,9 +3,9 @@ import {Controller} from './controller.js';
 export class Model {
     constructor (eventEmitter) {
         this.state = {
-            min: 0,
-            max: 100,
-            touchsValues: [0, 20, 40, 100],
+            min: 20,
+            max: 50,
+            touchsValues: [20, 25, 40, 50],
             orientation: 'horizontal',
             amount: 4,
             step: 4,

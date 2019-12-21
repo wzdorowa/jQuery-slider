@@ -242,6 +242,7 @@ export class View {
             allTooltips[i].classList.add('slider-tooltip-hide');
         }
     }
+    /* метод showTooltip показывает тултипы ползунков */
     showTooltip() {
         const allTooltips = Array.from($(this.slider).find('.slider-tooltip'));
         for(let i = 0; i < allTooltips.length; i++) {

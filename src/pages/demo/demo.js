@@ -76,9 +76,20 @@ $( () => {
             stepSize.value = state.step;
 
         }
+        const setValueToMinInputFromModelState = (state) => {
+            const MinInput = document.querySelectorAll('.minMaxValue');
+            MinInput[0].value = state.min;
+        }
+        const setValueMaxInputFromModelState = (state) => {
+            const MaxInput = document.querySelectorAll('.minMaxValue');
+            MaxInput[1].value = state.max;
+        }
+
         let modelState = element.getState();
         createInput(modelState);
         setValueToStepFromModelState(modelState);
+        setValueToMinInputFromModelState(modelState);
+        setValueMaxInputFromModelState(modelState);
 
         const amountInputs = () => {
             const amountInputs = Array.from(document.querySelectorAll('.input-rangeOfValues'));
