@@ -30,6 +30,12 @@ export class View {
                 this.changeAmountTouchs(this.modelState);
                 this.listenSliderTouchesEvents(this.modelState);
             }
+            if (this.modelState.tooltip === false) {
+                this.hideTooltip();
+            }
+            if (this.modelState.tooltip === true) {
+                this.showTooltip();
+            }
             this.setValueSliderTouch(this.modelState);
             this.setTooltipsValues(this.modelState);
         })
@@ -228,5 +234,18 @@ export class View {
     /* метод setCurrentTooltipValue устанавливает текущее значение в тултип ползунка */
     setCurrentTooltipValue(modelState, event, i) {
         this.elementsSliderTooltipText[i].innerHTML = modelState.touchsValues[i];
+    }
+    /* метод hideTooltip скрывает туллтипы ползунков */
+    hideTooltip() {
+        const allTooltips = Array.from($(this.slider).find('.slider-tooltip'));
+        for(let i = 0; i < allTooltips.length; i++) {
+            allTooltips[i].classList.add('slider-tooltip-hide');
+        }
+    }
+    showTooltip() {
+        const allTooltips = Array.from($(this.slider).find('.slider-tooltip'));
+        for(let i = 0; i < allTooltips.length; i++) {
+            allTooltips[i].classList.remove('slider-tooltip-hide');
+        }
     }
 }
