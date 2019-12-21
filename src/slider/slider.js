@@ -29,7 +29,6 @@ import {EventEmitter} from './eventEmitter.js';
             }
             element.setNewValueTouchsValues = (touchValue, index) => {
                 model.setNewValueTouchsValues(touchValue, index);
-                console.log(model.state);
             }
             element.setNewValueStep = (step) => {
                 model.setNewValueStep(step);
@@ -41,20 +40,18 @@ import {EventEmitter} from './eventEmitter.js';
                 model.setNewValueTooltip(value);
             }
 
-            element.subscribeToStateModel = (handler, isCreatedInput, amountInputs, changeAmountInputs) => {
+            element.subscribeToStateModel = (handler, isCreatedInput, amountInputs, changeAmountInputs, setValueToInputFromModelState, setValueToStepFromModelState) => {
                 eventEmitter.subscribe('model:state-changed', (state) => {
-                    console.log('вызвана: subscribeToStateModel');
-                    console.log(amountInputs.length);
-                    console.log(state.touchsValues.length);
                     if(!isCreatedInput) {
-                        console.log('я в условии: !isCreatedInput');
                         handler(state);
                         isCreatedInput = true;
                     }
-                    if(amountInputs.length != state.touchsValues.length) {
-                        console.log('я в условии: amountInputs.length');
+                    const arrayAmountInputs = amountInputs();
+                    if(arrayAmountInputs.length != state.touchsValues.length) {
                         changeAmountInputs(state);
                     }
+                    setValueToInputFromModelState(state);
+                    setValueToStepFromModelState(state);
                 })
             }
         });
