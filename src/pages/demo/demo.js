@@ -34,21 +34,20 @@ $( () => {
         }
         const changeAmountInputs = (state) => {
             let amountInputs = Array.from(document.querySelectorAll('.input-rangeOfValues'));
-            console.log('вызвана changeAmountInputs');
-            console.log('amountInputs.length' + amountInputs.length);
-            console.log('state.touchsValues.length' + state.touchsValues.length);
+
             if (amountInputs.length < state.touchsValues.length) {
-                console.log('я в условии amountInputs.length <');
                 const missingAmount = state.touchsValues.length - amountInputs.length;
-                console.log('missingAmount' + missingAmount);
                 const rangeOfValuesList = document.querySelector('.rangeOfValues-list');
 
                 for (let i = 1; i <= missingAmount; i++) {
-                    const rangeOfValuesItem = createElement('li', 'rangeOfValues-item', '', i+1);
+                    let ArrayRangeOfValuesItem = document.querySelectorAll('.rangeOfValues-item');
+                    const rangeOfValuesItem = createElement('li', 'rangeOfValues-item', '', (ArrayRangeOfValuesItem.length + 1));
                     const input = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
     
                     rangeOfValuesItem.append(input);
                     rangeOfValuesList.append(rangeOfValuesItem); 
+
+                    setNewValueToNewInputs(state);
                 }
             }
             if (amountInputs.length > state.touchsValues.length) {
@@ -59,16 +58,34 @@ $( () => {
                     allTouches[allTouches.length - 1].remove();
                     allTouches.splice(-1, 1);
                 }
-                console.log(allTouches);
             }
         };
+        const setNewValueToNewInputs = (state) => {
+            let allTouches = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues'));
+            const indexNewInput = allTouches.length - 1;
+            allTouches[indexNewInput].value = state.touchsValues[indexNewInput];
+        }
+        const setValueToInputFromModelState = (state) => {
+            let allTouches = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues'));
+            for (let i = 0; i <= state.touchsValues.length - 1; i++) {
+                allTouches[i].value = state.touchsValues[i];
+            }
+        }
+        const setValueToStepFromModelState = (state) => {
+            const stepSize = document.querySelector('.field-group-stepSize-container__content');
+            stepSize.value = state.step;
+
+        }
         let modelState = element.getState();
         createInput(modelState);
+        setValueToStepFromModelState(modelState);
 
-        let amountInputs = Array.from(document.querySelectorAll('.input-rangeOfValues'));
-        
-
-        element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs);
+        const amountInputs = () => {
+            const amountInputs = Array.from(document.querySelectorAll('.input-rangeOfValues'));
+            return amountInputs;
+        }
+    
+        element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs, setValueToInputFromModelState, setValueToStepFromModelState);
 
         // получить и передать новые введеные пользователем мин и макс значения слайдера 
         // из панели конфигураций в объект newConfig
@@ -77,12 +94,12 @@ $( () => {
         const maxValue = minMaxValues[1];
 
         minValue.addEventListener('blur', () => {
-            const min = minValue.value;
+            const min = Number(minValue.value);
             element.setNewValueMin(min);
         });
         
         maxValue.addEventListener('blur', () => {
-            const max = maxValue.value;
+            const max = Number(maxValue.value);
             element.setNewValueMax(max);
         });
 
@@ -91,18 +108,17 @@ $( () => {
         const amountSliderTouches = document.querySelector('.field-group-numberValues-container__content');
 
         amountSliderTouches.addEventListener('blur', () => {
-            const amount = amountSliderTouches.value;
+            const amount = Number(amountSliderTouches.value);
             element.setNewValueAmount(amount);
         });
 
         // получить и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций в объект newConfig
         const inputsSliderTouchs = document.querySelectorAll('.input-rangeOfValues');
-        console.log(inputsSliderTouchs);
 
         for(let i = 0; i < inputsSliderTouchs.length; i++) {
             inputsSliderTouchs[i].addEventListener('blur', () => {
-                const touchValue = inputsSliderTouchs[i].value;
+                const touchValue = Number(inputsSliderTouchs[i].value);
                 element.setNewValueTouchsValues(touchValue, i);
             })
         }
@@ -112,7 +128,7 @@ $( () => {
         const stepSize = document.querySelector('.field-group-stepSize-container__content');
 
         stepSize.addEventListener('blur', () => {
-            const step = stepSize.value;
+            const step = Number(stepSize.value);
             element.setNewValueStep(step);
         });
 
