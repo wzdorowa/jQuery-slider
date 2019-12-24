@@ -3,9 +3,9 @@ import {Controller} from './controller.js';
 export class Model {
     constructor (eventEmitter) {
         this.state = {
-            min: 20,
-            max: 50,
-            touchsValues: [20, 25, 40, 50],
+            min: 0,
+            max: 100,
+            touchsValues: [20, 35, 45, 60],
             orientation: 'horizontal',
             amount: 4,
             step: 4,
@@ -14,6 +14,11 @@ export class Model {
 
         this.emitter = eventEmitter;
         this.notifyStateChanged();
+
+        this.emitter.subscribe('model:state-changed', (state) => {
+            this.checkMinValueInArrayTouchsValues(state);
+            this.checkMaxValueInArrayTouchsValues(state);
+        });
 
         this.emitter.subscribe('view:amountTouches-changed', (touchsValues) => {
             this.overwriteCurrentTouchsValues(touchsValues);
@@ -25,6 +30,19 @@ export class Model {
     }
     notifyStateChanged() {
         this.emitter.emit('model:state-changed', this.state);
+    }
+    checkMinValueInArrayTouchsValues(state) {
+        console.log('вызвана: checkMinValueInArrayTouchsValues: 1 ' + state)
+        if (state.min > this.state.touchsValues[0]) {
+            this.state.touchsValues[0] = state.min;
+            this.notifyStateChanged();
+        }
+    }
+    checkMaxValueInArrayTouchsValues(state) {
+        if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
+            this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
+            this.notifyStateChanged();
+        }
     }
     //установить новое значение min//
     setNewValueMin(min) {

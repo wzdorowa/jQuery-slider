@@ -40,7 +40,9 @@ import {EventEmitter} from './eventEmitter.js';
                 model.setNewValueTooltip(value);
             }
 
-            element.subscribeToStateModel = (handler, isCreatedInput, amountInputs, changeAmountInputs, setValueToInputFromModelState, setValueToStepFromModelState) => {
+            element.subscribeToStateModel = (handler, isCreatedInput, amountInputs, changeAmountInputs,
+                 setValueToInputFromModelState, setValueToStepFromModelState,
+                  setValueToMinInputFromModelState, setValueMaxInputFromModelState) => {
                 eventEmitter.subscribe('model:state-changed', (state) => {
                     if(!isCreatedInput) {
                         handler(state);
@@ -52,6 +54,9 @@ import {EventEmitter} from './eventEmitter.js';
                     }
                     setValueToInputFromModelState(state);
                     setValueToStepFromModelState(state);
+                    setValueToMinInputFromModelState(state);
+                    setValueMaxInputFromModelState(state);
+                    console.log(state);
                 })
             }
         });

@@ -96,7 +96,9 @@ $( () => {
             return amountInputs;
         }
     
-        element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs, setValueToInputFromModelState, setValueToStepFromModelState);
+        element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs,
+             setValueToInputFromModelState, setValueToStepFromModelState, setValueToMinInputFromModelState,
+             setValueMaxInputFromModelState);
 
         // получить и передать новые введеные пользователем мин и макс значения слайдера 
         // из панели конфигураций в объект newConfig

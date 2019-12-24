@@ -23,6 +23,7 @@ export class View {
             if(!this.isCreatedSlider) {
                 this.createSlider(this.modelState);
                 this.isCreatedSlider = true;
+                this.setValueSliderTouch(this.modelState);
 
                 this.listenSliderTouchesEvents(this.modelState);
             }
@@ -36,7 +37,8 @@ export class View {
             if (this.modelState.tooltip === true) {
                 this.showTooltip();
             }
-            this.setValueSliderTouch(this.modelState);
+            //this.setValueSliderTouch(this.modelState);
+            this.setNewValueSliderTouch(this.modelState);
             this.setTooltipsValues(this.modelState);
         })
     }
@@ -117,7 +119,21 @@ export class View {
         this.coefficientPoint = (this.elementSliderLine.offsetWidth / (this.modelState.max - this.modelState.min));
 
         for(let i = 0; i < elements.length; i++) {
-            elements[i].style.left = Math.ceil(this.coefficientPoint * this.modelState.touchsValues[i]) + 'px';
+            elements[i].style.left = (Math.ceil(this.coefficientPoint * this.modelState.touchsValues[i])) + 'px';
+            console.log('elements[i].style.left' + i + ':' + elements[i].style.left);
+        }
+        this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
+        this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
+    }
+    setNewValueSliderTouch(modelState) {
+        console.log('вызвана: setNewValueSliderTouch: 1 ');
+        let elements = this.sliderTouches;
+        this.coefficientPoint = (this.elementSliderLine.offsetWidth / (this.modelState.max - this.modelState.min));
+        this.shiftToMinValue = Math.ceil(this.coefficientPoint * this.modelState.min);
+
+        for(let i = 0; i < elements.length; i++) {
+            elements[i].style.left = (Math.ceil(this.coefficientPoint * this.modelState.touchsValues[i]) - this.shiftToMinValue) + 'px';
+            console.log('elements[i].style.left' + i + ':' + elements[i].style.left);
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -147,6 +163,7 @@ export class View {
         
         this.currentX = target.offsetLeft;
         this.startX = eventTouch.pageX - this.currentX;
+        
         this.maxX = this.elementSliderLine.offsetWidth;
 
         const handleMove = event => this.onMove(this.modelState, event, i, target);
@@ -197,8 +214,10 @@ export class View {
         
         // write new value
         this.currentValue = this.calculateValue(this.modelState, event, i, target);
+        console.log('this.currentValue:' + this.currentValue);
 
-        const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.coefficientPoint);
+        const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.coefficientPoint) - this.shiftToMinValue;
+        console.log('halfStep:' + halfStep);
 
         if (this.currentX > halfStep) {
             this.currentValue = this.currentValue + modelState.step;
@@ -210,7 +229,7 @@ export class View {
       }
       onStop(handleMove, handleStop, modelState, event, i, target) {
         this.setCurrentTooltipValue(this.modelState, event, i);
-        target.style.left = Math.ceil(this.coefficientPoint * this.currentValue) + 'px';
+        target.style.left = Math.ceil(this.coefficientPoint * this.currentValue) - this.shiftToMinValue  + 'px';
 
         document.removeEventListener('mousemove', handleMove);
         document.removeEventListener('touchmove', handleMove);
@@ -225,7 +244,8 @@ export class View {
     subscribe вызвать обработчик, который это значение запишет в state.state
     */
     calculateValue(modelState, event, i, target) {
-        let currentValueX = Math.floor(this.currentX / this.coefficientPoint);
+        let currentValueX = Math.floor(this.currentX / this.coefficientPoint) + modelState.min;
+        console.log(currentValueX);
         let multi = Math.floor(currentValueX / modelState.step);
         currentValueX = modelState.step * multi;
 
