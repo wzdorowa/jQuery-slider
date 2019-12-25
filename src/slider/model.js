@@ -18,6 +18,7 @@ export class Model {
         this.emitter.subscribe('model:state-changed', (state) => {
             this.checkMinValueInArrayTouchsValues(state);
             this.checkMaxValueInArrayTouchsValues(state);
+            this.checkTouchsValues(state);
         });
 
         this.emitter.subscribe('view:amountTouches-changed', (touchsValues) => {
@@ -42,6 +43,45 @@ export class Model {
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
             this.notifyStateChanged();
+        }
+        // console.log('state.max:' + state.max);
+        // console.log(this.state.touchsValues[this.state.touchsValues.length - 2]);
+        // if (this.state.touchsValues[this.state.touchsValues.length - 1] <= this.state.touchsValues[this.state.touchsValues.length - 2]) {
+        //     this.state.touchsValues[this.state.touchsValues.length - 1] = this.state.touchsValues[this.state.touchsValues.length - 2] + this.state.step;
+        //     console.log(this.state.touchsValues[this.state.touchsValues.length - 1]);
+        //     this.notifyStateChanged();
+        // }  
+    }
+    checkTouchsValues(state) {
+        console.log('вызван метод checkTouchsValues');
+        console.log('state.touchsValues : ' + state.touchsValues);
+
+        for(let i = 0; i < state.touchsValues.length - 1; i++) {
+            const newValue = state.touchsValues[i] - state.min;
+            const remainderOfTheDivision = newValue % state.step;
+            const newCurrentValue = newValue - remainderOfTheDivision;
+
+            console.log('newValue :'  + i + ' :' + newValue);
+            console.log('remainderOfTheDivision : ' + remainderOfTheDivision);
+            console.log('newCurrentValue : ' + newCurrentValue);
+            if (this.state.touchsValues[i] != newCurrentValue || newCurrentValue + state.step) {
+                if (state.touchsValues[i - 1] === newCurrentValue) {
+                    this.state.touchsValues[i] = newCurrentValue + state.step;
+                    this.notifyStateChanged();
+                } else {
+                    this.state.touchsValues[i] = newCurrentValue;
+                    this.notifyStateChanged();
+                } 
+            }
+            console.log('в цикле метода checkTouchsValues');
+            // if (state.touchsValues[i] > state.touchsValues[i + 1]) {
+            //     this.state.touchsValues[i] = state.touchsValues[i + 1] - this.state.step;
+            //     this.notifyStateChanged();
+            // }
+            // if (state.touchsValues[i] < state.touchsValues[i - 1]) {
+            //     this.state.touchsValues[i] = state.touchsValues[i - 1] + this.state.step;
+            //     this.notifyStateChanged();
+            // }
         }
     }
     //установить новое значение min//
