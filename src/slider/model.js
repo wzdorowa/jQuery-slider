@@ -30,50 +30,58 @@ export class Model {
         });
     }
     notifyStateChanged() {
+        console.log('вызван метод: notifyStateChanged');
         this.emitter.emit('model:state-changed', this.state);
     }
     checkMinValueInArrayTouchsValues(state) {
-        console.log('вызвана: checkMinValueInArrayTouchsValues: 1 ' + state)
+        console.log('вызван метод: checkMinValueInArrayTouchsValues' + state.min)
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
+            if (this.state.touchsValues[0] >= this.state.touchsValues[1]) {
+                this.state.touchsValues[1] = this.state.touchsValues[0] + state.step;
+            }
             this.notifyStateChanged();
         }
     }
     checkMaxValueInArrayTouchsValues(state) {
+        console.log('вызван метод: checkMaxValueInArrayTouchsValues' + state.max);
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
+            if (this.state.touchsValues[this.state.touchsValues.length - 1] <= this.state.touchsValues[this.state.touchsValues.length - 2]) {
+                this.state.touchsValues[this.state.touchsValues.length - 2] = (this.state.touchsValues[this.state.touchsValues.length - 1]) - state.step;
+            }
             this.notifyStateChanged();
         }
-        // console.log('state.max:' + state.max);
-        // console.log(this.state.touchsValues[this.state.touchsValues.length - 2]);
-        // if (this.state.touchsValues[this.state.touchsValues.length - 1] <= this.state.touchsValues[this.state.touchsValues.length - 2]) {
-        //     this.state.touchsValues[this.state.touchsValues.length - 1] = this.state.touchsValues[this.state.touchsValues.length - 2] + this.state.step;
-        //     console.log(this.state.touchsValues[this.state.touchsValues.length - 1]);
-        //     this.notifyStateChanged();
-        // }  
+        
+        //   if (this.state.touchsValues[this.state.touchsValues.length - 1] <= this.state.touchsValues[this.state.touchsValues.length - 2]) {
+        //       this.state.touchsValues[this.state.touchsValues.length - 1] = this.state.touchsValues[this.state.touchsValues.length - 2] + this.state.step;
+              
+        //   }  
     }
     checkTouchsValues(state) {
         console.log('вызван метод checkTouchsValues');
-        console.log('state.touchsValues : ' + state.touchsValues);
-
-        for(let i = 0; i < state.touchsValues.length - 1; i++) {
-            const newValue = state.touchsValues[i] - state.min;
+        console.log('метод checkTouchsValues state.touchsValues : ' + state.touchsValues);
+        let currentTouchValues = [];
+        for(let i = 0; i < state.touchsValues.length; i++) {
+            console.log('в цикле метода checkTouchsValues ' + i);
+            const newValue = state.touchsValues[i]; //- state.min;
             const remainderOfTheDivision = newValue % state.step;
             const newCurrentValue = newValue - remainderOfTheDivision;
 
-            console.log('newValue :'  + i + ' :' + newValue);
-            console.log('remainderOfTheDivision : ' + remainderOfTheDivision);
-            console.log('newCurrentValue : ' + newCurrentValue);
             if (this.state.touchsValues[i] != newCurrentValue || newCurrentValue + state.step) {
+                console.log('в главном условии метода checkTouchsValues');
+                console.log('метод checkTouchsValues this.state.touchsValues[' + i + '] до ' + this.state.touchsValues[i]);
                 if (state.touchsValues[i - 1] === newCurrentValue) {
-                    this.state.touchsValues[i] = newCurrentValue + state.step;
-                    this.notifyStateChanged();
+                    console.log('в первом условии метода checkTouchsValues');
+                    currentTouchValues[i] = newCurrentValue + state.step;
+                    console.log('метод checkTouchsValues this.state.touchsValues[' + i + '] после ' + currentTouchValues);
                 } else {
-                    this.state.touchsValues[i] = newCurrentValue;
-                    this.notifyStateChanged();
+                    console.log('во втором условии метода checkTouchsValues');
+                    currentTouchValues[i] = newCurrentValue;
+                    console.log('метод checkTouchsValues this.state.touchsValues[' + i + '] после ' + currentTouchValues);
                 } 
             }
-            console.log('в цикле метода checkTouchsValues');
+            
             // if (state.touchsValues[i] > state.touchsValues[i + 1]) {
             //     this.state.touchsValues[i] = state.touchsValues[i + 1] - this.state.step;
             //     this.notifyStateChanged();
@@ -83,19 +91,43 @@ export class Model {
             //     this.notifyStateChanged();
             // }
         }
+        if (currentTouchValues[0] < state.min) {
+            console.log('currentTouchValues[0] ' + currentTouchValues[0]);
+            console.log('state.min ' + state.min);
+            currentTouchValues[0] = currentTouchValues[0] + state.step;
+        }
+
+        if (this.state.touchsValues != currentTouchValues) {
+            console.log('во втором условии метода checkTouchsValues');
+            console.log('this.state.touchsValues ' + this.state.touchsValues);
+            console.log('currentTouchValues ' + currentTouchValues);
+            for (let i = 0; i < this.state.touchsValues.length; i++) {
+                console.log('во втором цикле метода checkTouchsValues');
+                if (this.state.touchsValues[i] != currentTouchValues[i]) {
+                    console.log('в условии во втором цикле метода checkTouchsValues');
+                    console.log('this.state.touchsValues[' + i + '] ' + this.state.touchsValues[i]);
+                    console.log('currentTouchValues[' + i + '] ' + currentTouchValues[i]);
+                    this.state.touchsValues = currentTouchValues;
+                    this.notifyStateChanged();
+                }
+            }
+        }
     }
     //установить новое значение min//
     setNewValueMin(min) {
+        console.log('вызван метод setNewValueMin');
         this.state.min = min;
         this.notifyStateChanged();
     }
     //установить новое значение max//
     setNewValueMax(max) {
+        console.log('вызван метод setNewValueMax');
         this.state.max = max;
         this.notifyStateChanged();
     }
     //установить новое количество ползунков//
     setNewValueAmount(amount) {
+        console.log('вызван метод setNewValueAmount');
         if (amount <= 0) {
             this.state.amount = 1;
         } else if (amount >= 10) {
@@ -107,11 +139,13 @@ export class Model {
     }
     // установить новое значение для состояния ползунка//
     setNewValueTouchsValues(touchValue, index) {
+        console.log('вызван метод setNewValueTouchsValues');
         this.state.touchsValues[index] = touchValue;
         this.notifyStateChanged();
     }
     // установить новое значение для шага перемещения ползунков//
     setNewValueStep(step) {
+        console.log('вызван метод setNewValueStep');
         if (step <= 0){
             this.state.step = 1;
         } else if (step >= this.state.max) {
@@ -123,6 +157,7 @@ export class Model {
     }
     //установить новое значение для поля tultip//
     setNewValueTooltip(value) {
+        console.log('вызван метод setNewValueTooltip');
         if(value === true) {
             this.state.tooltip = value;
         }
@@ -133,6 +168,7 @@ export class Model {
     }
     //установить новое значение для поля orientation//
     setNewValueOrientation(value) {
+        console.log('вызван метод setNewValueOrientation');
         if(value === 'horizontal') {
             this.state.orientation = 'horizontal';
         } else if(value === 'vertical') {
@@ -142,10 +178,12 @@ export class Model {
     }
 
     overwriteCurrentTouchsValues(touchsValues) {
+        console.log('вызван метод overwriteCurrentTouchsValues');
         this.state.touchsValues = touchsValues;
         this.notifyStateChanged();
     }
     setCurrentTouchsValues(value, index) {
+        console.log('вызван метод setCurrentTouchsValues');
         this.state.touchsValues[index] = value;
         this.notifyStateChanged();
     }

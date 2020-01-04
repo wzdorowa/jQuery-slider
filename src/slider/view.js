@@ -126,14 +126,14 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
     setNewValueSliderTouch(modelState) {
-        console.log('вызвана: setNewValueSliderTouch: 1 ');
+        console.log('вызван метод: setNewValueSliderTouch');
         let elements = this.sliderTouches;
         this.coefficientPoint = (this.elementSliderLine.offsetWidth / (this.modelState.max - this.modelState.min));
         this.shiftToMinValue = Math.ceil(this.coefficientPoint * this.modelState.min);
 
         for(let i = 0; i < elements.length; i++) {
             elements[i].style.left = (Math.ceil(this.coefficientPoint * this.modelState.touchsValues[i]) - this.shiftToMinValue) + 'px';
-            console.log('elements[i].style.left' + i + ':' + elements[i].style.left);
+            //console.log('elements[i].style.left' + i + ':' + elements[i].style.left);
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -141,6 +141,7 @@ export class View {
     /* функция setTooltipsValues устанавливает значения по-умолчанию ползунков
      в соответствующие им тултипы  */
     setTooltipsValues(modelState) {
+        console.log('вызван метод: setTooltipsValues');
         for(let i = 0; i < this.modelState.touchsValues.length; i++) {
             this.elementsSliderTooltipText[i].innerHTML = this.modelState.touchsValues[i];
         }
