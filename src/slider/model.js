@@ -37,8 +37,8 @@ export class Model {
         console.log('вызван метод: checkMinValueInArrayTouchsValues' + state.min)
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
-            if (this.state.touchsValues[0] >= this.state.touchsValues[1]) {
-                this.state.touchsValues[1] = this.state.touchsValues[0] + state.step;
+            for (let i = 1; i <= (this.state.touchsValues.length - 1); i++) {
+                this.state.touchsValues[i] = this.state.touchsValues[i - 1] + state.step;
             }
             this.notifyStateChanged();
         }
@@ -47,8 +47,9 @@ export class Model {
         console.log('вызван метод: checkMaxValueInArrayTouchsValues' + state.max);
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
-            if (this.state.touchsValues[this.state.touchsValues.length - 1] <= this.state.touchsValues[this.state.touchsValues.length - 2]) {
-                this.state.touchsValues[this.state.touchsValues.length - 2] = (this.state.touchsValues[this.state.touchsValues.length - 1]) - state.step;
+            const touchsValuesLength = this.state.touchsValues.length - 1;
+            for (let i = 1; i <= touchsValuesLength; i++) {
+                this.state.touchsValues[touchsValuesLength - i] = (this.state.touchsValues[(touchsValuesLength - i) + 1]) - state.step;
             }
             this.notifyStateChanged();
         } 
