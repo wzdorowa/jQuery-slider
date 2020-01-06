@@ -38,7 +38,6 @@ export class View {
             if (this.modelState.tooltip === true) {
                 this.showTooltip();
             }
-            //this.setValueSliderTouch(this.modelState);
             this.setNewValueSliderTouch(this.modelState);
             this.setTooltipsValues(this.modelState);
         })
@@ -126,7 +125,6 @@ export class View {
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     }
     setNewValueSliderTouch(modelState) {
-        console.log('вызван метод: setNewValueSliderTouch');
         let elements = this.sliderTouches;
         this.coefficientPoint = (this.elementSliderLine.offsetWidth / (this.modelState.max - this.modelState.min));
         this.shiftToMinValue = Math.ceil(this.coefficientPoint * this.modelState.min);
@@ -141,7 +139,6 @@ export class View {
     /* функция setTooltipsValues устанавливает значения по-умолчанию ползунков
      в соответствующие им тултипы  */
     setTooltipsValues(modelState) {
-        console.log('вызван метод: setTooltipsValues');
         for(let i = 0; i < this.modelState.touchsValues.length; i++) {
             this.elementsSliderTooltipText[i].innerHTML = this.modelState.touchsValues[i];
         }
@@ -216,10 +213,8 @@ export class View {
         
         // write new value
         this.currentValue = this.calculateValue(this.modelState, event, i, target);
-        console.log('this.currentValue:' + this.currentValue);
 
         const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.coefficientPoint) - this.shiftToMinValue;
-        console.log('halfStep:' + halfStep);
 
         if (this.currentX > halfStep) {
             this.currentValue = this.currentValue + modelState.step;
@@ -248,7 +243,6 @@ export class View {
     */
     calculateValue(modelState, event, i, target) {
         let currentValueX = Math.floor(this.currentX / this.coefficientPoint) + modelState.min;
-        console.log(currentValueX);
         let multi = Math.floor(currentValueX / modelState.step);
         currentValueX = modelState.step * multi;
 

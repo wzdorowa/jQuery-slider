@@ -30,11 +30,9 @@ export class Model {
         });
     }
     notifyStateChanged() {
-        console.log('вызван метод: notifyStateChanged');
         this.emitter.emit('model:state-changed', this.state);
     }
     checkMinValueInArrayTouchsValues(state) {
-        console.log('вызван метод: checkMinValueInArrayTouchsValues' + state.min)
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
             for (let i = 1; i <= (this.state.touchsValues.length - 1); i++) {
@@ -44,7 +42,6 @@ export class Model {
         }
     }
     checkMaxValueInArrayTouchsValues(state) {
-        console.log('вызван метод: checkMaxValueInArrayTouchsValues' + state.max);
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
             const touchsValuesLength = this.state.touchsValues.length - 1;
@@ -55,7 +52,6 @@ export class Model {
         } 
     }
     checkTouchsValues(state) {
-        console.log('вызван метод checkTouchsValues');
         let currentTouchValues = [];
         for(let i = 0; i < state.touchsValues.length; i++) {
             const newValue = state.touchsValues[i];
@@ -84,19 +80,16 @@ export class Model {
     }
     //установить новое значение min//
     setNewValueMin(min) {
-        console.log('вызван метод setNewValueMin');
         this.state.min = min;
         this.notifyStateChanged();
     }
     //установить новое значение max//
     setNewValueMax(max) {
-        console.log('вызван метод setNewValueMax');
         this.state.max = max;
         this.notifyStateChanged();
     }
     //установить новое количество ползунков//
     setNewValueAmount(amount) {
-        console.log('вызван метод setNewValueAmount');
         if (amount <= 0) {
             this.state.amount = 1;
         } else if (amount >= 10) {
@@ -108,13 +101,11 @@ export class Model {
     }
     // установить новое значение для состояния ползунка//
     setNewValueTouchsValues(touchValue, index) {
-        console.log('вызван метод setNewValueTouchsValues');
         this.state.touchsValues[index] = touchValue;
         this.notifyStateChanged();
     }
     // установить новое значение для шага перемещения ползунков//
     setNewValueStep(step) {
-        console.log('вызван метод setNewValueStep');
         if (step <= 0){
             this.state.step = 1;
         } else if (step >= this.state.max) {
@@ -126,7 +117,6 @@ export class Model {
     }
     //установить новое значение для поля tultip//
     setNewValueTooltip(value) {
-        console.log('вызван метод setNewValueTooltip');
         if(value === true) {
             this.state.tooltip = value;
         }
@@ -137,7 +127,6 @@ export class Model {
     }
     //установить новое значение для поля orientation//
     setNewValueOrientation(value) {
-        console.log('вызван метод setNewValueOrientation');
         if(value === 'horizontal') {
             this.state.orientation = 'horizontal';
         } else if(value === 'vertical') {
@@ -147,12 +136,10 @@ export class Model {
     }
 
     overwriteCurrentTouchsValues(touchsValues) {
-        console.log('вызван метод overwriteCurrentTouchsValues');
         this.state.touchsValues = touchsValues;
         this.notifyStateChanged();
     }
     setCurrentTouchsValues(value, index) {
-        console.log('вызван метод setCurrentTouchsValues');
         this.state.touchsValues[index] = value;
         this.notifyStateChanged();
     }
