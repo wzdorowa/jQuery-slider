@@ -15,6 +15,7 @@ export class View {
         this.currentX = 0,
         this.currentValue,
         this.modelState = {},
+        this.currentTouchIndex = null,
 
         this.emitter = eventEmitter,
 
@@ -120,7 +121,6 @@ export class View {
 
         for(let i = 0; i < elements.length; i++) {
             elements[i].style.left = (Math.ceil(this.coefficientPoint * this.modelState.touchsValues[i])) + 'px';
-            console.log('elements[i].style.left' + i + ':' + elements[i].style.left);
         }
         this.elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         this.elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
@@ -131,7 +131,7 @@ export class View {
         this.coefficientPoint = (this.elementSliderLine.offsetWidth / (this.modelState.max - this.modelState.min));
         this.shiftToMinValue = Math.ceil(this.coefficientPoint * this.modelState.min);
 
-        for(let i = 0; i < elements.length; i++) {
+        for(let i = 0; i < elements.length && i != this.currentTouchIndex; i++) {
             elements[i].style.left = (Math.ceil(this.coefficientPoint * this.modelState.touchsValues[i]) - this.shiftToMinValue) + 'px';
             //console.log('elements[i].style.left' + i + ':' + elements[i].style.left);
         }
@@ -155,6 +155,7 @@ export class View {
         }
     }
     onStart(modelState, event, i) {
+        this.currentTouchIndex = i;
         event.preventDefault();
         let elements = this.sliderTouches;
 
@@ -223,8 +224,9 @@ export class View {
         if (this.currentX > halfStep) {
             this.currentValue = this.currentValue + modelState.step;
         }
-
-        this.emitter.emit('view:touchsValues-changed', {currentValue: this.currentValue, index: i});
+        if (this.modelState.touchsValues[i] != this.currentValue) {
+            this.emitter.emit('view:touchsValues-changed', {currentValue: this.currentValue, index: i});
+        }
 
         this.setCurrentTooltipValue(this.modelState, event, i);
       }

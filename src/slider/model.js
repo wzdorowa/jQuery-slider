@@ -5,7 +5,7 @@ export class Model {
         this.state = {
             min: 0,
             max: 100,
-            touchsValues: [20, 35, 45, 60],
+            touchsValues: [20, 32, 44, 60],
             orientation: 'horizontal',
             amount: 4,
             step: 4,
