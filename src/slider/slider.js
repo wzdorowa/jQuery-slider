@@ -1,5 +1,6 @@
 import {Model} from './model.js';
 import {View} from './view.js';
+import {verticalView} from './ verticalView.js';
 import {Controller} from './controller.js';
 import {EventEmitter} from './eventEmitter.js';
 
@@ -8,7 +9,7 @@ import {EventEmitter} from './eventEmitter.js';
         const elements = Array.from(this);
         elements.forEach((element, index) => {
             const eventEmitter = new EventEmitter();
-            const view = new View(element, eventEmitter);
+            const view = new verticalView(element, eventEmitter);
             const model = new Model(eventEmitter);
             new Controller(element, model, view);
             console.log(index);
