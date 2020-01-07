@@ -4,6 +4,9 @@
 @import "src/elements/checkbox-button/checkbox-button.scss";
 @import "src/components/slider-config/slider-config.scss";
 
+.slider-container {
+    display: flex;
+}
 .slider-ui {
     margin: 30px;
     margin-top: 0px;
