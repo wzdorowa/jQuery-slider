@@ -56,7 +56,6 @@ import {EventEmitter} from './eventEmitter.js';
                     setValueToStepFromModelState(state);
                     setValueToMinInputFromModelState(state);
                     setValueMaxInputFromModelState(state);
-                    console.log(state);
                 })
             }
         });

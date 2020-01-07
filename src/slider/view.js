@@ -233,6 +233,8 @@ export class View {
         document.removeEventListener('touchmove', handleMove);
         document.removeEventListener('mouseup', handleStop);
         document.removeEventListener('touchend', handleStop);
+
+        this.currentTouchIndex = null;
       }
       /* метод calculateValue рассчитывает текущее значение ползунка. 
     нужно высчитать из this.currentX текущеее значение ползунка которое
