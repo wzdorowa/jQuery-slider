@@ -1,5 +1,3 @@
-import {Controller} from './controller.js';
-
 export class Model {
     constructor (eventEmitter) {
         this.state = {
