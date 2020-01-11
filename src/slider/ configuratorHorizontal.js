@@ -42,6 +42,9 @@ export const configuratorHorizontal = {
     setIndentForTarget(target, currentXorY) {
         target.style.left = currentXorY + 'px';
     },
+    setIndentForTargetToOnStop(target, coefficientPoint, currentValue, shiftToMinValue) {
+        target.style.left = Math.ceil(coefficientPoint * currentValue) - shiftToMinValue  + 'px';
+    },
     updateLineSpan(elementSliderLineSpan, elements) {
         elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         elementSliderLineSpan.style.width = (elements[elements.length -1].offsetLeft - elements[0].offsetLeft) + 'px';

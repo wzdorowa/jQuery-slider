@@ -37,6 +37,12 @@ export class View {
                 this.currentOrientation = this.modelState.orientation;
                 console.log('я в условии currentOrientation');
                 this.setWidthSliderContainer();
+                console.log('this.configurator', this.configurator);
+                if(this.isCreatedSlider) {
+                    this.changeOrientation(); 
+                    this.setValueSliderTouch(this.modelState);
+                    this.setTooltipsValues(this.modelState);
+                }
             }
             if(!this.isCreatedSlider) {
                 this.createSlider();
@@ -85,7 +91,7 @@ export class View {
             this.elementsSliderTooltipText.push(sliderTooltipText);
         }
         const sliderLine = this.configurator.createSliderLine(this.createElement);
-        const sliderLineSpan = this.createElement('span', 'slider-line-span');
+        const sliderLineSpan = this.createElement('div', 'slider-line-span');
         
         this.slider.append(sliderLine);
         sliderLine.append(sliderLineSpan);
@@ -125,6 +131,30 @@ export class View {
             this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
         }
     }
+    changeOrientation() {
+        const sliderTooltip = Array.from($(this.slider).find('.slider-tooltip'));
+        this.elementsSliderTooltipText = [];
+        const tooltipText = Array.from($(this.slider).find('.slider-tooltip-text'));
+        for(let i = 0; i < tooltipText.length; i++) {
+            tooltipText[i].remove();
+        }
+        for(let i = 0; i < sliderTooltip.length; i++) {
+            const sliderTooltipText = this.configurator.createSliderTooltipText(this.createElement);
+            sliderTooltip[i].append(sliderTooltipText);
+            this.elementsSliderTooltipText.push(sliderTooltipText);
+        }
+        const sliderLineToDelete = $(this.slider).find('.slider-line');
+        sliderLineToDelete.remove();
+
+        const sliderLine = this.configurator.createSliderLine(this.createElement);
+        const sliderLineSpan = this.configurator.createSliderLineSpan(this.createElement);
+
+        this.slider.append(sliderLine);
+        sliderLine.append(sliderLineSpan);
+
+        this.elementSliderLine = sliderLine;
+        this.elementSliderLineSpan = sliderLineSpan;
+    }
     /* устанавливает значение для добавленного ползунка */
     setValueToNewTouch() {
         let allTouches = Array.from($(this.slider).find('.slider-touch'));
@@ -153,6 +183,7 @@ export class View {
      в соответствующие им тултипы  */
     setTooltipsValues() {
         for(let i = 0; i < this.modelState.touchsValues.length; i++) {
+            console.log('this.elementsSliderTooltipText', [i], this.elementsSliderTooltipText[i]);
             this.elementsSliderTooltipText[i].innerHTML = this.modelState.touchsValues[i];
         }
     }
@@ -238,7 +269,7 @@ export class View {
       }
       onStop(handleMove, handleStop, modelState, event, i, target) {
         this.setCurrentTooltipValue(this.modelState, event, i);
-        target.style.left = Math.ceil(this.coefficientPoint * this.currentValue) - this.shiftToMinValue  + 'px';
+        this.configurator.setIndentForTargetToOnStop(target, this.coefficientPoint, this.currentValue, this.shiftToMinValue);
 
         document.removeEventListener('mousemove', handleMove);
         document.removeEventListener('touchmove', handleMove);
