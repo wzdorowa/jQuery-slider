@@ -17,26 +17,35 @@ import {EventEmitter} from './eventEmitter.js';
                 let modelState = model.state;
                 return modelState;
             }
-
             element.setNewValueMin = (min) => {
+                console.log('я в setNewValueMin');
+                console.log('min', min);
                 model.setNewValueMin(min);
             }
             element.setNewValueMax = (max) => {
+                console.log('я в setNewValueMax');
+                console.log('max', max);
                 model.setNewValueMax(max);
             }
             element.setNewValueAmount = (amount) => {
+                console.log('я в setNewValueAmount');
                 model.setNewValueAmount(amount);
             }
             element.setNewValueTouchsValues = (touchValue, index) => {
+                console.log('я в setNewValueTouchsValues');
+                console.log('touchValue, index', touchValue, index);
                 model.setNewValueTouchsValues(touchValue, index);
             }
             element.setNewValueStep = (step) => {
+                console.log('я в setNewValueStep');
                 model.setNewValueStep(step);
             }
             element.setNewValueOrientation = (value) => {
+                console.log('я в setNewValueOrientation');
                 model.setNewValueOrientation(value);
             }
             element.setNewValueTooltip = (value) => {
+                console.log('я в setNewValueTooltip');
                 model.setNewValueTooltip(value);
             }
 

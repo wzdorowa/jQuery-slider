@@ -12,7 +12,12 @@ export const configuratorVertical = {
     createSliderLineSpan(createElement) {
         return createElement('span', 'slider-line-span-for-verticalView');
     },
-    
+    searchElementsTooltipText(slider) {
+        return Array.from($(slider).find('.slider-tooltip-text'));
+    },
+    sliderLineToDelete(slider) {
+        return $(slider).find('.slider-line');
+    },
     calculateCoefficientPoint(elementSliderLine, max, min) {
         return (elementSliderLine.offsetHeight / (max - min));
     },
@@ -52,6 +57,12 @@ export const configuratorVertical = {
     },
     setIndentForTarget(target, currentXorY) {
         target.style.top = currentXorY + 'px';
+    },
+    elementOffset(element) {
+        return element.offsetTop;
+    },
+    targetOffset(target) {
+        return target.offsetHeight;
     },
     setIndentForTargetToOnStop(target, coefficientPoint, currentValue, shiftToMinValue) {
         target.style.top = Math.ceil(coefficientPoint * currentValue) - shiftToMinValue  + 'px';

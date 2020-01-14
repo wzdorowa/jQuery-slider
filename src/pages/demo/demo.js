@@ -106,13 +106,28 @@ $( () => {
         const minValue = minMaxValues[0];
         const maxValue = minMaxValues[1];
 
+        const getMinValue = () => {
+            return Number(minValue.value);
+        };
+        const getMaxValue = () => {
+            return Number(maxValue.value);
+        }
+        const getAmountSliderTouches = () => {
+            return Number(amountSliderTouches.value);
+        }
+        const getInputsSliderTouchs = (i) => {
+            return Number(inputsSliderTouchs[i].value);
+        }
+        const getStepSize = () => {
+            return Number(stepSize.value);
+        }
+
         minValue.addEventListener('blur', () => {
-            const min = Number(minValue.value);
+            const min = getMinValue();
             element.setNewValueMin(min);
         });
-        
         maxValue.addEventListener('blur', () => {
-            const max = Number(maxValue.value);
+            const max = getMaxValue();
             element.setNewValueMax(max);
         });
 
@@ -121,7 +136,7 @@ $( () => {
         const amountSliderTouches = document.querySelector('.field-group-numberValues-container__content');
 
         amountSliderTouches.addEventListener('blur', () => {
-            const amount = Number(amountSliderTouches.value);
+            const amount = getAmountSliderTouches();
             element.setNewValueAmount(amount);
         });
 
@@ -131,7 +146,7 @@ $( () => {
 
         for(let i = 0; i < inputsSliderTouchs.length; i++) {
             inputsSliderTouchs[i].addEventListener('blur', () => {
-                const touchValue = Number(inputsSliderTouchs[i].value);
+                const touchValue = getInputsSliderTouchs(i);
                 element.setNewValueTouchsValues(touchValue, i);
             })
         }
@@ -141,7 +156,7 @@ $( () => {
         const stepSize = document.querySelector('.field-group-stepSize-container__content');
 
         stepSize.addEventListener('blur', () => {
-            const step = Number(stepSize.value);
+            const step = getStepSize();
             element.setNewValueStep(step);
         });
 
@@ -170,6 +185,32 @@ $( () => {
             }
             element.setNewValueTooltip(checked);
         });
+
+        let form = document.querySelector('.panel-configuration');
+        console.log(form);
+        form.addEventListener('submit', () => {
+            event.preventDefault();
+            console.log('я в onsubmit');
+
+            const min = getMinValue();
+            console.log('min в демо', min);
+            element.setNewValueMin(min);
+
+            const max = getMaxValue();
+            console.log('max в демо', max);
+            element.setNewValueMax(max);
+
+            const amount = getAmountSliderTouches();
+            element.setNewValueAmount(amount);
+
+            for(let i = 0; i < inputsSliderTouchs.length; i++) {
+                const touchValue = getInputsSliderTouchs(i);
+                element.setNewValueTouchsValues(touchValue, i);
+            }
+
+            const step = getStepSize();
+            element.setNewValueStep(step);
+        })
     });
 });
 

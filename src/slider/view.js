@@ -24,20 +24,15 @@ export class View {
 
         this.emitter.subscribe('model:state-changed', (state) => {
             this.modelState = state;
-            console.log('this.currentOrientation', this.currentOrientation);
             if (this.modelState.orientation === 'horizontal') {
-                console.log('я в условии horizontal');
                 this.configurator = configuratorHorizontal;
             }
             if (this.modelState.orientation === 'vertical') {
-                console.log('я в условии vertical');
                 this.configurator = configuratorVertical;
             }
             if (this.currentOrientation != this.modelState.orientation) {
                 this.currentOrientation = this.modelState.orientation;
-                console.log('я в условии currentOrientation');
                 this.setWidthSliderContainer();
-                console.log('this.configurator', this.configurator);
                 if(this.isCreatedSlider) {
                     this.changeOrientation(); 
                     this.setValueSliderTouch(this.modelState);
@@ -106,7 +101,7 @@ export class View {
                 const sliderTouch = this.createElement('div', 'slider-touch');
                 const sliderSpan = this.createElement('span', 'slider-span');
                 const sliderTooltip = this.createElement('div', 'slider-tooltip');
-                const sliderTooltipText = this.createElement('span', 'slider-tooltip-text');
+                const sliderTooltipText = this.configurator.createSliderTooltipText(this.createElement);
 
                 sliderTouch.append(sliderSpan);
                 sliderTouch.append(sliderTooltip);
@@ -134,7 +129,7 @@ export class View {
     changeOrientation() {
         const sliderTooltip = Array.from($(this.slider).find('.slider-tooltip'));
         this.elementsSliderTooltipText = [];
-        const tooltipText = Array.from($(this.slider).find('.slider-tooltip-text'));
+        const tooltipText = this.configurator.searchElementsTooltipText(this.slider);
         for(let i = 0; i < tooltipText.length; i++) {
             tooltipText[i].remove();
         }
@@ -143,7 +138,7 @@ export class View {
             sliderTooltip[i].append(sliderTooltipText);
             this.elementsSliderTooltipText.push(sliderTooltipText);
         }
-        const sliderLineToDelete = $(this.slider).find('.slider-line');
+        const sliderLineToDelete = this.configurator.sliderLineToDelete(this.slider)
         sliderLineToDelete.remove();
 
         const sliderLine = this.configurator.createSliderLine(this.createElement);
@@ -183,7 +178,6 @@ export class View {
      в соответствующие им тултипы  */
     setTooltipsValues() {
         for(let i = 0; i < this.modelState.touchsValues.length; i++) {
-            console.log('this.elementsSliderTooltipText', [i], this.elementsSliderTooltipText[i]);
             this.elementsSliderTooltipText[i].innerHTML = this.modelState.touchsValues[i];
         }
     }
@@ -208,6 +202,8 @@ export class View {
         
         this.maxXorY = this.configurator.setMaxXorYtoOnStart(this.elementSliderLine);
 
+        this.currentValue = modelState.touchsValues[i];
+
         const handleMove = event => this.onMove(this.modelState, event, i, target);
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('touchmove', handleMove);
@@ -223,8 +219,8 @@ export class View {
         this.currentXorY = this.configurator.setCurrentXorYtoOnMove(eventTouch, this.startXorY);
 
         if (i === 0) {
-            if(this.currentXorY > (elements[i + 1].offsetLeft - target.offsetWidth)) {
-                this.currentXorY = (elements[i + 1].offsetLeft - target.offsetWidth);
+            if (this.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
+                this.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
             }
             if (this.currentXorY < 0) {
                 this.currentXorY = 0;
@@ -232,17 +228,17 @@ export class View {
             this.configurator.setIndentForTarget(target, this.currentXorY);
         }
         if (i > 0 && i < elements.length - 1) {
-            if(this.currentXorY > (elements[i + 1].offsetLeft - target.offsetWidth)) {
-                this.currentXorY = (elements[i + 1].offsetLeft - target.offsetWidth);
+            if(this.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
+                this.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
             } 
-            if (this.currentXorY < (elements[i - 1].offsetLeft + target.offsetWidth)) {
-                this.currentXorY = (elements[i - 1].offsetLeft + target.offsetWidth);
+            if (this.currentXorY < (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target))) {
+                this.currentXorY = (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target));
             }
             this.configurator.setIndentForTarget(target, this.currentXorY);
         }
         if (i === elements.length - 1) {
-            if (this.currentXorY < (elements[i - 1].offsetLeft + target.offsetWidth)) {
-                this.currentXorY = (elements[i - 1].offsetLeft + target.offsetWidth);
+            if (this.currentXorY < (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target))) {
+                this.currentXorY = (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target));
             } 
             if(this.currentXorY > this.maxXorY) {
                 this.currentXorY = this.maxXorY;
@@ -269,7 +265,9 @@ export class View {
       }
       onStop(handleMove, handleStop, modelState, event, i, target) {
         this.setCurrentTooltipValue(this.modelState, event, i);
+        console.log('this.currentValue', this.currentValue);
         this.configurator.setIndentForTargetToOnStop(target, this.coefficientPoint, this.currentValue, this.shiftToMinValue);
+        this.currentValue = null;
 
         document.removeEventListener('mousemove', handleMove);
         document.removeEventListener('touchmove', handleMove);

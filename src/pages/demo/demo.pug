@@ -14,8 +14,9 @@ html
     body
         block content
             .slider-container
-                .panel-configuration
+                form.panel-configuration
                     +slider-config()
+                    input(type='submit')
                 .slider-ui
                     .js-slider-test
         block scripts
