@@ -19,6 +19,7 @@ export class View {
         this.currentTouchIndex = null,
         this.configurator = null,
         this.currentOrientation = null,
+        this.missingAmount = null,
 
         this.emitter = eventEmitter,
 
@@ -48,7 +49,6 @@ export class View {
             }
             if(this.sliderTouches.length != this.modelState.amount) {
                 this.changeAmountTouchs(this.modelState);
-                this.listenSliderTouchesEvents(this.modelState);
             }
             if (this.modelState.tooltip === false) {
                 this.hideTooltip();
@@ -96,8 +96,10 @@ export class View {
     }
     changeAmountTouchs() {
         if (this.sliderTouches.length < this.modelState.amount) {
-            const missingAmount = this.modelState.amount - this.sliderTouches.length;
-            for (let i = 1; i <= missingAmount; i++) {
+            let amount = this.modelState.amount - this.sliderTouches.length;
+            console.log('amount', amount);
+            this.missingAmount = this.missingAmount + amount;
+            for (let i = 1; i <= amount; i++) {
                 const sliderTouch = this.createElement('div', 'slider-touch');
                 const sliderSpan = this.createElement('span', 'slider-span');
                 const sliderTooltip = this.createElement('div', 'slider-tooltip');
@@ -110,6 +112,7 @@ export class View {
                 this.sliderTouches.push(sliderTouch);
                 this.elementsSliderTooltipText.push(sliderTooltipText);
 
+                this.newListenSliderTouchesEvents(this.modelState);
                 this.setValueToNewTouch();
             }
         }
@@ -118,10 +121,10 @@ export class View {
             let allTouches = Array.from($(this.slider).find('.slider-touch'));
 
             for (let i = 1; i <= excessAmount; i++) {
-                allTouches[allTouches.length - i].remove();
+                this.modelState.touchsValues.splice(-1, 1);
                 this.sliderTouches.splice(-1, 1);
                 this.elementsSliderTooltipText.splice(-1, 1);
-                this.modelState.touchsValues.splice(-1, 1);
+                allTouches[allTouches.length - i].remove();
             }
             this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
         }
@@ -188,6 +191,12 @@ export class View {
             elements[i].addEventListener('touchstart', event => this.onStart(this.modelState, event, i));
         }
     }
+    newListenSliderTouchesEvents(modelState) {
+        let elements = this.sliderTouches;
+        let i = elements.length - 1;
+        elements[i].addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
+        elements[i].addEventListener('touchstart', event => this.onStart(this.modelState, event, i));
+    }
     onStart(modelState, event, i) {
         this.currentTouchIndex = i;
         event.preventDefault();
@@ -231,14 +240,14 @@ export class View {
             if(this.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
                 this.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
             } 
-            if (this.currentXorY < (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target))) {
-                this.currentXorY = (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target));
+            if (this.currentXorY < (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target))) {
+                this.currentXorY = (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target));
             }
             this.configurator.setIndentForTarget(target, this.currentXorY);
         }
         if (i === elements.length - 1) {
-            if (this.currentXorY < (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target))) {
-                this.currentXorY = (this.configurator.elementOffset(elements[i - 1]) - this.configurator.targetOffset(target));
+            if (this.currentXorY < (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target))) {
+                this.currentXorY = (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target));
             } 
             if(this.currentXorY > this.maxXorY) {
                 this.currentXorY = this.maxXorY;
@@ -267,13 +276,13 @@ export class View {
         this.setCurrentTooltipValue(this.modelState, event, i);
         console.log('this.currentValue', this.currentValue);
         this.configurator.setIndentForTargetToOnStop(target, this.coefficientPoint, this.currentValue, this.shiftToMinValue);
-        this.currentValue = null;
 
         document.removeEventListener('mousemove', handleMove);
         document.removeEventListener('touchmove', handleMove);
         document.removeEventListener('mouseup', handleStop);
         document.removeEventListener('touchend', handleStop);
 
+        this.currentValue = null;
         this.currentTouchIndex = null;
       }
       /* метод calculateValue рассчитывает текущее значение ползунка. 

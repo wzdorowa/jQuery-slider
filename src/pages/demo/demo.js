@@ -106,62 +106,48 @@ $( () => {
         const minValue = minMaxValues[0];
         const maxValue = minMaxValues[1];
 
-        const getMinValue = () => {
-            return Number(minValue.value);
-        };
-        const getMaxValue = () => {
-            return Number(maxValue.value);
-        }
-        const getAmountSliderTouches = () => {
-            return Number(amountSliderTouches.value);
-        }
-        const getInputsSliderTouchs = (i) => {
-            return Number(inputsSliderTouchs[i].value);
-        }
-        const getStepSize = () => {
-            return Number(stepSize.value);
-        }
-
         minValue.addEventListener('blur', () => {
-            const min = getMinValue();
+            const min = Number(minValue.value);
             element.setNewValueMin(min);
         });
         maxValue.addEventListener('blur', () => {
-            const max = getMaxValue();
+            const max = Number(maxValue.value);
             element.setNewValueMax(max);
         });
 
         // получить и передать новое значение количества ползунков введенное пользователем
         // из панели конфигураций в объект newConfig
-        const amountSliderTouches = document.querySelector('.field-group-numberValues-container__content');
+        let amountSliderTouches = document.querySelector('.field-group-numberValues-container__content');
 
         amountSliderTouches.addEventListener('blur', () => {
-            const amount = getAmountSliderTouches();
+            const amount = Number(amountSliderTouches.value);
             element.setNewValueAmount(amount);
         });
-
         // получить и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций в объект newConfig
-        const inputsSliderTouchs = document.querySelectorAll('.input-rangeOfValues');
+        const toFindinputsSliderTouchs = () => {
+            return document.querySelectorAll('.input-rangeOfValues');
+        };
+        let inputsSliderTouchs = toFindinputsSliderTouchs();
 
         for(let i = 0; i < inputsSliderTouchs.length; i++) {
             inputsSliderTouchs[i].addEventListener('blur', () => {
-                const touchValue = getInputsSliderTouchs(i);
+                const touchValue = Number(inputsSliderTouchs[i].value);
                 element.setNewValueTouchsValues(touchValue, i);
             })
-        }
+        };
 
         // получить и передать новое значение размера шага введенного пользователем
         // из панели конфигураций в объект newConfig
-        const stepSize = document.querySelector('.field-group-stepSize-container__content');
+        let stepSize = document.querySelector('.field-group-stepSize-container__content');
 
         stepSize.addEventListener('blur', () => {
-            const step = getStepSize();
+            const step = Number(stepSize.value);
             element.setNewValueStep(step);
         });
 
         // получить и передать новое значение ориентации слайдера
-        const orientationSlider = document.querySelectorAll('.radio-button-container');
+        let orientationSlider = document.querySelectorAll('.radio-button-container');
 
         for(let i = 0; i < orientationSlider.length; i++) {
             orientationSlider[i].addEventListener('click', () => {
@@ -171,9 +157,10 @@ $( () => {
                 element.setNewValueOrientation(orientation);
             })
         };
+
         // получить и передать новое значение наличия тултипа
-        const checkboxContainer = document.querySelector('.checkbox-button-container');
-        const checkboxInput = document.querySelector('.checkbox-button-container__content');
+        let checkboxContainer = document.querySelector('.checkbox-button-container');
+        let checkboxInput = document.querySelector('.checkbox-button-container__content');
 
         checkboxContainer.addEventListener('click', () => {
             let checked = null;
@@ -186,25 +173,31 @@ $( () => {
             element.setNewValueTooltip(checked);
         });
 
+        const setValueOfInputsSliderTouchs = () => {
+            let inputsSliderTouchs = toFindinputsSliderTouchs();
+            console.log('inputsSliderTouchs', inputsSliderTouchs);
+            for(let i = 0; i < inputsSliderTouchs.length; i++) {
+                const touchValue = Number(inputsSliderTouchs[i].value);
+                element.setNewValueTouchsValues(touchValue, i);
+            }
+        }
+
         let form = document.querySelector('.panel-configuration');
          form.addEventListener('submit', () => {
             event.preventDefault();
 
-            const min = getMinValue();
+            const min = Number(minValue.value);
             element.setNewValueMin(min);
 
-            const max = getMaxValue();
+            const max = Number(maxValue.value);
             element.setNewValueMax(max);
 
-            const amount = getAmountSliderTouches();
+            const amount = Number(amountSliderTouches.value);
             element.setNewValueAmount(amount);
 
-            for(let i = 0; i < inputsSliderTouchs.length; i++) {
-                const touchValue = getInputsSliderTouchs(i);
-                element.setNewValueTouchsValues(touchValue, i);
-            }
+            setValueOfInputsSliderTouchs();
 
-            const step = getStepSize();
+            const step = Number(stepSize.value);
             element.setNewValueStep(step);
          });
     });
