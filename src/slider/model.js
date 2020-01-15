@@ -90,7 +90,6 @@ export class Model {
             return;
         }
         this.state.max = max;
-        console.log('я в setNewValueMax model.js', max);
         this.notifyStateChanged();
     }
     //установить новое количество ползунков//

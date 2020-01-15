@@ -103,11 +103,8 @@ $( () => {
         // получить и передать новые введеные пользователем мин и макс значения слайдера 
         // из панели конфигураций в объект newConfig
         const minMaxValues = document.querySelectorAll('.minMaxValue');
-        console.log('minMaxValues', minMaxValues);
         const minValue = minMaxValues[0];
-        console.log('minValue', minValue);
         const maxValue = minMaxValues[1];
-        console.log('maxValue', maxValue);
 
         const getMinValue = () => {
             return Number(minValue.value);
@@ -190,10 +187,8 @@ $( () => {
         });
 
         let form = document.querySelector('.panel-configuration');
-        console.log(form);
          form.addEventListener('submit', () => {
             event.preventDefault();
-            console.log('я в onsubmit');
 
             const min = getMinValue();
             element.setNewValueMin(min);
