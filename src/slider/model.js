@@ -78,16 +78,26 @@ export class Model {
     }
     //установить новое значение min//
     setNewValueMin(min) {
+        if (this.state.min === min) {
+            return;
+        }
         this.state.min = min;
         this.notifyStateChanged();
     }
     //установить новое значение max//
     setNewValueMax(max) {
+        if (this.state.max === max) {
+            return;
+        }
         this.state.max = max;
+        console.log('я в setNewValueMax model.js', max);
         this.notifyStateChanged();
     }
     //установить новое количество ползунков//
     setNewValueAmount(amount) {
+        if (this.state.amount === amount) {
+            return;
+        }
         if (amount <= 0) {
             this.state.amount = 1;
         } else if (amount >= 10) {
@@ -95,15 +105,22 @@ export class Model {
         } else {
         this.state.amount = amount;
         }
+        //console.log('я в setNewValueAmount model.js', amount);
         this.notifyStateChanged();
     }
     // установить новое значение для состояния ползунка//
     setNewValueTouchsValues(touchValue, index) {
+        if (this.state.touchsValues[index] === touchValue) {
+            return;
+        }
         this.state.touchsValues[index] = touchValue;
         this.notifyStateChanged();
     }
     // установить новое значение для шага перемещения ползунков//
     setNewValueStep(step) {
+        if (this.state.step === step) {
+            return;
+        }
         if (step <= 0){
             this.state.step = 1;
         } else if (step >= this.state.max) {

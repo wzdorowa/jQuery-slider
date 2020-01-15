@@ -18,17 +18,15 @@ import {EventEmitter} from './eventEmitter.js';
                 return modelState;
             }
             element.setNewValueMin = (min) => {
-                console.log('я в setNewValueMin');
-                console.log('min', min);
+                //console.log('я в setNewValueMin');
                 model.setNewValueMin(min);
             }
             element.setNewValueMax = (max) => {
-                console.log('я в setNewValueMax');
-                console.log('max', max);
+                console.log('я в setNewValueMax slider.js', max);
                 model.setNewValueMax(max);
             }
             element.setNewValueAmount = (amount) => {
-                console.log('я в setNewValueAmount');
+                console.log('я в setNewValueAmount slider.js', amount);
                 model.setNewValueAmount(amount);
             }
             element.setNewValueTouchsValues = (touchValue, index) => {
