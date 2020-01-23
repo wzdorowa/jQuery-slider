@@ -175,7 +175,6 @@ $( () => {
 
         const setValueOfInputsSliderTouchs = () => {
             let inputsSliderTouchs = toFindinputsSliderTouchs();
-            console.log('inputsSliderTouchs', inputsSliderTouchs);
             for(let i = 0; i < inputsSliderTouchs.length; i++) {
                 const touchValue = Number(inputsSliderTouchs[i].value);
                 element.setNewValueTouchsValues(touchValue, i);

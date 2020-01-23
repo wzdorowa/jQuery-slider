@@ -158,7 +158,7 @@ export class View {
         let allTouches = Array.from($(this.slider).find('.slider-touch'));
         const indexNewTouch = allTouches.length - 1;
 
-        this.modelState.touchsValues[indexNewTouch] = (this.modelState.touchsValues[indexNewTouch -1] + (this.modelState.step * 2));
+        this.modelState.touchsValues[indexNewTouch] = (this.modelState.touchsValues[indexNewTouch -1] + (this.modelState.step));
         this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
     }
     getCoefficientPoint() {
@@ -274,7 +274,6 @@ export class View {
       }
       onStop(handleMove, handleStop, modelState, event, i, target) {
         this.setCurrentTooltipValue(this.modelState, event, i);
-        console.log('this.currentValue', this.currentValue);
         this.configurator.setIndentForTargetToOnStop(target, this.coefficientPoint, this.currentValue, this.shiftToMinValue);
 
         document.removeEventListener('mousemove', handleMove);

@@ -26,6 +26,7 @@
     "npm": "6.4.1"
   },
   "devDependencies": {
-    "sass": "^1.22.10"
+    "sass": "^1.22.10",
+    "typescript": "^3.7.5"
   }
 }
