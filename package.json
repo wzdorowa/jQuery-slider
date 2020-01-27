@@ -18,15 +18,16 @@
   },
   "homepage": "https://github.com/wzdorowa/jQuery-slider#readme",
   "dependencies": {
-    "pug": "^2.0.4",
-    "parcel-bundler": "^1.12.3"
+    "parcel-bundler": "^1.12.4",
+    "pug": "^2.0.4"
   },
   "engines": {
     "node": "10.15.0",
     "npm": "6.4.1"
   },
   "devDependencies": {
-    "sass": "^1.22.10",
+    "@types/jquery": "^3.3.31",
+    "sass": "^1.25.0",
     "typescript": "^3.7.5"
   }
 }
