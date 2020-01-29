@@ -9,6 +9,7 @@ $( () => {
 
     elements.forEach((element, index) => {
         let isCreatedInput = false;
+        console.log('тип', typeof(element), element);
 
         const createElement = (teg, className, type, value) => {
             const element = document.createElement(teg);
