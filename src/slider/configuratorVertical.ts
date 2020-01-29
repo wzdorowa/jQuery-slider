@@ -32,13 +32,13 @@ export const configuratorVertical: IConfigurator = {
         slider.classList.remove('width-horizontal-slider-container');
         slider.classList.add('height-vertical-slider-container');
     },
-    createSliderTooltipText(createElement: Function): HTMLElement {
+    createSliderTooltipText(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
         return createElement('span', 'slider-tooltip-text-for-verticalView');
     },
-    createSliderLine(createElement: Function): HTMLElement {
+    createSliderLine(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
         return createElement('div', 'slider-line-for-verticalView');
     },
-    createSliderLineSpan(createElement: Function): HTMLElement {
+    createSliderLineSpan(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
         return createElement('span', 'slider-line-span-for-verticalView');
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
@@ -50,10 +50,10 @@ export const configuratorVertical: IConfigurator = {
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number {
         return (elementSliderLine.offsetHeight / (max - min));
     },
-    calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: Function, modelState: StateObject, elementSliderLineSpan: HTMLElement): void {
+    calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: StateObject, elementSliderLineSpan: HTMLElement): void {
         for(let i = 0; i < elements.length; i++) {
             elements[i].style.left = "";
-            elements[i].style.top = (Math.ceil(getCoefficientPoint(modelState) * modelState.touchsValues[i])) + 'px';
+            elements[i].style.top = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
         }
         elementSliderLineSpan.style.marginLeft = "";
         elementSliderLineSpan.style.width = "";
