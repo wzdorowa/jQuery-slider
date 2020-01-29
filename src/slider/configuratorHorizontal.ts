@@ -32,13 +32,13 @@ export const configuratorHorizontal: IConfigurator = {
         slider.classList.remove('height-vertical-slider-container');
         slider.classList.add('width-horizontal-slider-container');
     },
-    createSliderTooltipText(createElement: Function): HTMLElement {
+    createSliderTooltipText(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
         return createElement('span', 'slider-tooltip-text');
     },
-    createSliderLine(createElement: Function): HTMLElement {
+    createSliderLine(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
         return createElement('div', 'slider-line');
     },
-    createSliderLineSpan(createElement: Function): HTMLElement {
+    createSliderLineSpan(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
         return createElement('span', 'slider-line-span');
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
@@ -50,10 +50,10 @@ export const configuratorHorizontal: IConfigurator = {
     sliderLineToDelete(slider: HTMLElement) { // дописать возвращаемый тип метода
         return $(slider).find('.slider-line-for-verticalView');
     },
-    calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: Function, modelState: StateObject, elementSliderLineSpan: HTMLElement): void {
+    calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: StateObject, elementSliderLineSpan: HTMLElement): void {
         for(let i = 0; i < elements.length; i++) {
             elements[i].style.top = "";
-            elements[i].style.left = (Math.ceil(getCoefficientPoint(modelState) * modelState.touchsValues[i])) + 'px';
+            elements[i].style.left = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
         }
         elementSliderLineSpan.style.marginTop = "";
         elementSliderLineSpan.style.height = "";
