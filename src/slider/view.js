@@ -93,6 +93,7 @@ export class View {
 
         this.elementSliderLineSpan = sliderLineSpan;
         this.elementSliderLine = sliderLine;
+        console.log('тип this.elementsSliderTooltipText', typeof(this.elementsSliderTooltipText), this.elementsSliderTooltipText);
     }
     changeAmountTouchs() {
         if (this.sliderTouches.length < this.modelState.amount) {
@@ -173,6 +174,7 @@ export class View {
     setNewValueSliderTouch() {
         let elements = this.sliderTouches;
         this.coefficientPoint = this.getCoefficientPoint();
+        console.log('coefficientPoint', this.coefficientPoint);
         this.shiftToMinValue = Math.ceil(this.coefficientPoint * this.modelState.min);
 
         this.configurator.calculateNewValueSliderTouch(elements, this.currentTouchIndex, this.coefficientPoint, this.modelState, this.shiftToMinValue, this.elementSliderLineSpan);
@@ -212,6 +214,7 @@ export class View {
         this.maxXorY = this.configurator.setMaxXorYtoOnStart(this.elementSliderLine);
 
         this.currentValue = modelState.touchsValues[i];
+        console.log('currentValue', this.currentValue);
 
         const handleMove = event => this.onMove(this.modelState, event, i, target);
         document.addEventListener('mousemove', handleMove);
