@@ -1,21 +1,15 @@
-interface StateObject {
-    min: number
-    max: number,
-    touchsValues: number[],
-    orientation: string,
-    amount: number,
-    step: number,
-    tooltip: boolean,
-}
-interface DataObject {
+import {IModelState} from './iModelState';
+import { EventEmitter } from './eventEmitter';
+
+interface IData {
     currentValue: number
     index: number
 }
 export class Model {
-    state: StateObject
-    emitter: any
+    state: IModelState
+    emitter: EventEmitter
 
-    constructor (eventEmitter: any) {
+    constructor (eventEmitter: EventEmitter) {
         this.state = {
             min: 0,
             max: 100,
@@ -29,7 +23,7 @@ export class Model {
         this.emitter = eventEmitter;
         this.notifyStateChanged();
 
-        this.emitter.subscribe('model:state-changed', (state: StateObject) => {
+        this.emitter.subscribe('model:state-changed', (state: IModelState) => {
             this.checkMinValueInArrayTouchsValues(state);
             this.checkMaxValueInArrayTouchsValues(state);
             this.checkTouchsValues(state);
@@ -39,14 +33,14 @@ export class Model {
             this.overwriteCurrentTouchsValues(touchsValues);
         });
 
-        this.emitter.subscribe('view:touchsValues-changed', (data: DataObject) => {
+        this.emitter.subscribe('view:touchsValues-changed', (data: IData) => {
             this.setCurrentTouchsValues(data.currentValue, data.index);
         });
     }
     notifyStateChanged(): void {
         this.emitter.emit('model:state-changed', this.state);
     }
-    checkMinValueInArrayTouchsValues(state: StateObject): void {
+    checkMinValueInArrayTouchsValues(state: IModelState): void {
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
             for (let i = 1; i <= (this.state.touchsValues.length - 1); i++) {
@@ -55,7 +49,7 @@ export class Model {
             this.notifyStateChanged();
         }
     }
-    checkMaxValueInArrayTouchsValues(state: StateObject): void {
+    checkMaxValueInArrayTouchsValues(state: IModelState): void {
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
             const touchsValuesLength = this.state.touchsValues.length - 1;
@@ -65,7 +59,7 @@ export class Model {
             this.notifyStateChanged();
         } 
     }
-    checkTouchsValues(state: StateObject): void {
+    checkTouchsValues(state: IModelState): void {
         let currentTouchValues: number[] = [];
         for(let i = 0; i < state.touchsValues.length; i++) {
             const newValue: number = state.touchsValues[i];
@@ -123,7 +117,7 @@ export class Model {
         this.notifyStateChanged();
     }
     // установить новое значение для состояния ползунка//
-    setNewValueTouchsValues(touchValue: number, index: number): number {
+    setNewValueTouchsValues(touchValue: number, index: number) {
         if (this.state.touchsValues[index] === touchValue) {
             return;
         }

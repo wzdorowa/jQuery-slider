@@ -1,32 +1,6 @@
-interface StateObject {
-    min: number
-    max: number,
-    touchsValues: number[],
-    orientation: string,
-    amount: number,
-    step: number,
-    tooltip: boolean,
-}
-interface IConfigurator {
-    setWidthHeightSliderContainer: Function
-    createSliderTooltipText: Function
-    createSliderLine: Function
-    createSliderLineSpan: Function
-    searchElementsTooltipText: Function
-    calculateCoefficientPoint: Function
-    sliderLineToDelete: Function
-    calculateValueSliderTouch: Function
-    calculateNewValueSliderTouch: Function
-    setCurrentXorYtoOnStart: Function
-    setStartXorYtoOnStart: Function
-    setMaxXorYtoOnStart: Function
-    setCurrentXorYtoOnMove: Function
-    setIndentForTarget: Function
-    elementOffset: Function
-    targetOffset: Function
-    setIndentForTargetToOnStop: Function
-    updateLineSpan: Function
-}
+import {IModelState} from './iModelState';
+import {IConfigurator} from './iConfigurator';
+
 export const configuratorVertical: IConfigurator = {
     setWidthHeightSliderContainer(slider: HTMLElement): void {
         slider.classList.remove('width-horizontal-slider-container');
@@ -50,7 +24,7 @@ export const configuratorVertical: IConfigurator = {
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number {
         return (elementSliderLine.offsetHeight / (max - min));
     },
-    calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: StateObject, elementSliderLineSpan: HTMLElement): void {
+    calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: IModelState, elementSliderLineSpan: HTMLElement): void {
         for(let i = 0; i < elements.length; i++) {
             elements[i].style.left = "";
             elements[i].style.top = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
@@ -61,7 +35,7 @@ export const configuratorVertical: IConfigurator = {
         elementSliderLineSpan.style.marginTop = elements[0].offsetTop + 'px';
         elementSliderLineSpan.style.height = (elements[elements.length - 1].offsetTop - elements[0].offsetTop) + 'px';
     },
-    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number, coefficientPoint: number, modelState: StateObject, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
+    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
         for(let i = 0; i < elements.length && i != currentTouchIndex; i++) {
             elements[i].style.left = "";
             elements[i].style.top = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';

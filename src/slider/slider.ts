@@ -1,69 +1,50 @@
-import $ = require ('jquery');
 import {Model} from './model';
 import {View} from './view';
 import {Controller} from './controller';
 import {EventEmitter} from './eventEmitter';
+import {IModelState} from './iModelState';
+import {IHTMLElement} from './iHTMLElement';
 
-interface StateObject {
-    min: number
-    max: number,
-    touchsValues: number[],
-    orientation: string,
-    amount: number,
-    step: number,
-    tooltip: boolean,
-}
-interface IMyElement extends HTMLElement {
-    getState: any;
-    setNewValueMin: any
-    setNewValueMax: any
-    setNewValueAmount: any
-    setNewValueTouchsValues: any
-    setNewValueStep: any
-    setNewValueOrientation: any
-    setNewValueTooltip: any
-    subscribeToStateModel: any
-  }
 (function($){
     $.fn.slider = function(){
-        const elements: IMyElement[] = Array.from(this) as IMyElement[];
-        elements.forEach((element: IMyElement, index: number) => {
+        const elements: IHTMLElement[] = Array.from(this) as IHTMLElement[];
+        elements.forEach((element: IHTMLElement, index: number) => {
             const eventEmitter = new EventEmitter();
-            const view: View = new View(element, eventEmitter);
+            new View(element, eventEmitter);
             const model: Model = new Model(eventEmitter);
             new Controller(element);
             console.log(index);
 
-            element.getState = (): StateObject => {
-                let modelState: StateObject = model.state;
+            element.getState = (): IModelState => {
+                let modelState: IModelState = model.state;
                 return modelState;
             }
-            element.setNewValueMin = (min: number) => {
+            element.setNewValueMin = (min: number): void => {
                 model.setNewValueMin(min);
             }
-            element.setNewValueMax = (max: number) => {
+            element.setNewValueMax = (max: number): void => {
                 model.setNewValueMax(max);
             }
-            element.setNewValueAmount = (amount: number) => {
+            element.setNewValueAmount = (amount: number): void => {
                 model.setNewValueAmount(amount);
             }
-            element.setNewValueTouchsValues = (touchValue: number, index: number) => {
+            element.setNewValueTouchsValues = (touchValue: number, index: number): void => {
                 model.setNewValueTouchsValues(touchValue, index);
             }
-            element.setNewValueStep = (step: number) => {
+            element.setNewValueStep = (step: number): void => {
                 model.setNewValueStep(step);
             }
-            element.setNewValueOrientation = (value: string) => {
+            element.setNewValueOrientation = (value: string): void => {
                 model.setNewValueOrientation(value);
             }
-            element.setNewValueTooltip = (value: boolean) => {
+            element.setNewValueTooltip = (value: boolean): void => {
                 model.setNewValueTooltip(value);
             }
 
-            element.subscribeToStateModel = (handler: (state: StateObject) => void, isCreatedInput: boolean, amountInputs: () => Element[], changeAmountInputs: (state: StateObject) => void,
-                 setValueToInputFromModelState: (state: StateObject) => void, setValueToStepFromModelState: (state: StateObject) => void,
-                  setValueToMinInputFromModelState: (state: StateObject) => void, setValueMaxInputFromModelState: (state: StateObject) => void) => {
-                eventEmitter.subscribe('model:state-changed', (state: StateObject) => {
+            element.subscribeToStateModel = (handler: (state: IModelState) => void, isCreatedInput: boolean, amountInputs: () => Element[], changeAmountInputs: (state: IModelState) => void,
+                 setValueToInputFromModelState: (state: IModelState) => void, setValueToStepFromModelState: (state: IModelState) => void,
+                  setValueToMinInputFromModelState: (state: IModelState) => void, setValueMaxInputFromModelState: (state: IModelState) => void): void => {
+                eventEmitter.subscribe('model:state-changed', (state: IModelState): void => {
                     if(!isCreatedInput) {
                         handler(state);
                         isCreatedInput = true;
