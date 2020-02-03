@@ -9,7 +9,7 @@ export interface IConfigurator {
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number
     sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement>
     calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: IModelState, elementSliderLineSpan: HTMLElement): void
-    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void
+    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void
     setCurrentXorYtoOnStart(target: HTMLElement): number
     setStartXorYtoOnStart(eventTouch: MouseEvent, currentXorY: number): number
     setMaxXorYtoOnStart(elementSliderLine: HTMLElement): number

@@ -18,7 +18,7 @@ export const configuratorVertical: IConfigurator = {
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
         return Array.from($(slider).find('.slider-tooltip-text'));
     },
-    sliderLineToDelete(slider: HTMLElement) { //дописать возвращаемый тип метода
+    sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line');
     },
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number {
@@ -35,7 +35,7 @@ export const configuratorVertical: IConfigurator = {
         elementSliderLineSpan.style.marginTop = elements[0].offsetTop + 'px';
         elementSliderLineSpan.style.height = (elements[elements.length - 1].offsetTop - elements[0].offsetTop) + 'px';
     },
-    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
+    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
         for(let i = 0; i < elements.length && i != currentTouchIndex; i++) {
             elements[i].style.left = "";
             elements[i].style.top = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';

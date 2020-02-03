@@ -6,8 +6,8 @@ interface IData {
     index: number
 }
 export class Model {
-    state: IModelState
-    emitter: EventEmitter
+     state: IModelState
+     emitter: EventEmitter
 
     constructor (eventEmitter: EventEmitter) {
         this.state = {
@@ -154,7 +154,6 @@ export class Model {
         }
         this.notifyStateChanged();
     }
-
     overwriteCurrentTouchsValues(touchsValues: number[]): void {
         this.state.touchsValues = touchsValues;
         this.notifyStateChanged();

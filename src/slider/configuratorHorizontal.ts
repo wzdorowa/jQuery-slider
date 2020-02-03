@@ -35,7 +35,7 @@ export const configuratorHorizontal: IConfigurator = {
         elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     },
-    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
+    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
         for(let i = 0; i < elements.length && i != currentTouchIndex; i++) {
             elements[i].style.top = "";
             elements[i].style.left = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';
