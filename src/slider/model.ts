@@ -62,8 +62,8 @@ export class Model {
     }
     private checkTouchsValues(state: IModelState): void {
         let currentTouchValues: number[] = [];
-        for(let i = 0; i < state.touchsValues.length; i++) {
-            const newValue: number = state.touchsValues[i];
+        state.touchsValues.forEach((element: number, i: number) => {
+            const newValue: number = element;
             const remainderOfTheDivision: number = newValue % state.step;
             const newCurrentValue: number = newValue - remainderOfTheDivision;
 
@@ -74,20 +74,19 @@ export class Model {
                     currentTouchValues[i] = newCurrentValue;
                 } 
             }
-        }
+        });
         if (currentTouchValues[0] < state.min) {
             currentTouchValues[0] = currentTouchValues[0] + state.step;
         }
         if (this.state.touchsValues != currentTouchValues) {
-            for (let i = 0; i < this.state.touchsValues.length; i++) {
+            this.state.touchsValues.forEach((element: number, i: number) => {
                 if (this.state.touchsValues[i] != currentTouchValues[i]) {
                     this.state.touchsValues = currentTouchValues;
                     this.notifyStateChanged();
                 }
-            }
+            });
         }
     }
-
     checkTouchsValuesForOverlap() {
         this.state.touchsValues.forEach((element: number, i: number) => {
             if (element <= this.state.touchsValues[i - 1]) {
