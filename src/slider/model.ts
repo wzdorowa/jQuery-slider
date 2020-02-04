@@ -6,8 +6,8 @@ interface IData {
     index: number
 }
 export class Model {
-     state: IModelState
-     emitter: EventEmitter
+     private state: IModelState
+     private emitter: EventEmitter
 
     constructor (eventEmitter: EventEmitter) {
         this.state = {
@@ -37,10 +37,10 @@ export class Model {
             this.setCurrentTouchsValues(data.currentValue, data.index);
         });
     }
-    notifyStateChanged(): void {
+    private notifyStateChanged(): void {
         this.emitter.emit('model:state-changed', this.state);
     }
-    checkMinValueInArrayTouchsValues(state: IModelState): void {
+    private checkMinValueInArrayTouchsValues(state: IModelState): void {
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
             for (let i = 1; i <= (this.state.touchsValues.length - 1); i++) {
@@ -49,7 +49,7 @@ export class Model {
             this.notifyStateChanged();
         }
     }
-    checkMaxValueInArrayTouchsValues(state: IModelState): void {
+    private checkMaxValueInArrayTouchsValues(state: IModelState): void {
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
             const touchsValuesLength = this.state.touchsValues.length - 1;
@@ -59,7 +59,7 @@ export class Model {
             this.notifyStateChanged();
         } 
     }
-    checkTouchsValues(state: IModelState): void {
+    private checkTouchsValues(state: IModelState): void {
         let currentTouchValues: number[] = [];
         for(let i = 0; i < state.touchsValues.length; i++) {
             const newValue: number = state.touchsValues[i];
@@ -87,7 +87,7 @@ export class Model {
         }
     }
     //установить новое значение min//
-    setNewValueMin(min: number): void {
+    public setNewValueMin(min: number): void {
         if (this.state.min === min) {
             return;
         }
@@ -95,7 +95,7 @@ export class Model {
         this.notifyStateChanged();
     }
     //установить новое значение max//
-    setNewValueMax(max: number): void {
+    public setNewValueMax(max: number): void {
         if (this.state.max === max) {
             return;
         }
@@ -103,7 +103,7 @@ export class Model {
         this.notifyStateChanged();
     }
     //установить новое количество ползунков//
-    setNewValueAmount(amount: number) {
+    public setNewValueAmount(amount: number) {
         if (this.state.amount === amount) {
             return;
         }
@@ -117,7 +117,7 @@ export class Model {
         this.notifyStateChanged();
     }
     // установить новое значение для состояния ползунка//
-    setNewValueTouchsValues(touchValue: number, index: number) {
+    public setNewValueTouchsValues(touchValue: number, index: number) {
         if (this.state.touchsValues[index] === touchValue) {
             return;
         }
@@ -125,7 +125,7 @@ export class Model {
         this.notifyStateChanged();
     }
     // установить новое значение для шага перемещения ползунков//
-    setNewValueStep(step: number): void {
+    public setNewValueStep(step: number): void {
         if (this.state.step === step) {
             return;
         }
@@ -139,14 +139,14 @@ export class Model {
         this.notifyStateChanged();
     }
     //установить новое значение для поля tultip//
-    setNewValueTooltip(value: boolean): void {
+    public setNewValueTooltip(value: boolean): void {
         if(value !==  this.state.tooltip) {
             this.state.tooltip = value;
             this.notifyStateChanged();
         }
     }
     //установить новое значение для поля orientation//
-    setNewValueOrientation(value: string): void {
+    public setNewValueOrientation(value: string): void {
         if(value === 'horizontal') {
             this.state.orientation = 'horizontal';
         } else if(value === 'vertical') {
@@ -154,11 +154,11 @@ export class Model {
         }
         this.notifyStateChanged();
     }
-    overwriteCurrentTouchsValues(touchsValues: number[]): void {
+    private overwriteCurrentTouchsValues(touchsValues: number[]): void {
         this.state.touchsValues = touchsValues;
         this.notifyStateChanged();
     }
-    setCurrentTouchsValues(value: number, index: number): void {
+    private setCurrentTouchsValues(value: number, index: number): void {
         this.state.touchsValues[index] = value;
         this.notifyStateChanged();
     }

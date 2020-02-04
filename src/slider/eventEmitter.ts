@@ -7,7 +7,7 @@ export class EventEmitter {
     constructor() {
         this.handlersByEvent = {}
     }
-    subscribe(eventName: string, fn: Function): Function {
+    public subscribe(eventName: string, fn: Function): Function {
         if(!this.handlersByEvent[eventName]) {
             this.handlersByEvent[eventName] = [];
         }
@@ -17,7 +17,7 @@ export class EventEmitter {
             this.handlersByEvent[eventName] = this.handlersByEvent[eventName].filter(eventFn => fn !== eventFn);
         }
     }
-    emit(eventName: string, data: object) {
+    public emit(eventName: string, data: object) {
         const handlers: Function[] = this.handlersByEvent[eventName];
         if(handlers) {
             handlers.forEach(fn => { fn.call(null, data) } );
