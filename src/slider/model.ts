@@ -27,6 +27,7 @@ export class Model {
             this.checkMinValueInArrayTouchsValues(state);
             this.checkMaxValueInArrayTouchsValues(state);
             this.checkTouchsValues(state);
+            this.checkTouchsValuesForOverlap();
         });
 
         this.emitter.subscribe('view:amountTouches-changed', (touchsValues: number[]) => {
@@ -85,6 +86,19 @@ export class Model {
                 }
             }
         }
+    }
+
+    checkTouchsValuesForOverlap() {
+        this.state.touchsValues.forEach((element: number, i: number) => {
+            if (element <= this.state.touchsValues[i - 1]) {
+                this.state.touchsValues[i] = this.state.touchsValues[i - 1] + this.state.step;
+                this.notifyStateChanged();
+            }
+            if (element >= this.state.touchsValues[i + 1]) {
+                this.state.touchsValues[i] = this.state.touchsValues[i + 1] - this.state.step;
+                this.notifyStateChanged();
+            }
+        });
     }
     //установить новое значение min//
     public setNewValueMin(min: number): void {

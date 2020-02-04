@@ -155,14 +155,14 @@ export class View {
             const sliderTooltip: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
             this.elementsSliderTooltipText = [];
             const tooltipText: HTMLElement[] = this.configurator.searchElementsTooltipText(this.slider);
-            for(let i = 0; i < tooltipText.length; i++) {
-                tooltipText[i].remove();
-            }
-            for(let i = 0; i < sliderTooltip.length; i++) {
+            tooltipText.forEach((element: HTMLElement) => {
+                element.remove();
+            });
+            sliderTooltip.forEach((element: HTMLElement) => {
                 const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
-                sliderTooltip[i].append(sliderTooltipText);
+                element.append(sliderTooltipText);
                 this.elementsSliderTooltipText.push(sliderTooltipText);
-            }
+            });
             const sliderLineToDelete: JQuery<HTMLElement> = this.configurator.sliderLineToDelete(this.slider)
             sliderLineToDelete.remove();
     
@@ -180,8 +180,8 @@ export class View {
         let allTouches: HTMLElement[] = Array.from($(this.slider).find('.slider-touch'));
         const indexNewTouch: number = allTouches.length - 1;
 
-            this.modelState.touchsValues[indexNewTouch] = (this.modelState.touchsValues[indexNewTouch -1] + (this.modelState.step));
-            this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
+        this.modelState.touchsValues[indexNewTouch] = (this.modelState.touchsValues[indexNewTouch -1] + (this.modelState.step));
+        this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
     }
     public getCoefficientPoint(): number {
         return this.coefficientPoint = this.configurator.calculateCoefficientPoint(this.elementSliderLine, this.modelState.max, this.modelState.min);
@@ -205,16 +205,16 @@ export class View {
      в соответствующие им тултипы  */
     private setTooltipsValues() {
         if(this.modelState && this.configurator !== null) {
-            for(let i = 0; i < this.modelState.touchsValues.length; i++) {
-                this.elementsSliderTooltipText[i].innerHTML = String(this.modelState.touchsValues[i]);
-            }
+            this.modelState.touchsValues.forEach((element: number, i: number) => {
+                this.elementsSliderTooltipText[i].innerHTML = String(element);
+            });
         }
     }
     private listenSliderTouchesEvents() {
         let elements: HTMLElement[] = this.sliderTouches;
-            for(let i = 0; i < elements.length; i++) {
-                elements[i].addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
-            }
+        elements.forEach((element: HTMLElement, i: number) => {
+            element.addEventListener('mousedown', event => this.onStart(this.modelState, event, i))
+        });
     }
     private newListenSliderTouchesEvents() {
         let elements: HTMLElement[] = this.sliderTouches;
@@ -336,15 +336,15 @@ export class View {
     /* метод hideTooltip скрывает туллтипы ползунков */
     private hideTooltip() {
         const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
-        for(let i = 0; i < allTooltips.length; i++) {
-            allTooltips[i].classList.add('slider-tooltip-hide');
-        }
+        allTooltips.forEach((element: HTMLElement): void => {
+            element.classList.add('slider-tooltip-hide');
+        });
     }
     /* метод showTooltip показывает тултипы ползунков */
     private showTooltip() {
         const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
-        for(let i = 0; i < allTooltips.length; i++) {
-            allTooltips[i].classList.remove('slider-tooltip-hide');
-        }
+        allTooltips.forEach((element: HTMLElement): void => {
+            element.classList.remove('slider-tooltip-hide');
+        });
     }
 }
