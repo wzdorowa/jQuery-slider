@@ -70,9 +70,8 @@ $( () => {
         }
         const setValueToInputFromModelState = (state: IModelState) => {
             let allTouches: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues')) as IHTMLElement[];
-            let touchsValuesLength = state.touchsValues.length - 1;
 
-            new Array(touchsValuesLength)
+            new Array(state.touchsValues.length)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
                     allTouches[i].value = state.touchsValues[i];
