@@ -181,10 +181,13 @@ $( () => {
 
         const setValueOfInputsSliderTouchs = () => {
             let inputsSliderTouchs: NodeListOf<IHTMLElement> = toFindinputsSliderTouchs();
-            for(let i = 0; i < inputsSliderTouchs.length; i++) {
-                const touchValue: number = Number(inputsSliderTouchs[i].value);
-                element.setNewValueTouchsValues(touchValue, i);
-            }
+
+            new Array(inputsSliderTouchs.length)
+                .fill(1)
+                .forEach((_element: number, i: number) => {
+                    const touchValue: number = Number(inputsSliderTouchs[i].value);
+                    element.setNewValueTouchsValues(touchValue, i);
+                })
         }
 
         let form: IHTMLElement = document.querySelector('.panel-configuration') as IHTMLElement;
