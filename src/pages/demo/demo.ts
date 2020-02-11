@@ -38,25 +38,29 @@ $( () => {
                 const missingAmount: number = state.touchsValues.length - amountInputs.length;
                 const rangeOfValuesList: IHTMLElement = document.querySelector('.rangeOfValues-list') as IHTMLElement;
 
-                for (let i = 1; i <= missingAmount; i++) {
-                    let ArrayRangeOfValuesItem: NodeListOf<HTMLElement> = document.querySelectorAll('.rangeOfValues-item');
-                    const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item', '', ArrayRangeOfValuesItem.length + 1);
-                    const input: HTMLElement = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
+                new Array(missingAmount)
+                    .fill(1)
+                    .forEach((element: number, i: number) => {
+                        let ArrayRangeOfValuesItem: NodeListOf<HTMLElement> = document.querySelectorAll('.rangeOfValues-item');
+                        const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item', '', ArrayRangeOfValuesItem.length + 1);
+                        const input: HTMLElement = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
+        
+                        rangeOfValuesItem.append(input);
+                        rangeOfValuesList.append(rangeOfValuesItem); 
     
-                    rangeOfValuesItem.append(input);
-                    rangeOfValuesList.append(rangeOfValuesItem); 
-
-                    setNewValueToNewInputs(state);
-                }
+                        setNewValueToNewInputs(state);
+                    })
             }
             if (amountInputs.length > state.touchsValues.length) {
                 const excessAmount: number = amountInputs.length - state.touchsValues.length;
                 let allTouches: HTMLElement[] = Array.from($('.rangeOfValues-list').find('.rangeOfValues-item'));
 
-                for (let i = 1; i <= excessAmount; i++) {
-                    allTouches[allTouches.length - 1].remove();
-                    allTouches.splice(-1, 1);
-                }
+                new Array(excessAmount)
+                    .fill(1)
+                    .forEach(() => {
+                        allTouches[allTouches.length - 1].remove();
+                        allTouches.splice(-1, 1);
+                    })
             }
         };
         const setNewValueToNewInputs = (state: IModelState) => {
@@ -66,9 +70,13 @@ $( () => {
         }
         const setValueToInputFromModelState = (state: IModelState) => {
             let allTouches: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues')) as IHTMLElement[];
-            for (let i = 0; i <= state.touchsValues.length - 1; i++) {
-                allTouches[i].value = state.touchsValues[i];
-            }
+            let touchsValuesLength = state.touchsValues.length - 1;
+
+            new Array(touchsValuesLength)
+                .fill(1)
+                .forEach((element: number, i: number) => {
+                    allTouches[i].value = state.touchsValues[i];
+                })
         }
         const setValueToStepFromModelState = (state: IModelState) => {
             const stepSize: IHTMLElement = document.querySelector('.field-group-stepSize-container__content') as IHTMLElement;
