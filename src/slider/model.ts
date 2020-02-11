@@ -44,9 +44,9 @@ export class Model {
     private checkMinValueInArrayTouchsValues(state: IModelState): void {
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
-            let newLenth = this.state.touchsValues.length - 1;
+            let touchsValuesLength = this.state.touchsValues.length - 1;
 
-            new Array(newLenth)
+            new Array(touchsValuesLength)
                 .fill(1)
                 .forEach((element: number, i: number) => {
                     this.state.touchsValues[i] = this.state.touchsValues[i - 1] + state.step;
@@ -58,9 +58,12 @@ export class Model {
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
             const touchsValuesLength = this.state.touchsValues.length - 1;
-            for (let i = 1; i <= touchsValuesLength; i++) {
-                this.state.touchsValues[touchsValuesLength - i] = (this.state.touchsValues[(touchsValuesLength - i) + 1]) - state.step;
-            }
+
+            new Array(touchsValuesLength)
+                .fill(1)
+                .forEach((element: number, i: number) => {
+                    this.state.touchsValues[touchsValuesLength - i] = (this.state.touchsValues[(touchsValuesLength - i) + 1]) - state.step;
+                })
             this.notifyStateChanged();
         } 
     }
