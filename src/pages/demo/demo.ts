@@ -20,13 +20,15 @@ $( () => {
         const createInput = (state: IModelState) => {
             const rangeOfValuesList: IHTMLElement = document.querySelector('.rangeOfValues-list') as IHTMLElement;
 
-            for(let i = 0; i < state.amount; i++) {
-                const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item', '', i+1);
-                const input: HTMLElement = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
-
-                rangeOfValuesItem.append(input);
-                rangeOfValuesList.append(rangeOfValuesItem);
-            } 
+            new Array(state.amount)
+                .fill(1)
+                .forEach((_element: number, i: number) => {
+                    const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item', '', i+1);
+                    const input: HTMLElement = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
+    
+                    rangeOfValuesItem.append(input);
+                    rangeOfValuesList.append(rangeOfValuesItem);
+                })
             if(!isCreatedInput) {
                 isCreatedInput = true;
             }
@@ -136,12 +138,14 @@ $( () => {
         };
         let inputsSliderTouchs: NodeListOf<IHTMLElement> = toFindinputsSliderTouchs();
 
-        for(let i = 0; i < inputsSliderTouchs.length; i++) {
-            inputsSliderTouchs[i].addEventListener('blur', () => {
-                const touchValue: number = Number(inputsSliderTouchs[i].value);
-                element.setNewValueTouchsValues(touchValue, i);
+        new Array(inputsSliderTouchs.length)
+            .fill(1)
+            .forEach((_element: number, i: number) => {
+                inputsSliderTouchs[i].addEventListener('blur', () => {
+                    const touchValue: number = Number(inputsSliderTouchs[i].value);
+                    element.setNewValueTouchsValues(touchValue, i);
+                })
             })
-        };
 
         // получить и передать новое значение размера шага введенного пользователем
         // из панели конфигураций в объект newConfig
