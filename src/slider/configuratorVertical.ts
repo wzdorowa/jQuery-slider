@@ -25,10 +25,12 @@ export const configuratorVertical: IConfigurator = {
         return (elementSliderLine.offsetHeight / (max - min));
     },
     calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: IModelState, elementSliderLineSpan: HTMLElement): void {
-        for(let i = 0; i < elements.length; i++) {
-            elements[i].style.left = "";
-            elements[i].style.top = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
-        }
+        new Array(elements.length)
+            .fill(1)
+            .forEach((_element: number, i: number) => {
+                elements[i].style.left = "";
+                elements[i].style.top = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
+            })
         elementSliderLineSpan.style.marginLeft = "";
         elementSliderLineSpan.style.width = "";
 
@@ -36,10 +38,14 @@ export const configuratorVertical: IConfigurator = {
         elementSliderLineSpan.style.height = (elements[elements.length - 1].offsetTop - elements[0].offsetTop) + 'px';
     },
     calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
-        for(let i = 0; i < elements.length && i != currentTouchIndex; i++) {
-            elements[i].style.left = "";
-            elements[i].style.top = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';
-        }
+        new Array(elements.length)
+            .fill(1)
+            .forEach((_element: number, i: number) => {
+                if (i != currentTouchIndex) {
+                    elements[i].style.left = "";
+                    elements[i].style.top = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';
+                }
+            })
         elementSliderLineSpan.style.marginLeft = "";
         elementSliderLineSpan.style.width = "";
 

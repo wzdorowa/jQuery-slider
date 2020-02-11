@@ -25,10 +25,12 @@ export const configuratorHorizontal: IConfigurator = {
         return $(slider).find('.slider-line-for-verticalView');
     },
     calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: IModelState, elementSliderLineSpan: HTMLElement): void {
-        for(let i = 0; i < elements.length; i++) {
-            elements[i].style.top = "";
-            elements[i].style.left = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
-        }
+        new Array(elements.length)
+            .fill(1)
+            .forEach((_element: number, i: number) => {
+                elements[i].style.top = "";
+                elements[i].style.left = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
+            })
         elementSliderLineSpan.style.marginTop = "";
         elementSliderLineSpan.style.height = "";
 
@@ -36,10 +38,14 @@ export const configuratorHorizontal: IConfigurator = {
         elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
     },
     calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
-        for(let i = 0; i < elements.length && i != currentTouchIndex; i++) {
-            elements[i].style.top = "";
-            elements[i].style.left = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';
-        }
+        new Array(elements.length)
+            .fill(1)
+            .forEach((_element: number, i: number) => {
+                if (i != currentTouchIndex) {
+                    elements[i].style.top = "";
+                    elements[i].style.left = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';
+                }
+            })
         elementSliderLineSpan.style.marginTop = "";
         elementSliderLineSpan.style.height = "";
 

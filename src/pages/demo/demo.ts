@@ -159,14 +159,16 @@ $( () => {
         // получить и передать новое значение ориентации слайдера
         let orientationSlider: NodeListOf<IHTMLElement> = document.querySelectorAll('.radio-button-container');
 
-        for(let i = 0; i < orientationSlider.length; i++) {
-            orientationSlider[i].addEventListener('click', () => {
-                let orientation: string = '';
-                if(i === 0) { orientation = 'horizontal';}
-                if(i === 1) { orientation = 'vertical';}
-                element.setNewValueOrientation(orientation);
+        new Array(orientationSlider.length)
+            .fill(1)
+            .forEach((_element: number, i: number) => {
+                orientationSlider[i].addEventListener('click', () => {
+                    let orientation: string = '';
+                    if(i === 0) { orientation = 'horizontal';}
+                    if(i === 1) { orientation = 'vertical';}
+                    element.setNewValueOrientation(orientation);
+                })
             })
-        };
 
         // получить и передать новое значение наличия тултипа
         let checkboxContainer: IHTMLElement = document.querySelector('.checkbox-button-container') as IHTMLElement;
