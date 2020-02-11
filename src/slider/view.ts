@@ -123,33 +123,38 @@ export class View {
                 if (this.missingAmount !== null) {
                     this.missingAmount = this.missingAmount + amount;
                 }
-                for (let i = 1; i <= amount; i++) {
-                    const sliderTouch: HTMLElement = this.createElement('div', 'slider-touch');
-                    const sliderSpan: HTMLElement = this.createElement('span', 'slider-span');
-                    const sliderTooltip: HTMLElement = this.createElement('div', 'slider-tooltip');
-                    const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
-    
-                    sliderTouch.append(sliderSpan);
-                    sliderTouch.append(sliderTooltip);
-                    sliderTooltip.append(sliderTooltipText);
-                    this.slider.append(sliderTouch);
-                    this.sliderTouches.push(sliderTouch);
-                    this.elementsSliderTooltipText.push(sliderTooltipText);
-    
-                    this.newListenSliderTouchesEvents();
-                    this.setValueToNewTouch();
-                }
+                new Array(amount)
+                    .fill(1)
+                    .forEach(() => {
+                        const sliderTouch: HTMLElement = this.createElement('div', 'slider-touch');
+                        const sliderSpan: HTMLElement = this.createElement('span', 'slider-span');
+                        const sliderTooltip: HTMLElement = this.createElement('div', 'slider-tooltip');
+                        const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
+        
+                        sliderTouch.append(sliderSpan);
+                        sliderTouch.append(sliderTooltip);
+                        sliderTooltip.append(sliderTooltipText);
+                        this.slider.append(sliderTouch);
+                        this.sliderTouches.push(sliderTouch);
+                        this.elementsSliderTooltipText.push(sliderTooltipText);
+        
+                        this.newListenSliderTouchesEvents();
+                        this.setValueToNewTouch();
+                    })
             }
             if (this.sliderTouches.length > this.modelState.amount) {
                 const excessAmount: number =  this.sliderTouches.length - this.modelState.amount;
                 let allTouches: HTMLElement[] = Array.from($(this.slider).find('.slider-touch'));
     
-                for (let i = 1; i <= excessAmount; i++) {
-                    this.modelState.touchsValues.splice(-1, 1);
-                    this.sliderTouches.splice(-1, 1);
-                    this.elementsSliderTooltipText.splice(-1, 1);
-                    allTouches[allTouches.length - i].remove();
-                }
+                new Array(excessAmount)
+                    .fill(1)
+                    .forEach((element: number, i: number) => {
+                        this.modelState.touchsValues.splice(-1, 1);
+                        this.sliderTouches.splice(-1, 1);
+                        this.elementsSliderTooltipText.splice(-1, 1);
+                        let newLength = allTouches.length - i;
+                        allTouches[newLength - 1].remove();
+                    })
                 this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
             }
     }
