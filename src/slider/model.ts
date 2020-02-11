@@ -44,9 +44,13 @@ export class Model {
     private checkMinValueInArrayTouchsValues(state: IModelState): void {
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
-            for (let i = 1; i <= (this.state.touchsValues.length - 1); i++) {
-                this.state.touchsValues[i] = this.state.touchsValues[i - 1] + state.step;
-            }
+            let newLenth = this.state.touchsValues.length - 1;
+
+            new Array(newLenth)
+                .fill(1)
+                .forEach((element: number, i: number) => {
+                    this.state.touchsValues[i] = this.state.touchsValues[i - 1] + state.step;
+                })
             this.notifyStateChanged();
         }
     }
