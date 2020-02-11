@@ -93,19 +93,21 @@ export class View {
     }
     /* функция CreateSlider создает основную html-структуру слайдера */
     private createSlider(): void {
-            for(let i = 1; i <= this.modelState.amount; i++) {
-                const sliderTouch: HTMLElement = this.createElement('div', 'slider-touch');
-                const sliderSpan: HTMLElement = this.createElement('span', 'slider-span');
-                const sliderTooltip: HTMLElement = this.createElement('div', 'slider-tooltip');
-                const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
+            new Array(this.modelState.amount)
+                .fill(1)
+                .forEach(() => {
+                    const sliderTouch: HTMLElement = this.createElement('div', 'slider-touch');
+                    const sliderSpan: HTMLElement = this.createElement('span', 'slider-span');
+                    const sliderTooltip: HTMLElement = this.createElement('div', 'slider-tooltip');
+                    const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
     
-                sliderTouch.append(sliderSpan);
-                sliderTouch.append(sliderTooltip);
-                sliderTooltip.append(sliderTooltipText);
-                this.slider.append(sliderTouch);
-                this.sliderTouches.push(sliderTouch);
-                this.elementsSliderTooltipText.push(sliderTooltipText);
-            }
+                    sliderTouch.append(sliderSpan);
+                    sliderTouch.append(sliderTooltip);
+                    sliderTooltip.append(sliderTooltipText);
+                    this.slider.append(sliderTouch);
+                    this.sliderTouches.push(sliderTouch);
+                    this.elementsSliderTooltipText.push(sliderTooltipText);
+                })
             const sliderLine: HTMLElement = this.configurator.createSliderLine(this.createElement);
             const sliderLineSpan: HTMLElement = this.createElement('div', 'slider-line-span');
             
