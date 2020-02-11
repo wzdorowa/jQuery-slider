@@ -40,7 +40,7 @@ $( () => {
 
                 new Array(missingAmount)
                     .fill(1)
-                    .forEach((element: number, i: number) => {
+                    .forEach((_element: number, i: number) => {
                         let ArrayRangeOfValuesItem: NodeListOf<HTMLElement> = document.querySelectorAll('.rangeOfValues-item');
                         const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item', '', ArrayRangeOfValuesItem.length + 1);
                         const input: HTMLElement = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
@@ -74,7 +74,7 @@ $( () => {
 
             new Array(touchsValuesLength)
                 .fill(1)
-                .forEach((element: number, i: number) => {
+                .forEach((_element: number, i: number) => {
                     allTouches[i].value = state.touchsValues[i];
                 })
         }

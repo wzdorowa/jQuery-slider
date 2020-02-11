@@ -148,7 +148,7 @@ export class View {
     
                 new Array(excessAmount)
                     .fill(1)
-                    .forEach((element: number, i: number) => {
+                    .forEach((_element: number, i: number) => {
                         this.modelState.touchsValues.splice(-1, 1);
                         this.sliderTouches.splice(-1, 1);
                         this.elementsSliderTooltipText.splice(-1, 1);
@@ -303,7 +303,7 @@ export class View {
         }
         this.setCurrentTooltipValue(this.modelState, i);
       }
-    private onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, event: MouseEvent, i: number, target: HTMLElement) {
+    private onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement) {
         this.setCurrentTooltipValue(this.modelState, i);
 
         if (this.currentValue !== null) {

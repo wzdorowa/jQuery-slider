@@ -6,7 +6,7 @@ interface IData {
     index: number
 }
 export class Model {
-     private state: IModelState
+     public state: IModelState
      private emitter: EventEmitter
 
     constructor (eventEmitter: EventEmitter) {
@@ -48,7 +48,7 @@ export class Model {
 
             new Array(touchsValuesLength)
                 .fill(1)
-                .forEach((element: number, i: number) => {
+                .forEach((_element: number, i: number) => {
                     this.state.touchsValues[i] = this.state.touchsValues[i - 1] + state.step;
                 })
             this.notifyStateChanged();
@@ -61,7 +61,7 @@ export class Model {
 
             new Array(touchsValuesLength)
                 .fill(1)
-                .forEach((element: number, i: number) => {
+                .forEach((_element: number, i: number) => {
                     this.state.touchsValues[touchsValuesLength - i] = (this.state.touchsValues[(touchsValuesLength - i) + 1]) - state.step;
                 })
             this.notifyStateChanged();
@@ -86,7 +86,7 @@ export class Model {
             currentTouchValues[0] = currentTouchValues[0] + state.step;
         }
         if (this.state.touchsValues != currentTouchValues) {
-            this.state.touchsValues.forEach((element: number, i: number) => {
+            this.state.touchsValues.forEach((_element: number, i: number) => {
                 if (this.state.touchsValues[i] != currentTouchValues[i]) {
                     this.state.touchsValues = currentTouchValues;
                     this.notifyStateChanged();
