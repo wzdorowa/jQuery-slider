@@ -3,6 +3,7 @@ import {configuratorVertical} from './configuratorVertical';
 import { EventEmitter } from './eventEmitter';
 import {IModelState} from './iModelState';
 import {IConfigurator} from './iConfigurator'
+import {createElement} from './functions/createElement';
 
 export class View {
      private slider: HTMLElement
@@ -85,21 +86,21 @@ export class View {
             this.configurator.setWidthHeightSliderContainer(this.slider);
         } 
     }
-    /* функция CreateElement создает необходимый элемент с заданным классом */
-    public createElement(teg: string, className: string): HTMLElement {
-        const element: HTMLElement = document.createElement(teg);
-        element.className = className;
-        return element;
-    }
+    // /* функция CreateElement создает необходимый элемент с заданным классом */
+    // public createElement(teg: string, className: string): HTMLElement {
+    //     const element: HTMLElement = document.createElement(teg);
+    //     element.className = className;
+    //     return element;
+    // }
     /* функция CreateSlider создает основную html-структуру слайдера */
     private createSlider(): void {
             new Array(this.modelState.amount)
                 .fill(1)
                 .forEach(() => {
-                    const sliderTouch: HTMLElement = this.createElement('div', 'slider-touch');
-                    const sliderSpan: HTMLElement = this.createElement('span', 'slider-span');
-                    const sliderTooltip: HTMLElement = this.createElement('div', 'slider-tooltip');
-                    const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
+                    const sliderTouch: HTMLElement = createElement('div', 'slider-touch');
+                    const sliderSpan: HTMLElement = createElement('span', 'slider-span');
+                    const sliderTooltip: HTMLElement = createElement('div', 'slider-tooltip');
+                    const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText();
     
                     sliderTouch.append(sliderSpan);
                     sliderTouch.append(sliderTooltip);
@@ -108,8 +109,8 @@ export class View {
                     this.sliderTouches.push(sliderTouch);
                     this.elementsSliderTooltipText.push(sliderTooltipText);
                 })
-            const sliderLine: HTMLElement = this.configurator.createSliderLine(this.createElement);
-            const sliderLineSpan: HTMLElement = this.createElement('div', 'slider-line-span');
+            const sliderLine: HTMLElement = this.configurator.createSliderLine();
+            const sliderLineSpan: HTMLElement = createElement('div', 'slider-line-span');
             
             this.slider.append(sliderLine);
             sliderLine.append(sliderLineSpan);
@@ -126,10 +127,10 @@ export class View {
                 new Array(amount)
                     .fill(1)
                     .forEach(() => {
-                        const sliderTouch: HTMLElement = this.createElement('div', 'slider-touch');
-                        const sliderSpan: HTMLElement = this.createElement('span', 'slider-span');
-                        const sliderTooltip: HTMLElement = this.createElement('div', 'slider-tooltip');
-                        const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
+                        const sliderTouch: HTMLElement = createElement('div', 'slider-touch');
+                        const sliderSpan: HTMLElement = createElement('span', 'slider-span');
+                        const sliderTooltip: HTMLElement = createElement('div', 'slider-tooltip');
+                        const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText();
         
                         sliderTouch.append(sliderSpan);
                         sliderTouch.append(sliderTooltip);
@@ -166,15 +167,15 @@ export class View {
                 element.remove();
             });
             sliderTooltip.forEach((element: HTMLElement) => {
-                const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText(this.createElement);
+                const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText();
                 element.append(sliderTooltipText);
                 this.elementsSliderTooltipText.push(sliderTooltipText);
             });
             const sliderLineToDelete: JQuery<HTMLElement> = this.configurator.sliderLineToDelete(this.slider)
             sliderLineToDelete.remove();
     
-            const sliderLine: HTMLElement = this.configurator.createSliderLine(this.createElement);
-            const sliderLineSpan: HTMLElement = this.configurator.createSliderLineSpan(this.createElement);
+            const sliderLine: HTMLElement = this.configurator.createSliderLine();
+            const sliderLineSpan: HTMLElement = this.configurator.createSliderLineSpan();
     
             this.slider.append(sliderLine);
             sliderLine.append(sliderLineSpan);

@@ -2,9 +2,9 @@ import {IModelState} from './iModelState';
 
 export interface IConfigurator {
     setWidthHeightSliderContainer(slider: HTMLElement): void
-    createSliderTooltipText(createElement: (teg: string, className: string) => HTMLElement): HTMLElement
-    createSliderLine(createElement: (teg: string, className: string) => HTMLElement): HTMLElement
-    createSliderLineSpan(createElement: (teg: string, className: string) => HTMLElement): HTMLElement
+    createSliderTooltipText(): HTMLElement
+    createSliderLine(): HTMLElement
+    createSliderLineSpan(): HTMLElement
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[]
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number
     sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement>

@@ -1,18 +1,19 @@
 import {IModelState} from './iModelState';
 import {IConfigurator} from './iConfigurator';
+import {createElement} from './functions/createElement';
 
 export const configuratorHorizontal: IConfigurator = {
     setWidthHeightSliderContainer(slider: HTMLElement): void {
         slider.classList.remove('height-vertical-slider-container');
         slider.classList.add('width-horizontal-slider-container');
     },
-    createSliderTooltipText(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
+    createSliderTooltipText(): HTMLElement {
         return createElement('span', 'slider-tooltip-text');
     },
-    createSliderLine(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
+    createSliderLine(): HTMLElement {
         return createElement('div', 'slider-line');
     },
-    createSliderLineSpan(createElement: (teg: string, className: string) => HTMLElement): HTMLElement {
+    createSliderLineSpan(): HTMLElement {
         return createElement('span', 'slider-line-span');
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
