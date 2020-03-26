@@ -6,25 +6,24 @@ import {IConfigurator} from './iConfigurator'
 import {createElement} from './functions/createElement';
 
 export class View {
-     private slider: HTMLElement
-     private sliderTouches: HTMLElement[]
-     private elementSliderLine!: HTMLElement
-     private elementSliderLineSpan!: HTMLElement 
-     private elementsSliderTooltipText: HTMLElement[]
-     private isCreatedSlider: boolean
-     private coefficientPoint: number
-     private shiftToMinValue: number
-     private startXorY: number
-     private maxXorY: number
-     private currentXorY: number
-     private currentValue: number | null
-     private modelState!: IModelState
-     private currentTouchIndex: number | null
-     private configurator!: IConfigurator
-     private currentOrientation: string | null
-     private missingAmount: number | null
-     private emitter: EventEmitter
-
+    private slider: HTMLElement
+    private sliderTouches: HTMLElement[]
+    private elementSliderLine!: HTMLElement
+    private elementSliderLineSpan!: HTMLElement 
+    private elementsSliderTooltipText: HTMLElement[]
+    private isCreatedSlider: boolean
+    private coefficientPoint: number
+    private shiftToMinValue: number
+    private startXorY: number
+    private maxXorY: number
+    private currentXorY: number
+    private currentValue: number | null
+    private modelState!: IModelState
+    private currentTouchIndex: number | null
+    private configurator!: IConfigurator
+    private currentOrientation: string | null
+    private missingAmount: number | null
+    private emitter: EventEmitter
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.slider = element,
@@ -86,15 +85,39 @@ export class View {
             this.configurator.setWidthHeightSliderContainer(this.slider);
         } 
     }
-    // /* функция CreateElement создает необходимый элемент с заданным классом */
-    // public createElement(teg: string, className: string): HTMLElement {
-    //     const element: HTMLElement = document.createElement(teg);
-    //     element.className = className;
-    //     return element;
-    // }
     /* функция CreateSlider создает основную html-структуру слайдера */
     private createSlider(): void {
-            new Array(this.modelState.amount)
+        new Array(this.modelState.amount)
+            .fill(1)
+            .forEach(() => {
+                const sliderTouch: HTMLElement = createElement('div', 'slider-touch');
+                const sliderSpan: HTMLElement = createElement('span', 'slider-span');
+                const sliderTooltip: HTMLElement = createElement('div', 'slider-tooltip');
+                const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText();
+        
+                sliderTouch.append(sliderSpan);
+                sliderTouch.append(sliderTooltip);
+                sliderTooltip.append(sliderTooltipText);
+                this.slider.append(sliderTouch);
+                this.sliderTouches.push(sliderTouch);
+                this.elementsSliderTooltipText.push(sliderTooltipText);
+            })
+        const sliderLine: HTMLElement = this.configurator.createSliderLine();
+        const sliderLineSpan: HTMLElement = createElement('div', 'slider-line-span');
+                
+        this.slider.append(sliderLine);
+        sliderLine.append(sliderLineSpan);
+        
+        this.elementSliderLineSpan = sliderLineSpan;
+        this.elementSliderLine = sliderLine;
+    }
+    private changeAmountTouchs(): void {
+        if (this.sliderTouches.length < this.modelState.amount) {
+            let amount: number = this.modelState.amount - this.sliderTouches.length;
+            if (this.missingAmount !== null) {
+                this.missingAmount = this.missingAmount + amount;
+            }
+            new Array(amount)
                 .fill(1)
                 .forEach(() => {
                     const sliderTouch: HTMLElement = createElement('div', 'slider-touch');
@@ -108,80 +131,50 @@ export class View {
                     this.slider.append(sliderTouch);
                     this.sliderTouches.push(sliderTouch);
                     this.elementsSliderTooltipText.push(sliderTooltipText);
+    
+                    this.newListenSliderTouchesEvents();
+                    this.setValueToNewTouch();
                 })
-            const sliderLine: HTMLElement = this.configurator.createSliderLine();
-            const sliderLineSpan: HTMLElement = createElement('div', 'slider-line-span');
-            
-            this.slider.append(sliderLine);
-            sliderLine.append(sliderLineSpan);
-    
-            this.elementSliderLineSpan = sliderLineSpan;
-            this.elementSliderLine = sliderLine;
-    }
-    private changeAmountTouchs(): void {
-            if (this.sliderTouches.length < this.modelState.amount) {
-                let amount: number = this.modelState.amount - this.sliderTouches.length;
-                if (this.missingAmount !== null) {
-                    this.missingAmount = this.missingAmount + amount;
-                }
-                new Array(amount)
-                    .fill(1)
-                    .forEach(() => {
-                        const sliderTouch: HTMLElement = createElement('div', 'slider-touch');
-                        const sliderSpan: HTMLElement = createElement('span', 'slider-span');
-                        const sliderTooltip: HTMLElement = createElement('div', 'slider-tooltip');
-                        const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText();
-        
-                        sliderTouch.append(sliderSpan);
-                        sliderTouch.append(sliderTooltip);
-                        sliderTooltip.append(sliderTooltipText);
-                        this.slider.append(sliderTouch);
-                        this.sliderTouches.push(sliderTouch);
-                        this.elementsSliderTooltipText.push(sliderTooltipText);
-        
-                        this.newListenSliderTouchesEvents();
-                        this.setValueToNewTouch();
-                    })
-            }
-            if (this.sliderTouches.length > this.modelState.amount) {
-                const excessAmount: number =  this.sliderTouches.length - this.modelState.amount;
-                let allTouches: HTMLElement[] = Array.from($(this.slider).find('.slider-touch'));
-    
-                new Array(excessAmount)
-                    .fill(1)
-                    .forEach((_element: number, i: number) => {
-                        this.modelState.touchsValues.splice(-1, 1);
-                        this.sliderTouches.splice(-1, 1);
-                        this.elementsSliderTooltipText.splice(-1, 1);
-                        let newLength = allTouches.length - i;
-                        allTouches[newLength - 1].remove();
-                    })
-                this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
-            }
+        }
+        if (this.sliderTouches.length > this.modelState.amount) {
+            const excessAmount: number =  this.sliderTouches.length - this.modelState.amount;
+            let allTouches: HTMLElement[] = Array.from($(this.slider).find('.slider-touch'));
+
+            new Array(excessAmount)
+                .fill(1)
+                .forEach((_element: number, i: number) => {
+                    this.modelState.touchsValues.splice(-1, 1);
+                    this.sliderTouches.splice(-1, 1);
+                    this.elementsSliderTooltipText.splice(-1, 1);
+                    let newLength = allTouches.length - i;
+                    allTouches[newLength - 1].remove();
+                })
+            this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
+        }
     }
     private changeOrientation(): void {
-            const sliderTooltip: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
-            this.elementsSliderTooltipText = [];
-            const tooltipText: HTMLElement[] = this.configurator.searchElementsTooltipText(this.slider);
-            tooltipText.forEach((element: HTMLElement) => {
-                element.remove();
-            });
-            sliderTooltip.forEach((element: HTMLElement) => {
-                const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText();
-                element.append(sliderTooltipText);
-                this.elementsSliderTooltipText.push(sliderTooltipText);
-            });
-            const sliderLineToDelete: JQuery<HTMLElement> = this.configurator.sliderLineToDelete(this.slider)
-            sliderLineToDelete.remove();
-    
-            const sliderLine: HTMLElement = this.configurator.createSliderLine();
-            const sliderLineSpan: HTMLElement = this.configurator.createSliderLineSpan();
-    
-            this.slider.append(sliderLine);
-            sliderLine.append(sliderLineSpan);
-    
-            this.elementSliderLine = sliderLine;
-            this.elementSliderLineSpan = sliderLineSpan;
+        const sliderTooltip: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
+        this.elementsSliderTooltipText = [];
+        const tooltipText: HTMLElement[] = this.configurator.searchElementsTooltipText(this.slider);
+        tooltipText.forEach((element: HTMLElement) => {
+            element.remove();
+        });
+        sliderTooltip.forEach((element: HTMLElement) => {
+            const sliderTooltipText: HTMLElement = this.configurator.createSliderTooltipText();
+            element.append(sliderTooltipText);
+            this.elementsSliderTooltipText.push(sliderTooltipText);
+        });
+        const sliderLineToDelete: JQuery<HTMLElement> = this.configurator.sliderLineToDelete(this.slider)
+        sliderLineToDelete.remove();
+
+        const sliderLine: HTMLElement = this.configurator.createSliderLine();
+        const sliderLineSpan: HTMLElement = this.configurator.createSliderLineSpan();
+
+        this.slider.append(sliderLine);
+        sliderLine.append(sliderLineSpan);
+
+        this.elementSliderLine = sliderLine;
+        this.elementSliderLineSpan = sliderLineSpan;
     }
     /* устанавливает значение для добавленного ползунка */
     private setValueToNewTouch() {
@@ -333,7 +326,6 @@ export class View {
             currentValueX = modelState.step * multi;
         }
         return currentValueX;
-
     }
     /* метод setCurrentTooltipValue устанавливает текущее значение в тултип ползунка */
     private setCurrentTooltipValue(modelState: IModelState | null, i: number) {
