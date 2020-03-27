@@ -33,13 +33,17 @@ test('Find element with class "slider-tooltip-text-for-verticalView"', () => {
     const searchElementsTooltipText: HTMLElement[] = configuratorHorizontal.searchElementsTooltipText(parentTooltipText);
     expect(searchElementsTooltipText[0].className).toBe('slider-tooltip-text-for-verticalView');
 });
-//Переписать тест - не работает
-// test('', () => {
-//     const elementSliderLine: HTMLElement = configuratorHorizontal.createSliderLine();
-//     elementSliderLine.style.width = 300 + 'px';
-//     const calculateCoefficientPoint = configuratorHorizontal.calculateCoefficientPoint(elementSliderLine, 100, 0);
-//     expect(calculateCoefficientPoint).toBe(2);
-// });
+test('Calculate point coefficient', () => {
+    const elementSliderLine: HTMLElement = configuratorHorizontal.createSliderLine();
+    elementSliderLine.style.display = 'block';
+    elementSliderLine.style.width = 300 + 'px';
+    document.body.append(elementSliderLine);
+    //@ts-ignore
+    const domElement: HTMLElement = document.querySelector('.slider-line');
+    console.log(domElement.offsetWidth);
+    const calculateCoefficientPoint = configuratorHorizontal.calculateCoefficientPoint(elementSliderLine, 100, 0);
+    expect(calculateCoefficientPoint).toBe(2);
+});
 test('Find element with class "slider-line-span" for delete', () => {
     const lineVerticalView: HTMLElement = createElement('span', 'slider-line-for-verticalView');
     const parentLineVerticalView: HTMLElement = createElement('div', 'parent-slider-line-for-verticalView');
