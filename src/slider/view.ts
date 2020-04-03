@@ -4,6 +4,7 @@ import { EventEmitter } from './eventEmitter';
 import {IModelState} from './iModelState';
 import {IConfigurator} from './iConfigurator'
 import {createElement} from './functions/createElement';
+import {getCoefficientPoint} from './functions/getCoefficientPoint'
 
 export class View {
     private slider: HTMLElement
@@ -24,6 +25,7 @@ export class View {
     private currentOrientation: string | null
     private missingAmount: number | null
     private emitter: EventEmitter
+    private getCoefficientPoint: (configurator: IConfigurator, elementSliderLine: HTMLElement, max: number, min: number) => number
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.slider = element,
@@ -38,7 +40,7 @@ export class View {
         this.currentValue = 0,
         this.currentTouchIndex = null,
         this.currentOrientation = null,
-        this.missingAmount = null
+        this.missingAmount = null,
 
         this.emitter = eventEmitter,
 
@@ -78,7 +80,7 @@ export class View {
             this.setNewValueSliderTouch();
             this.setTooltipsValues();
         }),
-        this.getCoefficientPoint = this.getCoefficientPoint.bind(this);
+        this.getCoefficientPoint = getCoefficientPoint.bind(this);
     }
     private setWidthSliderContainer(): void {
         if(this.configurator !== null) {
@@ -184,20 +186,17 @@ export class View {
         this.modelState.touchsValues[indexNewTouch] = (this.modelState.touchsValues[indexNewTouch -1] + (this.modelState.step));
         this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
     }
-    public getCoefficientPoint(): number {
-        return this.coefficientPoint = this.configurator.calculateCoefficientPoint(this.elementSliderLine, this.modelState.max, this.modelState.min);
-    }
     /* функция setValuesSliderTouch устанавливает полученное по-умолчанию значение
      для каждой из кнопок-ползунков */
     private setValueSliderTouch() {
         let elements: HTMLElement[] = this.sliderTouches;
-        if(this.modelState && this.configurator !== null && this.getCoefficientPoint !== undefined) {
-            this.configurator.calculateValueSliderTouch(elements, this.getCoefficientPoint, this.modelState, this.elementSliderLineSpan);
+        if(this.modelState && this.configurator !== null) {
+            this.configurator.calculateValueSliderTouch(elements, this.modelState, this.elementSliderLineSpan, this.elementSliderLine);
         }
     }
     private setNewValueSliderTouch() {
         let elements: HTMLElement[] = this.sliderTouches;
-        this.coefficientPoint = this.getCoefficientPoint();
+        this.coefficientPoint = this.getCoefficientPoint(this.configurator, this.elementSliderLine, this.modelState.max, this.modelState.min);
 
         this.shiftToMinValue = Math.ceil(this.coefficientPoint * this.modelState.min);
         this.configurator.calculateNewValueSliderTouch(elements, this.currentTouchIndex, this.coefficientPoint, this.modelState, this.shiftToMinValue, this.elementSliderLineSpan);

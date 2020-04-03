@@ -1,6 +1,7 @@
 import {IModelState} from './iModelState';
 import {IConfigurator} from './iConfigurator';
 import {createElement} from './functions/createElement';
+import {getCoefficientPoint} from './functions/getCoefficientPoint'
 
 export const configuratorHorizontal: IConfigurator = {
     setWidthHeightSliderContainer(slider: HTMLElement): void {
@@ -25,12 +26,12 @@ export const configuratorHorizontal: IConfigurator = {
     sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line-for-verticalView');
     },
-    calculateValueSliderTouch(elements: HTMLElement[], getCoefficientPoint: () => number, modelState: IModelState, elementSliderLineSpan: HTMLElement): void {
+    calculateValueSliderTouch(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
                 elements[i].style.top = "";
-                elements[i].style.left = (Math.ceil(getCoefficientPoint() * modelState.touchsValues[i])) + 'px';
+                elements[i].style.left = (Math.ceil(getCoefficientPoint(configuratorHorizontal, elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i])) + 'px';
             })
         elementSliderLineSpan.style.marginTop = "";
         elementSliderLineSpan.style.height = "";
