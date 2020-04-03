@@ -30,11 +30,9 @@ export const configuratorHorizontal: IConfigurator = {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                elements[i].style.top = "";
                 elements[i].style.left = (Math.ceil(getCoefficientPoint(configuratorHorizontal, elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i])) + 'px';
+                console.log(getCoefficientPoint(configuratorHorizontal, elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i]);
             })
-        elementSliderLineSpan.style.marginTop = "";
-        elementSliderLineSpan.style.height = "";
 
         elementSliderLineSpan.style.marginLeft = elements[0].offsetLeft + 'px';
         elementSliderLineSpan.style.width = (elements[elements.length - 1].offsetLeft - elements[0].offsetLeft) + 'px';
