@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/wzdorowa/jQuery-slider#readme",
   "dependencies": {
+    "@types/node": "^13.11.0",
     "parcel-bundler": "^1.12.4",
-    "pug": "^2.0.4"
+    "pug": "^2.0.4",
+    "puppeteer": "^2.1.1"
   },
   "engines": {
     "node": "10.15.0",
@@ -32,6 +34,7 @@
     "sass": "^1.25.0",
     "ts-jest": "^25.2.1",
     "typescript": "^3.7.5",
-    "jquery": "3.4.1"
+    "jquery": "3.4.1",
+    "puppeteer": "2.1.1"
   }
 }

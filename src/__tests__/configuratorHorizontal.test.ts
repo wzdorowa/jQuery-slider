@@ -1,6 +1,18 @@
 import {configuratorHorizontal} from '../slider/configuratorHorizontal';
 import {createElement} from '../slider/functions/createElement';
 
+const puppeteer = require('puppeteer');
+let page: any;
+let browser: any;
+
+beforeAll(async () => {
+    browser = await puppeteer.launch({ headless: false });
+    page = await browser.newPage();
+});
+afterAll(() => {
+    browser.close();
+});
+
 test('Сhange the class from vertical to horizontal', () => {
     const slider: HTMLElement = createElement('span', 'height-vertical-slider-container');
     configuratorHorizontal.setWidthHeightSliderContainer(slider);
