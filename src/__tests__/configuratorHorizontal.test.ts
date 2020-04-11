@@ -79,11 +79,12 @@ test('', () => {
     modelState.touchsValues = [];
     modelState.max = 100;
     modelState.min = 0;
-    const element: HTMLElement = createElement('div', 'slider-element');
+
     const elements: HTMLElement[] = [];
     const elementCount: number = 4;
     let touchsValue: number = 20;
     for(let i = 0; i < elementCount; i++) {
+        const element: HTMLElement = createElement('div', 'slider-element');
         elements.push(element);
         modelState.touchsValues.push(touchsValue);
         touchsValue = touchsValue + 5;
@@ -94,8 +95,8 @@ test('', () => {
     const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createSliderLineSpan();
     
     configuratorHorizontal.calculateValueSliderTouch(elements, modelState, elementSliderLineSpan, elementSliderLine);
-    expect(elements[3].style.left).toBe('40px');
-    expect(elements[2].style.left).toBe('50px');
-    expect(elements[1].style.left).toBe('60px');
-    expect(elements[0].style.left).toBe('70px');
+    expect(elements[0].style.left).toBe('40px');
+    expect(elements[1].style.left).toBe('50px');
+    expect(elements[2].style.left).toBe('60px');
+    expect(elements[3].style.left).toBe('70px');
 })

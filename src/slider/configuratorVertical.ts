@@ -1,7 +1,6 @@
 import {IModelState} from './iModelState';
 import {IConfigurator} from './iConfigurator';
 import {createElement} from './functions/createElement';
-import {getCoefficientPoint} from './functions/getCoefficientPoint'
 
 export const configuratorVertical: IConfigurator = {
     setWidthHeightSliderContainer(slider: HTMLElement): void {
@@ -30,7 +29,7 @@ export const configuratorVertical: IConfigurator = {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                elements[i].style.top = (Math.ceil(getCoefficientPoint(configuratorVertical, elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i])) + 'px';
+                elements[i].style.top = (Math.ceil(configuratorVertical.calculateCoefficientPoint(elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i])) + 'px';
             })
 
         elementSliderLineSpan.style.marginTop = elements[0].offsetTop + 'px';

@@ -4,7 +4,6 @@ import { EventEmitter } from './eventEmitter';
 import {IModelState} from './iModelState';
 import {IConfigurator} from './iConfigurator'
 import {createElement} from './functions/createElement';
-import {getCoefficientPoint} from './functions/getCoefficientPoint'
 
 export class View {
     private slider: HTMLElement
@@ -25,7 +24,6 @@ export class View {
     private currentOrientation: string | null
     private missingAmount: number | null
     private emitter: EventEmitter
-    private getCoefficientPoint: (configurator: IConfigurator, elementSliderLine: HTMLElement, max: number, min: number) => number
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.slider = element,
@@ -79,8 +77,7 @@ export class View {
             }
             this.setNewValueSliderTouch();
             this.setTooltipsValues();
-        }),
-        this.getCoefficientPoint = getCoefficientPoint.bind(this);
+        })
     }
     private setWidthSliderContainer(): void {
         if(this.configurator !== null) {
@@ -196,7 +193,7 @@ export class View {
     }
     private setNewValueSliderTouch() {
         let elements: HTMLElement[] = this.sliderTouches;
-        this.coefficientPoint = this.getCoefficientPoint(this.configurator, this.elementSliderLine, this.modelState.max, this.modelState.min);
+        this.coefficientPoint = this.configurator.calculateCoefficientPoint(this.elementSliderLine, this.modelState.max, this.modelState.min);
 
         this.shiftToMinValue = Math.ceil(this.coefficientPoint * this.modelState.min);
         this.configurator.calculateNewValueSliderTouch(elements, this.currentTouchIndex, this.coefficientPoint, this.modelState, this.shiftToMinValue, this.elementSliderLineSpan);
