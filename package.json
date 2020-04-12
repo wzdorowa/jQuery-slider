@@ -22,7 +22,8 @@
     "@types/puppeteer": "^2.0.1",
     "parcel-bundler": "^1.12.4",
     "pug": "^2.0.4",
-    "puppeteer": "^2.1.1"
+    "puppeteer": "^2.1.1",
+    "sinon": "^9.0.2"
   },
   "engines": {
     "node": "10.15.0",
