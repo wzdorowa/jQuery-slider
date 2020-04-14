@@ -1,6 +1,7 @@
 import {IModelState} from './iModelState';
 
 export interface IConfigurator {
+    calculateElementOffsetLeftOrTop(element: HTMLElement): number
     setWidthHeightSliderContainer(slider: HTMLElement): void
     createSliderTooltipText(): HTMLElement
     createSliderLine(): HTMLElement

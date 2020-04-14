@@ -3,6 +3,9 @@ import {IConfigurator} from './iConfigurator';
 import {createElement} from './functions/createElement';
 
 export const configuratorVertical: IConfigurator = {
+    calculateElementOffsetLeftOrTop(element: HTMLElement): number {
+        return element.offsetTop;
+    },
     setWidthHeightSliderContainer(slider: HTMLElement): void {
         slider.classList.remove('width-horizontal-slider-container');
         slider.classList.add('height-vertical-slider-container');
@@ -32,8 +35,8 @@ export const configuratorVertical: IConfigurator = {
                 elements[i].style.top = (Math.ceil(configuratorVertical.calculateCoefficientPoint(elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i])) + 'px';
             })
 
-        elementSliderLineSpan.style.marginTop = elements[0].offsetTop + 'px';
-        elementSliderLineSpan.style.height = (elements[elements.length - 1].offsetTop - elements[0].offsetTop) + 'px';
+        elementSliderLineSpan.style.marginTop = configuratorVertical.calculateElementOffsetLeftOrTop(elements[0]) + 'px';
+        elementSliderLineSpan.style.height = (configuratorVertical.calculateElementOffsetLeftOrTop(elements[elements.length - 1]) - configuratorVertical.calculateElementOffsetLeftOrTop(elements[0])) + 'px';
     },
     calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
         new Array(elements.length)
@@ -47,8 +50,8 @@ export const configuratorVertical: IConfigurator = {
         elementSliderLineSpan.style.marginLeft = "";
         elementSliderLineSpan.style.width = "";
 
-        elementSliderLineSpan.style.marginTop = elements[0].offsetTop + 'px';
-        elementSliderLineSpan.style.height = (elements[elements.length - 1].offsetTop - elements[0].offsetTop) + 'px';
+        elementSliderLineSpan.style.marginTop = configuratorVertical.calculateElementOffsetLeftOrTop(elements[0]) + 'px';
+        elementSliderLineSpan.style.height = (configuratorVertical.calculateElementOffsetLeftOrTop(elements[elements.length - 1]) - configuratorVertical.calculateElementOffsetLeftOrTop(elements[0])) + 'px';
     },
     setCurrentXorYtoOnStart(target: HTMLElement): number {
         return target.offsetTop;
@@ -75,7 +78,7 @@ export const configuratorVertical: IConfigurator = {
         target.style.top = Math.ceil(coefficientPoint * currentValue) - shiftToMinValue  + 'px';
     },
     updateLineSpan(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void {
-        elementSliderLineSpan.style.marginTop = elements[0].offsetTop + 'px';
-        elementSliderLineSpan.style.height = (elements[elements.length -1].offsetTop - elements[0].offsetTop) + 'px';
+        elementSliderLineSpan.style.marginTop = configuratorVertical.calculateElementOffsetLeftOrTop(elements[0]) + 'px';
+        elementSliderLineSpan.style.height = (configuratorVertical.calculateElementOffsetLeftOrTop(elements[elements.length -1]) - configuratorVertical.calculateElementOffsetLeftOrTop(elements[0])) + 'px';
     },
 };
