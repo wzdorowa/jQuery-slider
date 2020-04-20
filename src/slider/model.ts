@@ -94,7 +94,7 @@ export class Model {
             });
         }
     }
-    checkTouchsValuesForOverlap() {
+    private checkTouchsValuesForOverlap() {
         this.state.touchsValues.forEach((element: number, i: number) => {
             if (element <= this.state.touchsValues[i - 1]) {
                 this.state.touchsValues[i] = this.state.touchsValues[i - 1] + this.state.step;
