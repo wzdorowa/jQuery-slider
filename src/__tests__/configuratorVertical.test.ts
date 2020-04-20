@@ -60,7 +60,6 @@ test('Find element with class "slider-tooltip-text"', () => {
         parentTooltipText.append(tooltipText);
     }
     const searchElementsTooltipText: HTMLElement[] = configuratorVertical.searchElementsTooltipText(parentTooltipText);
-    console.log('searchElementsTooltipText', searchElementsTooltipText);
     expect(searchElementsTooltipText[0].className).toBe('slider-tooltip-text');
 });
 test('Calculate point coefficient', () => {

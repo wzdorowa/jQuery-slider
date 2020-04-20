@@ -183,8 +183,7 @@ export class View {
         this.modelState.touchsValues[indexNewTouch] = (this.modelState.touchsValues[indexNewTouch -1] + (this.modelState.step));
         this.emitter.emit('view:amountTouches-changed', this.modelState.touchsValues);
     }
-    /* функция setValuesSliderTouch устанавливает полученное по-умолчанию значение
-     для каждой из кнопок-ползунков */
+    /* расставляет кнопки-ползунки по слайдеру в зависимости от полученных по-умолчанию значений */
     private setValueSliderTouch() {
         let elements: HTMLElement[] = this.sliderTouches;
         if(this.modelState && this.configurator !== null) {
