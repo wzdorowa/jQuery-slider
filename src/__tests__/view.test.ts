@@ -1,11 +1,10 @@
 import {View} from '../slider/view';
 import { EventEmitter } from '../slider/eventEmitter';
 import {IModelState} from '../slider/iModelState';
-//import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer';
 
 //var sinon = require('sinon');
 
-debugger;
 const element = window.document.createElement('div');
 element.className = 'js-slider-test';
 window.document.body.appendChild(element);
@@ -145,33 +144,110 @@ test('Check tooltip values', () => {
     expect(tooltipsText[1].innerHTML).toContain('30');
     expect(tooltipsText[2].innerHTML).toContain('40');
 });
-// describe('', () => {
-//     //@ts-ignore
-//     let browser: any;
-//     //@ts-ignore
-//     let page: any;
+test('тестирование событий', () => {
+    let event = new Event('mousedown');
+    const touchElements = window.document.querySelectorAll('.slider-touch');
+    emitter.subscribe('mousedown', (event: MouseEvent) => {
+        console.log('event', event);
+    })
+    touchElements[0].dispatchEvent(event);
+    debugger;
+    //console.log('touchElements[0]:', element);
+})
+describe('', () => {
+    //@ts-ignore
+    let browser: any;
+    //@ts-ignore
+    let page: any;
 
-//     beforeEach(async () => {
-//         browser = await puppeteer.launch({ headless: false});
-//         page = await browser.newPage();
-//     });
-//     afterEach(async () => {
+    beforeEach(async () => {
+        browser = await puppeteer.launch({ headless: false});
+        page = await browser.newPage();
+    });
+    afterEach(async () => {
         
-//         await browser.close();
-//     });
-//     test('Checking the location of the sliders on the slider', async () => {
-//         await page.goto('http://localhost:1234');
-//         await page.waitFor(1000);
+        await browser.close();
+    });
+    test('Checking the location of the sliders on the slider', async () => {
+        await page.goto('http://localhost:1234');
+        await page.waitFor(2000);
 
-//         // Checking the location of the sliders on the slider
-//         const touchElements = await page.querySelectorAll('.slider-touch');
-//         console.log('touchElements', touchElements.length);
+        //Функция для нахождения коэффициента единичного значения слайдера в пикселях
+        const getCoefficientPoint = (sliderLineWidth: number, max: number, min: number) => {
+           return sliderLineWidth / (max - min);
+        };
+        //Функция для нахождения значения минимально возможной дистанции между ползунками
+        const getDistanceTouches = (touchWidth: number, coefficientPoint: number) => {
+            return Math.ceil(touchWidth / coefficientPoint);
+        };
+        const getCurrentValue = (offsetLeft: number, startSlider: number, coefficientPoint: number) => {
+            return Math.floor((offsetLeft - startSlider) / coefficientPoint);
+        }
+        const getRectPreviousTouch = (currentValue: number, distanceTouches: number, coefficientPoint: number, startSlider: number) => {
+            return Math.ceil((currentValue - distanceTouches) * coefficientPoint + startSlider);
+        }
+        // Найти координаты линии слайдера
+        const sliderLine: HTMLDivElement = await page.$('.slider-line');
+        const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
+            const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, sliderLine);
+        const sliderLineWidth: number = rectSliderLine.right - rectSliderLine.left;
+        console.log('sliderLineWidth', sliderLineWidth);
         
-//         //@ts-ignore
-//         const elementMarginLeft = await page.$$eval('.slider-touch', divs => divs);
-//         console.log('elementMarginLeft', elementMarginLeft[0].offsetLeft);
-//        // expect(elementMarginLeft).toBe('30px');
-//         // elementSliderLine.width = elementSliderLineOffsetWidth; 
+        //Найти первый ползунок и его ширину
+        const touchElements: HTMLDivElement[] = await page.$$('.slider-touch');
+        const firstElement: HTMLDivElement = touchElements[0];
+        let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, firstElement);
+        const elementWidth: number = rectFirstElement.right - rectFirstElement.left;
         
-//     })
-//})
+        //Найти координаты второго ползунка
+        const secondElement: HTMLDivElement = touchElements[1];
+        let rectSecondElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, secondElement);
+        console.log('rectSecondElement', rectSecondElement);
+
+        //Точки начала и конца линии слайдера
+        const startPointSlider = rectSliderLine.left - (elementWidth/2);
+        //@ts-ignore
+        const endPointSlider = rectSliderLine.right + (elementWidth/2);
+
+        //Определить значения и коэффициенты перед проверкой работы ползунка
+        const coefficientPoint = getCoefficientPoint(sliderLineWidth, state.max, state.min);
+        const distanceTouches = getDistanceTouches(elementWidth, coefficientPoint);
+        const currentValue = getCurrentValue(rectSecondElement.left, startPointSlider, coefficientPoint);
+        const rectPreviousTouch = getRectPreviousTouch(currentValue, distanceTouches, coefficientPoint, startPointSlider)
+        
+        // Проверить корректность работы первого ползунка
+        await page.mouse.move(514, 54);
+        await page.mouse.down();
+        await page.waitFor(500);
+        await page.mouse.move(450,  54, { steps: 2});
+        await page.waitFor(500);
+        await  page.mouse.up();
+
+        rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+          }, firstElement);
+        expect(rectFirstElement.left).toBe(startPointSlider);
+        
+        await page.mouse.move(448, 54);
+        await page.mouse.down();
+        await page.waitFor(500);
+        await page.mouse.move(700,  54, { steps: 2});
+        await page.waitFor(500);
+        await  page.mouse.up();
+
+        rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+          }, firstElement);
+        expect(rectFirstElement.left).toBe(rectPreviousTouch);
+    })
+})

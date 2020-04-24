@@ -16,7 +16,7 @@ export class Model {
             touchsValues: [20, 32, 44, 60],
             orientation: 'horizontal',
             amount: 4,
-            step: 4,
+            step: 2,
             tooltip: true,
         };
 
