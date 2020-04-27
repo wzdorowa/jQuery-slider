@@ -5,16 +5,6 @@ import puppeteer from 'puppeteer';
 
 //var sinon = require('sinon');
 
-const element = window.document.createElement('div');
-element.className = 'js-slider-test';
-window.document.body.appendChild(element);
-
-const eventEmitter = new EventEmitter();
-let emitter = eventEmitter;
-
-//@ts-ignore
-const view = new View(element, eventEmitter);
-
 let state: IModelState = {
     min: 0,
     max: 100,
@@ -23,149 +13,155 @@ let state: IModelState = {
     amount: 4,
     step: 2,
     tooltip: true,
-}
-test('Check creating basic HTML slider structure', () => {
-    emitter.emit('model:state-changed', state);
-    //Проверка корректного создания элементов
-    const touchElements = window.document.querySelectorAll('.slider-touch');
-    const sliderSpans = window.document.querySelectorAll('.slider-span');
-    const tooltips = window.document.querySelectorAll('.slider-tooltip');
-    const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
-    const sliderLine = window.document.querySelector('.slider-line');
-    const sliderLineSpan = window.document.querySelector('.slider-line-span');
+};
+describe('Модульные тесты', () => {
 
-    expect(touchElements.length).toBe(state.amount);
-    expect(sliderSpans.length).toBe(state.amount);
-    expect(tooltips.length).toBe(state.amount);
-    expect(tooltipsText.length).toBe(state.amount);
-    expect(sliderLine?.className).toBe('slider-line');
-    expect(sliderLineSpan?.className).toBe('slider-line-span');
+    const element = window.document.createElement('div');
+    element.className = 'js-slider-test';
+    window.document.body.appendChild(element);
+    
+    const eventEmitter = new EventEmitter();
+    let emitter = eventEmitter;
+    
+    //@ts-ignore
+    const view = new View(element, eventEmitter);
+    
+    test('Check creating basic HTML slider structure', () => {
+        emitter.emit('model:state-changed', state);
+        //Проверка корректного создания элементов
+        const touchElements = window.document.querySelectorAll('.slider-touch');
+        const sliderSpans = window.document.querySelectorAll('.slider-span');
+        const tooltips = window.document.querySelectorAll('.slider-tooltip');
+        const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
+        const sliderLine = window.document.querySelector('.slider-line');
+        const sliderLineSpan = window.document.querySelector('.slider-line-span');
+    
+        expect(touchElements.length).toBe(state.amount);
+        expect(sliderSpans.length).toBe(state.amount);
+        expect(tooltips.length).toBe(state.amount);
+        expect(tooltipsText.length).toBe(state.amount);
+        expect(sliderLine?.className).toBe('slider-line');
+        expect(sliderLineSpan?.className).toBe('slider-line-span');
+    });
+    test('Check for parents for created items', () => {
+        //Проверить наличие родителей у созданных элементов
+        const parentTouchElements = window.document.querySelectorAll('.slider-touch')[0].parentNode;
+        const parentSliderSpans = window.document.querySelectorAll('.slider-span')[0].parentNode;
+        const parentTooltips = window.document.querySelectorAll('.slider-tooltip')[0].parentNode;
+        const parentTooltipsText = window.document.querySelectorAll('.slider-tooltip-text')[0].parentNode;
+        const parentSliderLine = window.document.querySelector('.slider-line')?.parentNode;
+        const parentSliderLineSpan = window.document.querySelector('.slider-line-span')?.parentNode;
+    
+        //@ts-ignore
+        expect(parentTouchElements.className).toContain('js-slider-test');
+        //@ts-ignore
+        expect(parentSliderSpans.className).toBe('slider-touch');
+        //@ts-ignore
+        expect(parentTooltips.className).toBe('slider-touch');
+        //@ts-ignore
+        expect(parentTooltipsText.className).toBe('slider-tooltip');
+        //@ts-ignore
+        expect(parentSliderLine.className).toContain('js-slider-test');
+        //@ts-ignore
+        expect(parentSliderLineSpan.className).toBe('slider-line');
+    });
+    test('Check class replacement for some elements when changing orientation', () => {
+        //Проверить замену классов у некоторых элементов при смене ориентации
+        state.orientation = 'vertical';
+        emitter.emit('model:state-changed', state);
+    
+        const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text-for-verticalView');
+        const sliderLine = window.document.querySelector('.slider-line-for-verticalView');
+        const sliderLineSpan = window.document.querySelector('.slider-line-span-for-verticalView');
+    
+        expect(tooltipsText.length).toBe(state.amount);
+        expect(tooltipsText[0].className).toBe('slider-tooltip-text-for-verticalView');
+        expect(tooltipsText[0].className).not.toBe('slider-tooltip-text');
+    
+        expect(sliderLine?.className).toBe('slider-line-for-verticalView');
+        expect(sliderLine?.className).not.toBe('slider-line');
+    
+        expect(sliderLineSpan?.className).toBe('slider-line-span-for-verticalView');
+        expect(sliderLineSpan?.className).not.toBe('slider-line-span');
+    
+        state.orientation = 'horizontal';
+        emitter.emit('model:state-changed', state);
+    });
+    test('Check Add Sliders', () => {
+        //Проверить изменение количества созданных элементов при изменении количества ползунков
+        state.amount = 5;
+        emitter.emit('model:state-changed', state);
+    
+        const touchElements = window.document.querySelectorAll('.slider-touch');
+        const sliderSpans = window.document.querySelectorAll('.slider-span');
+        const tooltips = window.document.querySelectorAll('.slider-tooltip');
+        const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
+    
+        expect(touchElements.length).toBe(state.amount);
+        expect(sliderSpans.length).toBe(state.amount);
+        expect(tooltips.length).toBe(state.amount);
+        expect(tooltipsText.length).toBe(state.amount);
+    
+        //Проверить значение добавленного ползунка
+        expect(state.touchsValues.length).toBe(5);
+        expect(state.touchsValues[4]).toBe(52);
+    });
+    test('Check for sliders removal', () => {
+        //Проверить удаление ползунков
+        state.amount = 3;
+        emitter.emit('model:state-changed', state);
+    
+        const touchElements = window.document.querySelectorAll('.slider-touch');
+        const sliderSpans = window.document.querySelectorAll('.slider-span');
+        const tooltips = window.document.querySelectorAll('.slider-tooltip');
+        const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
+    
+        expect(touchElements.length).toBe(state.amount);
+        expect(sliderSpans.length).toBe(state.amount);
+        expect(tooltips.length).toBe(state.amount);
+        expect(tooltipsText.length).toBe(state.amount);
+        expect(state.touchsValues.length).toBe(3);
+    });
+    test('Check for tooltips when changing state', () => {
+        //Проверить наличие тултипов при изменении стейта
+        state.tooltip = false;
+        emitter.emit('model:state-changed', state);
+    
+        let tooltips = window.document.querySelectorAll('.slider-tooltip');
+        //@ts-ignore
+        expect(tooltips[0].className).toContain('slider-tooltip-hide');
+    
+        state.tooltip = true;
+        emitter.emit('model:state-changed', state);
+    
+        tooltips = window.document.querySelectorAll('.slider-tooltip');
+        //@ts-ignore
+        expect(tooltips[0].className).not.toContain('slider-tooltip-hide');
+    });
+    test('Check tooltip values', () => {
+        //Проверить наличие значений в тултипах
+        const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
+    
+        expect(tooltipsText[0].innerHTML).toContain('20');
+        expect(tooltipsText[1].innerHTML).toContain('30');
+        expect(tooltipsText[2].innerHTML).toContain('40');
+    });
 });
-test('Check for parents for created items', () => {
-    //Проверить наличие родителей у созданных элементов
-    const parentTouchElements = window.document.querySelectorAll('.slider-touch')[0].parentNode;
-    const parentSliderSpans = window.document.querySelectorAll('.slider-span')[0].parentNode;
-    const parentTooltips = window.document.querySelectorAll('.slider-tooltip')[0].parentNode;
-    const parentTooltipsText = window.document.querySelectorAll('.slider-tooltip-text')[0].parentNode;
-    const parentSliderLine = window.document.querySelector('.slider-line')?.parentNode;
-    const parentSliderLineSpan = window.document.querySelector('.slider-line-span')?.parentNode;
-
-    //@ts-ignore
-    expect(parentTouchElements.className).toContain('js-slider-test');
-    //@ts-ignore
-    expect(parentSliderSpans.className).toBe('slider-touch');
-    //@ts-ignore
-    expect(parentTooltips.className).toBe('slider-touch');
-    //@ts-ignore
-    expect(parentTooltipsText.className).toBe('slider-tooltip');
-    //@ts-ignore
-    expect(parentSliderLine.className).toContain('js-slider-test');
-    //@ts-ignore
-    expect(parentSliderLineSpan.className).toBe('slider-line');
-});
-test('Check class replacement for some elements when changing orientation', () => {
-    //Проверить замену классов у некоторых элементов при смене ориентации
-    state.orientation = 'vertical';
-    emitter.emit('model:state-changed', state);
-
-    const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text-for-verticalView');
-    const sliderLine = window.document.querySelector('.slider-line-for-verticalView');
-    const sliderLineSpan = window.document.querySelector('.slider-line-span-for-verticalView');
-
-    expect(tooltipsText.length).toBe(state.amount);
-    expect(tooltipsText[0].className).toBe('slider-tooltip-text-for-verticalView');
-    expect(tooltipsText[0].className).not.toBe('slider-tooltip-text');
-
-    expect(sliderLine?.className).toBe('slider-line-for-verticalView');
-    expect(sliderLine?.className).not.toBe('slider-line');
-
-    expect(sliderLineSpan?.className).toBe('slider-line-span-for-verticalView');
-    expect(sliderLineSpan?.className).not.toBe('slider-line-span');
-
-    state.orientation = 'horizontal';
-    emitter.emit('model:state-changed', state);
-});
-test('Check Add Sliders', () => {
-    //Проверить изменение количества созданных элементов при изменении количества ползунков
-    state.amount = 5;
-    emitter.emit('model:state-changed', state);
-
-    const touchElements = window.document.querySelectorAll('.slider-touch');
-    const sliderSpans = window.document.querySelectorAll('.slider-span');
-    const tooltips = window.document.querySelectorAll('.slider-tooltip');
-    const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
-
-    expect(touchElements.length).toBe(state.amount);
-    expect(sliderSpans.length).toBe(state.amount);
-    expect(tooltips.length).toBe(state.amount);
-    expect(tooltipsText.length).toBe(state.amount);
-
-    //Проверить значение добавленного ползунка
-    expect(state.touchsValues.length).toBe(5);
-    expect(state.touchsValues[4]).toBe(52);
-});
-test('Check for sliders removal', () => {
-    //Проверить удаление ползунков
-    state.amount = 3;
-    emitter.emit('model:state-changed', state);
-
-    const touchElements = window.document.querySelectorAll('.slider-touch');
-    const sliderSpans = window.document.querySelectorAll('.slider-span');
-    const tooltips = window.document.querySelectorAll('.slider-tooltip');
-    const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
-
-    expect(touchElements.length).toBe(state.amount);
-    expect(sliderSpans.length).toBe(state.amount);
-    expect(tooltips.length).toBe(state.amount);
-    expect(tooltipsText.length).toBe(state.amount);
-    expect(state.touchsValues.length).toBe(3);
-});
-test('Check for tooltips when changing state', () => {
-    //Проверить наличие тултипов при изменении стейта
-    state.tooltip = false;
-    emitter.emit('model:state-changed', state);
-
-    let tooltips = window.document.querySelectorAll('.slider-tooltip');
-    //@ts-ignore
-    expect(tooltips[0].className).toContain('slider-tooltip-hide');
-
-    state.tooltip = true;
-    emitter.emit('model:state-changed', state);
-
-    tooltips = window.document.querySelectorAll('.slider-tooltip');
-    //@ts-ignore
-    expect(tooltips[0].className).not.toContain('slider-tooltip-hide');
-});
-test('Check tooltip values', () => {
-    //Проверить наличие значений в тултипах
-    const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
-
-    expect(tooltipsText[0].innerHTML).toContain('20');
-    expect(tooltipsText[1].innerHTML).toContain('30');
-    expect(tooltipsText[2].innerHTML).toContain('40');
-});
-test('тестирование событий', () => {
-    let event = new Event('mousedown');
-    const touchElements = window.document.querySelectorAll('.slider-touch');
-    emitter.subscribe('mousedown', (event: MouseEvent) => {
-        console.log('event', event);
-    })
-    touchElements[0].dispatchEvent(event);
-    debugger;
-    //console.log('touchElements[0]:', element);
-})
-describe('', () => {
+describe('Интеграционные тесты', () => {
     //@ts-ignore
     let browser: any;
     //@ts-ignore
     let page: any;
 
     beforeEach(async () => {
+        const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
+        if(element !== null || element !== undefined) {
+            element?.remove();
+        }; 
         browser = await puppeteer.launch({ headless: false});
         page = await browser.newPage();
     });
     afterEach(async () => {
-        
         await browser.close();
     });
     test('Checking the location of the sliders on the slider', async () => {
@@ -189,6 +185,12 @@ describe('', () => {
         const getPlaceRelativeToNextTouch = (currentValue: number, distanceTouches: number, coefficientPoint: number, startSlider: number) => {
             return Math.ceil((currentValue - distanceTouches) * coefficientPoint + startSlider);
         };
+        const calculateValue = (offsetLeft: number, startSlider: number) => {
+            let currentValueX: number = Math.floor((offsetLeft - startSlider) / coefficientPoint) + state.min;
+            let multi: number = Math.floor(currentValueX / state.step);
+            currentValueX = state.step * multi;
+            return currentValueX;
+        }
         // Найти координаты линии слайдера
         const sliderLine: HTMLDivElement = await page.$('.slider-line');
         const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
@@ -228,9 +230,9 @@ describe('', () => {
         // Проверить корректность работы первого ползунка
         await page.mouse.move(514, 54);
         await page.mouse.down();
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.move(450,  54, { steps: 2});
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.up();
 
         rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
@@ -241,9 +243,9 @@ describe('', () => {
         
         await page.mouse.move(448, 54);
         await page.mouse.down();
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.move(700,  54, { steps: 2});
-        await page.waitFor(300);
+        await page.waitFor(200);
         await  page.mouse.up();
 
         rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
@@ -274,9 +276,9 @@ describe('', () => {
 
         await page.mouse.move(592, 54);
         await page.mouse.down();
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.move(670,  54, { steps: 2});
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.up();
 
         rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
@@ -288,9 +290,9 @@ describe('', () => {
 
         await page.mouse.move(618, 54);
         await page.mouse.down();
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.move(530,  54, { steps: 2});
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.up();
 
         rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
@@ -306,9 +308,9 @@ describe('', () => {
 
         await page.mouse.move(644, 54);
         await page.mouse.down();
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.move(550,  54, { steps: 2});
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.up();
         
         rectLastElement = await page.evaluate((element: HTMLDivElement) => {
@@ -320,9 +322,9 @@ describe('', () => {
 
         await page.mouse.move(605, 54);
         await page.mouse.down();
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.move(800,  54, { steps: 2});
-        await page.waitFor(300);
+        await page.waitFor(200);
         await page.mouse.up();
 
         rectLastElement = await page.evaluate((element: HTMLDivElement) => {
@@ -332,12 +334,46 @@ describe('', () => {
         
         expect(rectLastElement.right).toBe(endPointSlider);
         // Проверить корректность изменений значений в тултипах
-        // const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
 
-        // expect(tooltipsText[0].innerHTML).toContain('20');
-        // expect(tooltipsText[1].innerHTML).toContain('30');
-        // expect(tooltipsText[2].innerHTML).toContain('40');
+        await page.mouse.move(527, 54);
+        await page.mouse.down();
+        await page.waitFor(200);
+        await page.mouse.move(490,  54, { steps: 2});
+        await page.waitFor(200);
+        await page.mouse.up();
 
+        rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, firstElement);
+
+        let currentValueTooltip = String(calculateValue(rectFirstElement.left, startPointSlider));
+        let tooltipsText = await page.$$('.slider-tooltip-text');
+        let tooltipText = tooltipsText[0];
+        //@ts-ignore
+        let innerHTMLTooltip = await page.evaluateHandle(element => element.innerHTML, tooltipText);
+
+        expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
+
+        await page.mouse.move(774, 54);
+        await page.mouse.down();
+        await page.waitFor(200);
+        await page.mouse.move(700,  54, { steps: 2});
+        await page.waitFor(200);
+        await page.mouse.up();
+
+        rectLastElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, lastElement);
+
+        currentValueTooltip = String(calculateValue(rectLastElement.left, startPointSlider));
+        tooltipsText = await page.$$('.slider-tooltip-text');
+        tooltipText = tooltipsText[tooltipsText.length - 1];
+        //@ts-ignore
+        innerHTMLTooltip = await page.evaluateHandle(element => element.innerHTML, tooltipText);
+
+        expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
         //Здесь тесты для вертикальной вью
     })
 })
