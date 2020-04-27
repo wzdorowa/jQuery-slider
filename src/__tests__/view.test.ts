@@ -170,7 +170,7 @@ describe('', () => {
     });
     test('Checking the location of the sliders on the slider', async () => {
         await page.goto('http://localhost:1234');
-        await page.waitFor(2000);
+        await page.waitFor(1000);
 
         //Функция для нахождения коэффициента единичного значения слайдера в пикселях
         const getCoefficientPoint = (sliderLineWidth: number, max: number, min: number) => {
@@ -182,10 +182,13 @@ describe('', () => {
         };
         const getCurrentValue = (offsetLeft: number, startSlider: number, coefficientPoint: number) => {
             return Math.floor((offsetLeft - startSlider) / coefficientPoint);
-        }
-        const getRectPreviousTouch = (currentValue: number, distanceTouches: number, coefficientPoint: number, startSlider: number) => {
+        };
+        const getPlaceRelativeToPreviousTouch = (currentValue: number, distanceTouches: number, coefficientPoint: number, startSlider: number) => {
+            return Math.ceil((currentValue + distanceTouches) * coefficientPoint + startSlider);
+        };
+        const getPlaceRelativeToNextTouch = (currentValue: number, distanceTouches: number, coefficientPoint: number, startSlider: number) => {
             return Math.ceil((currentValue - distanceTouches) * coefficientPoint + startSlider);
-        }
+        };
         // Найти координаты линии слайдера
         const sliderLine: HTMLDivElement = await page.$('.slider-line');
         const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
@@ -217,19 +220,20 @@ describe('', () => {
         //@ts-ignore
         const endPointSlider = rectSliderLine.right + (elementWidth/2);
 
-        //Определить значения и коэффициенты перед проверкой работы ползунка
+        //Определить значения и коэффициенты перед проверкой работы первого ползунка
         const coefficientPoint = getCoefficientPoint(sliderLineWidth, state.max, state.min);
         const distanceTouches = getDistanceTouches(elementWidth, coefficientPoint);
-        const currentValue = getCurrentValue(rectSecondElement.left, startPointSlider, coefficientPoint);
-        const rectPreviousTouch = getRectPreviousTouch(currentValue, distanceTouches, coefficientPoint, startPointSlider)
+        let currentValueToNextTouch = getCurrentValue(rectSecondElement.left, startPointSlider, coefficientPoint);
+        //место относительно следующего ползунка на слайдере
+        let placeRelativeToNextTouch = getPlaceRelativeToNextTouch(currentValueToNextTouch, distanceTouches, coefficientPoint, startPointSlider)
         
         // Проверить корректность работы первого ползунка
         await page.mouse.move(514, 54);
         await page.mouse.down();
-        await page.waitFor(500);
+        await page.waitFor(300);
         await page.mouse.move(450,  54, { steps: 2});
-        await page.waitFor(500);
-        await  page.mouse.up();
+        await page.waitFor(300);
+        await page.mouse.up();
 
         rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
@@ -239,15 +243,79 @@ describe('', () => {
         
         await page.mouse.move(448, 54);
         await page.mouse.down();
-        await page.waitFor(500);
+        await page.waitFor(300);
         await page.mouse.move(700,  54, { steps: 2});
-        await page.waitFor(500);
+        await page.waitFor(300);
         await  page.mouse.up();
 
         rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
           }, firstElement);
-        expect(rectFirstElement.left).toBe(rectPreviousTouch);
+        expect(rectFirstElement.left).toBe(placeRelativeToNextTouch);
+
+        // Проверить корректность работы одного из промежуточных ползунков, например, третьего
+          //Найти координаты третьего ползунка
+        const thirdElement: HTMLDivElement = touchElements[2];
+        let rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, thirdElement);
+        console.log('rectThirdElement', rectThirdElement);
+        // Найти координаты последнего ползунка
+        const lastElement: HTMLDivElement = touchElements[touchElements.length - 1];
+        let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, lastElement);
+        console.log('rectLastElement', rectLastElement);
+
+        let currentValueToPreviousTouch = getCurrentValue(rectSecondElement.left, startPointSlider, coefficientPoint);
+        let placeRelativeToPreviousTouch = getPlaceRelativeToPreviousTouch(currentValueToPreviousTouch, distanceTouches, coefficientPoint, startPointSlider);
+        currentValueToNextTouch = getCurrentValue(rectLastElement.left, startPointSlider, coefficientPoint);
+        placeRelativeToNextTouch = getPlaceRelativeToNextTouch(currentValueToNextTouch, distanceTouches, coefficientPoint, startPointSlider)
+
+        await page.mouse.move(592, 54);
+        await page.mouse.down();
+        await page.waitFor(300);
+        await page.mouse.move(670,  54, { steps: 2});
+        await page.waitFor(300);
+        await page.mouse.up();
+
+        rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, thirdElement);
+        console.log('rectThirdElement', rectThirdElement);
+
+        expect(rectThirdElement.left).toBe(placeRelativeToNextTouch);
+
+        await page.mouse.move(618, 54);
+        await page.mouse.down();
+        await page.waitFor(300);
+        await page.mouse.move(530,  54, { steps: 2});
+        await page.waitFor(300);
+        await page.mouse.up();
+
+        rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, thirdElement);
+        console.log('rectThirdElement', rectThirdElement);
+
+        expect(rectThirdElement.left).toBe(placeRelativeToPreviousTouch);
+
+        // Проверить корректность работы последнего ползунка
+        currentValueToPreviousTouch = getCurrentValue(rectSecondElement.left, startPointSlider, coefficientPoint);
+        placeRelativeToPreviousTouch = getPlaceRelativeToPreviousTouch(currentValueToPreviousTouch, distanceTouches, coefficientPoint, startPointSlider);
+
+        // Проверить корректность изменений значений в тултипах
+        // const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
+
+        // expect(tooltipsText[0].innerHTML).toContain('20');
+        // expect(tooltipsText[1].innerHTML).toContain('30');
+        // expect(tooltipsText[2].innerHTML).toContain('40');
+
+        //Здесь тесты для вертикальной вью
     })
 })
