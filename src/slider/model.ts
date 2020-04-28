@@ -44,26 +44,12 @@ export class Model {
     private checkMinValueInArrayTouchsValues(state: IModelState): void {
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
-            let touchsValuesLength = this.state.touchsValues.length - 1;
-
-            new Array(touchsValuesLength)
-                .fill(1)
-                .forEach((_element: number, i: number) => {
-                    this.state.touchsValues[i] = this.state.touchsValues[i - 1] + state.step;
-                })
             this.notifyStateChanged();
         }
     }
     private checkMaxValueInArrayTouchsValues(state: IModelState): void {
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
-            const touchsValuesLength = this.state.touchsValues.length - 1;
-
-            new Array(touchsValuesLength)
-                .fill(1)
-                .forEach((_element: number, i: number) => {
-                    this.state.touchsValues[touchsValuesLength - i] = (this.state.touchsValues[(touchsValuesLength - i) + 1]) - state.step;
-                })
             this.notifyStateChanged();
         } 
     }
