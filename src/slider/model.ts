@@ -42,52 +42,70 @@ export class Model {
         this.emitter.emit('model:state-changed', this.state);
     }
     private checkMinValueInArrayTouchsValues(state: IModelState): void {
+        console.log(this.state.touchsValues);
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
             this.notifyStateChanged();
-        }
+        };
+        this.checkTouchsValuesForOverlap();
     }
     private checkMaxValueInArrayTouchsValues(state: IModelState): void {
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
             this.notifyStateChanged();
-        } 
+        };
+        this.checkTouchsValuesForOverlap();
     }
+    //Высчитать значения ползунков в зависимости от размера шага
     private checkTouchsValues(state: IModelState): void {
-        let currentTouchValues: number[] = [];
         state.touchsValues.forEach((element: number, i: number) => {
             const newValue: number = element;
             const remainderOfTheDivision: number = newValue % state.step;
-            const newCurrentValue: number = newValue - remainderOfTheDivision;
+            const newCurrentValue: number = newValue + remainderOfTheDivision;
+            const maxPossibleValue: number = state.max - (((state.touchsValues.length - 1) - i) * state.step);
+            const minPossibleValue: number = state.min + (i * state.step);
 
-            if (this.state.touchsValues[i] != newCurrentValue || newCurrentValue + state.step) {
-                if (state.touchsValues[i - 1] === newCurrentValue) {
-                    currentTouchValues[i] = newCurrentValue + state.step;
-                } else {
-                    currentTouchValues[i] = newCurrentValue;
-                } 
+            if (newCurrentValue > maxPossibleValue) {
+                this.state.touchsValues[i] = maxPossibleValue;
+                this.notifyStateChanged(); 
+            } else if (newCurrentValue < minPossibleValue) {
+                this.state.touchsValues[i] = minPossibleValue;
+                this.notifyStateChanged(); 
+            } else if (this.state.touchsValues[i] !== newCurrentValue){
+                this.state.touchsValues[i] = newCurrentValue;
+                this.notifyStateChanged(); 
+            }
+
+            if (newCurrentValue < state.min) {
+                this.state.touchsValues[i] = minPossibleValue;
+                this.notifyStateChanged(); 
+            };
+            if (newCurrentValue > state.max) {
+                this.state.touchsValues[i] = maxPossibleValue;
+                this.notifyStateChanged(); 
             }
         });
-        if (currentTouchValues[0] < state.min) {
-            currentTouchValues[0] = currentTouchValues[0] + state.step;
-        }
-        if (this.state.touchsValues != currentTouchValues) {
-            this.state.touchsValues.forEach((_element: number, i: number) => {
-                if (this.state.touchsValues[i] != currentTouchValues[i]) {
-                    this.state.touchsValues = currentTouchValues;
-                    this.notifyStateChanged();
-                }
-            });
-        }
     }
+    //Проверить перекрытие ползунков друг другом
     private checkTouchsValuesForOverlap() {
         this.state.touchsValues.forEach((element: number, i: number) => {
-            if (element <= this.state.touchsValues[i - 1]) {
-                this.state.touchsValues[i] = this.state.touchsValues[i - 1] + this.state.step;
+            const maxPossibleValue: number = this.state.max - (((this.state.touchsValues.length - 1) - i) * this.state.step);
+            const minPossibleValue: number = this.state.min + (i * this.state.step);
+
+            if (i !== 0 && element <= this.state.touchsValues[i - 1]) {
+                this.state.touchsValues[i - 1] = this.state.touchsValues[i] - this.state.step;
+                if(this.state.touchsValues[i - 1] < minPossibleValue - this.state.step) {
+                    this.state.touchsValues[i - 1] = minPossibleValue - this.state.step;
+                    this.state.touchsValues[i] = minPossibleValue;
+                }
                 this.notifyStateChanged();
             }
-            if (element >= this.state.touchsValues[i + 1]) {
-                this.state.touchsValues[i] = this.state.touchsValues[i + 1] - this.state.step;
+            if (i !== this.state.touchsValues[this.state.touchsValues.length -1] && element >= this.state.touchsValues[i + 1]) {
+                this.state.touchsValues[i + 1] = this.state.touchsValues[i] + this.state.step;
+                if(this.state.touchsValues[i + 1] > maxPossibleValue + this.state.step) {
+                    this.state.touchsValues[i + 1] = maxPossibleValue + this.state.step;
+                    this.state.touchsValues[i] = maxPossibleValue;
+                }
                 this.notifyStateChanged();
             }
         });
