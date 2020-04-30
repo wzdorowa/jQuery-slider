@@ -17,7 +17,7 @@ describe('Model testing', () => {
     eventEmitter.emit('model:state-changed', state);
 
     test('Set new value Min', () => {
-        state.min = 25;
+        state.min = 10;
         model.setNewValueMin(state.min);
         expect(model.state.min).toBe(state.min);
     });
@@ -35,7 +35,7 @@ describe('Model testing', () => {
         model.setNewValueAmount(state.amount);
         expect(model.state.amount).toBe(10);
 
-        state.amount = 5;
+        state.amount = 4;
         model.setNewValueAmount(state.amount);
         expect(model.state.amount).toBe(state.amount);
     });
@@ -44,7 +44,7 @@ describe('Model testing', () => {
         model.setNewValueTouchsValues(state.touchsValues[1], 1);
         expect(model.state.touchsValues[1]).toBe(state.touchsValues[1]);
 
-        state.touchsValues[3] = 72;
+        state.touchsValues[3] = 80;
         model.setNewValueTouchsValues(state.touchsValues[3], 3);
         expect(model.state.touchsValues[3]).toBe(state.touchsValues[3]);
     });
@@ -53,7 +53,7 @@ describe('Model testing', () => {
         model.setNewValueStep(state.step);
         expect(model.state.step).toBe(1);
 
-        state.step = 4;
+        state.step = 2;
         model.setNewValueStep(state.step);
         expect(model.state.step).toBe(state.step);
     })
@@ -74,5 +74,48 @@ describe('Model testing', () => {
         state.orientation = 'horizontal';
         model.setNewValueOrientation(state.orientation);
         expect(model.state.orientation).toBe('horizontal');
-    })
+    });
+    test('check touches values', () => {
+        //Проверка значения первого ползунка при установки большего минимального значния
+        // чем значение ползунка
+        state.min = 25;
+        model.setNewValueMin(state.min);
+        expect(model.state.min).toBe(state.min);
+        expect(model.state.touchsValues[0]).toBe(26);
+
+        //Проверка значения последнего ползунка при установки меньшего максимального значения
+        // чем значение ползунка
+        state.max = 75;
+        model.setNewValueMax(state.max);
+        expect(model.state.max).toBe(state.max);
+        expect(model.state.touchsValues[model.state.touchsValues.length - 1]).toBe(74);
+
+        //Проверка изменения значений ползунков в зависимости от размера шага
+        state.step = 3;
+        model.setNewValueStep(state.step);
+        expect(model.state.step).toBe(state.step);
+        expect(model.state.touchsValues[0]).toBe(27);
+        expect(model.state.touchsValues[1]).toBe(36);
+        expect(model.state.touchsValues[model.state.touchsValues.length - 1]).toBe(72);
+
+        state.step = 5;
+        model.setNewValueStep(state.step);
+        expect(model.state.step).toBe(state.step);
+        expect(model.state.touchsValues[0]).toBe(25);
+        expect(model.state.touchsValues[1]).toBe(35);
+        expect(model.state.touchsValues[model.state.touchsValues.length - 1]).toBe(70);
+
+        //проверка значений ползунков на перекрытие друг друга
+        state.touchsValues[0] = 38;
+        model.setNewValueTouchsValues(state.touchsValues[0], 0);
+        expect(model.state.touchsValues[0]).toBe(35);
+        expect(model.state.touchsValues[0]).toBe(35);
+        expect(model.state.touchsValues[1]).toBe(40);
+
+        state.touchsValues[1] = 67;
+        model.setNewValueTouchsValues(state.touchsValues[1], 1);
+        expect(model.state.touchsValues[1]).toBe(65);
+        expect(model.state.touchsValues[1]).toBe(65);
+        expect(model.state.touchsValues[2]).toBe(70);
+    });
 })

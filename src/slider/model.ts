@@ -42,28 +42,29 @@ export class Model {
         this.emitter.emit('model:state-changed', this.state);
     }
     private checkMinValueInArrayTouchsValues(state: IModelState): void {
-        console.log(this.state.touchsValues);
         if (state.min > this.state.touchsValues[0]) {
             this.state.touchsValues[0] = state.min;
             this.notifyStateChanged();
         };
-        this.checkTouchsValuesForOverlap();
     }
     private checkMaxValueInArrayTouchsValues(state: IModelState): void {
         if (state.max < this.state.touchsValues[this.state.touchsValues.length - 1]) {
             this.state.touchsValues[this.state.touchsValues.length - 1] = state.max;
             this.notifyStateChanged();
         };
-        this.checkTouchsValuesForOverlap();
     }
     //Высчитать значения ползунков в зависимости от размера шага
     private checkTouchsValues(state: IModelState): void {
         state.touchsValues.forEach((element: number, i: number) => {
             const newValue: number = element;
             const remainderOfTheDivision: number = newValue % state.step;
-            const newCurrentValue: number = newValue + remainderOfTheDivision;
-            const maxPossibleValue: number = state.max - (((state.touchsValues.length - 1) - i) * state.step);
-            const minPossibleValue: number = state.min + (i * state.step);
+            const newCurrentValue: number = newValue - remainderOfTheDivision;
+            let maxPossibleValue: number = (state.max - (state.max % state.step)) - (((state.touchsValues.length - 1) - i) * state.step);
+            let minPossibleValue: number = (state.min - (state.min % state.step)) + (i * state.step);
+
+            if(minPossibleValue < state.min) {
+                minPossibleValue = minPossibleValue + state.step;
+            };
 
             if (newCurrentValue > maxPossibleValue) {
                 this.state.touchsValues[i] = maxPossibleValue;
