@@ -3,8 +3,6 @@ import { EventEmitter } from '../slider/eventEmitter';
 import {IModelState} from '../slider/iModelState';
 import puppeteer from 'puppeteer';
 
-//var sinon = require('sinon');
-
 let state: IModelState = {
     min: 0,
     max: 100,
@@ -148,9 +146,7 @@ describe('Модульные тесты', () => {
     });
 });
 describe('Интеграционные тесты для горизонтального вида', () => {
-    //@ts-ignore
     let browser: any;
-    //@ts-ignore
     let page: any;
 
     beforeEach(async () => {
@@ -378,9 +374,7 @@ describe('Интеграционные тесты для горизонталь�
     });
 });
 describe('Интеграционные тесты для вертикального вида', () => {
-    //@ts-ignore
     let browser: any;
-    //@ts-ignore
     let page: any;
 
     beforeEach(async () => {
@@ -392,6 +386,7 @@ describe('Интеграционные тесты для вертикально�
         page = await browser.newPage();
     });
     afterEach(async () => {
+        //@ts-ignore
         await browser.close();
     });
     test('Checking the location of the sliders on the slider', async () => {
