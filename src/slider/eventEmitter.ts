@@ -23,5 +23,4 @@ export class EventEmitter {
             handlers.forEach(fn => { fn.call(null, data) } );
         }
     }
-    
 }
