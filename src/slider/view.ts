@@ -65,6 +65,7 @@ export class View {
                 this.setValueSliderTouch();
 
                 this.listenSliderTouchesEvents();
+                this.listenSliderLineEvents();
             }
             if(this.sliderTouches.length != this.modelState.amount) {
                 this.changeAmountTouchs();
@@ -209,13 +210,52 @@ export class View {
     private listenSliderTouchesEvents() {
         let elements: HTMLElement[] = this.sliderTouches;
         elements.forEach((element: HTMLElement, i: number) => {
-            element.addEventListener('mousedown', event => this.onStart(this.modelState, event, i))
+            element.addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
         });
+    }
+    private listenSliderLineEvents() {
+        this.elementSliderLine.addEventListener('click', event => this.setSliderTouchToNewPosition(event));
     }
     private newListenSliderTouchesEvents() {
         let elements: HTMLElement[] = this.sliderTouches;
         let i: number = elements.length - 1;
         elements[i].addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
+    }
+    private setSliderTouchToNewPosition(event: MouseEvent) {
+        let currentClickLocation: number = event.offsetX;
+        console.log('currentClickLocation', currentClickLocation);
+        let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(this.modelState, currentClickLocation);
+        console.log('currentValue', currentValue);
+
+        //@ts-ignore
+        console.log('modelState.touchsValues', this.modelState.touchsValues);
+        //@ts-ignore
+        let nearestRunnerIndex = null;
+        this.modelState.touchsValues.forEach((element: number, i: number) => {
+            if (currentValue !== null && currentValue !== undefined) {
+                console.log('уровень 1');
+                if (i === 0 && element >= currentValue) {
+                    console.log('уровень 2');
+                    nearestRunnerIndex = i;
+                } else if (i === this.modelState.touchsValues.length - 1 && element <= currentValue) {
+                    console.log('уровень 3');
+                    nearestRunnerIndex = i;
+                } else if (currentValue >= element && currentValue <= this.modelState.touchsValues[i + 1]) {
+                    console.log('уровень 4');
+                    let leftSpacing: number = currentValue - element;
+                    let rightSpacing: number = this.modelState.touchsValues[i + 1] - currentValue;
+
+                    if (leftSpacing > rightSpacing) {
+                        console.log('уровень 5');
+                        nearestRunnerIndex = i + 1;
+                    } else {
+                        console.log('уровень 6');
+                        nearestRunnerIndex = i;
+                    }
+                }
+            }
+        });
+        console.log('nearestRunnerIndex', nearestRunnerIndex);
     }
     private onStart(modelState: IModelState | null, event: MouseEvent, i: number) {
         this.currentTouchIndex = i;
@@ -274,22 +314,7 @@ export class View {
             // update line span
             this.configurator.updateLineSpan(this.elementSliderLineSpan, elements);
         }
-        if(this.modelState && modelState && this.coefficientPoint && this.shiftToMinValue !== null) {
-            // write new value
-            this.currentValue = this.calculateValue(this.modelState);
-            
-            if (this.currentValue !== null) {
-                const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.coefficientPoint) - this.shiftToMinValue;
-    
-                if (this.currentXorY > halfStep) {
-                    this.currentValue = this.currentValue + modelState.step;
-                }
-            }
-            
-            if (this.modelState.touchsValues[i] != this.currentValue) {
-                this.emitter.emit('view:touchsValues-changed', {currentValue: this.currentValue, index: i});
-            }
-        }
+        this.calculateValueOfPlaceOnScale(modelState, i);
         this.setCurrentTooltipValue(this.modelState, i);
       }
     private onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement) {
@@ -312,15 +337,47 @@ export class View {
     текущее преобразованное значение ползунка в emitter.emit, а в модели в 
     subscribe вызвать обработчик, который это значение запишет в state.state
     */
-   private calculateValue(modelState: IModelState | null) {
+   private calculateValue(modelState: IModelState | null, currentXorY: number) {
         let currentValueX: number | null = null;
         let multi: number;
         if (modelState && this.coefficientPoint !== null) {
-            currentValueX = Math.floor(this.currentXorY / this.coefficientPoint) + modelState.min;
+            currentValueX = Math.floor(currentXorY / this.coefficientPoint) + modelState.min;
             multi = Math.floor(currentValueX / modelState.step);
             currentValueX = modelState.step * multi;
         }
         return currentValueX;
+    }
+    /* метод рассчитывает значение места бегунка на шкале */
+    private calculateValueOfPlaceOnScale(modelState: IModelState | null, i: number) {
+        if(this.modelState && modelState && this.coefficientPoint && this.shiftToMinValue !== null) {
+            this.currentValue = this.calculateValue(this.modelState, this.currentXorY);
+                
+                if (this.currentValue !== null) {
+                    const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.coefficientPoint) - this.shiftToMinValue;
+        
+                    if (this.currentXorY > halfStep) {
+                        this.currentValue = this.currentValue + modelState.step;
+                    }
+                }
+                
+                if (this.modelState.touchsValues[i] != this.currentValue) {
+                    this.emitter.emit('view:touchsValues-changed', {currentValue: this.currentValue, index: i});
+                }
+        };
+    }
+    private calculateValueOfPlaceClickOnScale(modelState: IModelState | null, currentXorY: number) {
+        if(this.modelState && modelState && this.coefficientPoint && this.shiftToMinValue !== null) {
+            let currentValue: number | null = this.calculateValue(this.modelState, currentXorY);
+                
+                if (this.currentValue !== null) {
+                    const halfStep = Math.floor((this.currentValue + (modelState.step / 2)) * this.coefficientPoint) - this.shiftToMinValue;
+        
+                    if (this.currentXorY > halfStep) {
+                        this.currentValue = this.currentValue + modelState.step;
+                    }
+                }
+            return currentValue;
+        };
     }
     /* метод setCurrentTooltipValue устанавливает текущее значение в тултип ползунка */
     private setCurrentTooltipValue(modelState: IModelState | null, i: number) {
