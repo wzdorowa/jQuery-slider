@@ -214,7 +214,7 @@ export class View {
         });
     }
     private listenSliderLineEvents() {
-        this.elementSliderLine.addEventListener('click', event => this.setSliderTouchToNewPosition(event));
+        this.elementSliderLine.addEventListener('click', event => this.setSliderTouchToNewPosition(event), {capture: true});
     }
     private newListenSliderTouchesEvents() {
         let elements: HTMLElement[] = this.sliderTouches;
@@ -222,40 +222,43 @@ export class View {
         elements[i].addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
     }
     private setSliderTouchToNewPosition(event: MouseEvent) {
-        let currentClickLocation: number = event.offsetX;
-        console.log('currentClickLocation', currentClickLocation);
+        event.preventDefault();
+        let target = event.target;
+        let currentClickLocation: number | null = null;
+        //@ts-ignore
+        if (target != null && target.className === 'slider-line-span') {
+            //@ts-ignore
+            currentClickLocation = event.offsetX + target.offsetLeft;
+        } else {
+            currentClickLocation = event.offsetX;
+        }
+        
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(this.modelState, currentClickLocation);
         console.log('currentValue', currentValue);
 
         //@ts-ignore
-        console.log('modelState.touchsValues', this.modelState.touchsValues);
-        //@ts-ignore
         let nearestRunnerIndex = null;
         this.modelState.touchsValues.forEach((element: number, i: number) => {
             if (currentValue !== null && currentValue !== undefined) {
-                console.log('уровень 1');
                 if (i === 0 && element >= currentValue) {
-                    console.log('уровень 2');
                     nearestRunnerIndex = i;
                 } else if (i === this.modelState.touchsValues.length - 1 && element <= currentValue) {
-                    console.log('уровень 3');
                     nearestRunnerIndex = i;
                 } else if (currentValue >= element && currentValue <= this.modelState.touchsValues[i + 1]) {
-                    console.log('уровень 4');
                     let leftSpacing: number = currentValue - element;
                     let rightSpacing: number = this.modelState.touchsValues[i + 1] - currentValue;
 
                     if (leftSpacing > rightSpacing) {
-                        console.log('уровень 5');
                         nearestRunnerIndex = i + 1;
                     } else {
-                        console.log('уровень 6');
                         nearestRunnerIndex = i;
                     }
                 }
             }
         });
-        console.log('nearestRunnerIndex', nearestRunnerIndex);
+        if (nearestRunnerIndex != null && this.modelState.touchsValues[nearestRunnerIndex] != this.currentValue) {
+            this.emitter.emit('view:touchsValues-changed', {currentValue: currentValue, index: nearestRunnerIndex});
+        }
     }
     private onStart(modelState: IModelState | null, event: MouseEvent, i: number) {
         this.currentTouchIndex = i;
