@@ -224,7 +224,7 @@ export class View {
     private setSliderTouchToNewPosition(event: MouseEvent) {
         event.preventDefault();
         let target = event.target;
-        let currentClickLocation: number | null = null;
+        let currentClickLocation: number = 0;
         //@ts-ignore
         if (target != null && target.className === 'slider-line-span') {
             //@ts-ignore
@@ -232,9 +232,8 @@ export class View {
         } else {
             currentClickLocation = event.offsetX;
         }
-        
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(this.modelState, currentClickLocation);
-        console.log('currentValue', currentValue);
+
 
         //@ts-ignore
         let nearestRunnerIndex = null;

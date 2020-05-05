@@ -9,11 +9,9 @@ $( () => {
     elements.forEach((element: IHTMLElement) => {
         let isCreatedInput: boolean = false;
 
-        const createElement = (teg: string, className: string, type: string, value: number) => {
+        const createElement = (teg: string, className: string) => {
             const element: IHTMLElement = document.createElement(teg) as IHTMLElement;
             element.className = className;
-            element.type = type;
-            element.value = value;
             return element;
         }
 
@@ -23,10 +21,34 @@ $( () => {
             new Array(state.amount)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
-                    const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item', '', i+1);
-                    const input: HTMLElement = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
+                    const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item');
+                    const rangeOfValuesSet: HTMLElement = createElement('div', 'rangeOfValues-set');
+                    const input: HTMLElement = createElement('input', 'input-rangeOfValues');
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('value', String(state.touchsValues[i]));
+
+                    const valueFrom: HTMLElement = createElement('input', 'input-rangeOfValues-from');
+                    valueFrom.setAttribute('type', 'text');
+                    if (i === 0) {
+                        valueFrom.setAttribute('value', String(state.min));
+                    } else {
+                        valueFrom.setAttribute('value', String(state.touchsValues[i - 1] + state.step));
+                    }
+
+                    const valueTo: HTMLElement = createElement('input', 'input-rangeOfValues-to');
+                    valueTo.setAttribute('type', 'text');
+                    valueTo.setAttribute('value', String(state.max));
+                    if (i === state.amount - 1) {
+                        valueTo.setAttribute('value', String(state.max));
+                    } else {
+                        valueTo.setAttribute('value', String(state.touchsValues[i + 1] - state.step));
+                    }
+                    
     
-                    rangeOfValuesItem.append(input);
+                    rangeOfValuesItem.append(rangeOfValuesSet);
+                    rangeOfValuesSet.append(input);
+                    rangeOfValuesSet.append(valueFrom);
+                    rangeOfValuesSet.append(valueTo)
                     rangeOfValuesList.append(rangeOfValuesItem);
                 })
             if(!isCreatedInput) {
@@ -34,7 +56,7 @@ $( () => {
             }
         }
         const changeAmountInputs = (state: IModelState) => {
-            let amountInputs: HTMLElement[] = Array.from(document.querySelectorAll('.input-rangeOfValues'));
+            let amountInputs: HTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-set'));
 
             if (amountInputs.length < state.touchsValues.length) {
                 const missingAmount: number = state.touchsValues.length - amountInputs.length;
@@ -43,12 +65,26 @@ $( () => {
                 new Array(missingAmount)
                     .fill(1)
                     .forEach((_element: number, i: number) => {
-                        let ArrayRangeOfValuesItem: NodeListOf<HTMLElement> = document.querySelectorAll('.rangeOfValues-item');
-                        const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item', '', ArrayRangeOfValuesItem.length + 1);
-                        const input: HTMLElement = createElement('input', 'input-rangeOfValues', 'text', state.touchsValues[i]);
-        
-                        rangeOfValuesItem.append(input);
-                        rangeOfValuesList.append(rangeOfValuesItem); 
+                        let currentAmountInputs: HTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-set'));
+                        const rangeOfValuesItem: HTMLElement = createElement('li', 'rangeOfValues-item');
+                        const rangeOfValuesSet: HTMLElement = createElement('div', 'rangeOfValues-set');
+                        const input: HTMLElement = createElement('input', 'input-rangeOfValues');
+                        input.setAttribute('type', 'text');
+                        input.setAttribute('value', String(state.touchsValues[i]));
+
+                        const valueFrom: HTMLElement = createElement('input', 'input-rangeOfValues-from');
+                        valueFrom.setAttribute('type', 'text');
+                        valueFrom.setAttribute('value', String(state.touchsValues[currentAmountInputs.length - 1] + state.step));
+
+                        const valueTo: HTMLElement = createElement('input', 'input-rangeOfValues-to');
+                        valueTo.setAttribute('type', 'text');
+                        valueTo.setAttribute('value', String(state.max));
+                        
+                        rangeOfValuesItem.append(rangeOfValuesSet);
+                        rangeOfValuesSet.append(input);
+                        rangeOfValuesSet.append(valueFrom);
+                        rangeOfValuesSet.append(valueTo)
+                        rangeOfValuesList.append(rangeOfValuesItem);
     
                         setNewValueToNewInputs(state);
                     })
@@ -72,11 +108,28 @@ $( () => {
         }
         const setValueToInputFromModelState = (state: IModelState) => {
             let allTouches: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues')) as IHTMLElement[];
+            let allValueFrom: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues-from')) as IHTMLElement[];
+            let allValueTo: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues-to')) as IHTMLElement[];
 
             new Array(state.touchsValues.length)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
                     allTouches[i].value = state.touchsValues[i];
+                    if (i === 0) {
+                        if (state.touchsValues.length === 1) {
+                            allValueFrom[i].value = state.min;
+                            allValueTo[i].value = state.max;
+                        } else {
+                            allValueFrom[i].value = state.min;
+                            allValueTo[i].value = state.touchsValues[i + 1] - state.step;
+                        }
+                    } else if (i === state.amount - 1) {
+                        allValueFrom[i].value = state.touchsValues[i - 1] + state.step;
+                        allValueTo[i].value = state.max;
+                    } else {
+                        allValueFrom[i].value = state.touchsValues[i - 1] + state.step;
+                        allValueTo[i].value = state.touchsValues[i + 1] - state.step;
+                    }
                 })
         }
         const setValueToStepFromModelState = (state: IModelState) => {
@@ -108,7 +161,7 @@ $( () => {
              setValueToInputFromModelState, setValueToStepFromModelState, setValueToMinInputFromModelState,
              setValueMaxInputFromModelState);
 
-        // получить и передать новые введеные пользователем мин и макс значения слайдера 
+        // получить из поля ввода и передать новые введеные пользователем мин и макс значения слайдера 
         // из панели конфигураций в объект newConfig
         const minMaxValues: NodeListOf<IHTMLElement> = document.querySelectorAll('.minMaxValue');
         const minValue: IHTMLElement = minMaxValues[0];
@@ -123,7 +176,7 @@ $( () => {
             element.setNewValueMax(max);
         });
 
-        // получить и передать новое значение количества ползунков введенное пользователем
+        // получить из поля ввода и передать новое значение количества ползунков введенное пользователем
         // из панели конфигураций в объект newConfig
         let amountSliderTouches: IHTMLElement = document.querySelector('.field-group-numberValues-container__content') as IHTMLElement;
 
@@ -131,7 +184,7 @@ $( () => {
             const amount: number = Number(amountSliderTouches.value);
             element.setNewValueAmount(amount);
         });
-        // получить и передать новые значения текущих состояний ползунков введенных пользователем
+        // получить из поля ввода и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций в объект newConfig
         const toFindinputsSliderTouchs = (): NodeListOf<IHTMLElement> => {
             return document.querySelectorAll('.input-rangeOfValues');
@@ -147,7 +200,7 @@ $( () => {
                 })
             })
 
-        // получить и передать новое значение размера шага введенного пользователем
+        // получить из поля ввода и передать новое значение размера шага введенного пользователем
         // из панели конфигураций в объект newConfig
         let stepSize: IHTMLElement = document.querySelector('.field-group-stepSize-container__content') as IHTMLElement;
 
@@ -156,7 +209,7 @@ $( () => {
             element.setNewValueStep(step);
         });
 
-        // получить и передать новое значение ориентации слайдера
+        // получить из поля ввода и передать новое значение ориентации слайдера
         let orientationSlider: NodeListOf<IHTMLElement> = document.querySelectorAll('.radio-button-container');
 
         new Array(orientationSlider.length)
@@ -170,7 +223,7 @@ $( () => {
                 })
             })
 
-        // получить и передать новое значение наличия тултипа
+        // получить из поля ввода и передать новое значение наличия тултипа
         let checkboxContainer: IHTMLElement = document.querySelector('.checkbox-button-container') as IHTMLElement;
         let checkboxInput: IHTMLElement = document.querySelector('.checkbox-button-container__content') as IHTMLElement;
 

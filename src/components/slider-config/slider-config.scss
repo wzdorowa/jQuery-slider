@@ -105,6 +105,19 @@
     flex-direction: column;
     justify-content: space-between;
     min-height: 110px;
+    margin-bottom: 10px;
+}
+.titles-field-group-for-rangeOfValues {
+    display: flex;
+    flex-wrap: nowrap;
+    
+
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 17px;
+    color: grey;
+    margin-top: 10px;
+    margin-left: 40px;
 }
 .rangeOfValues-list {
     display: flex;
@@ -118,8 +131,38 @@
     font-size: 18px;
     color: grey;
 }
+.rangeOfValues-set {
+    display: grid;
+    grid-template-columns: repeat(3, 85px);
+    grid-column-gap: 10px;
+}
 .input-rangeOfValues {
-    width: 110px;
+    width: 80%;
+    height: 30px;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    padding-left: 10px;
+    outline: none;
+
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 16px;
+}
+.input-rangeOfValues-from {
+    width: 90%;
+    height: 30px;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    padding-left: 10px;
+    outline: none;
+
+
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 16px;
+}
+.input-rangeOfValues-to {
+    width: 90%;
     height: 30px;
     border: 1px solid #eee;
     border-radius: 2px;

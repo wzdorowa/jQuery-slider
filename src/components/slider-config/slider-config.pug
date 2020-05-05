@@ -23,7 +23,9 @@ mixin slider-config()
             h2.title-field-group Количество ползунков:
             input.field-group-numberValues-container__content(type='text', value='4')     
         .field-group-rangeOfValues
-            h2.title-field-group Текущее состояние ползунков:
+            .titles-field-group-for-rangeOfValues
+                span.title-field-group__current-value Текущее значение:
+                span.title-field-group__interval-values Доступный диапазон:
             ol.rangeOfValues-list
         .field-group-stepSize
             h2.title-field-group Размер шага:
