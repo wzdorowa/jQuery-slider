@@ -66,6 +66,7 @@ export class View {
 
                 this.listenSliderTouchesEvents();
                 this.listenSliderLineEvents();
+                this.listenSizeWindow()
             }
             if(this.sliderTouches.length != this.modelState.amount) {
                 this.changeAmountTouchs();
@@ -80,6 +81,7 @@ export class View {
             this.setTooltipsValues();
         })
     }
+    
     private setWidthSliderContainer(): void {
         if(this.configurator !== null) {
             this.configurator.setWidthHeightSliderContainer(this.slider);
@@ -207,6 +209,9 @@ export class View {
                 this.elementsSliderTooltipText[i].innerHTML = String(element);
             });
         }
+    }
+    private listenSizeWindow() {
+        window.addEventListener('resize', () => this.setNewValueSliderTouch());
     }
     private listenSliderTouchesEvents() {
         let elements: HTMLElement[] = this.sliderTouches;
