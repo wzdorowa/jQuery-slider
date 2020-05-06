@@ -20,4 +20,6 @@ export interface IConfigurator {
     targetOffset(target: HTMLElement): number
     setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void
     updateLineSpan(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void
+    calculateCurrentClickLocation(event: MouseEvent, target: HTMLElement): number
+    getOffsetFromClick(event: MouseEvent): number
 }

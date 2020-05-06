@@ -175,6 +175,7 @@ export class View {
 
         this.elementSliderLine = sliderLine;
         this.elementSliderLineSpan = sliderLineSpan;
+        this.listenSliderLineEvents();
     }
     /* устанавливает значение для добавленного ползунка */
     private setValueToNewTouch() {
@@ -213,27 +214,33 @@ export class View {
             element.addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
         });
     }
-    private listenSliderLineEvents() {
-        this.elementSliderLine.addEventListener('click', event => this.setSliderTouchToNewPosition(event), {capture: true});
-    }
     private newListenSliderTouchesEvents() {
         let elements: HTMLElement[] = this.sliderTouches;
         let i: number = elements.length - 1;
         elements[i].addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
     }
+    private listenSliderLineEvents() {
+        console.log('this.elementSliderLine', this.elementSliderLine);
+        this.elementSliderLine.addEventListener('click', event => this.setSliderTouchToNewPosition(event));
+    }
     private setSliderTouchToNewPosition(event: MouseEvent) {
+        console.log('event', event);
         event.preventDefault();
+        console.log('event', event);
         let target = event.target;
+        console.log('target', target);
         let currentClickLocation: number = 0;
         //@ts-ignore
-        if (target != null && target.className === 'slider-line-span') {
+        if (target != null && target.className === 'slider-line-span' || target != null && target.className === 'slider-line-span-for-verticalView') {
             //@ts-ignore
-            currentClickLocation = event.offsetX + target.offsetLeft;
+            currentClickLocation = this.configurator.calculateCurrentClickLocation(event, target);
+            console.log('currentClickLocation', currentClickLocation);
         } else {
-            currentClickLocation = event.offsetX;
+            currentClickLocation = this.configurator.getOffsetFromClick(event);
+            console.log('currentClickLocation', currentClickLocation);
         }
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(this.modelState, currentClickLocation);
-
+        console.log('currentValue', currentValue);
 
         //@ts-ignore
         let nearestRunnerIndex = null;
@@ -287,12 +294,20 @@ export class View {
         if(modelState &&  this.configurator !== null) {
             this.currentXorY = this.configurator.setCurrentXorYtoOnMove(eventTouch, this.startXorY);
             if (i === 0) {
-                if (this.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
-                    this.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
+                if (elements.length === 1) {
+                    if (this.currentXorY > this.maxXorY) {
+                        this.currentXorY = this.maxXorY;
+                    }
                 }
-                if (this.currentXorY < 0) {
-                    this.currentXorY = 0;
+                if (elements.length != 1) {
+                    if (this.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
+                        this.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
+                    }
                 }
+                if (this.currentXorY < modelState.min) {
+                    this.currentXorY = modelState.min;
+                }
+
                 this.configurator.setIndentForTarget(target, this.currentXorY);
             }
             if (i > 0 && i < elements.length - 1) {
@@ -304,7 +319,7 @@ export class View {
                 }
                 this.configurator.setIndentForTarget(target, this.currentXorY);
             }
-            if (i === elements.length - 1) {
+            if (i === elements.length - 1 && i != 0) {
                 if (this.currentXorY < (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target))) {
                     this.currentXorY = (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target));
                 } 
@@ -367,6 +382,7 @@ export class View {
                 }
         };
     }
+    //@ts-ignore
     private calculateValueOfPlaceClickOnScale(modelState: IModelState | null, currentXorY: number) {
         if(this.modelState && modelState && this.coefficientPoint && this.shiftToMinValue !== null) {
             let currentValue: number | null = this.calculateValue(this.modelState, currentXorY);

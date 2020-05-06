@@ -44,9 +44,9 @@
     box-sizing: border-box;
     position: absolute;
     height: calc(100% - 24px);
-    left: 12px;
+    left: 11px;
     top: 12px;
-    width: 2px;
+    width: 4px;
     border-radius: 4px;
     background: grey;
     z-index: 0;
@@ -60,7 +60,7 @@
 .slider-line-span-for-verticalView {
     display: block;
     height: 100%;
-    width: 150%;
+    width: 100%;
     background: #b3d4fc;
 }
 .slider-tooltip {

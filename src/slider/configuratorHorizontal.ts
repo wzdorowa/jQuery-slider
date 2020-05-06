@@ -81,4 +81,10 @@ export const configuratorHorizontal: IConfigurator = {
         elementSliderLineSpan.style.marginLeft = configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0]) + 'px';
         elementSliderLineSpan.style.width = (configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[elements.length -1]) - configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0])) + 'px';
     },
+    calculateCurrentClickLocation(event: MouseEvent, target: HTMLElement): number {
+        return event.offsetX + target.offsetLeft;
+    },
+    getOffsetFromClick(event: MouseEvent): number {
+        return event.offsetX
+    }
 };
