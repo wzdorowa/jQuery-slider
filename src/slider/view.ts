@@ -52,7 +52,6 @@ export class View {
             }
             if (this.currentOrientation != this.modelState.orientation) {
                 this.currentOrientation = this.modelState.orientation;
-                this.setWidthSliderContainer();
                 if(this.isCreatedSlider) {
                     this.changeOrientation(); 
                     this.setValueSliderTouch();
@@ -80,12 +79,6 @@ export class View {
             this.setNewValueSliderTouch();
             this.setTooltipsValues();
         })
-    }
-    
-    private setWidthSliderContainer(): void {
-        if(this.configurator !== null) {
-            this.configurator.setWidthHeightSliderContainer(this.slider);
-        } 
     }
     /* функция CreateSlider создает основную html-структуру слайдера */
     private createSlider(): void {
@@ -225,27 +218,20 @@ export class View {
         elements[i].addEventListener('mousedown', event => this.onStart(this.modelState, event, i));
     }
     private listenSliderLineEvents() {
-        console.log('this.elementSliderLine', this.elementSliderLine);
         this.elementSliderLine.addEventListener('click', event => this.setSliderTouchToNewPosition(event));
     }
     private setSliderTouchToNewPosition(event: MouseEvent) {
-        console.log('event', event);
         event.preventDefault();
-        console.log('event', event);
         let target = event.target;
-        console.log('target', target);
         let currentClickLocation: number = 0;
         //@ts-ignore
         if (target != null && target.className === 'slider-line-span' || target != null && target.className === 'slider-line-span-for-verticalView') {
             //@ts-ignore
             currentClickLocation = this.configurator.calculateCurrentClickLocation(event, target);
-            console.log('currentClickLocation', currentClickLocation);
         } else {
             currentClickLocation = this.configurator.getOffsetFromClick(event);
-            console.log('currentClickLocation', currentClickLocation);
         }
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(this.modelState, currentClickLocation);
-        console.log('currentValue', currentValue);
 
         //@ts-ignore
         let nearestRunnerIndex = null;

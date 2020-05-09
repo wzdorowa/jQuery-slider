@@ -6,10 +6,6 @@ export const configuratorHorizontal: IConfigurator = {
     calculateElementOffsetLeftOrTop(element: HTMLElement): number {
         return element.offsetLeft;
     },
-    setWidthHeightSliderContainer(slider: HTMLElement): void {
-        slider.classList.remove('height-vertical-slider-container');
-        slider.classList.add('width-horizontal-slider-container');
-    },
     createSliderTooltipText(): HTMLElement {
         return createElement('span', 'slider-tooltip-text');
     },
