@@ -1,19 +1,17 @@
 import { EventEmitter } from '../eventEmitter';
-import { IConfigurator } from '../iConfigurator';
 import {createElement} from '../functions/createElement';
 import { IModelState } from '../iModelState';
 import { ISlidersState } from './ISlidersState';
+import { IConfigurator } from '../iConfigurator';
 
 export class Sliders {
     private parentBlock: HTMLElement
     private emitter: EventEmitter
-    private configurator!: IConfigurator
     public state: ISlidersState
 
-    constructor(element: HTMLElement, eventEmitter: EventEmitter, configurator: IConfigurator) {
+    constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.parentBlock = element,
-        this.emitter = eventEmitter,
-        this.configurator = configurator
+        this.emitter = eventEmitter
 
         this.state = {
             sliders: [],
@@ -41,13 +39,12 @@ export class Sliders {
             })
     }
     /* изменяет количество отрисованных на шкале бегунков */
-    changeAmountSliders(modelState: IModelState, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
-
+    changeAmountSliders(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         if (this.state.sliders.length < modelState.amount) {
             let amount: number = modelState.amount - this.state.sliders.length;
 
             this.createSliders(amount);
-            this.newListenSlidersEvents(amount, modelState, scale, activeRange, setCurrentTooltipValue);
+            this.newListenSlidersEvents(amount, modelState, configurator, scale, activeRange, setCurrentTooltipValue);
             this.setValueToNewSlider(amount, modelState);
             }
         if (this.state.sliders.length > modelState.amount) {
@@ -65,17 +62,18 @@ export class Sliders {
             this.emitter.emit('view:amountTouches-changed', modelState.touchsValues);
         }
     }
-    listenSlidersEvents(modelState: IModelState, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    /* навешивает обработчик событий 'mousedown' на каждый созданный бегунок */
+    listenSlidersEvents(modelState: IModelState,configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
         this.state.sliders.forEach((element: HTMLElement, i: number) => {
-            element.addEventListener('mousedown', event => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue));
+            element.addEventListener('mousedown', event => this.onStart(modelState, configurator, event, i, scale, activeRange, setCurrentTooltipValue));
         });
     }
     /* навешивает обработчик событий 'mousedown' на каждый добавленный бегунок */
-    newListenSlidersEvents(amount: number, modelState: IModelState, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    newListenSlidersEvents(amount: number, modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
         new Array(amount)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                this.state.sliders[this.state.sliders.length - (amount - i)].addEventListener('mousedown', event => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue));
+                this.state.sliders[this.state.sliders.length - (amount - i)].addEventListener('mousedown', event => this.onStart(modelState, configurator, event, i, scale, activeRange, setCurrentTooltipValue));
             })
     }
     /* устанавливает значение для каждого добавленного бегунка */
@@ -88,15 +86,15 @@ export class Sliders {
             })
     }
     /* расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений */
-    setValuesSliders(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement) {
-        this.configurator.calculateValueSliderTouch(this.state.sliders, modelState, activeRange, scale);
+    setValuesSliders(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, configurator: IConfigurator) {
+        configurator.calculateValueSliderTouch(this.state.sliders, modelState, activeRange, scale);
     }
     /* расставляет бегунки по слайдеру в зависимости от полученных новых значений */
-    setNewValuesForSliders(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState) {
-        this.state.coefficientPoint = this.configurator.calculateCoefficientPoint(scale, modelState.max, modelState.min);
+    setNewValuesForSliders(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, configurator: IConfigurator) {
+        this.state.coefficientPoint = configurator.calculateCoefficientPoint(scale, modelState.max, modelState.min);
 
         this.state.shiftToMinValue = Math.ceil(this.state.coefficientPoint * modelState.min);
-        this.configurator.calculateNewValueSliderTouch(this.state.sliders, this.state.currentSliderIndex, this.state.coefficientPoint, modelState, this.state.shiftToMinValue, activeRange);
+        configurator.calculateNewValueSliderTouch(this.state.sliders, this.state.currentSliderIndex, this.state.coefficientPoint, modelState, this.state.shiftToMinValue, activeRange);
     }
     /* метод рассчитывает текущее значение ползунка */
     calculateValue(modelState: IModelState, currentXorY: number) {
@@ -131,7 +129,7 @@ export class Sliders {
         return currentValue;
     }
     /* метод для установки ближайшего ползунка на место клика по шкале слайдера */
-    setSliderTouchToNewPosition(event: MouseEvent, modelState: IModelState) {
+    setSliderTouchToNewPosition(event: MouseEvent, modelState: IModelState, configurator: IConfigurator) {
         event.preventDefault();
         let target = event.target;
         let currentClickLocation: number = 0;
@@ -140,7 +138,7 @@ export class Sliders {
             //@ts-ignore
             currentClickLocation = this.configurator.calculateCurrentClickLocation(event, target);
         } else {
-            currentClickLocation = this.configurator.getOffsetFromClick(event);
+            currentClickLocation = configurator.getOffsetFromClick(event);
         }
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(modelState, currentClickLocation);
 
@@ -168,7 +166,7 @@ export class Sliders {
             this.emitter.emit('view:touchsValues-changed', {currentValue: currentValue, index: nearestRunnerIndex});
         }
     }
-    onStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    onStart(modelState: IModelState, configurator: IConfigurator, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
         this.state.currentSliderIndex = i;
         event.preventDefault();
 
@@ -176,22 +174,22 @@ export class Sliders {
         let target: HTMLElement = elements[i];
         let eventTouch: MouseEvent = event;
         
-        this.state.currentXorY = this.configurator.setCurrentXorYtoOnStart(target);
-        this.state.startXorY = this.configurator.setStartXorYtoOnStart(eventTouch, this.state.currentXorY);
-        this.state.maxXorY = this.configurator.setMaxXorYtoOnStart(scale);
+        this.state.currentXorY = configurator.setCurrentXorYtoOnStart(target);
+        this.state.startXorY = configurator.setStartXorYtoOnStart(eventTouch, this.state.currentXorY);
+        this.state.maxXorY = configurator.setMaxXorYtoOnStart(scale);
         this.state.currentValue = modelState.touchsValues[i];
         
-        const handleMove = (event: MouseEvent) => this.onMove(modelState, event, i, target, activeRange, setCurrentTooltipValue);
+        const handleMove = (event: MouseEvent) => this.onMove(modelState, configurator, event, i, target, activeRange, setCurrentTooltipValue);
         document.addEventListener('mousemove', handleMove);
 
-        const handleStop = (event: MouseEvent) => this.onStop(handleMove, handleStop, event, i, target, modelState, setCurrentTooltipValue);
+        const handleStop = (event: MouseEvent) => this.onStop(handleMove, handleStop, event, i, target, modelState, configurator, setCurrentTooltipValue);
         document.addEventListener('mouseup', handleStop);
     }
-    onMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    onMove(modelState: IModelState, configurator: IConfigurator, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
         let elements: HTMLElement[] = this.state.sliders;
         let eventTouch: MouseEvent = event;
     
-        this.state.currentXorY = this.configurator.setCurrentXorYtoOnMove(eventTouch, this.state.startXorY);
+        this.state.currentXorY = configurator.setCurrentXorYtoOnMove(eventTouch, this.state.startXorY);
         if (i === 0) {
             if (elements.length === 1) {
                 if (this.state.currentXorY > this.state.maxXorY) {
@@ -199,44 +197,45 @@ export class Sliders {
                 }
             }
             if (elements.length != 1) {
-                if (this.state.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
-                    this.state.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
+                if (this.state.currentXorY > (configurator.elementOffset(elements[i + 1]) - configurator.targetOffset(target))) {
+                    this.state.currentXorY = (configurator.elementOffset(elements[i + 1]) - configurator.targetOffset(target));
                 }
             }
             if (this.state.currentXorY < modelState.min) {
                 this.state.currentXorY = modelState.min;
             }
 
-            this.configurator.setIndentForTarget(target, this.state.currentXorY);
+            configurator.setIndentForTarget(target, this.state.currentXorY);
         }
         if (i > 0 && i < elements.length - 1) {
-            if(this.state.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
-                this.state.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
+            if(this.state.currentXorY > (configurator.elementOffset(elements[i + 1]) - configurator.targetOffset(target))) {
+                this.state.currentXorY = (configurator.elementOffset(elements[i + 1]) - configurator.targetOffset(target));
             } 
-            if (this.state.currentXorY < (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target))) {
-                this.state.currentXorY = (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target));
+            if (this.state.currentXorY < (configurator.elementOffset(elements[i - 1]) + configurator.targetOffset(target))) {
+                this.state.currentXorY = (configurator.elementOffset(elements[i - 1]) + configurator.targetOffset(target));
             }
-            this.configurator.setIndentForTarget(target, this.state.currentXorY);
+            configurator.setIndentForTarget(target, this.state.currentXorY);
         }
         if (i === elements.length - 1 && i != 0) {
-            if (this.state.currentXorY < (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target))) {
-                this.state.currentXorY = (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target));
+            if (this.state.currentXorY < (configurator.elementOffset(elements[i - 1]) + configurator.targetOffset(target))) {
+                this.state.currentXorY = (configurator.elementOffset(elements[i - 1]) + configurator.targetOffset(target));
             } 
             if(this.state.currentXorY > this.state.maxXorY) {
                 this.state.currentXorY = this.state.maxXorY;
             }
-            this.configurator.setIndentForTarget(target, this.state.currentXorY);
+            configurator.setIndentForTarget(target, this.state.currentXorY);
         }
         // update line span
-        this.configurator.updateLineSpan(activeRange, elements);
+        configurator.updateLineSpan(activeRange, elements);
         this.calculateValueOfPlaceOnScale(modelState, i);
         setCurrentTooltipValue(modelState, i);
     }
-    onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, configurator: IConfigurator, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
         setCurrentTooltipValue(modelState, i);
 
+        console.log(' я здесь! ');
         if (this.state.currentValue !== null) {
-            this.configurator.setIndentForTargetToOnStop(target, this.state.coefficientPoint, this.state.currentValue, this.state.shiftToMinValue);
+            configurator.setIndentForTargetToOnStop(target, this.state.coefficientPoint, this.state.currentValue, this.state.shiftToMinValue);
         }
 
         document.removeEventListener('mousemove', handleMove);

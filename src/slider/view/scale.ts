@@ -1,21 +1,18 @@
-import { IConfigurator } from '../iConfigurator';
 import {createElement} from '../functions/createElement';
 import { IModelState } from '../iModelState';
+import { IConfigurator } from '../iConfigurator';
 
 export class Scale {
     private parentBlock: HTMLElement
-    private configurator!: IConfigurator
     public scale!: HTMLElement
     public activeRange!: HTMLElement 
 
-    constructor(element: HTMLElement, configurator: IConfigurator) {
-        this.parentBlock = element,
-        this.configurator = configurator
-
+    constructor(element: HTMLElement) {
+        this.parentBlock = element
     }
     /* функция createScale добавляет элементы шкалы в основную html-структуру слайдера */
-    createScale(): void {
-        const scale: HTMLElement = this.configurator.createSliderLine();
+    createScale(configurator: IConfigurator): void {
+        const scale: HTMLElement = configurator.createSliderLine();
         const activeRange: HTMLElement = createElement('div', 'slider-line-span');
 
         this.parentBlock.append(scale);
@@ -24,14 +21,14 @@ export class Scale {
         this.activeRange = activeRange
         this.scale = scale;
     }
-    changeOrientation(setSliderTouchToNewPosition: (event: MouseEvent, modelState: IModelState) => void, modelState: IModelState): void {
-        const scaleToDelete: JQuery<HTMLElement> = this.configurator.sliderLineToDelete(this.parentBlock)
+    changeOrientation(setSliderTouchToNewPosition: (event: MouseEvent, modelState: IModelState, configurator: IConfigurator) => void, modelState: IModelState, configurator: IConfigurator): void {
+        const scaleToDelete: JQuery<HTMLElement> = configurator.sliderLineToDelete(this.parentBlock)
         scaleToDelete.remove();
 
-        this.createScale();
-        this.listenScaleEvents(setSliderTouchToNewPosition, modelState);
+        this.createScale(configurator);
+        this.listenScaleEvents(setSliderTouchToNewPosition, modelState, configurator);
     }
-    listenScaleEvents(setSliderTouchToNewPosition: (event: MouseEvent, modelState: IModelState) => void, modelState: IModelState): void {
-        this.scale.addEventListener('click', event => setSliderTouchToNewPosition(event, modelState));
+    listenScaleEvents(setSliderTouchToNewPosition: (event: MouseEvent, modelState: IModelState, configurator: IConfigurator) => void, modelState: IModelState, configurator: IConfigurator): void {
+        this.scale.addEventListener('click', event => setSliderTouchToNewPosition(event, modelState, configurator));
     }
 }

@@ -1,31 +1,29 @@
 import { EventEmitter } from '../eventEmitter';
-import { IConfigurator } from '../iConfigurator';
 import {createElement} from '../functions/createElement';
 import { IModelState } from '../iModelState';
+import { IConfigurator } from '../iConfigurator';
 
 export class Tooltips {
     private parentBlock: HTMLElement
     private emitter: EventEmitter
-    private configurator!: IConfigurator
     private textInTooltips!: HTMLElement[]
 
-    constructor(element: HTMLElement, eventEmitter: EventEmitter, configurator: IConfigurator) {
+    constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.parentBlock = element,
         this.emitter = eventEmitter,
-        this.configurator = configurator,
         this.textInTooltips = []
     }
     /* функция createToolpips добавляет элементы тултипов в основную html-структуру слайдера */
-    createTooltips(amount: number, sliders: HTMLElement[]): void {
+    createTooltips(amount: number, sliders: HTMLElement[], configurator: IConfigurator): void {
         new Array(amount)
             .fill(1)
-            .forEach((i: number) => {
+            .forEach((_element: number, i: number) => {
                 const tooltip: HTMLElement = createElement('div', 'slider-tooltip');
-                const textInTooltips: HTMLElement = this.configurator.createSliderTooltipText();
+                const textInTooltips: HTMLElement = configurator.createSliderTooltipText();
 
-                sliders[i].append(tooltip);
                 tooltip.append(textInTooltips);
-
+                sliders[i].append(tooltip);
+                
                 this.textInTooltips.push(textInTooltips);
         })
     }
@@ -36,10 +34,10 @@ export class Tooltips {
         });
     }
     /* изменяет количество отрисованных тултипов */
-    changeAmountTooltips(modelState: IModelState, sliders: HTMLElement[]): void {
+    changeAmountTooltips(modelState: IModelState, sliders: HTMLElement[], configurator: IConfigurator): void {
         if (sliders.length < modelState.amount) {
             let amount: number = modelState.amount - sliders.length;
-            this.createTooltips(amount, sliders);
+            this.createTooltips(amount, sliders, configurator);
         }
         if (sliders.length > modelState.amount) {
             const excessAmount: number =  sliders.length - modelState.amount;
@@ -53,15 +51,15 @@ export class Tooltips {
         }
     }
     /* перерисовывает  */
-    changeOrientation(): void {
+    changeOrientation(configurator: IConfigurator): void {
         const tooltips: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-tooltip'));
         this.textInTooltips = [];
-        const textInTooltips: HTMLElement[] = this.configurator.searchElementsTooltipText(this.parentBlock);
+        const textInTooltips: HTMLElement[] = configurator.searchElementsTooltipText(this.parentBlock);
         textInTooltips.forEach((element: HTMLElement) => {
             element.remove();
         });
         tooltips.forEach((element: HTMLElement) => {
-            const tooltipText: HTMLElement = this.configurator.createSliderTooltipText();
+            const tooltipText: HTMLElement = configurator.createSliderTooltipText();
             element.append(tooltipText);
             this.textInTooltips.push(tooltipText);
         });

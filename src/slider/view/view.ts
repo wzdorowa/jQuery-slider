@@ -24,9 +24,9 @@ export class View {
         this.currentOrientation = null,
         this.emitter = eventEmitter,
 
-        this.scale = new Scale(this.parentBlock, this.configurator)
-        this.sliders = new Sliders(this.parentBlock, this.emitter, this.configurator)
-        this.tooltips = new Tooltips(this.parentBlock, this.emitter, this.configurator)
+        this.scale = new Scale(this.parentBlock)
+        this.sliders = new Sliders(this.parentBlock, this.emitter)
+        this.tooltips = new Tooltips(this.parentBlock, this.emitter)
         
 
         this.emitter.subscribe('model:state-changed', (state: IModelState) => {
@@ -41,26 +41,26 @@ export class View {
             if (this.currentOrientation != this.modelState.orientation) {
                 this.currentOrientation = this.modelState.orientation;
                 if(this.isCreatedSlider) {
-                    this.scale.changeOrientation(this.sliders.setSliderTouchToNewPosition, this.modelState);
-                    this.tooltips.changeOrientation(); 
-                    this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale);
+                    this.scale.changeOrientation(this.sliders.setSliderTouchToNewPosition, this.modelState, this.configurator);
+                    this.tooltips.changeOrientation(this.configurator); 
+                    this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
                     this.tooltips.setTooltipsValues(this.modelState);
                 }
             }
             if(!this.isCreatedSlider) {
-                this.scale.createScale();
+                this.scale.createScale(this.configurator);
                 this.sliders.createSliders(this.modelState.amount);
-                this.tooltips.createTooltips(this.modelState.amount, this.sliders.state.sliders);
+                this.tooltips.createTooltips(this.modelState.amount, this.sliders.state.sliders, this.configurator);
                 this.isCreatedSlider = true;
-                this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale);
+                this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
 
-                this.sliders.listenSlidersEvents(this.modelState, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue);
-                this.scale.listenScaleEvents(this.sliders.setSliderTouchToNewPosition, this.modelState);
+                this.sliders.listenSlidersEvents(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
+                this.scale.listenScaleEvents(this.sliders.setSliderTouchToNewPosition, this.modelState, this.configurator);
                 this.listenSizeWindow()
             }
             if(this.sliders.state.sliders.length != this.modelState.amount) {
-                this.sliders.changeAmountSliders(this.modelState, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue);
-                this.tooltips.changeAmountTooltips(this.modelState, this.sliders.state.sliders)
+                this.sliders.changeAmountSliders(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
+                this.tooltips.changeAmountTooltips(this.modelState, this.sliders.state.sliders, this.configurator)
             }
             if (this.modelState.tooltip === false) {
                 this.tooltips.hideTooltip();
@@ -68,11 +68,11 @@ export class View {
             if (this.modelState.tooltip === true) {
                 this.tooltips.showTooltip();
             }
-            this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState);
+            this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator);
             this.tooltips.setTooltipsValues(this.modelState);
         })
     }
     private listenSizeWindow() {
-        window.addEventListener('resize', () => this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState));
+        window.addEventListener('resize', () => this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator));
     }
 }

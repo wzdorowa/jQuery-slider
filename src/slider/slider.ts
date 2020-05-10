@@ -1,5 +1,5 @@
 import {Model} from './model';
-import {View} from './view';
+import {View} from './view/view';
 import {Controller} from './controller';
 import {EventEmitter} from './eventEmitter';
 import {IModelState} from './iModelState';
