@@ -98,6 +98,7 @@ export class Sliders {
     }
     /* метод рассчитывает текущее значение ползунка */
     calculateValue(modelState: IModelState, currentXorY: number) {
+        console.log('this.state.coefficientPoint', this.state.coefficientPoint);
         let currentValueX: number = Math.floor(currentXorY / this.state.coefficientPoint) + modelState.min;
         let multi: number = Math.floor(currentValueX / modelState.step);
         return currentValueX = modelState.step * multi;
@@ -116,7 +117,7 @@ export class Sliders {
     }
     /* рассчитывает значение места клика на шкале */
     //@ts-ignore
-    calculateValueOfPlaceClickOnScale(modelState: IModelState, currentXorY: number) {
+    calculateValueOfPlaceClickOnScale(modelState: IModelState, currentXorY: number): number {
         let currentValue: number | null = this.calculateValue(modelState, currentXorY);
             
             if (this.state.currentValue !== null) {
@@ -131,14 +132,17 @@ export class Sliders {
     /* метод для установки ближайшего ползунка на место клика по шкале слайдера */
     setSliderTouchToNewPosition(event: MouseEvent, modelState: IModelState, configurator: IConfigurator) {
         event.preventDefault();
+        console.log('configurator', configurator);
         let target = event.target;
         let currentClickLocation: number = 0;
         //@ts-ignore
         if (target != null && target.className === 'slider-line-span' || target != null && target.className === 'slider-line-span-for-verticalView') {
             //@ts-ignore
-            currentClickLocation = this.configurator.calculateCurrentClickLocation(event, target);
+            currentClickLocation = configurator.calculateCurrentClickLocation(event, target);
+            console.log('currentClickLocation1', currentClickLocation);
         } else {
             currentClickLocation = configurator.getOffsetFromClick(event);
+            console.log('currentClickLocation2', currentClickLocation);
         }
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(modelState, currentClickLocation);
 

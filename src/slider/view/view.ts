@@ -41,7 +41,7 @@ export class View {
             if (this.currentOrientation != this.modelState.orientation) {
                 this.currentOrientation = this.modelState.orientation;
                 if(this.isCreatedSlider) {
-                    this.scale.changeOrientation(this.sliders.setSliderTouchToNewPosition, this.modelState, this.configurator);
+                    this.scale.changeOrientation(this.sliders.setSliderTouchToNewPosition.bind(this.sliders), this.modelState, this.configurator);
                     this.tooltips.changeOrientation(this.configurator); 
                     this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
                     this.tooltips.setTooltipsValues(this.modelState);
@@ -55,7 +55,7 @@ export class View {
                 this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
 
                 this.sliders.listenSlidersEvents(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
-                this.scale.listenScaleEvents(this.sliders.setSliderTouchToNewPosition, this.modelState, this.configurator);
+                this.scale.listenScaleEvents(this.sliders.setSliderTouchToNewPosition.bind(this.sliders), this.modelState, this.configurator);
                 this.listenSizeWindow()
             }
             if(this.sliders.state.sliders.length != this.modelState.amount) {
