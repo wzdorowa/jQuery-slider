@@ -8,17 +8,12 @@ export class Tooltips {
     private emitter: EventEmitter
     private configurator!: IConfigurator
     private textInTooltips!: HTMLElement[]
-    private modelState!: IModelState
-    private missingAmount: number | null
 
-    constructor(element: HTMLElement, eventEmitter: EventEmitter, configurator: IConfigurator, modelState: IModelState) {
+    constructor(element: HTMLElement, eventEmitter: EventEmitter, configurator: IConfigurator) {
         this.parentBlock = element,
         this.emitter = eventEmitter,
         this.configurator = configurator,
-        this.textInTooltips = [],
-        this.modelState = modelState,
-        this.missingAmount = null
-
+        this.textInTooltips = []
     }
     /* функция createToolpips добавляет элементы тултипов в основную html-структуру слайдера */
     createTooltips(amount: number, sliders: HTMLElement[]): void {
@@ -36,16 +31,12 @@ export class Tooltips {
     }
     /* устанавливает значения ползунков по-умолчанию в соответствующие им тултипы  */
     setTooltipsValues(modelState: IModelState) {
-        if(modelState && this.configurator !== null) {
-            modelState.touchsValues.forEach((element: number, i: number) => {
-                this.textInTooltips[i].innerHTML = String(element);
-            });
-        }
+        modelState.touchsValues.forEach((element: number, i: number) => {
+            this.textInTooltips[i].innerHTML = String(element);
+        });
     }
     /* изменяет количество отрисованных тултипов */
-    changeAmountTooltips(modelState: IModelState): void {
-        const sliders: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-touch'));
-
+    changeAmountTooltips(modelState: IModelState, sliders: HTMLElement[]): void {
         if (sliders.length < modelState.amount) {
             let amount: number = modelState.amount - sliders.length;
             this.createTooltips(amount, sliders);
@@ -76,10 +67,8 @@ export class Tooltips {
         });
     }
     /* метод устанавливает текущее значение в тултип ползунка */
-    setCurrentTooltipValue(modelState: IModelState | null, i: number) {
-        if (modelState !== null) {
-            this.textInTooltips[i].innerHTML = String(modelState.touchsValues[i]);
-        }
+    setCurrentTooltipValue(modelState: IModelState, i: number) {
+        this.textInTooltips[i].innerHTML = String(modelState.touchsValues[i]);
     }
     /* метод hideTooltip скрывает туллтипы ползунков */
     hideTooltip() {

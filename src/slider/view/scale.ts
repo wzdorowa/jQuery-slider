@@ -1,17 +1,15 @@
-import { EventEmitter } from '../eventEmitter';
 import { IConfigurator } from '../iConfigurator';
 import {createElement} from '../functions/createElement';
+import { IModelState } from '../iModelState';
 
 export class Scale {
     private parentBlock: HTMLElement
-    private emitter: EventEmitter
     private configurator!: IConfigurator
-    private scale!: HTMLElement
-    private activeRange!: HTMLElement 
+    public scale!: HTMLElement
+    public activeRange!: HTMLElement 
 
-    constructor(element: HTMLElement, eventEmitter: EventEmitter, configurator: IConfigurator) {
+    constructor(element: HTMLElement, configurator: IConfigurator) {
         this.parentBlock = element,
-        this.emitter = eventEmitter,
         this.configurator = configurator
 
     }
@@ -26,14 +24,14 @@ export class Scale {
         this.activeRange = activeRange
         this.scale = scale;
     }
-    changeOrientation(): void {
+    changeOrientation(setSliderTouchToNewPosition: (event: MouseEvent, modelState: IModelState) => void, modelState: IModelState): void {
         const scaleToDelete: JQuery<HTMLElement> = this.configurator.sliderLineToDelete(this.parentBlock)
         scaleToDelete.remove();
 
         this.createScale();
-        this.listenScaleEvents();
+        this.listenScaleEvents(setSliderTouchToNewPosition, modelState);
     }
-    listenScaleEvents() {
-        this.scale.addEventListener('click', event => setSliderTouchToNewPosition(event));
+    listenScaleEvents(setSliderTouchToNewPosition: (event: MouseEvent, modelState: IModelState) => void, modelState: IModelState): void {
+        this.scale.addEventListener('click', event => setSliderTouchToNewPosition(event, modelState));
     }
 }

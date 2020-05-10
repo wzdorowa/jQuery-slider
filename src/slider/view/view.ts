@@ -1,46 +1,33 @@
-import {configuratorHorizontal} from './configuratorHorizontal';
-import {configuratorVertical} from './configuratorVertical';
-import { EventEmitter } from './eventEmitter';
-import {IModelState} from './iModelState';
-import {IConfigurator} from './iConfigurator'
-import {createElement} from './functions/createElement';
+import {configuratorHorizontal} from '../configuratorHorizontal';
+import {configuratorVertical} from '../configuratorVertical';
+import {EventEmitter} from '../eventEmitter';
+import {IModelState} from '../iModelState';
+import {IConfigurator} from '../iConfigurator';
+import {Scale} from '../view/scale';
+import {Sliders} from '../view/sliders';
+import {Tooltips} from '../view/tooltips';
 
 export class View {
-    private slider: HTMLElement
-    private sliderTouches: HTMLElement[]
-    private elementSliderLine!: HTMLElement
-    private elementSliderLineSpan!: HTMLElement 
-    private elementsSliderTooltipText: HTMLElement[]
+    private parentBlock: HTMLElement
     private isCreatedSlider: boolean
-    private coefficientPoint: number
-    private shiftToMinValue: number
-    private startXorY: number
-    private maxXorY: number
-    private currentXorY: number
-    private currentValue: number | null
     private modelState!: IModelState
-    private currentTouchIndex: number | null
     private configurator!: IConfigurator
     private currentOrientation: string | null
-    private missingAmount: number | null
     private emitter: EventEmitter
+    private scale!: Scale
+    private sliders!: Sliders
+    private tooltips!: Tooltips
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
-        this.slider = element,
-        this.sliderTouches = [],
-        this.elementsSliderTooltipText =[],
+        this.parentBlock = element,
         this.isCreatedSlider = false,
-        this.coefficientPoint = 0,
-        this.shiftToMinValue = 0,
-        this.startXorY = 0,
-        this.maxXorY = 0,
-        this.currentXorY = 0,
-        this.currentValue = 0,
-        this.currentTouchIndex = null,
         this.currentOrientation = null,
-        this.missingAmount = null,
-
         this.emitter = eventEmitter,
+
+        this.scale = new Scale(this.parentBlock, this.configurator)
+        this.sliders = new Sliders(this.parentBlock, this.emitter, this.configurator)
+        this.tooltips = new Tooltips(this.parentBlock, this.emitter, this.configurator)
+        
 
         this.emitter.subscribe('model:state-changed', (state: IModelState) => {
             this.modelState = state;
@@ -50,33 +37,42 @@ export class View {
             if (this.modelState.orientation === 'vertical') {
                 this.configurator = configuratorVertical;
             }
+            
             if (this.currentOrientation != this.modelState.orientation) {
                 this.currentOrientation = this.modelState.orientation;
                 if(this.isCreatedSlider) {
-                    this.changeOrientation(); 
-                    this.setValueSliderTouch();
-                    this.setTooltipsValues();
+                    this.scale.changeOrientation(this.sliders.setSliderTouchToNewPosition, this.modelState);
+                    this.tooltips.changeOrientation(); 
+                    this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale);
+                    this.tooltips.setTooltipsValues(this.modelState);
                 }
             }
             if(!this.isCreatedSlider) {
-                this.createSlider();
+                this.scale.createScale();
+                this.sliders.createSliders(this.modelState.amount);
+                this.tooltips.createTooltips(this.modelState.amount, this.sliders.state.sliders);
                 this.isCreatedSlider = true;
-                this.setValueSliderTouch();
+                this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale);
 
-                this.listenSliderTouchesEvents();
-                this.listenSliderLineEvents();
+                this.sliders.listenSlidersEvents(this.modelState, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue);
+                this.scale.listenScaleEvents(this.sliders.setSliderTouchToNewPosition, this.modelState);
                 this.listenSizeWindow()
             }
-            if(this.sliderTouches.length != this.modelState.amount) {
-                this.changeAmountTouchs();
+            if(this.sliders.state.sliders.length != this.modelState.amount) {
+                this.sliders.changeAmountSliders(this.modelState, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue);
+                this.tooltips.changeAmountTooltips(this.modelState, this.sliders.state.sliders)
             }
             if (this.modelState.tooltip === false) {
-                this.hideTooltip();
+                this.tooltips.hideTooltip();
             }
             if (this.modelState.tooltip === true) {
-                this.showTooltip();
+                this.tooltips.showTooltip();
             }
-            this.setNewValueSliderTouch();
-            this.setTooltipsValues();
+            this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState);
+            this.tooltips.setTooltipsValues(this.modelState);
         })
     }
+    private listenSizeWindow() {
+        window.addEventListener('resize', () => this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState));
+    }
+}
