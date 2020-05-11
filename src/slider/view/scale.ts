@@ -1,9 +1,8 @@
-import {createElement} from '../functions/createElement';
 import { IModelState } from '../iModelState';
 import { IConfigurator } from '../iConfigurator';
 
 export class Scale {
-    private parentBlock: HTMLElement
+    public parentBlock: HTMLElement
     public scale!: HTMLElement
     public activeRange!: HTMLElement 
 
@@ -13,7 +12,7 @@ export class Scale {
     /* функция createScale добавляет элементы шкалы в основную html-структуру слайдера */
     createScale(configurator: IConfigurator): void {
         const scale: HTMLElement = configurator.createSliderLine();
-        const activeRange: HTMLElement = createElement('div', 'slider-line-span');
+        const activeRange: HTMLElement = configurator.createSliderLineSpan();
 
         this.parentBlock.append(scale);
         scale.append(activeRange);
@@ -22,9 +21,11 @@ export class Scale {
         this.scale = scale;
     }
     changeOrientation(setSliderTouchToNewPosition: (event: MouseEvent, modelState: IModelState, configurator: IConfigurator) => void, modelState: IModelState, configurator: IConfigurator): void {
-        const scaleToDelete: JQuery<HTMLElement> = configurator.sliderLineToDelete(this.parentBlock)
+        const activeRangeToDelite: JQuery<HTMLElement> = configurator.sliderLineSpanToDelete(this.parentBlock);
+        activeRangeToDelite.remove();
+        const scaleToDelete: JQuery<HTMLElement> = configurator.sliderLineToDelete(this.parentBlock);
         scaleToDelete.remove();
-
+    
         this.createScale(configurator);
         this.listenScaleEvents(setSliderTouchToNewPosition, modelState, configurator);
     }

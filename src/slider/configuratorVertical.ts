@@ -21,6 +21,9 @@ export const configuratorVertical: IConfigurator = {
     sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line');
     },
+    sliderLineSpanToDelete(slider: HTMLElement): JQuery<HTMLElement> {
+        return $(slider).find('.slider-line-span');
+    },
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number {
         return (elementSliderLine.offsetHeight / (max - min));
     },

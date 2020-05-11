@@ -5,38 +5,6 @@ import { IModelState } from '../slider/iModelState';
 
 var sinon = require('sinon');
 
-describe('Start tests', () => {
-    // //@ts-ignore
-    // let browser;
-    // //@ts-ignore
-    // let page: any;
-
-    // beforeEach(async () => {
-    //     browser = await puppeteer.launch({ headless: false});
-    //     page = await browser.newPage();
-    // });
-    // afterEach(async () => {
-    //     //@ts-ignore
-    //     await browser.close();
-    // });
-    // test('Calculate point coefficient', async () => {
-    //     await page.goto('http://localhost:1234');
-    //     await page.waitFor(1000);
-        
-    //     const elementSliderLine = await page.$('.slider-line');
-    //     //@ts-ignore
-    //     const elementSliderLineOffsetWidth = await page.$eval('.slider-line', e => e.offsetWidth);
-    //     elementSliderLine.width = elementSliderLineOffsetWidth; 
-        
-    // })
-});
-test('Сhange the class from vertical to horizontal', () => {
-    const slider: HTMLElement = createElement('span', 'height-vertical-slider-container');
-    configuratorHorizontal.setWidthHeightSliderContainer(slider);
-    expect(slider.tagName).toBe('SPAN');
-    expect(slider.className).not.toBe('height-vertical-slider-container');
-    expect(slider.className).toBe('width-horizontal-slider-container');
-});
 test('Create element with class "slider-tooltip-text"', () => {
     const createElementTooltip = configuratorHorizontal.createSliderTooltipText();
     expect(createElementTooltip.tagName).toBe('SPAN');

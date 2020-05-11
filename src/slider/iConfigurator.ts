@@ -8,6 +8,7 @@ export interface IConfigurator {
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[]
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number
     sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement>
+    sliderLineSpanToDelete(slider: HTMLElement): JQuery<HTMLElement>
     calculateValueSliderTouch(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void
     calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void
     setCurrentXorYtoOnStart(target: HTMLElement): number

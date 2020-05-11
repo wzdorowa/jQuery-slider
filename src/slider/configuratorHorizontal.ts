@@ -24,6 +24,9 @@ export const configuratorHorizontal: IConfigurator = {
     sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line-for-verticalView');
     },
+    sliderLineSpanToDelete(slider: HTMLElement): JQuery<HTMLElement> {
+        return $(slider).find('.slider-line-span-for-verticalView');
+    },
     calculateValueSliderTouch(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void {
         new Array(elements.length)
             .fill(1)

@@ -6,7 +6,7 @@ import { IConfigurator } from '../iConfigurator';
 export class Tooltips {
     private parentBlock: HTMLElement
     private emitter: EventEmitter
-    private textInTooltips!: HTMLElement[]
+    public textInTooltips!: HTMLElement[]
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.parentBlock = element,
@@ -65,7 +65,8 @@ export class Tooltips {
         });
     }
     /* метод устанавливает текущее значение в тултип ползунка */
-    setCurrentTooltipValue(modelState: IModelState, i: number) {
+    setCurrentTooltipValue(
+        modelState: IModelState, i: number) {
         this.textInTooltips[i].innerHTML = String(modelState.touchsValues[i]);
     }
     /* метод hideTooltip скрывает туллтипы ползунков */
