@@ -6,11 +6,13 @@ import { IConfigurator } from '../iConfigurator';
 export class Tooltips {
     private parentBlock: HTMLElement
     private emitter: EventEmitter
+    public tooltipsElements: HTMLElement[]
     public textInTooltips!: HTMLElement[]
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.parentBlock = element,
         this.emitter = eventEmitter,
+        this.tooltipsElements = [],
         this.textInTooltips = []
     }
     /* функция createToolpips добавляет элементы тултипов в основную html-структуру слайдера */
@@ -22,10 +24,10 @@ export class Tooltips {
                 const textInTooltips: HTMLElement = configurator.createSliderTooltipText();
 
                 tooltip.append(textInTooltips);
-                sliders[i].append(tooltip);
-                
+                sliders[sliders.length - (amount - i)].append(tooltip);
+                this.tooltipsElements.push(tooltip);
                 this.textInTooltips.push(textInTooltips);
-        })
+            })
     }
     /* устанавливает значения ползунков по-умолчанию в соответствующие им тултипы  */
     setTooltipsValues(modelState: IModelState) {
@@ -34,23 +36,25 @@ export class Tooltips {
         });
     }
     /* изменяет количество отрисованных тултипов */
-    changeAmountTooltips(modelState: IModelState, sliders: HTMLElement[], configurator: IConfigurator): void {
-        if (sliders.length < modelState.amount) {
-            let amount: number = modelState.amount - sliders.length;
+    changeAmountTooltips(sliders: HTMLElement[], configurator: IConfigurator, modelState: IModelState): void {
+        if (this.tooltipsElements.length < modelState.touchsValues.length) {
+            let amount: number = modelState.touchsValues.length - this.tooltipsElements.length;
             this.createTooltips(amount, sliders, configurator);
+            //this.setTooltipsValues(modelState);
         }
-        if (sliders.length > modelState.amount) {
-            const excessAmount: number =  sliders.length - modelState.amount;
+        if (this.tooltipsElements.length > modelState.touchsValues.length) {
+            const excessAmount: number =  this.tooltipsElements.length - modelState.touchsValues.length;
 
             new Array(excessAmount)
                 .fill(1)
                 .forEach(() => {
+                    this.tooltipsElements.splice(-1, 1);
                     this.textInTooltips.splice(-1, 1);
+
                 })
-            this.emitter.emit('view:amountTouches-changed', modelState.touchsValues);
         }
     }
-    /* перерисовывает  */
+    /* перерисовывает тултипы при смене ориентации */
     changeOrientation(configurator: IConfigurator): void {
         const tooltips: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-tooltip'));
         this.textInTooltips = [];
@@ -65,8 +69,7 @@ export class Tooltips {
         });
     }
     /* метод устанавливает текущее значение в тултип ползунка */
-    setCurrentTooltipValue(
-        modelState: IModelState, i: number) {
+    setCurrentTooltipValue(modelState: IModelState, i: number) {
         this.textInTooltips[i].innerHTML = String(modelState.touchsValues[i]);
     }
     /* метод hideTooltip скрывает туллтипы ползунков */

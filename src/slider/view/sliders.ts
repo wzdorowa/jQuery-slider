@@ -73,17 +73,21 @@ export class Sliders {
         new Array(amount)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                this.state.sliders[this.state.sliders.length - (amount - i)].addEventListener('mousedown', event => this.onStart(modelState, configurator, event, i, scale, activeRange, setCurrentTooltipValue));
+                let index = this.state.sliders.length - (amount - i);
+                this.state.sliders[this.state.sliders.length - (amount - i)].addEventListener('mousedown', event => this.onStart(modelState, configurator, event, index, scale, activeRange, setCurrentTooltipValue));
             })
     }
     /* устанавливает значение для каждого добавленного бегунка */
     setValueToNewSlider(amount: number, modelState: IModelState) {
+        if (this.state.sliders.length === modelState.touchsValues.length) {
+            return
+        }
         new Array(amount)
             .fill(1)
             .forEach((_element: number, i: number) => {
                 modelState.touchsValues[this.state.sliders.length - (amount - i)] = (modelState.touchsValues[(this.state.sliders.length - 1) - (amount - i)] + (modelState.step));
-                this.emitter.emit('view:amountTouches-changed', modelState.touchsValues);  
             })
+        this.emitter.emit('view:amountTouches-changed', modelState.touchsValues); 
     }
     /* расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений */
     setValuesSliders(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, configurator: IConfigurator) {
@@ -98,7 +102,6 @@ export class Sliders {
     }
     /* метод рассчитывает текущее значение ползунка */
     calculateValue(modelState: IModelState, currentXorY: number) {
-        console.log('this.state.coefficientPoint', this.state.coefficientPoint);
         let currentValueX: number = Math.floor(currentXorY / this.state.coefficientPoint) + modelState.min;
         let multi: number = Math.floor(currentValueX / modelState.step);
         return currentValueX = modelState.step * multi;
@@ -237,7 +240,6 @@ export class Sliders {
     onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, configurator: IConfigurator, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
         setCurrentTooltipValue(modelState, i);
 
-        console.log(' я здесь! ');
         if (this.state.currentValue !== null) {
             configurator.setIndentForTargetToOnStop(target, this.state.coefficientPoint, this.state.currentValue, this.state.shiftToMinValue);
         }
