@@ -17,18 +17,16 @@ export class View {
     private scale!: Scale
     private sliders!: Sliders
     private tooltips!: Tooltips
-    private missingAmount: number | null
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.parentBlock = element,
         this.isCreatedSlider = false,
         this.currentOrientation = null,
-        this.missingAmount = null,
         this.emitter = eventEmitter,
 
         this.scale = new Scale(this.parentBlock)
         this.sliders = new Sliders(this.parentBlock, this.emitter)
-        this.tooltips = new Tooltips(this.parentBlock, this.emitter)
+        this.tooltips = new Tooltips(this.parentBlock)
         
 
         this.emitter.subscribe('model:state-changed', (state: IModelState) => {
@@ -61,7 +59,6 @@ export class View {
                 this.listenSizeWindow()
             }
             if(this.sliders.state.sliders.length != this.modelState.amount) {
-                this.missingAmount = this.modelState.amount - this.sliders.state.sliders.length;
                 this.sliders.changeAmountSliders(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
             }
             if(this.tooltips.tooltipsElements.length != this.modelState.touchsValues.length) {

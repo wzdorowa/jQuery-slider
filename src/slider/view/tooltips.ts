@@ -1,17 +1,14 @@
-import { EventEmitter } from '../eventEmitter';
 import {createElement} from '../functions/createElement';
 import { IModelState } from '../iModelState';
 import { IConfigurator } from '../iConfigurator';
 
 export class Tooltips {
     private parentBlock: HTMLElement
-    private emitter: EventEmitter
     public tooltipsElements: HTMLElement[]
     public textInTooltips!: HTMLElement[]
 
-    constructor(element: HTMLElement, eventEmitter: EventEmitter) {
+    constructor(element: HTMLElement) {
         this.parentBlock = element,
-        this.emitter = eventEmitter,
         this.tooltipsElements = [],
         this.textInTooltips = []
     }
@@ -40,7 +37,6 @@ export class Tooltips {
         if (this.tooltipsElements.length < modelState.touchsValues.length) {
             let amount: number = modelState.touchsValues.length - this.tooltipsElements.length;
             this.createTooltips(amount, sliders, configurator);
-            //this.setTooltipsValues(modelState);
         }
         if (this.tooltipsElements.length > modelState.touchsValues.length) {
             const excessAmount: number =  this.tooltipsElements.length - modelState.touchsValues.length;
@@ -50,7 +46,6 @@ export class Tooltips {
                 .forEach(() => {
                     this.tooltipsElements.splice(-1, 1);
                     this.textInTooltips.splice(-1, 1);
-
                 })
         }
     }

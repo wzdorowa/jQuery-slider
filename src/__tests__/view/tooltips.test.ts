@@ -65,32 +65,77 @@ describe('Модульные тесты', () => {
         eventEmitter.emit('model:state-changed', state);
 
         let tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
-        //let textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
-        //let slidersElements = window.document.querySelectorAll('.slider-touch');
+        let textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
+        let slidersElements = window.document.querySelectorAll('.slider-touch');
 
         expect(tooltipsElements.length).toBe(state.amount);
-        // expect(textInTooltipsElements.length).toBe(state.amount);
-        // tooltipsElements.forEach((element, i: number) => {
-        //     expect(element.childNodes).toContain(textInTooltipsElements[i]);
-        // });
-        // slidersElements.forEach((element, i: number) => {
-        //     expect(String(element.childNodes[1])).toBe(String(tooltipsElements[i]));
-        // });
+        expect(textInTooltipsElements.length).toBe(state.amount);
+        tooltipsElements.forEach((element, i: number) => {
+            expect(element.childNodes).toContain(textInTooltipsElements[i]);
+        });
+        slidersElements.forEach((element, i: number) => {
+            expect(String(element.childNodes[1])).toBe(String(tooltipsElements[i]));
+        });
 
-        // state.amount = 4;
-        // eventEmitter.emit('model:state-changed', state);
+        state.amount = 4;
+        eventEmitter.emit('model:state-changed', state);
 
-        // tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
-        // textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
-        // slidersElements = window.document.querySelectorAll('.slider-touch');
+        tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
+        textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
+        slidersElements = window.document.querySelectorAll('.slider-touch');
 
-        // expect(tooltipsElements.length).toBe(state.amount);
-        // expect(textInTooltipsElements.length).toBe(state.amount);
-        // tooltipsElements.forEach((element, i: number) => {
-        //     expect(element.childNodes).toContain(textInTooltipsElements[i]);
-        // });
-        // slidersElements.forEach((element, i: number) => {
-        //     expect(element.childNodes).toContain(tooltipsElements[i]);
-        // });
+        expect(tooltipsElements.length).toBe(state.amount);
+        expect(textInTooltipsElements.length).toBe(state.amount);
+        tooltipsElements.forEach((element, i: number) => {
+            expect(element.childNodes).toContain(textInTooltipsElements[i]);
+        });
+        slidersElements.forEach((element, i: number) => {
+            expect(element.childNodes).toContain(tooltipsElements[i]);
+        });
+    });
+    test('Проверка перерисовки тултипов при смене ориентации', () => {
+        state.orientation = 'vertical';
+        eventEmitter.emit('model:state-changed', state);
+
+        let tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
+        let textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text-for-verticalView');
+
+        textInTooltipsElements.forEach((element) => {
+            expect(element.className).toBe('slider-tooltip-text-for-verticalView');
+        });
+        tooltipsElements.forEach((element, i: number) => {
+            expect(element.childNodes).toContain(textInTooltipsElements[i]);
+        });
+
+        state.orientation = 'horizontal';
+        eventEmitter.emit('model:state-changed', state);
+
+        tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
+        textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
+
+        textInTooltipsElements.forEach((element) => {
+            expect(element.className).toBe('slider-tooltip-text');
+        });
+        tooltipsElements.forEach((element, i: number) => {
+            expect(element.childNodes).toContain(textInTooltipsElements[i]);
+        });
+    });
+    test('Проверка скрытия тултипов бегунков', () => {
+        state.tooltip = false
+        eventEmitter.emit('model:state-changed', state);
+
+        const tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
+        tooltipsElements.forEach((element) => {
+            expect(element.className).toContain('slider-tooltip-hide');
+        });
+    });
+    test('Проверка показа тултипов бегунков', () => {
+        state.tooltip = true
+        eventEmitter.emit('model:state-changed', state);
+
+        const tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
+        tooltipsElements.forEach((element) => {
+            expect(element.className).not.toContain('slider-tooltip-hide');
+        })
     });
 })
