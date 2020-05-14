@@ -1,6 +1,4 @@
-import { EventEmitter } from '../../slider/eventEmitter';
 import {IModelState} from '../../slider/iModelState';
-import { View } from '../../slider/view/view';
 import puppeteer from 'puppeteer';
 
 interface IRectNextSlider {
@@ -18,62 +16,6 @@ let state: IModelState = {
     step: 2,
     tooltip: true,
 };
-describe('Модульные тесты', () => {
-
-    const element = window.document.createElement('div');
-    element.className = 'js-slider-test';
-    window.document.body.appendChild(element);
-    
-    const eventEmitter = new EventEmitter();
-    let emitter = eventEmitter;
-    
-    //@ts-ignore
-    const view = new View(element, eventEmitter);
-    
-    test('Проверка корректного создания элементов', () => {
-        emitter.emit('model:state-changed', state);
-
-        const touchElements = window.document.querySelectorAll('.slider-touch');
-        const sliderSpans = window.document.querySelectorAll('.slider-span');
-    
-        expect(touchElements.length).toBe(state.amount);
-        expect(sliderSpans.length).toBe(state.amount);
-    });
-    test('Проверить наличие родителей у созданных элементов', () => {
-        const parentTouchElements = window.document.querySelectorAll('.slider-touch')[0].parentNode;
-        const parentSliderSpans = window.document.querySelectorAll('.slider-span')[0].parentNode;
-    
-        //@ts-ignore
-        expect(parentTouchElements.className).toContain('js-slider-test');
-        //@ts-ignore
-        expect(parentSliderSpans.className).toBe('slider-touch');
-    });
-    test('Проверить изменение количества созданных элементов при изменении количества бегунков в большую сторону', () => {
-        state.amount = 5;
-        emitter.emit('model:state-changed', state);
-    
-        const touchElements = window.document.querySelectorAll('.slider-touch');
-        const sliderSpans = window.document.querySelectorAll('.slider-span');
-    
-        expect(touchElements.length).toBe(state.amount);
-        expect(sliderSpans.length).toBe(state.amount);
-    
-        //Проверить значение добавленного ползунка
-        expect(state.touchsValues.length).toBe(5);
-        expect(state.touchsValues[4]).toBe(52);
-    });
-    test('Проверить удаление ползунков', () => {
-        state.amount = 3;
-        emitter.emit('model:state-changed', state);
-    
-        const touchElements = window.document.querySelectorAll('.slider-touch');
-        const sliderSpans = window.document.querySelectorAll('.slider-span');
-    
-        expect(touchElements.length).toBe(state.amount);
-        expect(sliderSpans.length).toBe(state.amount);
-        expect(state.touchsValues.length).toBe(3);
-    });
-});
 describe('Интеграционные тесты для горизонтального вида', () => {
     let browser: any;
     let page: any;
@@ -91,7 +33,7 @@ describe('Интеграционные тесты для горизонталь�
     });
     test('Checking the location of the sliders on the slider', async () => {
         await page.goto('http://localhost:1234');
-        await page.waitFor(500);
+        await page.waitFor(300);
 
         //Функция для нахождения коэффициента единичного значения слайдера в пикселях
         const getCoefficientPoint = (sliderLineLength: number, max: number, min: number) => {
@@ -181,6 +123,20 @@ describe('Интеграционные тесты для горизонталь�
           }, firstElement);
         expect(rectFirstElement.left).toBe(currentValue);
 
+        //Проверить корректность перемещения ползунка при клике по шкале
+        await page.waitFor(200);
+        await page.mouse.click(rectSliderLine.left + 30, rectSliderLine.top);
+        await page.waitFor(200);
+
+        rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+          }, firstElement);
+
+        offsetNextSlider = Math.ceil((rectSliderLine.left + 30) - elementWidth/2 - startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        expect(rectFirstElement.left).toBe(currentValue);
+
         // Проверить корректность работы одного из промежуточных ползунков, например, третьего
         //Найти координаты третьего ползунка
         const thirdElement: HTMLDivElement = touchElements[2];
@@ -260,6 +216,20 @@ describe('Интеграционные тесты для горизонталь�
         }, lastElement);
         
         expect(rectLastElement.right).toBe(endPointSlider);
+
+        //Проверить корректность перемещения ползунка при клике по шкале
+        await page.waitFor(200);
+        await page.mouse.click(endPointSlider - 50, rectSliderLine.top);
+        await page.waitFor(300);
+
+        rectLastElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, lastElement);
+
+        offsetNextSlider = Math.ceil((endPointSlider - 50) - elementWidth/2 - startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        expect(rectLastElement.left).toBe(currentValue);
     });
 });
 describe('Интеграционные тесты для вертикального вида', () => {
