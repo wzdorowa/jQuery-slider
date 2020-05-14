@@ -1,12 +1,7 @@
-//import {Scale} from '../../slider/view/scale';
-//import {Sliders} from '../../slider/view/sliders';
-//import { Tooltips } from '../../slider/view/tooltips';
 import { EventEmitter } from '../../slider/eventEmitter';
 import {IModelState} from '../../slider/iModelState';
-//import {configuratorHorizontal} from '../../slider/configuratorHorizontal';
 import { View } from '../../slider/view/view';
-//import {configuratorVertical} from '../../slider/configuratorVertical';
-
+import puppeteer from 'puppeteer';
 
 let state: IModelState = {
     min: 0,
@@ -120,6 +115,13 @@ describe('Модульные тесты', () => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);
         });
     });
+    test('Проверить наличие значений в тултипах', () => {
+        const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
+    
+        expect(tooltipsText[0].innerHTML).toContain('20');
+        expect(tooltipsText[1].innerHTML).toContain('30');
+        expect(tooltipsText[2].innerHTML).toContain('40');
+    });
     test('Проверка скрытия тултипов бегунков', () => {
         state.tooltip = false
         eventEmitter.emit('model:state-changed', state);
@@ -137,5 +139,105 @@ describe('Модульные тесты', () => {
         tooltipsElements.forEach((element) => {
             expect(element.className).not.toContain('slider-tooltip-hide');
         })
+    });
+});
+describe('Интеграционные тесты для горизонтального вида', () => {
+    let browser: any;
+    let page: any;
+
+    beforeEach(async () => {
+        const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
+        if(element !== null || element !== undefined) {
+            element?.remove();
+        }; 
+        browser = await puppeteer.launch({ headless: false});
+        page = await browser.newPage();
+    });
+    afterEach(async () => {
+        await browser.close();
+    });
+    test('Проверить корректность изменений значений в тултипах горизонтального вида', async () => {
+        await page.goto('http://localhost:1234');
+        await page.waitFor(500);
+
+        //Функция для нахождения коэффициента единичного значения слайдера в пикселях
+        const getCoefficientPoint = (sliderLineWidth: number, max: number, min: number) => {
+           return sliderLineWidth / (max - min);
+        };
+        const calculateValue = (offsetLeft: number, startSlider: number) => {
+            let currentValueX: number = Math.floor((offsetLeft - startSlider) / coefficientPoint) + state.min;
+            let multi: number = Math.floor(currentValueX / state.step);
+            currentValueX = state.step * multi;
+            return currentValueX;
+        }
+        // Найти координаты линии слайдера
+        const sliderLine: HTMLDivElement = await page.$('.slider-line');
+        const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
+            const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, sliderLine);
+        const sliderLineWidth: number = rectSliderLine.right - rectSliderLine.left;
+
+        //Найти первый ползунок и его ширину
+        const touchElements: HTMLDivElement[] = await page.$$('.slider-touch');
+        const firstElement: HTMLDivElement = touchElements[0];
+        let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, firstElement);
+        const elementWidth: number = rectFirstElement.right - rectFirstElement.left;
+
+        //Точки начала и конца линии слайдера
+        const startPointSlider = rectSliderLine.left - (elementWidth/2);
+        //@ts-ignore
+        const endPointSlider = rectSliderLine.right + (elementWidth/2);
+
+        await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
+        await page.mouse.down();
+        await page.waitFor(200);
+        await page.mouse.move(rectFirstElement.left - 40,  rectFirstElement.top, { steps: 2});
+        await page.waitFor(200);
+        await page.mouse.up();
+
+        rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, firstElement);
+
+        const coefficientPoint = getCoefficientPoint(sliderLineWidth, state.max, state.min);
+        let currentValueTooltip = String(calculateValue(rectFirstElement.left, startPointSlider));
+        let tooltipsText = await page.$$('.slider-tooltip-text');
+        let tooltipText = tooltipsText[0];
+        //@ts-ignore
+        let innerHTMLTooltip = await page.evaluateHandle(element => element.innerHTML, tooltipText);
+
+        expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
+
+        // Найти координаты последнего ползунка
+        const lastElement: HTMLDivElement = touchElements[touchElements.length - 1];
+        let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, lastElement);
+
+        await page.mouse.move(rectLastElement.left, rectLastElement.top);
+        await page.mouse.down();
+        await page.waitFor(200);
+        await page.mouse.move(rectLastElement.left - 75,  rectLastElement.top, { steps: 2});
+        await page.waitFor(200);
+        await page.mouse.up();
+
+        rectLastElement = await page.evaluate((element: HTMLDivElement) => {
+            const {top, left, bottom, right} = element.getBoundingClientRect();
+            return {top, left, bottom, right};
+        }, lastElement);
+
+        currentValueTooltip = String(calculateValue(rectLastElement.left, startPointSlider));
+        tooltipsText = await page.$$('.slider-tooltip-text');
+        tooltipText = tooltipsText[tooltipsText.length - 1];
+        //@ts-ignore
+        innerHTMLTooltip = await page.evaluateHandle(element => element.innerHTML, tooltipText);
+
+        expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
     });
 })

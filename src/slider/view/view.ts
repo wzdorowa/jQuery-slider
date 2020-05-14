@@ -45,6 +45,7 @@ export class View {
                     this.tooltips.changeOrientation(this.configurator); 
                     this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
                     this.tooltips.setTooltipsValues(this.modelState);
+                    this.sliders.listenSlidersEventsForNewOtientation(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips))
                 }
             }
             if(!this.isCreatedSlider) {
