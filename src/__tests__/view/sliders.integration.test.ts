@@ -114,7 +114,7 @@ describe('Интеграционные тесты для горизонталь�
         await page.mouse.down();
         await page.waitFor(200);
         await page.mouse.move(rectFirstElement.left + 250,  rectFirstElement.top, { steps: 2});
-        await page.waitFor(300);
+        await page.waitFor(200);
         await  page.mouse.up();
 
         rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
@@ -220,7 +220,7 @@ describe('Интеграционные тесты для горизонталь�
         //Проверить корректность перемещения ползунка при клике по шкале
         await page.waitFor(200);
         await page.mouse.click(endPointSlider - 50, rectSliderLine.top);
-        await page.waitFor(300);
+        await page.waitFor(200);
 
         rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
@@ -250,7 +250,7 @@ describe('Интеграционные тесты для вертикально�
     });
     test('Checking the location of the sliders on the slider', async () => {
         await page.goto('http://localhost:1234');
-        await page.waitFor(500);
+        await page.waitFor(300);
 
         const getCoefficientPoint = (sliderLineLength: number, max: number, min: number) => {
            return sliderLineLength / (max - min);
@@ -282,7 +282,7 @@ describe('Интеграционные тесты для вертикально�
 
         //Переключиться на вертикальный вид
         await page.mouse.click(213.5, 69);
-        await page.waitFor(1000);
+        await page.waitFor(500);
 
         // Найти координаты линии слайдера
         const sliderLine: HTMLDivElement = await page.$('.slider-line-for-verticalView');

@@ -8,7 +8,7 @@ export class Sliders {
     private parentBlock: HTMLElement
     private emitter: EventEmitter
     public state: ISlidersState
-    private configurator: IConfigurator | null
+    public configurator: IConfigurator | null
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
         this.parentBlock = element,
@@ -135,7 +135,6 @@ export class Sliders {
     //@ts-ignore
     calculateValueOfPlaceClickOnScale(modelState: IModelState, currentXorY: number): number {
         let currentValue: number | null = this.calculateValue(modelState, currentXorY);
-            
             if (this.state.currentValue !== null) {
                 const halfStep = Math.floor((this.state.currentValue + (modelState.step / 2)) * this.state.coefficientPoint) - this.state.shiftToMinValue;
     
@@ -158,7 +157,6 @@ export class Sliders {
             currentClickLocation = configurator.getOffsetFromClick(event);
         }
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(modelState, currentClickLocation);
-
         //@ts-ignore
         let nearestRunnerIndex: number | null = null;
         modelState.touchsValues.forEach((element: number, i: number) => {
@@ -181,7 +179,8 @@ export class Sliders {
         });
         if (nearestRunnerIndex != null && modelState.touchsValues[nearestRunnerIndex] != this.state.currentValue) {
             this.emitter.emit('view:touchsValues-changed', {currentValue: currentValue, index: nearestRunnerIndex});
-        }
+        };
+        return [currentValue, nearestRunnerIndex];
     }
     onStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
         this.state.currentSliderIndex = i;
