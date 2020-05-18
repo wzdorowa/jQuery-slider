@@ -4,6 +4,8 @@ import {IModelState} from '../../slider/iModelState';
 import { View } from '../../slider/view/view';
 import {Sliders} from '../../slider/view/sliders';
 
+var sinon = require('sinon');
+
 let state: IModelState = {
     min: 0,
     max: 100,
@@ -82,8 +84,6 @@ describe('Модульные тесты', () => {
         expect(sliders.state.currentValue).toBe(86);
     });
     test('Проверка установки ближайшего ползунка на место клика по шкале слайдера', () => {
-        var sinon = require('sinon');
-
         const configurator = configuratorHorizontal;
         const activeRange: HTMLElement = configurator.createSliderLineSpan();
         const scale: HTMLElement = configurator.createSliderLine();
@@ -111,8 +111,6 @@ describe('Модульные тесты', () => {
 
     });
     test('Тест вызова onStart', () => {
-        var sinon = require('sinon');
-
         sliders.configurator = configuratorHorizontal;
         const activeRange: HTMLElement = sliders.configurator.createSliderLineSpan();
         const scale: HTMLElement = sliders.configurator.createSliderLine();
@@ -127,21 +125,17 @@ describe('Модульные тесты', () => {
             clientY: 100
           });
 
-        sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnStart').callsFake( function () { 90; });
+        sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnStart').callsFake( function () { return 90; });
         sinon.stub(configuratorHorizontal, 'setStartXorYtoOnStart').callsFake( function () { return 50; });
         sinon.stub(configuratorHorizontal, 'setMaxXorYtoOnStart').callsFake( function () { return 300; });
 
         sliders.onStart(state, event, i, scale, activeRange, setCurrentTooltipValue);
         expect(sliders.state.currentValue).toBe(state.touchsValues[i]);
     });
-    test('Тест вызова onMove', () => {
-        var sinon = require('sinon');
-
+    describe('Проверка onMove для первого ползунка', () => {
         sliders.configurator = configuratorHorizontal;
-        const i: number = 0;
         const activeRange: HTMLElement = sliders.configurator.createSliderLineSpan();
         let elements: HTMLElement[] = sliders.state.sliders;
-        let target: HTMLElement = elements[i];
         
         const setCurrentTooltipValue = () => {
             return
@@ -151,10 +145,61 @@ describe('Модульные тесты', () => {
             cancelable: true,
             clientX: 100,
             clientY: 100
-          });
+        });
         
-        sliders.state.maxXorY = 80;
-        sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnMove').callsFake( function () { 90; });
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-    })
+        sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
+        sinon.stub(configuratorHorizontal, 'updateLineSpan').callsFake(function () { return });
+        let setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnMove');
+
+        const i: number = 0;
+        const target: HTMLElement = elements[i];
+
+        test('Если ползунок на шкале один', () => {
+            sliders.state.maxXorY = 280;
+            sliders.state.sliders.length = 1;
+
+            setCurrentXorYtoOnMove.onCall(0).returns(290);
+            sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+            expect(sliders.state.currentXorY).toBe(sliders.state.maxXorY);
+            sliders.state.currentXorY = 0;
+            sinon.reset();
+        });
+        test('Проверка первого ползунка, если ползунков на шкале много', () => {
+            sliders.state.sliders.length = 4;
+
+            setCurrentXorYtoOnMove.onCall(1).returns(290);
+            sinon.stub(configuratorHorizontal, 'elementOffset').callsFake(function () { return 290; });
+            sinon.stub(configuratorHorizontal, 'targetOffset').callsFake(function () { return 24; });
+
+            sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+            expect(sliders.state.currentXorY).toBe(266);
+            sliders.state.currentXorY = 0;
+            sinon.reset();
+        });
+        test('Если значение первого ползунка становиться меньше минимально возможного значения', () => {
+            state.min = 20;
+
+            setCurrentXorYtoOnMove.onCall(2).returns(10);
+            sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+            expect(sliders.state.currentXorY).toBe(state.min);
+            sliders.state.currentXorY = 0;
+            sinon.reset();
+        });
+    });
+    sinon.reset();
+    // describe('Проверка onMove для любого ползунка кроме первого и последнего', () => {
+    //     const i: number = 1;
+    //     const target: HTMLElement = elements[i];
+
+    //     test('Если значение любого кроме первого и последнего ползунка превышает значение следующего за ним ползунка', () => {
+    //         setCurrentXorYtoOnMove.onCall(1).returns(290);
+
+    //         sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    //         expect(sliders.state.currentXorY).toBe(266);
+    //     });
+    //     // test('Если значение любого кроме первого и последнего ползунка меньше значения предыдущего ползунка', () => {
+    //     //     sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    //     //     expect(sliders.state.currentXorY).toBe(350);
+    //     // });
+    // });
 });
