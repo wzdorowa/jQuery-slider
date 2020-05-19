@@ -2,6 +2,11 @@ import {Model} from '../slider/model';
 import {IModelState} from '../slider/iModelState';
 import { EventEmitter } from '../slider/eventEmitter';
 
+interface IData {
+    currentValue: number
+    index: number
+}
+
 let state: IModelState = {
     min: 0,
     max: 100,
@@ -20,8 +25,16 @@ describe('Model testing', () => {
         state.min = 10;
         model.setNewValueMin(state.min);
         expect(model.state.min).toBe(state.min);
+
+        state.min = 10;
+        model.setNewValueMin(state.min);
+        expect(model.state.min).toBe(state.min);
     });
     test('Set new value Max', () => {
+        state.max = 80;
+        model.setNewValueMax(state.max);
+        expect(model.state.max).toBe(state.max);
+
         state.max = 80;
         model.setNewValueMax(state.max);
         expect(model.state.max).toBe(state.max);
@@ -34,6 +47,10 @@ describe('Model testing', () => {
         state.amount = 15;
         model.setNewValueAmount(state.amount);
         expect(model.state.amount).toBe(10);
+
+        state.amount = 4;
+        model.setNewValueAmount(state.amount);
+        expect(model.state.amount).toBe(state.amount);
 
         state.amount = 4;
         model.setNewValueAmount(state.amount);
@@ -52,6 +69,10 @@ describe('Model testing', () => {
         state.step = 0;
         model.setNewValueStep(state.step);
         expect(model.state.step).toBe(1);
+
+        state.step = 2;
+        model.setNewValueStep(state.step);
+        expect(model.state.step).toBe(state.step);
 
         state.step = 2;
         model.setNewValueStep(state.step);
@@ -109,13 +130,29 @@ describe('Model testing', () => {
         state.touchsValues[0] = 38;
         model.setNewValueTouchsValues(state.touchsValues[0], 0);
         expect(model.state.touchsValues[0]).toBe(35);
-        expect(model.state.touchsValues[0]).toBe(35);
         expect(model.state.touchsValues[1]).toBe(40);
 
         state.touchsValues[1] = 67;
         model.setNewValueTouchsValues(state.touchsValues[1], 1);
         expect(model.state.touchsValues[1]).toBe(65);
-        expect(model.state.touchsValues[1]).toBe(65);
         expect(model.state.touchsValues[2]).toBe(70);
+
+        state.touchsValues[1] = 30;
+        model.setNewValueTouchsValues(state.touchsValues[1], 1);
+        expect(model.state.touchsValues[0]).toBe(35);
+        expect(model.state.touchsValues[1]).toBe(40);
+
+    });
+    test('Проверить подписку на событие "view:amountTouches-changed"', () => {
+        eventEmitter.emit('view:amountTouches-changed', state.touchsValues);
+        expect(model.state.touchsValues).toBe(state.touchsValues);
+    });
+    test('Проверить подписку на событие "view:touchsValues-changed"', () => {
+        const data: IData = {
+            currentValue: 45,
+            index: 1
+        }
+        eventEmitter.emit('view:touchsValues-changed', data);
+        expect(model.state.touchsValues[1]).toBe(data.currentValue);
     });
 })
