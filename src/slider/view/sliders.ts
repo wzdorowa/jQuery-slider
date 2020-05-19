@@ -215,8 +215,9 @@ export class Sliders {
                     }
                 }
                 if (elements.length != 1) {
-                    if (this.state.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
-                        this.state.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
+                    const offsetNextSlider: number = this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target);
+                    if (this.state.currentXorY > offsetNextSlider) {
+                        this.state.currentXorY = offsetNextSlider;
                     }
                 }
                 if (this.state.currentXorY < modelState.min) {
@@ -226,19 +227,25 @@ export class Sliders {
                 this.configurator.setIndentForTarget(target, this.state.currentXorY);
             }
             if (i > 0 && i < elements.length - 1) {
-                if(this.state.currentXorY > (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target))) {
-                    this.state.currentXorY = (this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target));
-                } 
-                if (this.state.currentXorY < (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target))) {
-                    this.state.currentXorY = (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target));
+                const offsetNextSlider: number = this.configurator.elementOffset(elements[i + 1]) - this.configurator.targetOffset(target);
+                const offsetPreviousSlider: number = this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target);
+                const currentXorY: number = this.state.currentXorY;
+
+                if(currentXorY > offsetNextSlider) {
+                    this.state.currentXorY = offsetNextSlider;
+                }
+                if(currentXorY < offsetPreviousSlider) {
+                    this.state.currentXorY = offsetPreviousSlider;
                 }
                 this.configurator.setIndentForTarget(target, this.state.currentXorY);
             }
             if (i === elements.length - 1 && i != 0) {
-                if (this.state.currentXorY < (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target))) {
-                    this.state.currentXorY = (this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target));
+                const offsetPreviousSlider: number = this.configurator.elementOffset(elements[i - 1]) + this.configurator.targetOffset(target);
+                const currentXorY: number = this.state.currentXorY;
+                if(currentXorY < offsetPreviousSlider) {
+                    this.state.currentXorY = offsetPreviousSlider;
                 } 
-                if(this.state.currentXorY > this.state.maxXorY) {
+                if(currentXorY > this.state.maxXorY) {
                     this.state.currentXorY = this.state.maxXorY;
                 }
                 this.configurator.setIndentForTarget(target, this.state.currentXorY);
