@@ -156,8 +156,8 @@ export class Model {
         }
         if (step <= 0){
             this.state.step = 1;
-        } else if (step >= this.state.max) {
-            this.state.step = this.state.max;
+        } else if (step >= this.state.max / this.state.touchsValues.length - 1) {
+            this.state.step = this.state.max / this.state.touchsValues.length - 1;
         } else {
         this.state.step = step;
         }

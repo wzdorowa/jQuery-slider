@@ -6,7 +6,7 @@ $( () => {
 
     const elements: IHTMLElement[] = Array.from($('.js-slider-test')) as IHTMLElement[];
 
-    elements.forEach((element: IHTMLElement) => {
+    elements.forEach((element: IHTMLElement, index: number) => {
         let isCreatedInput: boolean = false;
 
         const createElement = (teg: string, className: string) => {
@@ -16,7 +16,7 @@ $( () => {
         }
 
         const createInput = (state: IModelState) => {
-            const rangeOfValuesList: IHTMLElement = document.querySelector('.rangeOfValues-list') as IHTMLElement;
+            const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
 
             new Array(state.amount)
                 .fill(1)
@@ -44,12 +44,11 @@ $( () => {
                         valueTo.setAttribute('value', String(state.touchsValues[i + 1] - state.step));
                     }
                     
-    
                     rangeOfValuesItem.append(rangeOfValuesSet);
                     rangeOfValuesSet.append(input);
                     rangeOfValuesSet.append(valueFrom);
                     rangeOfValuesSet.append(valueTo)
-                    rangeOfValuesList.append(rangeOfValuesItem);
+                    rangeOfValuesList[index].append(rangeOfValuesItem);
                 })
             if(!isCreatedInput) {
                 isCreatedInput = true;
@@ -60,7 +59,7 @@ $( () => {
 
             if (amountInputs.length < state.touchsValues.length) {
                 const missingAmount: number = state.touchsValues.length - amountInputs.length;
-                const rangeOfValuesList: IHTMLElement = document.querySelector('.rangeOfValues-list') as IHTMLElement;
+                const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
 
                 new Array(missingAmount)
                     .fill(1)
@@ -84,14 +83,16 @@ $( () => {
                         rangeOfValuesSet.append(input);
                         rangeOfValuesSet.append(valueFrom);
                         rangeOfValuesSet.append(valueTo)
-                        rangeOfValuesList.append(rangeOfValuesItem);
+                        rangeOfValuesList[index].append(rangeOfValuesItem);
     
                         setNewValueToNewInputs(state);
                     })
             }
             if (amountInputs.length > state.touchsValues.length) {
                 const excessAmount: number = amountInputs.length - state.touchsValues.length;
-                let allTouches: HTMLElement[] = Array.from($('.rangeOfValues-list').find('.rangeOfValues-item'));
+
+                const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
+                let allTouches: HTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.rangeOfValues-item'));
 
                 new Array(excessAmount)
                     .fill(1)
@@ -102,14 +103,18 @@ $( () => {
             }
         };
         const setNewValueToNewInputs = (state: IModelState) => {
-            let allTouches: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues')) as IHTMLElement[];
+            const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
+
+            let allTouches: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues')) as IHTMLElement[];
             const indexNewInput: number = allTouches.length - 1;
             allTouches[indexNewInput].value = state.touchsValues[indexNewInput];
         }
         const setValueToInputFromModelState = (state: IModelState) => {
-            let allTouches: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues')) as IHTMLElement[];
-            let allValueFrom: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues-from')) as IHTMLElement[];
-            let allValueTo: IHTMLElement[] = Array.from($('.rangeOfValues-list').find('.input-rangeOfValues-to')) as IHTMLElement[];
+            const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
+
+            let allTouches: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues')) as IHTMLElement[];
+            let allValueFrom: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues-from')) as IHTMLElement[];
+            let allValueTo: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues-to')) as IHTMLElement[];
 
             new Array(state.touchsValues.length)
                 .fill(1)
@@ -133,16 +138,25 @@ $( () => {
                 })
         }
         const setValueToStepFromModelState = (state: IModelState) => {
-            const stepSize: IHTMLElement = document.querySelector('.field-group-stepSize-container__content') as IHTMLElement;
-            stepSize.value = state.step;
+            const sliderConfig: HTMLDivElement[] = Array.from(document.querySelectorAll('.slider-config'));
+            
+            const stepSize: HTMLElement[] = Array.from($(sliderConfig[index]).find('.field-group-stepSize-container__content'));
+            //@ts-ignore
+            stepSize[0].value = state.step;
 
         }
         const setValueToMinInputFromModelState = (state: IModelState) => {
-            const MinInput: NodeListOf<IHTMLElement> = document.querySelectorAll('.minMaxValue') as NodeListOf<IHTMLElement>;
+            const sliderConfig: HTMLDivElement[] = Array.from(document.querySelectorAll('.slider-config'));
+
+            const MinInput: HTMLElement[] = Array.from($(sliderConfig[index]).find('.minMaxValue'));
+            //@ts-ignore
             MinInput[0].value = state.min;
         }
         const setValueMaxInputFromModelState = (state: IModelState) => {
-            const MaxInput: NodeListOf<IHTMLElement> = document.querySelectorAll('.minMaxValue') as NodeListOf<IHTMLElement>;
+            const sliderConfig: HTMLDivElement[] = Array.from(document.querySelectorAll('.slider-config'));
+
+            const MaxInput: HTMLElement[] = Array.from($(sliderConfig[index]).find('.minMaxValue'));
+            //@ts-ignore
             MaxInput[1].value = state.max;
         }
 
@@ -153,48 +167,56 @@ $( () => {
         setValueMaxInputFromModelState(modelState);
 
         const amountInputs = () => {
-            const amountInputs: IHTMLElement[] = Array.from(document.querySelectorAll('.input-rangeOfValues'));
+            const sliderConfig: HTMLDivElement[] = Array.from(document.querySelectorAll('.slider-config'));
+
+            const amountInputs: HTMLElement[] = Array.from($(sliderConfig[index]).find('.input-rangeOfValues'));
             return amountInputs;
         }
     
         element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs,
              setValueToInputFromModelState, setValueToStepFromModelState, setValueToMinInputFromModelState,
              setValueMaxInputFromModelState);
+        
+        const sliderConfig: HTMLDivElement[] = Array.from(document.querySelectorAll('.slider-config'));
 
         // получить из поля ввода и передать новые введеные пользователем мин и макс значения слайдера 
         // из панели конфигураций в объект newConfig
-        const minMaxValues: NodeListOf<IHTMLElement> = document.querySelectorAll('.minMaxValue');
-        const minValue: IHTMLElement = minMaxValues[0];
-        const maxValue: IHTMLElement = minMaxValues[1];
+        const minMaxValues: HTMLElement[] = Array.from($(sliderConfig[index]).find('.minMaxValue'));
+        const minValue: HTMLElement = minMaxValues[0];
+        const maxValue: HTMLElement = minMaxValues[1];
 
         minValue.addEventListener('blur', () => {
+            //@ts-ignore
             const min: number = Number(minValue.value);
             element.setNewValueMin(min);
         });
         maxValue.addEventListener('blur', () => {
+            //@ts-ignore
             const max: number = Number(maxValue.value);
             element.setNewValueMax(max);
         });
 
         // получить из поля ввода и передать новое значение количества ползунков введенное пользователем
         // из панели конфигураций в объект newConfig
-        let amountSliderTouches: IHTMLElement = document.querySelector('.field-group-numberValues-container__content') as IHTMLElement;
+        let amountSliderTouches: HTMLElement[] = Array.from($(sliderConfig[index]).find('.field-group-numberValues-container__content'));
 
-        amountSliderTouches.addEventListener('blur', () => {
+        amountSliderTouches[0].addEventListener('blur', () => {
+            //@ts-ignore
             const amount: number = Number(amountSliderTouches.value);
             element.setNewValueAmount(amount);
         });
         // получить из поля ввода и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций в объект newConfig
-        const toFindinputsSliderTouchs = (): NodeListOf<IHTMLElement> => {
-            return document.querySelectorAll('.input-rangeOfValues');
+        const toFindinputsSliderTouchs = (): HTMLElement[] => {
+            return Array.from($(sliderConfig[index]).find('.input-rangeOfValues'));
         };
-        let inputsSliderTouchs: NodeListOf<IHTMLElement> = toFindinputsSliderTouchs();
+        let inputsSliderTouchs: HTMLElement[] = toFindinputsSliderTouchs();
 
         new Array(inputsSliderTouchs.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
                 inputsSliderTouchs[i].addEventListener('blur', () => {
+                    //@ts-ignore
                     const touchValue: number = Number(inputsSliderTouchs[i].value);
                     element.setNewValueTouchsValues(touchValue, i);
                 })
@@ -202,15 +224,16 @@ $( () => {
 
         // получить из поля ввода и передать новое значение размера шага введенного пользователем
         // из панели конфигураций в объект newConfig
-        let stepSize: IHTMLElement = document.querySelector('.field-group-stepSize-container__content') as IHTMLElement;
+        let stepSize: HTMLElement[] = Array.from($(sliderConfig[index]).find('.field-group-stepSize-container__content'));
 
-        stepSize.addEventListener('blur', () => {
+        stepSize[0].addEventListener('blur', () => {
+            //@ts-ignore
             const step: number = Number(stepSize.value);
             element.setNewValueStep(step);
         });
 
         // получить из поля ввода и передать новое значение ориентации слайдера
-        let orientationSlider: NodeListOf<IHTMLElement> = document.querySelectorAll('.radio-button-container');
+        let orientationSlider: HTMLElement[] = Array.from($(sliderConfig[index]).find('.radio-button-container'));
 
         new Array(orientationSlider.length)
             .fill(1)
@@ -224,14 +247,16 @@ $( () => {
             })
 
         // получить из поля ввода и передать новое значение наличия тултипа
-        let checkboxContainer: IHTMLElement = document.querySelector('.checkbox-button-container') as IHTMLElement;
-        let checkboxInput: IHTMLElement = document.querySelector('.checkbox-button-container__content') as IHTMLElement;
+        let checkboxContainer: HTMLElement[] = Array.from($(sliderConfig[index]).find('.checkbox-button-container'));
+        let checkboxInput: HTMLElement[] = Array.from($(sliderConfig[index]).find('.checkbox-button-container__content'));
 
-        checkboxContainer.addEventListener('click', () => {
+        checkboxContainer[0].addEventListener('click', () => {
             let checked: boolean = true;
-            if(checkboxInput.checked === true) {
+            //@ts-ignore
+            if(checkboxInput[0].checked === true) {
                 checked = true;
             }
+            //@ts-ignore
             if(checkboxInput.checked === false) {
                 checked = false;
             }
@@ -239,32 +264,37 @@ $( () => {
         });
 
         const setValueOfInputsSliderTouchs = () => {
-            let inputsSliderTouchs: NodeListOf<IHTMLElement> = toFindinputsSliderTouchs();
+            let inputsSliderTouchs: HTMLElement[] = toFindinputsSliderTouchs();
 
             new Array(inputsSliderTouchs.length)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
+                    //@ts-ignore
                     const touchValue: number = Number(inputsSliderTouchs[i].value);
                     element.setNewValueTouchsValues(touchValue, i);
                 })
         }
 
-        let form: IHTMLElement = document.querySelector('.panel-configuration') as IHTMLElement;
-         form.addEventListener('submit', (): void => {
+        let form: HTMLElement[] = Array.from(document.querySelectorAll('.panel-configuration'));
+         form[0].addEventListener('submit', (): void => {
             const currentEvent: Event = event as Event;
             currentEvent.preventDefault();
 
+            //@ts-ignore
             const min: number = Number(minValue.value);
             element.setNewValueMin(min);
 
+            //@ts-ignore
             const max: number = Number(maxValue.value);
             element.setNewValueMax(max);
 
+            //@ts-ignore
             const amount: number = Number(amountSliderTouches.value);
             element.setNewValueAmount(amount);
 
             setValueOfInputsSliderTouchs();
 
+            //@ts-ignore
             const step: number = Number(stepSize.value);
             element.setNewValueStep(step);
          });
