@@ -1,5 +1,5 @@
-import {IModelState} from '../../slider/iModelState';
-import {IHTMLElement} from '../../slider/iHTMLElement';
+import {IModelState} from '../../slider/interfaces/iModelState';
+import {IHTMLElement} from '../../slider/interfaces/iHTMLElement';
 
 $( () => {
     $('.js-slider-test').slider();

@@ -1,5 +1,5 @@
 import {Model} from '../slider/model';
-import {IModelState} from '../slider/iModelState';
+import {IModelState} from '../slider/interfaces/iModelState';
 import { EventEmitter } from '../slider/eventEmitter';
 
 interface IData {

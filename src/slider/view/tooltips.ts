@@ -1,6 +1,6 @@
 import {createElement} from '../functions/createElement';
-import { IModelState } from '../iModelState';
-import { IConfigurator } from '../iConfigurator';
+import { IModelState } from '../interfaces/iModelState';
+import { IConfigurator } from '../interfaces/iConfigurator';
 
 export class Tooltips {
     private parentBlock: HTMLElement

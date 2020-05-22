@@ -1,6 +1,6 @@
-import {configuratorHorizontal} from '../../slider/configuratorHorizontal';
+import {configuratorHorizontal} from '../../slider/view/configurators/configuratorHorizontal';
 import { EventEmitter } from '../../slider/eventEmitter';
-import {IModelState} from '../../slider/iModelState';
+import {IModelState} from '../../slider/interfaces/iModelState';
 import { View } from '../../slider/view/view';
 import {Sliders} from '../../slider/view/sliders';
 

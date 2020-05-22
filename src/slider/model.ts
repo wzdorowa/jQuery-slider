@@ -1,4 +1,4 @@
-import {IModelState} from './iModelState';
+import {IModelState} from './interfaces/iModelState';
 import { EventEmitter } from './eventEmitter';
 
 interface IData {

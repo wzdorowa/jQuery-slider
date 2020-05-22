@@ -1,6 +1,6 @@
-import {IModelState} from './iModelState';
-import {IConfigurator} from './iConfigurator';
-import {createElement} from './functions/createElement';
+import {IModelState} from '../../interfaces/iModelState';
+import {IConfigurator} from '../../interfaces/iConfigurator';
+import {createElement} from '../../functions/createElement';
 
 export const configuratorHorizontal: IConfigurator = {
     calculateElementOffsetLeftOrTop(element: HTMLElement): number {

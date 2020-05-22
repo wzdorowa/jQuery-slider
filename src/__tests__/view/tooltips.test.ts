@@ -1,5 +1,5 @@
 import { EventEmitter } from '../../slider/eventEmitter';
-import {IModelState} from '../../slider/iModelState';
+import {IModelState} from '../../slider/interfaces/iModelState';
 import { View } from '../../slider/view/view';
 import puppeteer from 'puppeteer';
 

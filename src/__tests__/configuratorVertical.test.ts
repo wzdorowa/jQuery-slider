@@ -1,6 +1,6 @@
-import {configuratorVertical} from '../slider/configuratorVertical';
+import {configuratorVertical} from '../slider/view/configurators/configuratorVertical';
 import {createElement} from '../slider/functions/createElement';
-import { IModelState } from '../slider/iModelState';
+import { IModelState } from '../slider/interfaces/iModelState';
 //import puppeteer from 'puppeteer';
 
 var sinon = require('sinon');

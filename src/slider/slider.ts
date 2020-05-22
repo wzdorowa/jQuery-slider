@@ -1,19 +1,16 @@
 import {Model} from './model';
 import {View} from './view/view';
-import {Controller} from './controller';
 import {EventEmitter} from './eventEmitter';
-import {IModelState} from './iModelState';
-import {IHTMLElement} from './iHTMLElement';
+import {IModelState} from './interfaces/iModelState';
+import {IHTMLElement} from './interfaces/iHTMLElement';
 
 (function($){
     $.fn.slider = function(){
         const elements: IHTMLElement[] = Array.from(this) as IHTMLElement[];
-        elements.forEach((element: IHTMLElement, index: number) => {
+        elements.forEach((element: IHTMLElement) => {
             const eventEmitter = new EventEmitter();
             new View(element, eventEmitter);
             const model: Model = new Model(eventEmitter);
-            new Controller(element);
-            console.log(index);
 
             element.getState = (): IModelState => {
                 let modelState: IModelState = model.state;

@@ -1,5 +1,5 @@
-import { IModelState } from '../iModelState';
-import { IConfigurator } from '../iConfigurator';
+import { IModelState } from '../interfaces/iModelState';
+import { IConfigurator } from '../interfaces/iConfigurator';
 
 export class Scale {
     public parentBlock: HTMLElement

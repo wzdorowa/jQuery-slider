@@ -1,8 +1,8 @@
 import { EventEmitter } from '../eventEmitter';
 import {createElement} from '../functions/createElement';
-import { IModelState } from '../iModelState';
-import { ISlidersState } from './ISlidersState';
-import { IConfigurator } from '../iConfigurator';
+import { IModelState } from '../interfaces/iModelState';
+import { ISlidersState } from '../interfaces/ISlidersState';
+import { IConfigurator } from '../interfaces/iConfigurator';
 
 export class Sliders {
     private parentBlock: HTMLElement

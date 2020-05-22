@@ -1,9 +1,9 @@
 import {Scale} from '../../slider/view/scale';
 import {Sliders} from '../../slider/view/sliders';
 import { EventEmitter } from '../../slider/eventEmitter';
-import {IModelState} from '../../slider/iModelState';
-import {configuratorHorizontal} from '../../slider/configuratorHorizontal';
-import {configuratorVertical} from '../../slider/configuratorVertical';
+import {IModelState} from '../../slider/interfaces/iModelState';
+import {configuratorHorizontal} from '../../slider/view/configurators/configuratorHorizontal';
+import {configuratorVertical} from '../../slider/view/configurators/configuratorVertical';
 
 let state: IModelState = {
     min: 0,

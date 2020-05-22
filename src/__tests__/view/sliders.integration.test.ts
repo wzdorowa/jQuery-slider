@@ -1,4 +1,4 @@
-import {IModelState} from '../../slider/iModelState';
+import {IModelState} from '../../slider/interfaces/iModelState';
 import puppeteer from 'puppeteer';
 
 interface IRectNextSlider {
