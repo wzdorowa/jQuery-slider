@@ -7,4 +7,5 @@
     `npm install`
 ## Команды
     Сборка проекта: `npm run dev`
+    
     Запуск тестов: `npm run test`
