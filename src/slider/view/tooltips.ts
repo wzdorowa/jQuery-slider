@@ -27,7 +27,7 @@ export class Tooltips {
             })
     }
     /* устанавливает значения ползунков по-умолчанию в соответствующие им тултипы  */
-    setTooltipsValues(modelState: IModelState) {
+    setTooltipsValues(modelState: IModelState): void {
         modelState.touchsValues.forEach((element: number, i: number) => {
             this.textInTooltips[i].innerHTML = String(element);
         });
@@ -64,18 +64,18 @@ export class Tooltips {
         });
     }
     /* метод устанавливает текущее значение в тултип ползунка */
-    setCurrentTooltipValue(modelState: IModelState, i: number) {
+    setCurrentTooltipValue(modelState: IModelState, i: number): void {
         this.textInTooltips[i].innerHTML = String(modelState.touchsValues[i]);
     }
     /* метод hideTooltip скрывает туллтипы ползунков */
-    hideTooltip() {
+    hideTooltip(): void {
         const allTooltips: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-tooltip'));
         allTooltips.forEach((element: HTMLElement): void => {
             element.classList.add('slider-tooltip-hide');
         });
     }
     /* метод showTooltip показывает тултипы ползунков */
-    showTooltip() {
+    showTooltip(): void {
         const allTooltips: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-tooltip'));
         allTooltips.forEach((element: HTMLElement): void => {
             element.classList.remove('slider-tooltip-hide');

@@ -17,7 +17,7 @@ export class EventEmitter {
             this.handlersByEvent[eventName] = this.handlersByEvent[eventName].filter(eventFn => fn !== eventFn);
         }
     }
-    public emit(eventName: string, data: object) {
+    public emit(eventName: string, data: object): void {
         const handlers: Function[] = this.handlersByEvent[eventName];
         if(handlers) {
             handlers.forEach(fn => { fn.call(null, data) } );

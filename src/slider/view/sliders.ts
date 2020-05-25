@@ -64,7 +64,7 @@ export class Sliders {
             this.emitter.emit('view:amountTouches-changed', modelState.touchsValues);
         }
     }
-    listenSlidersEventsForNewOtientation(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    listenSlidersEventsForNewOtientation(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         this.configurator = configurator;
         this.state.sliders.forEach((element: HTMLElement, i: number) => {
             element.removeEventListener('mousedown', event => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue));
@@ -74,14 +74,14 @@ export class Sliders {
         });
     }
     /* навешивает обработчик событий 'mousedown' на каждый созданный бегунок */
-    listenSlidersEvents(modelState: IModelState,configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    listenSlidersEvents(modelState: IModelState,configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         this.configurator = configurator;
         this.state.sliders.forEach((element: HTMLElement, i: number) => {
             element.addEventListener('mousedown', event => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue));
         });
     }
     /* навешивает обработчик событий 'mousedown' на каждый добавленный бегунок */
-    newListenSlidersEvents(amount: number, modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    newListenSlidersEvents(amount: number, modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         this.configurator = configurator;
         new Array(amount)
             .fill(1)
@@ -91,7 +91,7 @@ export class Sliders {
             })
     }
     /* устанавливает значение для каждого добавленного бегунка */
-    setValueToNewSlider(amount: number, modelState: IModelState) {
+    setValueToNewSlider(amount: number, modelState: IModelState): void {
         if (this.state.sliders.length === modelState.touchsValues.length) {
             return
         }
@@ -103,24 +103,24 @@ export class Sliders {
         this.emitter.emit('view:amountTouches-changed', modelState.touchsValues); 
     }
     /* расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений */
-    setValuesSliders(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, configurator: IConfigurator) {
+    setValuesSliders(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, configurator: IConfigurator): void {
         configurator.calculateValueSliderTouch(this.state.sliders, modelState, activeRange, scale);
     }
     /* расставляет бегунки по слайдеру в зависимости от полученных новых значений */
-    setNewValuesForSliders(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, configurator: IConfigurator) {
+    setNewValuesForSliders(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, configurator: IConfigurator): void {
         this.state.coefficientPoint = configurator.calculateCoefficientPoint(scale, modelState.max, modelState.min);
 
         this.state.shiftToMinValue = Math.ceil(this.state.coefficientPoint * modelState.min);
         configurator.calculateNewValueSliderTouch(this.state.sliders, this.state.currentSliderIndex, this.state.coefficientPoint, modelState, this.state.shiftToMinValue, activeRange);
     }
     /* метод рассчитывает текущее значение ползунка */
-    calculateValue(modelState: IModelState, currentXorY: number) {
+    calculateValue(modelState: IModelState, currentXorY: number): number {
         let currentValueX: number = Math.floor(currentXorY / this.state.coefficientPoint) + modelState.min;
         let multi: number = Math.floor(currentValueX / modelState.step);
         return currentValueX = modelState.step * multi;
     }
     /* метод рассчитывает значение места бегунка на шкале */
-    calculateValueOfPlaceOnScale(modelState: IModelState, i: number) {
+    calculateValueOfPlaceOnScale(modelState: IModelState, i: number): void {
         this.state.currentValue = this.calculateValue(modelState, this.state.currentXorY);
         const halfStep = Math.floor((this.state.currentValue + (modelState.step / 2)) * this.state.coefficientPoint) - this.state.shiftToMinValue;
 
@@ -145,7 +145,7 @@ export class Sliders {
         return currentValue;
     }
     /* метод для установки ближайшего ползунка на место клика по шкале слайдера */
-    setSliderTouchToNewPosition(event: MouseEvent, modelState: IModelState, configurator: IConfigurator) {
+    setSliderTouchToNewPosition(event: MouseEvent, modelState: IModelState, configurator: IConfigurator): [number, number | null] {
         event.preventDefault();
         let target = event.target;
         let currentClickLocation: number = 0;
@@ -182,7 +182,7 @@ export class Sliders {
         };
         return [currentValue, nearestRunnerIndex];
     }
-    onStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    onStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         this.state.currentSliderIndex = i;
         event.preventDefault();
 
@@ -203,7 +203,7 @@ export class Sliders {
         const handleStop = (event: MouseEvent) => this.onStop(handleMove, handleStop, event, i, target, modelState, setCurrentTooltipValue);
         document.addEventListener('mouseup', handleStop);
     }
-    onMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    onMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         let elements: HTMLElement[] = this.state.sliders;
         let eventTouch: MouseEvent = event;
         if( this.configurator !== null) {
@@ -256,7 +256,7 @@ export class Sliders {
         this.calculateValueOfPlaceOnScale(modelState, i);
         setCurrentTooltipValue(modelState, i);
     }
-    onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue: (modelState: IModelState, i: number) => void) {
+    onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         setCurrentTooltipValue(modelState, i);
         if (this.state.currentValue !== null && this.configurator !== null) {
             this.configurator.setIndentForTargetToOnStop(target, this.state.coefficientPoint, this.state.currentValue, this.state.shiftToMinValue);

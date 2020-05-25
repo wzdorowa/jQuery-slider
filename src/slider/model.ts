@@ -88,7 +88,7 @@ export class Model {
         });
     }
     //Проверить перекрытие ползунков друг другом
-    private checkTouchsValuesForOverlap() {
+    private checkTouchsValuesForOverlap(): void {
         this.state.touchsValues.forEach((element: number, i: number) => {
             const maxPossibleValue: number = this.state.max - (((this.state.touchsValues.length - 1) - i) * this.state.step);
             const minPossibleValue: number = this.state.min + (i * this.state.step);
@@ -128,7 +128,7 @@ export class Model {
         this.notifyStateChanged();
     }
     //установить новое количество ползунков//
-    public setNewValueAmount(amount: number) {
+    public setNewValueAmount(amount: number): void {
         if (this.state.amount === amount) {
             return;
         }
@@ -142,7 +142,7 @@ export class Model {
         this.notifyStateChanged();
     }
     // установить новое значение для состояния ползунка//
-    public setNewValueTouchsValues(touchValue: number, index: number) {
+    public setNewValueTouchsValues(touchValue: number, index: number): void {
         if (this.state.touchsValues[index] === touchValue) {
             return;
         }

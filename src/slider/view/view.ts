@@ -75,7 +75,7 @@ export class View {
             this.tooltips.setTooltipsValues(this.modelState);
         })
     }
-    private listenSizeWindow() {
+    private listenSizeWindow(): void {
         window.addEventListener('resize', () => this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator));
     }
 }

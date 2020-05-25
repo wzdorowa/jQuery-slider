@@ -5,9 +5,13 @@ import {EventEmitter} from './eventEmitter';
 import {IModelState} from './interfaces/iModelState';
 
 export class Controller {
+    public element: IHTMLElement
+
     constructor(element: IHTMLElement) {
+        this.element = element;
+
         const eventEmitter = new EventEmitter();
-        new View(element, eventEmitter);
+        new View(this.element, eventEmitter);
         const model: Model = new Model(eventEmitter);
 
         element.getState = (): IModelState => {
