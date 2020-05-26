@@ -36,44 +36,44 @@ describe('Интеграционные тесты для горизонталь�
         await page.waitFor(300);
 
         //Функция для нахождения коэффициента единичного значения слайдера в пикселях
-        const getCoefficientPoint = (sliderLineLength: number, max: number, min: number) => {
-            return sliderLineLength / (max - min);
+        const getCoefficientPoint = (scaleLength: number, max: number, min: number) => {
+            return scaleLength / (max - min);
          };
-         const getOffsetNextSlider = (rectNextSlider: IRectNextSlider, widthNextSlider: number, startPointSlider: number): number => {
-             return Math.ceil(rectNextSlider.left - widthNextSlider - startPointSlider);
+         const getOffsetNextThumb = (rectNextThums: IRectNextSlider, widthNextThums: number, startPointThums: number): number => {
+             return Math.ceil(rectNextThums.left - widthNextThums - startPointThums);
          };
-         const getOffsetPreviousSlider = (rectPreviousSlider: IRectNextSlider, widthNextSlider: number, startPointSlider: number): number => {
-             return Math.ceil(rectPreviousSlider.left + widthNextSlider - startPointSlider);
+         const getOffsetPreviousThumb = (rectPreviousThumb: IRectNextSlider, widthNextThumb: number, startPointThumb: number): number => {
+             return Math.ceil(rectPreviousThumb.left + widthNextThumb - startPointThumb);
          };
          /* метод рассчитывает текущее значение ползунка */
-         const calculateValue = (modelState: IModelState, currentXorY: number, coefficientPoint: number) => {
-             let currentValueX: number = Math.floor(currentXorY / coefficientPoint) + modelState.min;
-             let multi: number = Math.floor(currentValueX / modelState.step);
-             return currentValueX = modelState.step * multi;
+         const calculateValue = (modelState: IModelState, currentValueAxis: number, coefficientPoint: number) => {
+             let currentValue: number = Math.floor(currentValueAxis / coefficientPoint) + modelState.min;
+             let multi: number = Math.floor(currentValue / modelState.step);
+             return currentValue = modelState.step * multi;
          }
          /* метод рассчитывает значение места бегунка на шкале */
-         const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetSlider: number, sliderLineLength: number, max: number, min: number, startPointSlider: number) => {
-             let coefficientPoint = getCoefficientPoint(sliderLineLength, max, min);
+         const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetThumb: number, scaleLength: number, max: number, min: number, startPointSlider: number) => {
+             let coefficientPoint = getCoefficientPoint(scaleLength, max, min);
              let shiftToMinValue = Math.ceil(coefficientPoint * modelState.min);
-             let currentValue: number = calculateValue(modelState, offsetSlider, coefficientPoint);
+             let currentValue: number = calculateValue(modelState, offsetThumb, coefficientPoint);
              const halfStep = Math.floor((currentValue + (modelState.step / 2)) * coefficientPoint) - shiftToMinValue;
  
-             if (offsetSlider > halfStep) {
+             if (offsetThumb > halfStep) {
                  currentValue = currentValue + modelState.step;
              }
              return Math.ceil((currentValue * coefficientPoint) + startPointSlider);
          }
         // Найти координаты линии слайдера
-        const sliderLine: HTMLDivElement = await page.$('.slider-line');
-        const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
+        const scale: HTMLDivElement = await page.$('.slider-line');
+        const rectScale = await page.evaluate((sliderLine: HTMLDivElement) => {
             const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
             return {top, left, bottom, right};
-        }, sliderLine);
-        const sliderLineWidth: number = rectSliderLine.right - rectSliderLine.left;
+        }, scale);
+        const scaleWidth: number = rectScale.right - rectScale.left;
         
         //Найти первый ползунок и его ширину
-        const touchElements: HTMLDivElement[] = await page.$$('.slider-touch');
-        const firstElement: HTMLDivElement = touchElements[0];
+        const thumbElements: HTMLDivElement[] = await page.$$('.slider-touch');
+        const firstElement: HTMLDivElement = thumbElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -81,20 +81,20 @@ describe('Интеграционные тесты для горизонталь�
         const elementWidth: number = rectFirstElement.right - rectFirstElement.left;
         
         //Найти координаты второго ползунка
-        const secondElement: HTMLDivElement = touchElements[1];
+        const secondElement: HTMLDivElement = thumbElements[1];
         let rectSecondElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, secondElement);
 
         //Точки начала и конца линии слайдера
-        const startPointSlider = rectSliderLine.left - (elementWidth/2);
+        const startPointSlider = rectScale.left - (elementWidth/2);
         //@ts-ignore
-        const endPointSlider = rectSliderLine.right + (elementWidth/2);
+        const endPointSlider = rectScale.right + (elementWidth/2);
 
         //Определить значения и коэффициенты перед проверкой работы первого ползунка
-        let offsetNextSlider: number = getOffsetNextSlider(rectSecondElement, elementWidth, startPointSlider);
-        let currentValue: number = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        let offsetNextThumb: number = getOffsetNextThumb(rectSecondElement, elementWidth, startPointSlider);
+        let currentValue: number = calculateValueOfPlaceOnScale(state, offsetNextThumb, scaleWidth, state.max, state.min, startPointSlider);
         
         // Проверить корректность работы первого ползунка
         await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
@@ -125,7 +125,7 @@ describe('Интеграционные тесты для горизонталь�
 
         //Проверить корректность перемещения ползунка при клике по шкале
         await page.waitFor(200);
-        await page.mouse.click(rectSliderLine.left + 30, rectSliderLine.top);
+        await page.mouse.click(rectScale.left + 30, rectScale.top);
         await page.waitFor(200);
 
         rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
@@ -133,28 +133,28 @@ describe('Интеграционные тесты для горизонталь�
             return {top, left, bottom, right};
           }, firstElement);
 
-        offsetNextSlider = Math.ceil((rectSliderLine.left + 30) - elementWidth/2 - startPointSlider);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        offsetNextThumb = Math.ceil((rectScale.left + 30) - elementWidth/2 - startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetNextThumb, scaleWidth, state.max, state.min, startPointSlider);
         expect(rectFirstElement.left).toBe(currentValue);
 
         // Проверить корректность работы одного из промежуточных ползунков, например, третьего
         //Найти координаты третьего ползунка
-        const thirdElement: HTMLDivElement = touchElements[2];
+        const thirdElement: HTMLDivElement = thumbElements[2];
         let rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, thirdElement);
 
         // Найти координаты последнего ползунка
-        const lastElement: HTMLDivElement = touchElements[touchElements.length - 1];
+        const lastElement: HTMLDivElement = thumbElements[3];
         let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, lastElement);
 
-        let offsetPreviousSlider = getOffsetPreviousSlider(rectSecondElement, elementWidth, startPointSlider);
-        offsetNextSlider = getOffsetNextSlider(rectLastElement, elementWidth, startPointSlider);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        let offsetPreviousThumb = getOffsetPreviousThumb(rectSecondElement, elementWidth, startPointSlider);
+        offsetNextThumb = getOffsetNextThumb(rectLastElement, elementWidth, startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetNextThumb, scaleWidth, state.max, state.min, startPointSlider);
 
         await page.mouse.move(rectThirdElement.left, rectThirdElement.top);
         await page.mouse.down();
@@ -169,7 +169,7 @@ describe('Интеграционные тесты для горизонталь�
         }, thirdElement);
 
         expect(rectThirdElement.left).toBe(currentValue);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousThumb, scaleWidth, state.max, state.min, startPointSlider);
 
         await page.mouse.move(rectThirdElement.left, rectThirdElement.top);
         await page.mouse.down();
@@ -186,8 +186,8 @@ describe('Интеграционные тесты для горизонталь�
         expect(rectThirdElement.left).toBe(currentValue);
 
         // Проверить корректность работы последнего ползунка
-        offsetPreviousSlider = getOffsetPreviousSlider(rectThirdElement, elementWidth, startPointSlider);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        offsetPreviousThumb = getOffsetPreviousThumb(rectThirdElement, elementWidth, startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousThumb, scaleWidth, state.max, state.min, startPointSlider);
 
         await page.mouse.move(rectLastElement.left, rectLastElement.top);
         await page.mouse.down();
@@ -219,7 +219,7 @@ describe('Интеграционные тесты для горизонталь�
 
         //Проверить корректность перемещения ползунка при клике по шкале
         await page.waitFor(200);
-        await page.mouse.click(endPointSlider - 50, rectSliderLine.top);
+        await page.mouse.click(endPointSlider - 50, rectScale.top);
         await page.waitFor(200);
 
         rectLastElement = await page.evaluate((element: HTMLDivElement) => {
@@ -227,8 +227,8 @@ describe('Интеграционные тесты для горизонталь�
             return {top, left, bottom, right};
         }, lastElement);
 
-        offsetNextSlider = Math.ceil((endPointSlider - 50) - elementWidth/2 - startPointSlider);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineWidth, state.max, state.min, startPointSlider);
+        offsetNextThumb = Math.ceil((endPointSlider - 50) - elementWidth/2 - startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetNextThumb, scaleWidth, state.max, state.min, startPointSlider);
         expect(rectLastElement.left).toBe(currentValue);
     });
 });
@@ -255,26 +255,26 @@ describe('Интеграционные тесты для вертикально�
         const getCoefficientPoint = (sliderLineLength: number, max: number, min: number) => {
            return sliderLineLength / (max - min);
         };
-        const getOffsetNextSlider = (rectNextSlider: IRectNextSlider, widthNextSlider: number, startPointSlider: number): number => {
-            return Math.ceil(rectNextSlider.top - widthNextSlider - startPointSlider);
+        const getOffsetNextThumb = (rectNextThumb: IRectNextSlider, widthNextThumb: number, startPointSlider: number): number => {
+            return Math.ceil(rectNextThumb.top - widthNextThumb - startPointSlider);
         };
-        const getOffsetPreviousSlider = (rectPreviousSlider: IRectNextSlider, widthNextSlider: number, startPointSlider: number): number => {
-            return Math.ceil(rectPreviousSlider.top + widthNextSlider - startPointSlider);
+        const getOffsetPreviousThumb = (rectPreviousThumb: IRectNextSlider, widthNextThumb: number, startPointThumb: number): number => {
+            return Math.ceil(rectPreviousThumb.top + widthNextThumb - startPointThumb);
         };
-        /* метод рассчитывает текущее значение ползунка */
-        const calculateValue = (modelState: IModelState, currentXorY: number, coefficientPoint: number) => {
-            let currentValueX: number = Math.floor(currentXorY / coefficientPoint) + modelState.min;
-            let multi: number = Math.floor(currentValueX / modelState.step);
-            return currentValueX = modelState.step * multi;
+        /* метод рассчитывает текущее значение бегунка */
+        const calculateValue = (modelState: IModelState, currentValueAxis: number, coefficientPoint: number) => {
+            let currentValue: number = Math.floor(currentValueAxis / coefficientPoint) + modelState.min;
+            let multi: number = Math.floor(currentValue / modelState.step);
+            return currentValue = modelState.step * multi;
         }
         /* метод рассчитывает значение места бегунка на шкале */
-        const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetSlider: number, sliderLineLength: number, max: number, min: number, startPointSlider: number) => {
-            let coefficientPoint = getCoefficientPoint(sliderLineLength, max, min);
+        const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetThumb: number, scaleLength: number, max: number, min: number, startPointSlider: number) => {
+            let coefficientPoint = getCoefficientPoint(scaleLength, max, min);
             let shiftToMinValue = Math.ceil(coefficientPoint * modelState.min);
-            let currentValue: number = calculateValue(modelState, offsetSlider, coefficientPoint);
+            let currentValue: number = calculateValue(modelState, offsetThumb, coefficientPoint);
             const halfStep = Math.floor((currentValue + (modelState.step / 2)) * coefficientPoint) - shiftToMinValue;
 
-            if (offsetSlider > halfStep) {
+            if (offsetThumb > halfStep) {
                 currentValue = currentValue + modelState.step;
             }
             return Math.ceil((currentValue * coefficientPoint) + startPointSlider);
@@ -285,12 +285,12 @@ describe('Интеграционные тесты для вертикально�
         await page.waitFor(500);
 
         // Найти координаты линии слайдера
-        const sliderLine: HTMLDivElement = await page.$('.slider-line-for-verticalView');
-        const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
+        const scale: HTMLDivElement = await page.$('.slider-line-for-verticalView');
+        const rectScale = await page.evaluate((sliderLine: HTMLDivElement) => {
             const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
             return {top, left, bottom, right};
-        }, sliderLine);
-        const sliderLineLength: number = rectSliderLine.bottom - rectSliderLine.top;
+        }, scale);
+        const scaleLength: number = rectScale.bottom - rectScale.top;
         
         //Найти первый ползунок и его ширину
         const touchElements: HTMLDivElement[] = await page.$$('.slider-touch');
@@ -309,12 +309,12 @@ describe('Интеграционные тесты для вертикально�
         }, secondElement);
 
         //Точки начала и конца линии слайдера
-        const startPointSlider = rectSliderLine.top - (elementHeight/2);
-        const endPointSlider = rectSliderLine.bottom - (elementHeight/2);
+        const startPointSlider = rectScale.top - (elementHeight/2);
+        const endPointSlider = rectScale.bottom - (elementHeight/2);
 
         //Определить значения и коэффициенты перед проверкой работы первого ползунка
-        let offsetNextSlider: number = getOffsetNextSlider(rectSecondElement, elementHeight, startPointSlider);
-        let currentValue = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineLength, state.max, state.min, startPointSlider);
+        let offsetNextThumb: number = getOffsetNextThumb(rectSecondElement, elementHeight, startPointSlider);
+        let currentValue = calculateValueOfPlaceOnScale(state, offsetNextThumb, scaleLength, state.max, state.min, startPointSlider);
         
         // Проверить корректность работы первого ползунка
         await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
@@ -352,15 +352,15 @@ describe('Интеграционные тесты для вертикально�
         }, thirdElement);
 
         // Найти координаты последнего ползунка
-        const lastElement: HTMLDivElement = touchElements[touchElements.length - 1];
+        const lastElement: HTMLDivElement = touchElements[3];
         let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, lastElement);
 
-        let offsetPreviousSlider = getOffsetPreviousSlider(rectSecondElement, elementHeight, startPointSlider);
-        offsetNextSlider = getOffsetNextSlider(rectLastElement, elementHeight, startPointSlider);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousSlider, sliderLineLength, state.max, state.min, startPointSlider);
+        let offsetPreviousThumb = getOffsetPreviousThumb(rectSecondElement, elementHeight, startPointSlider);
+        offsetNextThumb = getOffsetNextThumb(rectLastElement, elementHeight, startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousThumb, scaleLength, state.max, state.min, startPointSlider);
     
         await page.mouse.move(rectThirdElement.left, rectThirdElement.top);
         await page.mouse.down();
@@ -375,7 +375,7 @@ describe('Интеграционные тесты для вертикально�
         }, thirdElement);
 
         expect(rectThirdElement.top).toBe(currentValue);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetNextSlider, sliderLineLength, state.max, state.min, startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetNextThumb, scaleLength, state.max, state.min, startPointSlider);
 
         await page.mouse.move(rectThirdElement.left, rectThirdElement.top);
         await page.mouse.down();
@@ -392,8 +392,8 @@ describe('Интеграционные тесты для вертикально�
         expect(rectThirdElement.top).toBe(currentValue);
 
         // Проверить корректность работы последнего ползунка
-        offsetPreviousSlider = getOffsetPreviousSlider(rectThirdElement, elementHeight, startPointSlider);
-        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousSlider, sliderLineLength, state.max, state.min, startPointSlider);
+        offsetPreviousThumb = getOffsetPreviousThumb(rectThirdElement, elementHeight, startPointSlider);
+        currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousThumb, scaleLength, state.max, state.min, startPointSlider);
 
         await page.mouse.move(rectLastElement.left, rectLastElement.top);
         await page.mouse.down();
