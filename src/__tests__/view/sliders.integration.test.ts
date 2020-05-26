@@ -1,7 +1,7 @@
 import {IModelState} from '../../slider/interfaces/iModelState';
 import puppeteer from 'puppeteer';
 
-interface IRectNextSlider {
+interface IRectNextThumb {
     top: number,
     left: number,
     bottom: number,
@@ -39,10 +39,10 @@ describe('Интеграционные тесты для горизонталь�
         const getCoefficientPoint = (scaleLength: number, max: number, min: number) => {
             return scaleLength / (max - min);
          };
-         const getOffsetNextThumb = (rectNextThums: IRectNextSlider, widthNextThums: number, startPointThums: number): number => {
+         const getOffsetNextThumb = (rectNextThums: IRectNextThumb, widthNextThums: number, startPointThums: number): number => {
              return Math.ceil(rectNextThums.left - widthNextThums - startPointThums);
          };
-         const getOffsetPreviousThumb = (rectPreviousThumb: IRectNextSlider, widthNextThumb: number, startPointThumb: number): number => {
+         const getOffsetPreviousThumb = (rectPreviousThumb: IRectNextThumb, widthNextThumb: number, startPointThumb: number): number => {
              return Math.ceil(rectPreviousThumb.left + widthNextThumb - startPointThumb);
          };
          /* метод рассчитывает текущее значение ползунка */
@@ -255,10 +255,10 @@ describe('Интеграционные тесты для вертикально�
         const getCoefficientPoint = (sliderLineLength: number, max: number, min: number) => {
            return sliderLineLength / (max - min);
         };
-        const getOffsetNextThumb = (rectNextThumb: IRectNextSlider, widthNextThumb: number, startPointSlider: number): number => {
+        const getOffsetNextThumb = (rectNextThumb: IRectNextThumb, widthNextThumb: number, startPointSlider: number): number => {
             return Math.ceil(rectNextThumb.top - widthNextThumb - startPointSlider);
         };
-        const getOffsetPreviousThumb = (rectPreviousThumb: IRectNextSlider, widthNextThumb: number, startPointThumb: number): number => {
+        const getOffsetPreviousThumb = (rectPreviousThumb: IRectNextThumb, widthNextThumb: number, startPointThumb: number): number => {
             return Math.ceil(rectPreviousThumb.top + widthNextThumb - startPointThumb);
         };
         /* метод рассчитывает текущее значение бегунка */
@@ -303,7 +303,7 @@ describe('Интеграционные тесты для вертикально�
         
         //Найти координаты второго ползунка
         const secondElement: HTMLDivElement = touchElements[1];
-        let rectSecondElement: IRectNextSlider = await page.evaluate((element: HTMLDivElement): IRectNextSlider => {
+        let rectSecondElement: IRectNextThumb = await page.evaluate((element: HTMLDivElement): IRectNextThumb => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, secondElement);
