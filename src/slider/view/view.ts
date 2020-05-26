@@ -4,29 +4,29 @@ import {EventEmitter} from '../eventEmitter';
 import {IModelState} from '../interfaces/iModelState';
 import {IConfigurator} from '../interfaces/iConfigurator';
 import {Scale} from '../view/scale';
-import {Sliders} from '../view/sliders';
+import {Thumbs} from './thumbs';
 import {Tooltips} from '../view/tooltips';
 
 export class View {
-    private parentBlock: HTMLElement
+    private slider: HTMLElement
     private isCreatedSlider: boolean
     private modelState!: IModelState
     private configurator!: IConfigurator
     private currentOrientation: string | null
     private emitter: EventEmitter
     private scale!: Scale
-    private sliders!: Sliders
+    private thumbs!: Thumbs
     private tooltips!: Tooltips
 
-    constructor(element: HTMLElement, eventEmitter: EventEmitter) {
-        this.parentBlock = element,
+    constructor(slider: HTMLElement, eventEmitter: EventEmitter) {
+        this.slider = slider,
         this.isCreatedSlider = false,
         this.currentOrientation = null,
         this.emitter = eventEmitter,
 
-        this.scale = new Scale(this.parentBlock)
-        this.sliders = new Sliders(this.parentBlock, this.emitter)
-        this.tooltips = new Tooltips(this.parentBlock)
+        this.scale = new Scale(this.slider)
+        this.thumbs = new Thumbs(this.slider, this.emitter)
+        this.tooltips = new Tooltips(this.slider)
         
 
         this.emitter.subscribe('model:state-changed', (state: IModelState) => {
@@ -41,29 +41,29 @@ export class View {
             if (this.currentOrientation != this.modelState.orientation) {
                 this.currentOrientation = this.modelState.orientation;
                 if(this.isCreatedSlider) {
-                    this.scale.changeOrientation(this.sliders.setSliderTouchToNewPosition.bind(this.sliders), this.modelState, this.configurator);
+                    this.scale.changeOrientation(this.thumbs.setThumbToNewPosition.bind(this.thumbs), this.modelState, this.configurator);
                     this.tooltips.changeOrientation(this.configurator); 
-                    this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
+                    this.thumbs.setValuesThumbs(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
                     this.tooltips.setTooltipsValues(this.modelState);
-                    this.sliders.listenSlidersEventsForNewOtientation(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips))
+                    this.thumbs.listenThumbsEventsWhenChangingOrientation(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips))
                 }
             }
             if(!this.isCreatedSlider) {
                 this.scale.createScale(this.configurator);
-                this.sliders.createSliders(this.modelState.amount);
-                this.tooltips.createTooltips(this.modelState.amount, this.sliders.state.sliders, this.configurator);
+                this.thumbs.createThumbs(this.modelState.amount);
+                this.tooltips.createTooltips(this.modelState.amount, this.thumbs.state.thumbs, this.configurator);
                 this.isCreatedSlider = true;
-                this.sliders.setValuesSliders(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
+                this.thumbs.setValuesThumbs(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
 
-                this.sliders.listenSlidersEvents(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
-                this.scale.listenScaleEvents(this.sliders.setSliderTouchToNewPosition.bind(this.sliders), this.modelState, this.configurator);
-                this.listenSizeWindow()
+                this.thumbs.listenThumbsEvents(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
+                this.scale.listenScaleEvents(this.thumbs.setThumbToNewPosition.bind(this.thumbs), this.modelState, this.configurator);
+                this.thumbs.listenSizeWindow(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator);
             }
-            if(this.sliders.state.sliders.length != this.modelState.amount) {
-                this.sliders.changeAmountSliders(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
+            if(this.thumbs.state.thumbs.length != this.modelState.amount) {
+                this.thumbs.changeAmountThumbs(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
             }
             if(this.tooltips.tooltipsElements.length != this.modelState.touchsValues.length) {
-                this.tooltips.changeAmountTooltips(this.sliders.state.sliders, this.configurator, this.modelState);
+                this.tooltips.changeAmountTooltips(this.thumbs.state.thumbs, this.configurator, this.modelState);
             }
             if (this.modelState.tooltip === false) {
                 this.tooltips.hideTooltip();
@@ -71,11 +71,8 @@ export class View {
             if (this.modelState.tooltip === true) {
                 this.tooltips.showTooltip();
             }
-            this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator);
+            this.thumbs.setNewValuesForThumbs(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator);
             this.tooltips.setTooltipsValues(this.modelState);
         })
-    }
-    private listenSizeWindow(): void {
-        window.addEventListener('resize', () => this.sliders.setNewValuesForSliders(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator));
     }
 }

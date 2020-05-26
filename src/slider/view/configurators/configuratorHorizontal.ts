@@ -3,16 +3,16 @@ import {IConfigurator} from '../../interfaces/iConfigurator';
 import {createElement} from '../../functions/createElement';
 
 export const configuratorHorizontal: IConfigurator = {
-    calculateElementOffsetLeftOrTop(element: HTMLElement): number {
+    getElementOffset(element: HTMLElement): number {
         return element.offsetLeft;
     },
-    createSliderTooltipText(): HTMLElement {
+    createElementTooltipText(): HTMLElement {
         return createElement('span', 'slider-tooltip-text');
     },
-    createSliderLine(): HTMLElement {
+    createElementScale(): HTMLElement {
         return createElement('div', 'slider-line');
     },
-    createSliderLineSpan(): HTMLElement {
+    createElementActivRange(): HTMLElement {
         return createElement('span', 'slider-line-span');
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
@@ -21,23 +21,23 @@ export const configuratorHorizontal: IConfigurator = {
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number {
         return (elementSliderLine.offsetWidth / (max - min));
     },
-    sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement> {
+    searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line-for-verticalView');
     },
-    sliderLineSpanToDelete(slider: HTMLElement): JQuery<HTMLElement> {
+    searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line-span-for-verticalView');
     },
-    calculateValueSliderTouch(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void {
+    setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
                 elements[i].style.left = (Math.ceil(configuratorHorizontal.calculateCoefficientPoint(elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i])) + 'px';
             })
 
-        elementSliderLineSpan.style.marginLeft = configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0]) + 'px';
-        elementSliderLineSpan.style.width = (configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[elements.length - 1]) - configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0])) + 'px';
+        elementSliderLineSpan.style.marginLeft = configuratorHorizontal.getElementOffset(elements[0]) + 'px';
+        elementSliderLineSpan.style.width = (configuratorHorizontal.getElementOffset(elements[elements.length - 1]) - configuratorHorizontal.getElementOffset(elements[0])) + 'px';
     },
-    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
+    setInPlaceNewThumb(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
@@ -49,38 +49,35 @@ export const configuratorHorizontal: IConfigurator = {
         elementSliderLineSpan.style.marginTop = "";
         elementSliderLineSpan.style.height = "";
 
-        elementSliderLineSpan.style.marginLeft = configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0]) + 'px';
-        elementSliderLineSpan.style.width = (configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[elements.length - 1]) - configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0])) + 'px';
+        elementSliderLineSpan.style.marginLeft = configuratorHorizontal.getElementOffset(elements[0]) + 'px';
+        elementSliderLineSpan.style.width = (configuratorHorizontal.getElementOffset(elements[elements.length - 1]) - configuratorHorizontal.getElementOffset(elements[0])) + 'px';
     },
-    setCurrentXorYtoOnStart(target: HTMLElement): number {
+    getCurrentValueAxisToOnStart(target: HTMLElement): number {
         return target.offsetLeft;
     },
-    setStartXorYtoOnStart(eventTouch: MouseEvent, currentXorY: number): number {
+    getStartValueAxisToOnStart(eventTouch: MouseEvent, currentXorY: number): number {
         return eventTouch.pageX - currentXorY;
     },
-    setMaxXorYtoOnStart(elementSliderLine: HTMLElement): number {
+    getMaxValueAxisToOnStart(elementSliderLine: HTMLElement): number {
         return elementSliderLine.offsetWidth;
     },
-    setCurrentXorYtoOnMove(eventTouch: MouseEvent, startXorY: number): number {
+    getCurrentValueAxisToOnMove(eventTouch: MouseEvent, startXorY: number): number {
         return eventTouch.pageX - startXorY;
     },
     setIndentForTarget(target: HTMLElement, currentXorY: number): void {
         target.style.left = currentXorY + 'px';
     },
-    elementOffset(element: HTMLElement): number {
-        return element.offsetLeft;
-    },
-    targetOffset(target: HTMLElement): number {
+    getTargetWidth(target: HTMLElement): number {
         return target.offsetWidth;
     },
     setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void {
         target.style.left = Math.ceil(coefficientPoint * currentValue) - shiftToMinValue  + 'px';
     },
-    updateLineSpan(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void {
-        elementSliderLineSpan.style.marginLeft = configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0]) + 'px';
-        elementSliderLineSpan.style.width = (configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[elements.length -1]) - configuratorHorizontal.calculateElementOffsetLeftOrTop(elements[0])) + 'px';
+    updateActiveRange(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void {
+        elementSliderLineSpan.style.marginLeft = configuratorHorizontal.getElementOffset(elements[0]) + 'px';
+        elementSliderLineSpan.style.width = (configuratorHorizontal.getElementOffset(elements[elements.length -1]) - configuratorHorizontal.getElementOffset(elements[0])) + 'px';
     },
-    calculateCurrentClickLocation(event: MouseEvent, target: HTMLElement): number {
+    calculateClickLocation(event: MouseEvent, target: HTMLElement): number {
         return event.offsetX + target.offsetLeft;
     },
     getOffsetFromClick(event: MouseEvent): number {

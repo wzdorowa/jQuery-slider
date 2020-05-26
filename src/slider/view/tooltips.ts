@@ -3,12 +3,12 @@ import { IModelState } from '../interfaces/iModelState';
 import { IConfigurator } from '../interfaces/iConfigurator';
 
 export class Tooltips {
-    private parentBlock: HTMLElement
+    private slider: HTMLElement
     public tooltipsElements: HTMLElement[]
     public textInTooltips!: HTMLElement[]
 
     constructor(element: HTMLElement) {
-        this.parentBlock = element,
+        this.slider = element,
         this.tooltipsElements = [],
         this.textInTooltips = []
     }
@@ -18,7 +18,7 @@ export class Tooltips {
             .fill(1)
             .forEach((_element: number, i: number) => {
                 const tooltip: HTMLElement = createElement('div', 'slider-tooltip');
-                const textInTooltips: HTMLElement = configurator.createSliderTooltipText();
+                const textInTooltips: HTMLElement = configurator.createElementTooltipText();
 
                 tooltip.append(textInTooltips);
                 sliders[sliders.length - (amount - i)].append(tooltip);
@@ -51,14 +51,14 @@ export class Tooltips {
     }
     /* перерисовывает тултипы при смене ориентации */
     changeOrientation(configurator: IConfigurator): void {
-        const tooltips: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-tooltip'));
+        const tooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
         this.textInTooltips = [];
-        const textInTooltips: HTMLElement[] = configurator.searchElementsTooltipText(this.parentBlock);
+        const textInTooltips: HTMLElement[] = configurator.searchElementsTooltipText(this.slider);
         textInTooltips.forEach((element: HTMLElement) => {
             element.remove();
         });
         tooltips.forEach((element: HTMLElement) => {
-            const tooltipText: HTMLElement = configurator.createSliderTooltipText();
+            const tooltipText: HTMLElement = configurator.createElementTooltipText();
             element.append(tooltipText);
             this.textInTooltips.push(tooltipText);
         });
@@ -69,14 +69,14 @@ export class Tooltips {
     }
     /* метод hideTooltip скрывает туллтипы ползунков */
     hideTooltip(): void {
-        const allTooltips: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-tooltip'));
+        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
         allTooltips.forEach((element: HTMLElement): void => {
             element.classList.add('slider-tooltip-hide');
         });
     }
     /* метод showTooltip показывает тултипы ползунков */
     showTooltip(): void {
-        const allTooltips: HTMLElement[] = Array.from($(this.parentBlock).find('.slider-tooltip'));
+        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
         allTooltips.forEach((element: HTMLElement): void => {
             element.classList.remove('slider-tooltip-hide');
         });

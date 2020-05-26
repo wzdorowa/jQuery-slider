@@ -5,13 +5,13 @@ import {EventEmitter} from './eventEmitter';
 import {IModelState} from './interfaces/iModelState';
 
 export class Controller {
-    public element: IHTMLElement
+    public slider: IHTMLElement
 
     constructor(element: IHTMLElement) {
-        this.element = element;
+        this.slider = element;
 
         const eventEmitter = new EventEmitter();
-        new View(this.element, eventEmitter);
+        new View(this.slider, eventEmitter);
         const model: Model = new Model(eventEmitter);
 
         element.getState = (): IModelState => {

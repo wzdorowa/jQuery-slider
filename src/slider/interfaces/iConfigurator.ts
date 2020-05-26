@@ -1,25 +1,24 @@
 import {IModelState} from './iModelState';
 
 export interface IConfigurator {
-    calculateElementOffsetLeftOrTop(element: HTMLElement): number
-    createSliderTooltipText(): HTMLElement
-    createSliderLine(): HTMLElement
-    createSliderLineSpan(): HTMLElement
+    getElementOffset(element: HTMLElement): number
+    createElementTooltipText(): HTMLElement
+    createElementScale(): HTMLElement
+    createElementActivRange(): HTMLElement
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[]
     calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number
-    sliderLineToDelete(slider: HTMLElement): JQuery<HTMLElement>
-    sliderLineSpanToDelete(slider: HTMLElement): JQuery<HTMLElement>
-    calculateValueSliderTouch(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void
-    calculateNewValueSliderTouch(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void
-    setCurrentXorYtoOnStart(target: HTMLElement): number
-    setStartXorYtoOnStart(eventTouch: MouseEvent, currentXorY: number): number
-    setMaxXorYtoOnStart(elementSliderLine: HTMLElement): number
-    setCurrentXorYtoOnMove(eventTouch: MouseEvent, startXorY: number): number
+    searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>
+    searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>
+    setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void
+    setInPlaceNewThumb(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void
+    getCurrentValueAxisToOnStart(target: HTMLElement): number
+    getStartValueAxisToOnStart(eventTouch: MouseEvent, currentXorY: number): number
+    getMaxValueAxisToOnStart(elementSliderLine: HTMLElement): number
+    getCurrentValueAxisToOnMove(eventTouch: MouseEvent, startXorY: number): number
     setIndentForTarget(target: HTMLElement, currentXorY: number): void
-    elementOffset(element: HTMLElement): number
-    targetOffset(target: HTMLElement): number
+    getTargetWidth(target: HTMLElement): number
     setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void
-    updateLineSpan(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void
-    calculateCurrentClickLocation(event: MouseEvent, target: HTMLElement): number
+    updateActiveRange(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void
+    calculateClickLocation(event: MouseEvent, target: HTMLElement): number
     getOffsetFromClick(event: MouseEvent): number
 }
