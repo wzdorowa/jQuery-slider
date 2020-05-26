@@ -2,7 +2,7 @@ import {configuratorHorizontal} from '../../slider/view/configurators/configurat
 import { EventEmitter } from '../../slider/eventEmitter';
 import {IModelState} from '../../slider/interfaces/iModelState';
 import { View } from '../../slider/view/view';
-import {Sliders} from '../../slider/view/sliders';
+import {Thumbs} from '../../slider/view/thumbs';
 
 let state: IModelState = {
     min: 0,
@@ -24,7 +24,7 @@ describe('Модульные тесты', () => {
     
     //@ts-ignore
     const view = new View(element, eventEmitter);
-    const sliders = new Sliders(element, eventEmitter);
+    const thumbs = new Thumbs(element, eventEmitter);
     
     test('Проверка корректного создания элементов', () => {
         emitter.emit('model:state-changed', state);
@@ -70,23 +70,23 @@ describe('Модульные тесты', () => {
         expect(state.touchsValues.length).toBe(3);
     });
     test('Проверить корректность рассчета текущего значения ползунка', () => {
-        sliders.state.coefficientPoint = 3.5;
-        let currentValue: number = sliders.calculateValue(state, 345);
+        thumbs.state.coefficientPoint = 3.5;
+        let currentValue: number = thumbs.calculateValue(state, 345);
         expect(currentValue).toBe(98);
     });
     test('Проверка рассчета значения места бегунка на шкале', () => {
-        sliders.state.coefficientPoint = 3.2;
-        sliders.state.currentXorY = 273;
-        sliders.state.shiftToMinValue = 0;
-        sliders.calculateValueOfPlaceOnScale(state, 3);
-        expect(sliders.state.currentValue).toBe(86);
+        thumbs.state.coefficientPoint = 3.2;
+        thumbs.state.currentValueAxis = 273;
+        thumbs.state.shiftToMinValue = 0;
+        thumbs.calculateValueOfPlaceOnScale(state, 3);
+        expect(thumbs.state.currentValue).toBe(86);
     });
     test('Проверка установки ближайшего ползунка на место клика по шкале слайдера', () => {
         var sinon = require('sinon');
 
         const configurator = configuratorHorizontal;
-        const activeRange: HTMLElement = configurator.createSliderLineSpan();
-        const scale: HTMLElement = configurator.createSliderLine();
+        const activeRange: HTMLElement = configurator.createElementActivRange();
+        const scale: HTMLElement = configurator.createElementScale();
 
         let event = new MouseEvent("click", {
             bubbles: true,
@@ -97,15 +97,15 @@ describe('Модульные тесты', () => {
         
         sinon.stub(configuratorHorizontal, 'calculateCoefficientPoint').callsFake( function () { return 2; });
         sinon.stub(configuratorHorizontal, 'getOffsetFromClick').callsFake( function () { return 100; });
-        sinon.stub(configuratorHorizontal, 'calculateCurrentClickLocation').callsFake( function () { return 130; });
+        sinon.stub(configuratorHorizontal, 'calculateClickLocation').callsFake( function () { return 130; });
 
         scale.dispatchEvent(event);
-        let currentValues = sliders.setSliderTouchToNewPosition.apply(sliders, [event, state, configurator]);
+        let currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [event, state, configurator]);
         expect(currentValues[0]).toBe(30);
         expect(currentValues[1]).toBe(1);
 
         activeRange.dispatchEvent(event);
-        currentValues = sliders.setSliderTouchToNewPosition.apply(sliders, [event, state, configurator]);
+        currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [event, state, configurator]);
         expect(currentValues[0]).toBe(40);
         expect(currentValues[1]).toBe(2);
 
@@ -115,9 +115,9 @@ describe('Модульные тесты', () => {
     test('Тест вызова onStart', () => {
         var sinon = require('sinon');
 
-        sliders.configurator = configuratorHorizontal;
-        const activeRange: HTMLElement = sliders.configurator.createSliderLineSpan();
-        const scale: HTMLElement = sliders.configurator.createSliderLine();
+        thumbs.configurator = configuratorHorizontal;
+        const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
+        const scale: HTMLElement = thumbs.configurator.createElementScale();
         const i: number = 0;
         const setCurrentTooltipValue = () => {
             return
@@ -129,21 +129,21 @@ describe('Модульные тесты', () => {
             clientY: 100
           });
 
-        sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnStart').callsFake( function () { return 90; });
-        sinon.stub(configuratorHorizontal, 'setStartXorYtoOnStart').callsFake( function () { return 50; });
-        sinon.stub(configuratorHorizontal, 'setMaxXorYtoOnStart').callsFake( function () { return 300; });
+        sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnStart').callsFake( function () { return 90; });
+        sinon.stub(configuratorHorizontal, 'getStartValueAxisToOnStart').callsFake( function () { return 50; });
+        sinon.stub(configuratorHorizontal, 'getMaxValueAxisToOnStart').callsFake( function () { return 300; });
 
-        sliders.onStart(state, event, i, scale, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentValue).toBe(state.touchsValues[i]);
+        thumbs.onStart(state, event, i, scale, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValue).toBe(state.touchsValues[i]);
 
         sinon.reset();
     });
     test('Проверка onMove для первого ползунка', () => {
         var sinon = require('sinon');
 
-        sliders.configurator = configuratorHorizontal;
-        const activeRange: HTMLElement = sliders.configurator.createSliderLineSpan();
-        let elements: HTMLElement[] = sliders.state.sliders;
+        thumbs.configurator = configuratorHorizontal;
+        const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
+        let elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
@@ -155,40 +155,40 @@ describe('Модульные тесты', () => {
             clientY: 100
         });
         
-        const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnMove');
-        setCurrentXorYtoOnMove.onCall(0).returns(290);
-        setCurrentXorYtoOnMove.onCall(1).returns(290);
-        setCurrentXorYtoOnMove.onCall(2).returns(10);
-        const elementOffset = sinon.stub(configuratorHorizontal, 'elementOffset').callsFake(function () { return 290; });
-        const targetOffset = sinon.stub(configuratorHorizontal, 'targetOffset').callsFake(function () { return 24; });
+        const getCurrentValueAxisToOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove');
+        getCurrentValueAxisToOnMove.onCall(0).returns(290);
+        getCurrentValueAxisToOnMove.onCall(1).returns(290);
+        getCurrentValueAxisToOnMove.onCall(2).returns(10);
+        const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(function () { return 290; });
+        const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(function () { return 24; });
         const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
-        const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateLineSpan').callsFake(function () { return });
+        const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
 
         const i: number = 0;
         const target: HTMLElement = elements[i];
 
         //Если ползунок на шкале один
-        sliders.state.maxXorY = 280;
-        sliders.state.sliders.length = 1;
+        thumbs.state.maxValueAxis = 280;
+        thumbs.state.thumbs.length = 1;
 
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentXorY).toBe(sliders.state.maxXorY);
-        sliders.state.maxXorY = 350;
+        thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
+        thumbs.state.maxValueAxis = 350;
 
         //Проверка первого ползунка, если ползунков на шкале много
-        sliders.state.sliders.length = 4;
+        thumbs.state.thumbs.length = 4;
 
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentXorY).toBe(266);
+        thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValueAxis).toBe(266);
     
         //Если значение первого ползунка становиться меньше минимально возможного значения
         state.min = 20;
 
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentXorY).toBe(state.min);
+        thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValueAxis).toBe(state.min);
 
         //сбросить заглушки
-        setCurrentXorYtoOnMove.restore();
+        getCurrentValueAxisToOnMove.restore();
         elementOffset.restore();
         targetOffset.restore();
         setIndentForTarget.restore();
@@ -197,9 +197,9 @@ describe('Модульные тесты', () => {
     test('Проверка onMove для любого ползунка кроме первого и последнего', () => {
         var sinon = require('sinon');
 
-        sliders.configurator = configuratorHorizontal;
-        const activeRange: HTMLElement = sliders.configurator.createSliderLineSpan();
-        let elements: HTMLElement[] = sliders.state.sliders;
+        thumbs.configurator = configuratorHorizontal;
+        const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
+        let elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
@@ -211,30 +211,30 @@ describe('Модульные тесты', () => {
             clientY: 100
         });
 
-        const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnMove');
+        const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove');
         setCurrentXorYtoOnMove.onCall(0).returns(290);
         setCurrentXorYtoOnMove.onCall(1).returns(250);
 
-        const elementOffset = sinon.stub(configuratorHorizontal, 'elementOffset').callsFake(function () { return 290; });
+        const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(function () { return 290; });
         elementOffset.onCall(0).returns(290);
         elementOffset.onCall(1).returns(250);
         elementOffset.onCall(2).returns(350);
         elementOffset.onCall(3).returns(250);
 
-        const targetOffset = sinon.stub(configuratorHorizontal, 'targetOffset').callsFake(function () { return 24; });
+        const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(function () { return 24; });
         const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
-        const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateLineSpan').callsFake(function () { return });
+        const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
 
         const i: number = 1;
         const target: HTMLElement = elements[i];
 
         //Если значение любого кроме первого и последнего ползунка превышает значение следующего за ним ползунка
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentXorY).toBe(266);
+        thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValueAxis).toBe(266);
 
         //Если значение любого кроме первого и последнего ползунка меньше значения предыдущего ползунка
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentXorY).toBe(274);
+        thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValueAxis).toBe(274);
 
         //сбросить заглушки
         setCurrentXorYtoOnMove.restore();
@@ -246,9 +246,9 @@ describe('Модульные тесты', () => {
     test('Проверка onMove для последнего ползунка', () => {
         var sinon = require('sinon');
 
-        sliders.configurator = configuratorHorizontal;
-        const activeRange: HTMLElement = sliders.configurator.createSliderLineSpan();
-        let elements: HTMLElement[] = sliders.state.sliders;
+        thumbs.configurator = configuratorHorizontal;
+        const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
+        let elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
@@ -263,23 +263,23 @@ describe('Модульные тесты', () => {
         const i: number = 3;
         const target: HTMLElement = elements[i];
 
-        const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnMove');
+        const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove');
         setCurrentXorYtoOnMove.onCall(0).returns(290);
         setCurrentXorYtoOnMove.onCall(1).returns(350);
 
-        const elementOffset = sinon.stub(configuratorHorizontal, 'elementOffset').callsFake(function () { return 290; });
-        const targetOffset = sinon.stub(configuratorHorizontal, 'targetOffset').callsFake(function () { return 24; });
+        const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(function () { return 290; });
+        const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(function () { return 24; });
         const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
-        const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateLineSpan').callsFake(function () { return });
+        const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
 
         //Если значение ползунка меньше значения предыдущего ползунка
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentXorY).toBe(314);
+        thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValueAxis).toBe(314);
 
-        sliders.state.maxXorY = 280;
+        thumbs.state.maxValueAxis = 280;
         //Если значение ползунка больше максимально допустимого значения предыдущего ползунка
-        sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        expect(sliders.state.currentXorY).toBe(sliders.state.maxXorY);
+        thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
 
         //сбросить заглушки
         setCurrentXorYtoOnMove.restore();
@@ -291,9 +291,9 @@ describe('Модульные тесты', () => {
     test('Проверка onStop', () => {
         var sinon = require('sinon');
 
-        sliders.configurator = configuratorHorizontal;
-        const activeRange: HTMLElement = sliders.configurator.createSliderLineSpan();
-        let elements: HTMLElement[] = sliders.state.sliders;
+        thumbs.configurator = configuratorHorizontal;
+        const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
+        let elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
@@ -309,11 +309,11 @@ describe('Модульные тесты', () => {
 
         sinon.stub(configuratorHorizontal, 'setIndentForTargetToOnStop').callsFake(function () { return; });
 
-        const handleMove = (event: MouseEvent) => sliders.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-        const handleStop = (event: MouseEvent) => sliders.onStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
+        const handleMove = (event: MouseEvent) => thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+        const handleStop = (event: MouseEvent) => thumbs.onStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
 
-        sliders.onStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
-        expect(sliders.state.currentValue).toBe(null);
-        expect(sliders.state.currentSliderIndex).toBe(null);
+        thumbs.onStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
+        expect(thumbs.state.currentValue).toBe(null);
+        expect(thumbs.state.currentThumbIndex).toBe(null);
     })
 });

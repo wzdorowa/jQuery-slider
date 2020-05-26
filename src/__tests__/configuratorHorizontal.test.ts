@@ -6,19 +6,19 @@ import { IModelState } from '../slider/interfaces/iModelState';
 var sinon = require('sinon');
 
 test('Create element with class "slider-tooltip-text"', () => {
-    const createElementTooltip = configuratorHorizontal.createSliderTooltipText();
+    const createElementTooltip = configuratorHorizontal.createElementTooltipText();
     expect(createElementTooltip.tagName).toBe('SPAN');
     expect(createElementTooltip.className).toBe('slider-tooltip-text');
 });
 test('Create element with class "slider-line"', () => {
-    const createSliderLine = configuratorHorizontal.createSliderLine();
+    const createSliderLine = configuratorHorizontal.createElementScale();
     expect(createSliderLine.tagName).toBe('DIV');
     expect(createSliderLine.className).toBe('slider-line');
 });
 test('Create element with class "slider-line-span"', () => {
-    const createSliderLineSpan = configuratorHorizontal.createSliderLineSpan();
-    expect(createSliderLineSpan.tagName).toBe('SPAN');
-    expect(createSliderLineSpan.className).toBe('slider-line-span');
+    const elementActivRange = configuratorHorizontal.createElementActivRange();
+    expect(elementActivRange.tagName).toBe('SPAN');
+    expect(elementActivRange.className).toBe('slider-line-span');
 });
 test('Find element with class "slider-tooltip-text-for-verticalView"', () => {
     const tooltipText: HTMLElement = createElement('span', 'slider-tooltip-text-for-verticalView');
@@ -31,17 +31,17 @@ test('Find element with class "slider-tooltip-text-for-verticalView"', () => {
     expect(searchElementsTooltipText[0].className).toBe('slider-tooltip-text-for-verticalView');
 });
 test('Calculate point coefficient', () => {
-    const createSliderLine = configuratorHorizontal.createSliderLine();
-    createSliderLine.style.width = 200 + 'px';
-    const calculateCoefficientPoint = configuratorHorizontal.calculateCoefficientPoint(createSliderLine, 100, 0);
+    const elementScale = configuratorHorizontal.createElementScale();
+    elementScale.style.width = 200 + 'px';
+    const calculateCoefficientPoint = configuratorHorizontal.calculateCoefficientPoint(elementScale, 100, 0);
     expect(calculateCoefficientPoint).toBe(2);
 });
 test('Find element with class "slider-line-span" for delete', () => {
     const lineVerticalView: HTMLElement = createElement('span', 'slider-line-for-verticalView');
     const parentLineVerticalView: HTMLElement = createElement('div', 'parent-slider-line-for-verticalView');
     parentLineVerticalView.append(lineVerticalView);
-    const sliderLineToDelete: JQuery<HTMLElement> = configuratorHorizontal.sliderLineToDelete(parentLineVerticalView);
-    expect(sliderLineToDelete[0].className).toBe('slider-line-for-verticalView');
+    const elementScaleToDelete: JQuery<HTMLElement> = configuratorHorizontal.searchElementScaleToDelete(parentLineVerticalView);
+    expect(elementScaleToDelete[0].className).toBe('slider-line-for-verticalView');
 });
 test('Calculate value slider touch', () => {
     //@ts-ignore
@@ -59,21 +59,21 @@ test('Calculate value slider touch', () => {
         modelState.touchsValues.push(touchsValue);
         touchsValue = touchsValue + 5;
     }
-    const elementSliderLine: HTMLElement = configuratorHorizontal.createSliderLine();
-    const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createSliderLineSpan();
+    const elementScale: HTMLElement = configuratorHorizontal.createElementScale();
+    const elementActivRange: HTMLElement = configuratorHorizontal.createElementActivRange();
     
     sinon.stub(configuratorHorizontal, 'calculateCoefficientPoint').callsFake( function () { return 2; });
-    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'calculateElementOffsetLeftOrTop');
+    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
     calculateElementOffsetleft.onCall(0).returns(40);
     calculateElementOffsetleft.onCall(1).returns(90);
     calculateElementOffsetleft.onCall(2).returns(40);
-    configuratorHorizontal.calculateValueSliderTouch(elements, modelState, elementSliderLineSpan, elementSliderLine);
+    configuratorHorizontal.setInPlaceThumb(elements, modelState, elementActivRange, elementScale);
     expect(elements[0].style.left).toBe('40px');
     expect(elements[1].style.left).toBe('50px');
     expect(elements[2].style.left).toBe('60px');
     expect(elements[3].style.left).toBe('70px');
-    expect(elementSliderLineSpan.style.marginLeft).toBe('40px');
-    expect(elementSliderLineSpan.style.width).toBe('50px');
+    expect(elementActivRange.style.marginLeft).toBe('40px');
+    expect(elementActivRange.style.width).toBe('50px');
     sinon.restore();
 });
 test('Calculate new value slider touch', () => {
@@ -96,14 +96,14 @@ test('Calculate new value slider touch', () => {
     const coefficientPoint: number = 2;
     const shiftToMinValue: number = 10;
 
-    const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createSliderLineSpan();
+    const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createElementActivRange();
 
-    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'calculateElementOffsetLeftOrTop');
+    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
     calculateElementOffsetleft.onCall(0).returns(40);
     calculateElementOffsetleft.onCall(1).returns(90);
     calculateElementOffsetleft.onCall(2).returns(40);
 
-    configuratorHorizontal.calculateNewValueSliderTouch(elements, currentTouchIndex, coefficientPoint, modelState, shiftToMinValue, elementSliderLineSpan);
+    configuratorHorizontal.setInPlaceNewThumb(elements, currentTouchIndex, coefficientPoint, modelState, shiftToMinValue, elementSliderLineSpan);
     expect(elements[0].style.left).toBe('30px');
     expect(elements[1].style.left).toBe('40px');
     expect(elements[2].style.left).toBe('50px');
@@ -115,8 +115,8 @@ test('Calculate new value slider touch', () => {
 test('set currentX to OnStart', () => {
     const target: HTMLElement = createElement('div', 'slider-element');
 
-    sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnStart').callsFake( function () { return 30; });
-    const targetOffsetLeft = configuratorHorizontal.setCurrentXorYtoOnStart(target);
+    sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnStart').callsFake( function () { return 30; });
+    const targetOffsetLeft = configuratorHorizontal.getCurrentValueAxisToOnStart(target);
     expect(targetOffsetLeft).toBe(30);
     sinon.restore();
 });
@@ -125,16 +125,16 @@ test('set startX to OnStart', () => {
     const eventTouch: MouseEvent = MouseEvent;
     const currentXorY: number = 20;
 
-    sinon.stub(configuratorHorizontal, 'setStartXorYtoOnStart').callsFake( function () { return 50; });
-    const setStartXorYtoOnStart = configuratorHorizontal.setStartXorYtoOnStart(eventTouch, currentXorY);
+    sinon.stub(configuratorHorizontal, 'getStartValueAxisToOnStart').callsFake( function () { return 50; });
+    const setStartXorYtoOnStart = configuratorHorizontal.getStartValueAxisToOnStart(eventTouch, currentXorY);
     expect(setStartXorYtoOnStart).toBe(50);
     sinon.restore();
 });
 test('set MaxX to OnStart', () => {
-    const elementSliderLine: HTMLElement = configuratorHorizontal.createSliderLine();
+    const elementSliderLine: HTMLElement = configuratorHorizontal.createElementScale();
 
-    sinon.stub(configuratorHorizontal, 'setMaxXorYtoOnStart').callsFake( function () { return 150; });
-    const setMaxXorYtoOnStart = configuratorHorizontal.setMaxXorYtoOnStart(elementSliderLine);
+    sinon.stub(configuratorHorizontal, 'getMaxValueAxisToOnStart').callsFake( function () { return 150; });
+    const setMaxXorYtoOnStart = configuratorHorizontal.getMaxValueAxisToOnStart(elementSliderLine);
     expect(setMaxXorYtoOnStart).toBe(150);
     sinon.restore();
 });
@@ -143,8 +143,8 @@ test('set currentX to OnMove', () => {
     const eventTouch: MouseEvent = MouseEvent;
     const startXorY: number = 20;
 
-    sinon.stub(configuratorHorizontal, 'setCurrentXorYtoOnMove').callsFake( function () { return 50; });
-    const setCurrentXorYtoOnMove = configuratorHorizontal.setCurrentXorYtoOnMove(eventTouch, startXorY);
+    sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove').callsFake( function () { return 50; });
+    const setCurrentXorYtoOnMove = configuratorHorizontal.getCurrentValueAxisToOnMove(eventTouch, startXorY);
     expect(setCurrentXorYtoOnMove).toBe(50);
     sinon.restore();
 });
@@ -158,16 +158,16 @@ test('set indent for target', () => {
 test('get element Offset', () => {
     const element: HTMLElement = createElement('div', 'slider-element');
 
-    sinon.stub(configuratorHorizontal, 'elementOffset').callsFake( function () { return 120; });
-    const elementOffset: number = configuratorHorizontal.elementOffset(element);
+    sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake( function () { return 120; });
+    const elementOffset: number = configuratorHorizontal.getElementOffset(element);
     expect(elementOffset).toBe(120);
     sinon.restore();
 });
 test('get target Offset', () => {
     const target: HTMLElement = createElement('div', 'slider-element');
 
-    sinon.stub(configuratorHorizontal, 'targetOffset').callsFake( function () { return 60; });
-    const targetOffset: number = configuratorHorizontal.targetOffset(target);
+    sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake( function () { return 60; });
+    const targetOffset: number = configuratorHorizontal.getTargetWidth(target);
     expect(targetOffset).toBe(60);
     sinon.restore();
 });
@@ -181,18 +181,18 @@ test('set indent for target to OnStop', () =>{
     expect(target.style.left).toBe('40px');
 });
 test('update LineSpan', () => {
-    const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createSliderLineSpan();
+    const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createElementActivRange();
     const elements: HTMLElement[] = [];
     const elementCount: number = 4;
     for(let i = 0; i < elementCount; i++) {
         const element: HTMLElement = createElement('div', 'slider-element');
         elements.push(element);
     }
-    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'calculateElementOffsetLeftOrTop');
+    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
     calculateElementOffsetleft.onCall(0).returns(30);
     calculateElementOffsetleft.onCall(1).returns(95);
     calculateElementOffsetleft.onCall(2).returns(30);
-    configuratorHorizontal.updateLineSpan(elementSliderLineSpan, elements);
+    configuratorHorizontal.updateActiveRange(elementSliderLineSpan, elements);
     expect(elementSliderLineSpan.style.marginLeft).toBe('30px');
     expect(elementSliderLineSpan.style.width).toBe('65px');
 })

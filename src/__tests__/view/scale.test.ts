@@ -1,5 +1,5 @@
 import {Scale} from '../../slider/view/scale';
-import {Sliders} from '../../slider/view/sliders';
+import {Thumbs} from '../../slider/view/thumbs';
 import { EventEmitter } from '../../slider/eventEmitter';
 import {IModelState} from '../../slider/interfaces/iModelState';
 import {configuratorHorizontal} from '../../slider/view/configurators/configuratorHorizontal';
@@ -22,7 +22,7 @@ describe('Модульные тесты', () => {
 
     const eventEmitter = new EventEmitter();
     const scale = new Scale(element);
-    const sliders = new Sliders(element, eventEmitter);
+    const sliders = new Thumbs(element, eventEmitter);
 
     test('Проверка корректного создания элементов шкалы', () => {
         scale.createScale(configuratorHorizontal);
@@ -32,14 +32,14 @@ describe('Модульные тесты', () => {
 
         expect(scaleElement?.className).toBe('slider-line');
         expect(activeRange?.className).toBe('slider-line-span');
-        expect(scale.parentBlock.childElementCount).toBe(1);
+        expect(scale.slider.childElementCount).toBe(1);
         expect(scale.scale).toBe(scaleElement);
         expect(scale.activeRange).toBe(activeRange);
 
     });
     test('Проверка смены ориентации', () => {
         state.orientation = 'vertical';
-        scale.changeOrientation(sliders.setSliderTouchToNewPosition, state, configuratorVertical);
+        scale.changeOrientation(sliders.setThumbToNewPosition, state, configuratorVertical);
         const scaleToDelete = window.document.querySelector('.slider-line');
         const activeRangeToDelite = window.document.querySelector('.slider-line-span');
 
@@ -51,7 +51,7 @@ describe('Модульные тесты', () => {
 
         expect(scaleElement?.className).toBe('slider-line-for-verticalView');
         expect(activeRange?.className).toBe('slider-line-span-for-verticalView');
-        expect(scale.parentBlock.childElementCount).toBe(1);
+        expect(scale.slider.childElementCount).toBe(1);
         expect(scale.scale).toBe(scaleElement);
         expect(scale.activeRange).toBe(activeRange);        
     })
