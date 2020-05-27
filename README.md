@@ -14,4 +14,4 @@
 
     `$('.js-slider-test').slider();`
 # Архитектура приложения
-(./architectureDiagram.svg)
+(architectureDiagram.svg)
