@@ -56,12 +56,12 @@ export class Thumbs {
             new Array(excessAmount)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
-                    modelState.touchsValues.splice(-1, 1);
+                    modelState.thumbsValues.splice(-1, 1);
                     this.state.thumbs.splice(-1, 1);
                     let newLength = allThumbs.length - i;
                     allThumbs[newLength - 1].remove();
                 })
-            this.emitter.emit('view:amountTouches-changed', modelState.touchsValues);
+            this.emitter.emit('view:amountThumbs-changed', modelState.thumbsValues);
         }
     }
     listenThumbsEventsWhenChangingOrientation(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
@@ -96,15 +96,15 @@ export class Thumbs {
     }
     /* устанавливает значение для каждого добавленного бегунка */
     setValueToNewThumb(amount: number, modelState: IModelState): void {
-        if (this.state.thumbs.length === modelState.touchsValues.length) {
+        if (this.state.thumbs.length === modelState.thumbsValues.length) {
             return
         }
         new Array(amount)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                modelState.touchsValues[this.state.thumbs.length - (amount - i)] = (modelState.touchsValues[(this.state.thumbs.length - 1) - (amount - i)] + (modelState.step));
+                modelState.thumbsValues[this.state.thumbs.length - (amount - i)] = (modelState.thumbsValues[(this.state.thumbs.length - 1) - (amount - i)] + (modelState.step));
             })
-        this.emitter.emit('view:amountTouches-changed', modelState.touchsValues); 
+        this.emitter.emit('view:amountThumbs-changed', modelState.thumbsValues); 
     }
     /* расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений */
     setValuesThumbs(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, configurator: IConfigurator): void {
@@ -131,8 +131,8 @@ export class Thumbs {
         if (this.state.currentValueAxis > halfStep) {
             this.state.currentValue = this.state.currentValue + modelState.step;
         }
-        if (modelState.touchsValues[i] != this.state.currentValue) {
-            this.emitter.emit('view:touchsValues-changed', {currentValue: this.state.currentValue, index: i});
+        if (modelState.thumbsValues[i] != this.state.currentValue) {
+            this.emitter.emit('view:thumbsValues-changed', {currentValue: this.state.currentValue, index: i});
         }
     }
     /* рассчитывает потенциальное значение бегунка на месте клика на шкале */
@@ -163,15 +163,15 @@ export class Thumbs {
         let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(modelState, clickLocationAxis);
         //@ts-ignore
         let nearestThumbIndex: number | null = null;
-        modelState.touchsValues.forEach((element: number, i: number) => {
+        modelState.thumbsValues.forEach((element: number, i: number) => {
             if (currentValue !== null && currentValue !== undefined) {
                 if (i === 0 && element >= currentValue) {
                     nearestThumbIndex = i;
-                } else if (i === modelState.touchsValues.length - 1 && element <= currentValue) {
+                } else if (i === modelState.thumbsValues.length - 1 && element <= currentValue) {
                     nearestThumbIndex = i;
-                } else if (currentValue >= element && currentValue <= modelState.touchsValues[i + 1]) {
+                } else if (currentValue >= element && currentValue <= modelState.thumbsValues[i + 1]) {
                     let leftSpacing: number = currentValue - element;
-                    let rightSpacing: number = modelState.touchsValues[i + 1] - currentValue;
+                    let rightSpacing: number = modelState.thumbsValues[i + 1] - currentValue;
 
                     if (leftSpacing > rightSpacing) {
                         nearestThumbIndex = i + 1;
@@ -181,8 +181,8 @@ export class Thumbs {
                 }
             }
         });
-        if (nearestThumbIndex != null && modelState.touchsValues[nearestThumbIndex] != this.state.currentValue) {
-            this.emitter.emit('view:touchsValues-changed', {currentValue: currentValue, index: nearestThumbIndex});
+        if (nearestThumbIndex != null && modelState.thumbsValues[nearestThumbIndex] != this.state.currentValue) {
+            this.emitter.emit('view:thumbsValues-changed', {currentValue: currentValue, index: nearestThumbIndex});
         };
         return [currentValue, nearestThumbIndex];
     }
@@ -199,7 +199,7 @@ export class Thumbs {
             this.state.startValueAxis = this.configurator.getStartValueAxisToOnStart(eventThumb, this.state.currentValueAxis);
             this.state.maxValueAxis = this.configurator.getMaxValueAxisToOnStart(scale);
         }
-        this.state.currentValue = modelState.touchsValues[i];
+        this.state.currentValue = modelState.thumbsValues[i];
         
         const handleMove = (event: MouseEvent) => this.onMove(modelState, event, i, target, activeRange, setCurrentTooltipValue);
         document.addEventListener('mousemove', handleMove);

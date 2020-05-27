@@ -1,7 +1,7 @@
 export interface IModelState {
     min: number
     max: number,
-    touchsValues: number[],
+    thumbsValues: number[],
     orientation: string,
     amount: number,
     step: number,

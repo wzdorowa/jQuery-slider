@@ -31,19 +31,19 @@ export const configuratorVertical: IConfigurator = {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                elements[i].style.top = (Math.ceil(configuratorVertical.calculateCoefficientPoint(elementSliderLine, modelState.max, modelState.min) * modelState.touchsValues[i])) + 'px';
+                elements[i].style.top = (Math.ceil(configuratorVertical.calculateCoefficientPoint(elementSliderLine, modelState.max, modelState.min) * modelState.thumbsValues[i])) + 'px';
             })
 
         elementSliderLineSpan.style.marginTop = configuratorVertical.getElementOffset(elements[0]) + 'px';
         elementSliderLineSpan.style.height = (configuratorVertical.getElementOffset(elements[elements.length - 1]) - configuratorVertical.getElementOffset(elements[0])) + 'px';
     },
-    setInPlaceNewThumb(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
+    setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                if (i != currentTouchIndex) {
+                if (i != currentThumbIndex) {
                     elements[i].style.left = "";
-                    elements[i].style.top = (Math.ceil(coefficientPoint * modelState.touchsValues[i]) - shiftToMinValue) + 'px';
+                    elements[i].style.top = (Math.ceil(coefficientPoint * modelState.thumbsValues[i]) - shiftToMinValue) + 'px';
                 }
             })
         elementSliderLineSpan.style.marginLeft = "";
@@ -55,14 +55,14 @@ export const configuratorVertical: IConfigurator = {
     getCurrentValueAxisToOnStart(target: HTMLElement): number {
         return target.offsetTop;
     },
-    getStartValueAxisToOnStart(eventTouch: MouseEvent, currentXorY: number): number {
-        return eventTouch.pageY - currentXorY;
+    getStartValueAxisToOnStart(eventThumb: MouseEvent, currentXorY: number): number {
+        return eventThumb.pageY - currentXorY;
     },
     getMaxValueAxisToOnStart(elementSliderLine: HTMLElement): number {
         return elementSliderLine.offsetHeight;
     },
-    getCurrentValueAxisToOnMove(eventTouch: MouseEvent, startXorY: number): number {
-        return eventTouch.pageY - startXorY;
+    getCurrentValueAxisToOnMove(eventThumb: MouseEvent, startXorY: number): number {
+        return eventThumb.pageY - startXorY;
     },
     setIndentForTarget(target: HTMLElement, currentXorY: number): void {
         target.style.top = currentXorY + 'px';

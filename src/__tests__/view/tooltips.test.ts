@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer';
 let state: IModelState = {
     min: 0,
     max: 100,
-    touchsValues: [20,30,40,50],
+    thumbsValues: [20,30,40,50],
     orientation: 'horizontal',
     amount: 4,
     step: 2,
@@ -51,7 +51,7 @@ describe('Модульные тесты', () => {
     });
     test('Проверка установки значений ползунков по-умолчанию в соответствующие им тултипы ', () => {
         const textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
-        state.touchsValues.forEach((element: number, i: number) => {
+        state.thumbsValues.forEach((element: number, i: number) => {
             expect(String(element)).toBe(textInTooltipsElements[i].innerHTML);
         });
     });
@@ -179,8 +179,8 @@ describe('Интеграционные тесты для горизонталь�
         const sliderLineWidth: number = rectSliderLine.right - rectSliderLine.left;
 
         //Найти первый ползунок и его ширину
-        const touchElements: HTMLDivElement[] = await page.$$('.slider-touch');
-        const firstElement: HTMLDivElement = touchElements[0];
+        const thumbsElements: HTMLDivElement[] = await page.$$('.slider-touch');
+        const firstElement: HTMLDivElement = thumbsElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -214,7 +214,7 @@ describe('Интеграционные тесты для горизонталь�
         expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
 
         // Найти координаты последнего ползунка
-        const lastElement: HTMLDivElement = touchElements[touchElements.length - 1];
+        const lastElement: HTMLDivElement = thumbsElements[thumbsElements.length - 1];
         let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};

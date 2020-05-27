@@ -43,21 +43,21 @@ test('Find element with class "slider-line-span" for delete', () => {
     const elementScaleToDelete: JQuery<HTMLElement> = configuratorHorizontal.searchElementScaleToDelete(parentLineVerticalView);
     expect(elementScaleToDelete[0].className).toBe('slider-line-for-verticalView');
 });
-test('Calculate value slider touch', () => {
+test('Calculate value slider thumbs', () => {
     //@ts-ignore
     const modelState: IModelState = {};
-    modelState.touchsValues = [];
+    modelState.thumbsValues = [];
     modelState.max = 100;
     modelState.min = 0;
 
     const elements: HTMLElement[] = [];
     const elementCount: number = 4;
-    let touchsValue: number = 20;
+    let thumbsValue: number = 20;
     for(let i = 0; i < elementCount; i++) {
         const element: HTMLElement = createElement('div', 'slider-element');
         elements.push(element);
-        modelState.touchsValues.push(touchsValue);
-        touchsValue = touchsValue + 5;
+        modelState.thumbsValues.push(thumbsValue);
+        thumbsValue = thumbsValue + 5;
     }
     const elementScale: HTMLElement = configuratorHorizontal.createElementScale();
     const elementActivRange: HTMLElement = configuratorHorizontal.createElementActivRange();
@@ -76,23 +76,23 @@ test('Calculate value slider touch', () => {
     expect(elementActivRange.style.width).toBe('50px');
     sinon.restore();
 });
-test('Calculate new value slider touch', () => {
+test('Calculate new value slider thumbs', () => {
     //@ts-ignore
     const modelState: IModelState = {};
-    modelState.touchsValues = [];
+    modelState.thumbsValues = [];
     modelState.max = 100;
     modelState.min = 0;
 
     const elements: HTMLElement[] = [];
     const elementCount: number = 4;
-    let touchsValue: number = 20;
+    let thumbsValue: number = 20;
     for(let i = 0; i < elementCount; i++) {
         const element: HTMLElement = createElement('div', 'slider-element');
         elements.push(element);
-        modelState.touchsValues.push(touchsValue);
-        touchsValue = touchsValue + 5;
+        modelState.thumbsValues.push(thumbsValue);
+        thumbsValue = thumbsValue + 5;
     }
-    const currentTouchIndex: number = 3;
+    const currentThumbIndex: number = 3;
     const coefficientPoint: number = 2;
     const shiftToMinValue: number = 10;
 
@@ -103,7 +103,7 @@ test('Calculate new value slider touch', () => {
     calculateElementOffsetleft.onCall(1).returns(90);
     calculateElementOffsetleft.onCall(2).returns(40);
 
-    configuratorHorizontal.setInPlaceNewThumb(elements, currentTouchIndex, coefficientPoint, modelState, shiftToMinValue, elementSliderLineSpan);
+    configuratorHorizontal.setInPlaceNewThumb(elements, currentThumbIndex, coefficientPoint, modelState, shiftToMinValue, elementSliderLineSpan);
     expect(elements[0].style.left).toBe('30px');
     expect(elements[1].style.left).toBe('40px');
     expect(elements[2].style.left).toBe('50px');
@@ -122,11 +122,11 @@ test('set currentX to OnStart', () => {
 });
 test('set startX to OnStart', () => {
     //@ts-ignore
-    const eventTouch: MouseEvent = MouseEvent;
+    const eventThumb: MouseEvent = MouseEvent;
     const currentXorY: number = 20;
 
     sinon.stub(configuratorHorizontal, 'getStartValueAxisToOnStart').callsFake( function () { return 50; });
-    const setStartXorYtoOnStart = configuratorHorizontal.getStartValueAxisToOnStart(eventTouch, currentXorY);
+    const setStartXorYtoOnStart = configuratorHorizontal.getStartValueAxisToOnStart(eventThumb, currentXorY);
     expect(setStartXorYtoOnStart).toBe(50);
     sinon.restore();
 });
@@ -140,11 +140,11 @@ test('set MaxX to OnStart', () => {
 });
 test('set currentX to OnMove', () => {
     //@ts-ignore
-    const eventTouch: MouseEvent = MouseEvent;
+    const eventThumb: MouseEvent = MouseEvent;
     const startXorY: number = 20;
 
     sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove').callsFake( function () { return 50; });
-    const setCurrentXorYtoOnMove = configuratorHorizontal.getCurrentValueAxisToOnMove(eventTouch, startXorY);
+    const setCurrentXorYtoOnMove = configuratorHorizontal.getCurrentValueAxisToOnMove(eventThumb, startXorY);
     expect(setCurrentXorYtoOnMove).toBe(50);
     sinon.restore();
 });

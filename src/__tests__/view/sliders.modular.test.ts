@@ -7,7 +7,7 @@ import {Thumbs} from '../../slider/view/thumbs';
 let state: IModelState = {
     min: 0,
     max: 100,
-    touchsValues: [20,30,40,50],
+    thumbsValues: [20,30,40,50],
     orientation: 'horizontal',
     amount: 4,
     step: 2,
@@ -29,18 +29,18 @@ describe('Модульные тесты', () => {
     test('Проверка корректного создания элементов', () => {
         emitter.emit('model:state-changed', state);
 
-        const touchElements = window.document.querySelectorAll('.slider-touch');
+        const thumbsElements = window.document.querySelectorAll('.slider-touch');
         const sliderSpans = window.document.querySelectorAll('.slider-span');
     
-        expect(touchElements.length).toBe(state.amount);
+        expect(thumbsElements.length).toBe(state.amount);
         expect(sliderSpans.length).toBe(state.amount);
     });
     test('Проверить наличие родителей у созданных элементов', () => {
-        const parentTouchElements = window.document.querySelectorAll('.slider-touch')[0].parentNode;
+        const parentThumbsElements = window.document.querySelectorAll('.slider-touch')[0].parentNode;
         const parentSliderSpans = window.document.querySelectorAll('.slider-span')[0].parentNode;
     
         //@ts-ignore
-        expect(parentTouchElements.className).toContain('js-slider-test');
+        expect(parentThumbsElements.className).toContain('js-slider-test');
         //@ts-ignore
         expect(parentSliderSpans.className).toBe('slider-touch');
     });
@@ -48,26 +48,26 @@ describe('Модульные тесты', () => {
         state.amount = 5;
         emitter.emit('model:state-changed', state);
     
-        const touchElements = window.document.querySelectorAll('.slider-touch');
+        const thumbsElements = window.document.querySelectorAll('.slider-touch');
         const sliderSpans = window.document.querySelectorAll('.slider-span');
     
-        expect(touchElements.length).toBe(state.amount);
+        expect(thumbsElements.length).toBe(state.amount);
         expect(sliderSpans.length).toBe(state.amount);
     
         //Проверить значение добавленного ползунка
-        expect(state.touchsValues.length).toBe(5);
-        expect(state.touchsValues[4]).toBe(52);
+        expect(state.thumbsValues.length).toBe(5);
+        expect(state.thumbsValues[4]).toBe(52);
     });
     test('Проверить удаление ползунков', () => {
         state.amount = 3;
         emitter.emit('model:state-changed', state);
     
-        const touchElements = window.document.querySelectorAll('.slider-touch');
+        const thumbsElements = window.document.querySelectorAll('.slider-touch');
         const sliderSpans = window.document.querySelectorAll('.slider-span');
     
-        expect(touchElements.length).toBe(state.amount);
+        expect(thumbsElements.length).toBe(state.amount);
         expect(sliderSpans.length).toBe(state.amount);
-        expect(state.touchsValues.length).toBe(3);
+        expect(state.thumbsValues.length).toBe(3);
     });
     test('Проверить корректность рассчета текущего значения ползунка', () => {
         thumbs.state.coefficientPoint = 3.5;
@@ -134,7 +134,7 @@ describe('Модульные тесты', () => {
         sinon.stub(configuratorHorizontal, 'getMaxValueAxisToOnStart').callsFake( function () { return 300; });
 
         thumbs.onStart(state, event, i, scale, activeRange, setCurrentTooltipValue);
-        expect(thumbs.state.currentValue).toBe(state.touchsValues[i]);
+        expect(thumbs.state.currentValue).toBe(state.thumbsValues[i]);
 
         sinon.reset();
     });

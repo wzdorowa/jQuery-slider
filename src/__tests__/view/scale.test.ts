@@ -8,7 +8,7 @@ import {configuratorVertical} from '../../slider/view/configurators/configurator
 let state: IModelState = {
     min: 0,
     max: 100,
-    touchsValues: [20,30,40,50],
+    thumbsValues: [20,30,40,50],
     orientation: 'horizontal',
     amount: 4,
     step: 2,

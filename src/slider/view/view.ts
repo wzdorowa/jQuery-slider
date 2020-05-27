@@ -62,7 +62,7 @@ export class View {
             if(this.thumbs.state.thumbs.length != this.modelState.amount) {
                 this.thumbs.changeAmountThumbs(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
             }
-            if(this.tooltips.tooltipsElements.length != this.modelState.touchsValues.length) {
+            if(this.tooltips.tooltipsElements.length != this.modelState.thumbsValues.length) {
                 this.tooltips.changeAmountTooltips(this.thumbs.state.thumbs, this.configurator, this.modelState);
             }
             if (this.modelState.tooltip === false) {

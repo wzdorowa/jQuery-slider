@@ -10,12 +10,13 @@ interface IRectNextThumb {
 let state: IModelState = {
     min: 0,
     max: 100,
-    touchsValues: [20,30,40,50],
+    thumbsValues: [20,30,40,50],
     orientation: 'horizontal',
     amount: 4,
     step: 2,
     tooltip: true,
 };
+
 describe('Интеграционные тесты для горизонтального вида', () => {
     let browser: any;
     let page: any;
@@ -286,15 +287,15 @@ describe('Интеграционные тесты для вертикально�
 
         // Найти координаты линии слайдера
         const scale: HTMLDivElement = await page.$('.slider-line-for-verticalView');
-        const rectScale = await page.evaluate((sliderLine: HTMLDivElement) => {
-            const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
+        const rectScale = await page.evaluate((scale: HTMLDivElement) => {
+            const {top, left, bottom, right} = scale.getBoundingClientRect();
             return {top, left, bottom, right};
         }, scale);
         const scaleLength: number = rectScale.bottom - rectScale.top;
         
         //Найти первый ползунок и его ширину
-        const touchElements: HTMLDivElement[] = await page.$$('.slider-touch');
-        const firstElement: HTMLDivElement = touchElements[0];
+        const thumbsElements: HTMLDivElement[] = await page.$$('.slider-touch');
+        const firstElement: HTMLDivElement = thumbsElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -302,7 +303,7 @@ describe('Интеграционные тесты для вертикально�
         const elementHeight: number = rectFirstElement.bottom - rectFirstElement.top;
         
         //Найти координаты второго ползунка
-        const secondElement: HTMLDivElement = touchElements[1];
+        const secondElement: HTMLDivElement = thumbsElements[1];
         let rectSecondElement: IRectNextThumb = await page.evaluate((element: HTMLDivElement): IRectNextThumb => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -345,14 +346,14 @@ describe('Интеграционные тесты для вертикально�
 
         // Проверить корректность работы одного из промежуточных ползунков, например, третьего
         //Найти координаты третьего ползунка
-        const thirdElement: HTMLDivElement = touchElements[2];
+        const thirdElement: HTMLDivElement = thumbsElements[2];
         let rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, thirdElement);
 
         // Найти координаты последнего ползунка
-        const lastElement: HTMLDivElement = touchElements[3];
+        const lastElement: HTMLDivElement = thumbsElements[3];
         let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};

@@ -27,8 +27,8 @@ export class Controller {
         element.setNewValueAmount = (amount: number): void => {
             model.setNewValueAmount(amount);
         }
-        element.setNewValueTouchsValues = (touchValue: number, index: number): void => {
-            model.setNewValueTouchsValues(touchValue, index);
+        element.setNewValueThumbsValues = (touchValue: number, index: number): void => {
+            model.setNewValueThumbsValues(touchValue, index);
         }
         element.setNewValueStep = (step: number): void => {
             model.setNewValueStep(step);
@@ -49,7 +49,7 @@ export class Controller {
                     isCreatedInput = true;
                 }
                 const arrayAmountInputs = amountInputs();
-                if(arrayAmountInputs.length != state.touchsValues.length) {
+                if(arrayAmountInputs.length != state.thumbsValues.length) {
                     changeAmountInputs(state);
                 }
                 setValueToInputFromModelState(state);

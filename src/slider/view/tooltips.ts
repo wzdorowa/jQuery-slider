@@ -28,18 +28,18 @@ export class Tooltips {
     }
     /* устанавливает значения ползунков по-умолчанию в соответствующие им тултипы  */
     setTooltipsValues(modelState: IModelState): void {
-        modelState.touchsValues.forEach((element: number, i: number) => {
+        modelState.thumbsValues.forEach((element: number, i: number) => {
             this.textInTooltips[i].innerHTML = String(element);
         });
     }
     /* изменяет количество отрисованных тултипов */
     changeAmountTooltips(sliders: HTMLElement[], configurator: IConfigurator, modelState: IModelState): void {
-        if (this.tooltipsElements.length < modelState.touchsValues.length) {
-            let amount: number = modelState.touchsValues.length - this.tooltipsElements.length;
+        if (this.tooltipsElements.length < modelState.thumbsValues.length) {
+            let amount: number = modelState.thumbsValues.length - this.tooltipsElements.length;
             this.createTooltips(amount, sliders, configurator);
         }
-        if (this.tooltipsElements.length > modelState.touchsValues.length) {
-            const excessAmount: number =  this.tooltipsElements.length - modelState.touchsValues.length;
+        if (this.tooltipsElements.length > modelState.thumbsValues.length) {
+            const excessAmount: number =  this.tooltipsElements.length - modelState.thumbsValues.length;
 
             new Array(excessAmount)
                 .fill(1)
@@ -65,7 +65,7 @@ export class Tooltips {
     }
     /* метод устанавливает текущее значение в тултип ползунка */
     setCurrentTooltipValue(modelState: IModelState, i: number): void {
-        this.textInTooltips[i].innerHTML = String(modelState.touchsValues[i]);
+        this.textInTooltips[i].innerHTML = String(modelState.thumbsValues[i]);
     }
     /* метод hideTooltip скрывает туллтипы ползунков */
     hideTooltip(): void {

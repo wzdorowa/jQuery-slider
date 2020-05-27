@@ -25,14 +25,14 @@ $( () => {
                     const rangeOfValuesSet: HTMLElement = createElement('div', 'rangeOfValues-set');
                     const input: HTMLElement = createElement('input', 'input-rangeOfValues');
                     input.setAttribute('type', 'text');
-                    input.setAttribute('value', String(state.touchsValues[i]));
+                    input.setAttribute('value', String(state.thumbsValues[i]));
 
                     const valueFrom: HTMLElement = createElement('input', 'input-rangeOfValues-from');
                     valueFrom.setAttribute('type', 'text');
                     if (i === 0) {
                         valueFrom.setAttribute('value', String(state.min));
                     } else {
-                        valueFrom.setAttribute('value', String(state.touchsValues[i - 1] + state.step));
+                        valueFrom.setAttribute('value', String(state.thumbsValues[i - 1] + state.step));
                     }
 
                     const valueTo: HTMLElement = createElement('input', 'input-rangeOfValues-to');
@@ -41,7 +41,7 @@ $( () => {
                     if (i === state.amount - 1) {
                         valueTo.setAttribute('value', String(state.max));
                     } else {
-                        valueTo.setAttribute('value', String(state.touchsValues[i + 1] - state.step));
+                        valueTo.setAttribute('value', String(state.thumbsValues[i + 1] - state.step));
                     }
                     
                     rangeOfValuesItem.append(rangeOfValuesSet);
@@ -58,8 +58,8 @@ $( () => {
             const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
             let amountInputs: HTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.rangeOfValues-set'));
 
-            if (amountInputs.length < state.touchsValues.length) {
-                const missingAmount: number = state.touchsValues.length - amountInputs.length;
+            if (amountInputs.length < state.thumbsValues.length) {
+                const missingAmount: number = state.thumbsValues.length - amountInputs.length;
 
                 new Array(missingAmount)
                     .fill(1)
@@ -69,11 +69,11 @@ $( () => {
                         const rangeOfValuesSet: HTMLElement = createElement('div', 'rangeOfValues-set');
                         const input: HTMLElement = createElement('input', 'input-rangeOfValues');
                         input.setAttribute('type', 'text');
-                        input.setAttribute('value', String(state.touchsValues[i]));
+                        input.setAttribute('value', String(state.thumbsValues[i]));
 
                         const valueFrom: HTMLElement = createElement('input', 'input-rangeOfValues-from');
                         valueFrom.setAttribute('type', 'text');
-                        valueFrom.setAttribute('value', String(state.touchsValues[currentAmountInputs.length - 1] + state.step));
+                        valueFrom.setAttribute('value', String(state.thumbsValues[currentAmountInputs.length - 1] + state.step));
 
                         const valueTo: HTMLElement = createElement('input', 'input-rangeOfValues-to');
                         valueTo.setAttribute('type', 'text');
@@ -88,52 +88,52 @@ $( () => {
                         setNewValueToNewInputs(state);
                     })
             }
-            if (amountInputs.length > state.touchsValues.length) {
-                const excessAmount: number = amountInputs.length - state.touchsValues.length;
+            if (amountInputs.length > state.thumbsValues.length) {
+                const excessAmount: number = amountInputs.length - state.thumbsValues.length;
 
                 const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
-                let allTouches: HTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.rangeOfValues-item'));
+                let allThumbs: HTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.rangeOfValues-item'));
 
                 new Array(excessAmount)
                     .fill(1)
                     .forEach(() => {
-                        allTouches[allTouches.length - 1].remove();
-                        allTouches.splice(-1, 1);
+                        allThumbs[allThumbs.length - 1].remove();
+                        allThumbs.splice(-1, 1);
                     })
             }
         };
         const setNewValueToNewInputs = (state: IModelState) => {
             const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
 
-            let allTouches: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues')) as IHTMLElement[];
-            const indexNewInput: number = allTouches.length - 1;
-            allTouches[indexNewInput].value = state.touchsValues[indexNewInput];
+            let allThumbs: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues')) as IHTMLElement[];
+            const indexNewInput: number = allThumbs.length - 1;
+            allThumbs[indexNewInput].value = state.thumbsValues[indexNewInput];
         }
         const setValueToInputFromModelState = (state: IModelState) => {
             const rangeOfValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.rangeOfValues-list'));
 
-            let allTouches: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues')) as IHTMLElement[];
+            let allThumbs: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues')) as IHTMLElement[];
             let allValueFrom: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues-from')) as IHTMLElement[];
             let allValueTo: IHTMLElement[] = Array.from($(rangeOfValuesList[index]).find('.input-rangeOfValues-to')) as IHTMLElement[];
 
-            new Array(state.touchsValues.length)
+            new Array(state.thumbsValues.length)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
-                    allTouches[i].value = state.touchsValues[i];
+                    allThumbs[i].value = state.thumbsValues[i];
                     if (i === 0) {
-                        if (state.touchsValues.length === 1) {
+                        if (state.thumbsValues.length === 1) {
                             allValueFrom[i].value = state.min;
                             allValueTo[i].value = state.max;
                         } else {
                             allValueFrom[i].value = state.min;
-                            allValueTo[i].value = state.touchsValues[i + 1] - state.step;
+                            allValueTo[i].value = state.thumbsValues[i + 1] - state.step;
                         }
                     } else if (i === state.amount - 1) {
-                        allValueFrom[i].value = state.touchsValues[i - 1] + state.step;
+                        allValueFrom[i].value = state.thumbsValues[i - 1] + state.step;
                         allValueTo[i].value = state.max;
                     } else {
-                        allValueFrom[i].value = state.touchsValues[i - 1] + state.step;
-                        allValueTo[i].value = state.touchsValues[i + 1] - state.step;
+                        allValueFrom[i].value = state.thumbsValues[i - 1] + state.step;
+                        allValueTo[i].value = state.thumbsValues[i + 1] - state.step;
                     }
                 })
         }
@@ -198,28 +198,28 @@ $( () => {
 
         // получить из поля ввода и передать новое значение количества ползунков введенное пользователем
         // из панели конфигураций в объект newConfig
-        let amountSliderTouches: HTMLElement[] = Array.from($(sliderConfig[index]).find('.field-group-numberValues-container__content'));
+        let amountSliderThumbs: HTMLElement[] = Array.from($(sliderConfig[index]).find('.field-group-numberValues-container__content'));
 
-        amountSliderTouches[0].addEventListener('blur', () => {
+        amountSliderThumbs[0].addEventListener('blur', () => {
             //@ts-ignore
-            const amount: number = Number(amountSliderTouches[0].value);
+            const amount: number = Number(amountSliderThumbs[0].value);
             element.setNewValueAmount(amount);
         });
         // получить из поля ввода и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций
-        const toFindinputsSliderTouchs = (): HTMLElement[] => {
+        const toFindinputsSliderThumbs = (): HTMLElement[] => {
             const sliderConfig: HTMLDivElement[] = Array.from(document.querySelectorAll('.slider-config'));
             return Array.from($(sliderConfig[index]).find('.input-rangeOfValues'));
         };
-        let inputsSliderTouchs: HTMLElement[] = toFindinputsSliderTouchs();
+        let inputsSliderThumbs: HTMLElement[] = toFindinputsSliderThumbs();
 
-        new Array(inputsSliderTouchs.length)
+        new Array(inputsSliderThumbs.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                inputsSliderTouchs[i].addEventListener('blur', () => {
+                inputsSliderThumbs[i].addEventListener('blur', () => {
                     //@ts-ignore
-                    const touchValue: number = Number(inputsSliderTouchs[i].value);
-                    element.setNewValueTouchsValues(touchValue, i);
+                    const thumbsValue: number = Number(inputsSliderThumbs[i].value);
+                    element.setNewValueThumbsValues(thumbsValue, i);
                 })
             })
 
@@ -264,15 +264,15 @@ $( () => {
             element.setNewValueTooltip(checked);
         });
 
-        const setValueOfInputsSliderTouchs = () => {
-            let inputsSliderTouchs: HTMLElement[] = toFindinputsSliderTouchs();
+        const setValueOfInputsSliderThumbs = () => {
+            let inputsSliderThumbs: HTMLElement[] = toFindinputsSliderThumbs();
 
-            new Array(inputsSliderTouchs.length)
+            new Array(inputsSliderThumbs.length)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
                     //@ts-ignore
-                    const touchValue: number = Number(inputsSliderTouchs[i].value);
-                    element.setNewValueTouchsValues(touchValue, i);
+                    const thumbsValue: number = Number(inputsSliderThumbs[i].value);
+                    element.setNewValueThumbsValues(thumbsValue, i);
                 })
         }
 
@@ -291,10 +291,10 @@ $( () => {
                 element.setNewValueMax(max);
     
                 //@ts-ignore
-                const amount: number = Number(amountSliderTouches[0].value);
+                const amount: number = Number(amountSliderThumbs[0].value);
                 element.setNewValueAmount(amount);
     
-                setValueOfInputsSliderTouchs();
+                setValueOfInputsSliderThumbs();
     
                 //@ts-ignore
                 const step: number = Number(stepSize[0].value);

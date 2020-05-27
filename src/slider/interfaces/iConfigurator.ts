@@ -10,11 +10,11 @@ export interface IConfigurator {
     searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>
     searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>
     setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void
-    setInPlaceNewThumb(elements: HTMLElement[], currentTouchIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void
+    setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void
     getCurrentValueAxisToOnStart(target: HTMLElement): number
-    getStartValueAxisToOnStart(eventTouch: MouseEvent, currentXorY: number): number
+    getStartValueAxisToOnStart(eventThumb: MouseEvent, currentXorY: number): number
     getMaxValueAxisToOnStart(elementSliderLine: HTMLElement): number
-    getCurrentValueAxisToOnMove(eventTouch: MouseEvent, startXorY: number): number
+    getCurrentValueAxisToOnMove(eventThumb: MouseEvent, startXorY: number): number
     setIndentForTarget(target: HTMLElement, currentXorY: number): void
     getTargetWidth(target: HTMLElement): number
     setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void
