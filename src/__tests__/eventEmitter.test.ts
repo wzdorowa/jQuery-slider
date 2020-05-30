@@ -1,29 +1,36 @@
 import { EventEmitter } from '../slider/eventEmitter';
 interface StateValue {
-    valueTwo: number | null,
-    valueThree: number | null
+    values: number[]
+}
+interface IData {
+    currentValue: number
+    index: number
 }
 const eventEmitter = new EventEmitter();
 
-const assignValueTwo = (state: StateValue): void =>  {
-    state.valueTwo = 2;
+const stateValue: StateValue = {
+    values: [0, 0]
 };
-const assignValueThree = (state: StateValue): void => {
-    state.valueThree = 3;
+const stateData: IData = {
+    currentValue: 20,
+    index: 0
+}
+const assignValues = (state: IData): void =>  {
+    stateValue.values[state.index] = state.currentValue;
 };
-let stateValue: StateValue = {
-    valueTwo: null,
-    valueThree: null
-};
+
 test('testing subscription method', () => {
-    eventEmitter.subscribe('eventEmitter-verification', (state: StateValue) => {
-        assignValueTwo(state);
-        assignValueThree(state);
+    eventEmitter.subscribe('eventEmitter-verification', (state: IData) => {
+        assignValues(state);
     });
     expect(eventEmitter.handlersByEvent['eventEmitter-verification'].length).toBe(1);
 });
 test('testing emit method', () => {
-    eventEmitter.emit('eventEmitter-verification', stateValue);
-    expect(stateValue.valueTwo).toBe(2);
-    expect(stateValue.valueThree).toBe(3);
+    eventEmitter.emit('eventEmitter-verification', stateData);
+    expect(stateValue.values[0]).toBe(20);
+
+    stateData.currentValue = 40;
+    stateData.index = 1;
+    eventEmitter.emit('eventEmitter-verification', stateData);
+    expect(stateValue.values[1]).toBe(40);
 })

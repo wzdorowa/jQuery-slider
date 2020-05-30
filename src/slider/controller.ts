@@ -15,7 +15,7 @@ export class Controller {
         const model: Model = new Model(eventEmitter);
 
         element.getState = (): IModelState => {
-            let modelState: IModelState = model.state;
+            const modelState: IModelState = model.state;
             return modelState;
         }
         element.setNewValueMin = (min: number): void => {

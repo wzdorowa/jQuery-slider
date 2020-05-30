@@ -35,7 +35,7 @@ export class Tooltips {
     /* изменяет количество отрисованных тултипов */
     changeAmountTooltips(sliders: HTMLElement[], configurator: IConfigurator, modelState: IModelState): void {
         if (this.tooltipsElements.length < modelState.thumbsValues.length) {
-            let amount: number = modelState.thumbsValues.length - this.tooltipsElements.length;
+            const amount: number = modelState.thumbsValues.length - this.tooltipsElements.length;
             this.createTooltips(amount, sliders, configurator);
         }
         if (this.tooltipsElements.length > modelState.thumbsValues.length) {

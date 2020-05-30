@@ -43,7 +43,7 @@ export class Thumbs {
     /* изменяет количество отрисованных на шкале бегунков */
     changeAmountThumbs(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         if (this.state.thumbs.length < modelState.amount) {
-            let amount: number = modelState.amount - this.state.thumbs.length;
+            const amount: number = modelState.amount - this.state.thumbs.length;
 
             this.createThumbs(amount);
             this.listenNewThumbsEvents(amount, modelState, configurator, scale, activeRange, setCurrentTooltipValue);
@@ -51,14 +51,14 @@ export class Thumbs {
             }
         if (this.state.thumbs.length > modelState.amount) {
             const excessAmount: number =  this.state.thumbs.length - modelState.amount;
-            let allThumbs: HTMLElement[] = Array.from($(this.slider).find('.slider-touch'));
+            const allThumbs: HTMLElement[] = Array.from($(this.slider).find('.slider-touch'));
 
             new Array(excessAmount)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
                     modelState.thumbsValues.splice(-1, 1);
                     this.state.thumbs.splice(-1, 1);
-                    let newLength = allThumbs.length - i;
+                    const newLength = allThumbs.length - i;
                     allThumbs[newLength - 1].remove();
                 })
             this.emitter.emit('view:amountThumbs-changed', modelState.thumbsValues);
@@ -86,7 +86,7 @@ export class Thumbs {
         new Array(amount)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                let index = this.state.thumbs.length - (amount - i);
+                const index = this.state.thumbs.length - (amount - i);
                 this.state.thumbs[this.state.thumbs.length - (amount - i)].addEventListener('mousedown', event => this.onStart(modelState, event, index, scale, activeRange, setCurrentTooltipValue));
             })
     }
@@ -120,7 +120,7 @@ export class Thumbs {
     /* метод рассчитывает текущее значение ползунка */
     calculateValue(modelState: IModelState, currentValueAxis: number): number {
         let currentValue: number = Math.floor(currentValueAxis / this.state.coefficientPoint) + modelState.min;
-        let multi: number = Math.floor(currentValue / modelState.step);
+        const multi: number = Math.floor(currentValue / modelState.step);
         return currentValue = modelState.step * multi;
     }
     /* метод рассчитывает значение места бегунка на шкале */
@@ -136,9 +136,8 @@ export class Thumbs {
         }
     }
     /* рассчитывает потенциальное значение бегунка на месте клика на шкале */
-    //@ts-ignore
     calculateValueOfPlaceClickOnScale(modelState: IModelState, currentValueAxis: number): number {
-        let currentValue: number | null = this.calculateValue(modelState, currentValueAxis);
+        const currentValue: number | null = this.calculateValue(modelState, currentValueAxis);
             if (this.state.currentValue !== null) {
                 const halfStep = Math.floor((this.state.currentValue + (modelState.step / 2)) * this.state.coefficientPoint) - this.state.shiftToMinValue;
     
@@ -151,17 +150,14 @@ export class Thumbs {
     /* метод для установки ближайшего ползунка на место клика по шкале слайдера */
     setThumbToNewPosition(event: MouseEvent, modelState: IModelState, configurator: IConfigurator): [number, number | null] {
         event.preventDefault();
-        let target = event.target;
-        let clickLocationAxis: number = 0;
-        //@ts-ignore
+        const target: HTMLDivElement = event.target as HTMLDivElement;
+        let clickLocationAxis = 0;
         if (target != null && target.className === 'slider-line-span' || target != null && target.className === 'slider-line-span-for-verticalView') {
-            //@ts-ignore
             clickLocationAxis = configurator.calculateClickLocation(event, target);
         } else {
             clickLocationAxis = configurator.getOffsetFromClick(event);
         }
-        let currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(modelState, clickLocationAxis);
-        //@ts-ignore
+        const currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(modelState, clickLocationAxis);
         let nearestThumbIndex: number | null = null;
         modelState.thumbsValues.forEach((element: number, i: number) => {
             if (currentValue !== null && currentValue !== undefined) {
@@ -170,8 +166,8 @@ export class Thumbs {
                 } else if (i === modelState.thumbsValues.length - 1 && element <= currentValue) {
                     nearestThumbIndex = i;
                 } else if (currentValue >= element && currentValue <= modelState.thumbsValues[i + 1]) {
-                    let leftSpacing: number = currentValue - element;
-                    let rightSpacing: number = modelState.thumbsValues[i + 1] - currentValue;
+                    const leftSpacing: number = currentValue - element;
+                    const rightSpacing: number = modelState.thumbsValues[i + 1] - currentValue;
 
                     if (leftSpacing > rightSpacing) {
                         nearestThumbIndex = i + 1;
@@ -183,16 +179,16 @@ export class Thumbs {
         });
         if (nearestThumbIndex != null && modelState.thumbsValues[nearestThumbIndex] != this.state.currentValue) {
             this.emitter.emit('view:thumbsValues-changed', {currentValue: currentValue, index: nearestThumbIndex});
-        };
+        }
         return [currentValue, nearestThumbIndex];
     }
     onStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         this.state.currentThumbIndex = i;
         event.preventDefault();
 
-        let elements: HTMLElement[] = this.state.thumbs;
-        let target: HTMLElement = elements[i];
-        let eventThumb: MouseEvent = event;
+        const elements: HTMLElement[] = this.state.thumbs;
+        const target: HTMLElement = elements[i];
+        const eventThumb: MouseEvent = event;
         
         if (this.configurator !== null) {
             this.state.currentValueAxis = this.configurator.getCurrentValueAxisToOnStart(target);
@@ -208,8 +204,8 @@ export class Thumbs {
         document.addEventListener('mouseup', handleStop);
     }
     onMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
-        let elements: HTMLElement[] = this.state.thumbs;
-        let eventThumb: MouseEvent = event;
+        const elements: HTMLElement[] = this.state.thumbs;
+        const eventThumb: MouseEvent = event;
         if( this.configurator !== null) {
             this.state.currentValueAxis = this.configurator.getCurrentValueAxisToOnMove(eventThumb, this.state.startValueAxis);
             if (i === 0) {

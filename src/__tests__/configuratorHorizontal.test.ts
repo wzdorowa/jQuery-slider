@@ -1,9 +1,9 @@
 import {configuratorHorizontal} from '../slider/view/configurators/configuratorHorizontal';
 import {createElement} from '../slider/functions/createElement';
 import { IModelState } from '../slider/interfaces/iModelState';
-//import puppeteer from 'puppeteer';
+import sinonLib = require('sinon');
 
-var sinon = require('sinon');
+const sinon = sinonLib;
 
 test('Create element with class "slider-tooltip-text"', () => {
     const createElementTooltip = configuratorHorizontal.createElementTooltipText();
@@ -22,8 +22,8 @@ test('Create element with class "slider-line-span"', () => {
 });
 test('Find element with class "slider-tooltip-text-for-verticalView"', () => {
     const tooltipText: HTMLElement = createElement('span', 'slider-tooltip-text-for-verticalView');
-    const parentTooltipText: HTMLElement = createElement('div', 'search-elements-tooltip-text');;
-    const elementCount: number = 4;
+    const parentTooltipText: HTMLElement = createElement('div', 'search-elements-tooltip-text');
+    const elementCount = 4;
     for(let i = 0; i < elementCount; i++) {
         parentTooltipText.append(tooltipText);
     }
@@ -32,7 +32,7 @@ test('Find element with class "slider-tooltip-text-for-verticalView"', () => {
 });
 test('Calculate point coefficient', () => {
     const elementScale = configuratorHorizontal.createElementScale();
-    elementScale.style.width = 200 + 'px';
+    elementScale.style.width = String(200) + 'px';
     const calculateCoefficientPoint = configuratorHorizontal.calculateCoefficientPoint(elementScale, 100, 0);
     expect(calculateCoefficientPoint).toBe(2);
 });
@@ -44,15 +44,19 @@ test('Find element with class "slider-line-span" for delete', () => {
     expect(elementScaleToDelete[0].className).toBe('slider-line-for-verticalView');
 });
 test('Calculate value slider thumbs', () => {
-    //@ts-ignore
-    const modelState: IModelState = {};
-    modelState.thumbsValues = [];
-    modelState.max = 100;
-    modelState.min = 0;
+    const modelState: IModelState = {
+        min: 0,
+        max: 100,
+        thumbsValues: [],
+        orientation: 'horizontal',
+        amount: 4,
+        step: 2,
+        tooltip: true
+    };
 
     const elements: HTMLElement[] = [];
-    const elementCount: number = 4;
-    let thumbsValue: number = 20;
+    const elementCount = 4;
+    let thumbsValue = 20;
     for(let i = 0; i < elementCount; i++) {
         const element: HTMLElement = createElement('div', 'slider-element');
         elements.push(element);
@@ -63,7 +67,7 @@ test('Calculate value slider thumbs', () => {
     const elementActivRange: HTMLElement = configuratorHorizontal.createElementActivRange();
     
     sinon.stub(configuratorHorizontal, 'calculateCoefficientPoint').callsFake( function () { return 2; });
-    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
+    const calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
     calculateElementOffsetleft.onCall(0).returns(40);
     calculateElementOffsetleft.onCall(1).returns(90);
     calculateElementOffsetleft.onCall(2).returns(40);
@@ -77,28 +81,32 @@ test('Calculate value slider thumbs', () => {
     sinon.restore();
 });
 test('Calculate new value slider thumbs', () => {
-    //@ts-ignore
-    const modelState: IModelState = {};
-    modelState.thumbsValues = [];
-    modelState.max = 100;
-    modelState.min = 0;
+    const modelState: IModelState = {
+        min: 0,
+        max: 100,
+        thumbsValues: [],
+        orientation: 'horizontal',
+        amount: 4,
+        step: 2,
+        tooltip: true
+    };
 
     const elements: HTMLElement[] = [];
-    const elementCount: number = 4;
-    let thumbsValue: number = 20;
+    const elementCount = 4;
+    let thumbsValue = 20;
     for(let i = 0; i < elementCount; i++) {
         const element: HTMLElement = createElement('div', 'slider-element');
         elements.push(element);
         modelState.thumbsValues.push(thumbsValue);
         thumbsValue = thumbsValue + 5;
     }
-    const currentThumbIndex: number = 3;
-    const coefficientPoint: number = 2;
-    const shiftToMinValue: number = 10;
+    const currentThumbIndex = 3;
+    const coefficientPoint = 2;
+    const shiftToMinValue = 10;
 
     const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createElementActivRange();
 
-    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
+    const calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
     calculateElementOffsetleft.onCall(0).returns(40);
     calculateElementOffsetleft.onCall(1).returns(90);
     calculateElementOffsetleft.onCall(2).returns(40);
@@ -121,9 +129,8 @@ test('set currentX to OnStart', () => {
     sinon.restore();
 });
 test('set startX to OnStart', () => {
-    //@ts-ignore
-    const eventThumb: MouseEvent = MouseEvent;
-    const currentXorY: number = 20;
+    const eventThumb = new MouseEvent('click');
+    const currentXorY = 20;
 
     sinon.stub(configuratorHorizontal, 'getStartValueAxisToOnStart').callsFake( function () { return 50; });
     const setStartXorYtoOnStart = configuratorHorizontal.getStartValueAxisToOnStart(eventThumb, currentXorY);
@@ -139,9 +146,8 @@ test('set MaxX to OnStart', () => {
     sinon.restore();
 });
 test('set currentX to OnMove', () => {
-    //@ts-ignore
-    const eventThumb: MouseEvent = MouseEvent;
-    const startXorY: number = 20;
+    const eventThumb = new MouseEvent('click');
+    const startXorY = 20;
 
     sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove').callsFake( function () { return 50; });
     const setCurrentXorYtoOnMove = configuratorHorizontal.getCurrentValueAxisToOnMove(eventThumb, startXorY);
@@ -150,7 +156,7 @@ test('set currentX to OnMove', () => {
 });
 test('set indent for target', () => {
     const target: HTMLElement = createElement('div', 'slider-element');
-    const currentXorY: number = 20;
+    const currentXorY = 20;
 
     configuratorHorizontal.setIndentForTarget(target, currentXorY);
     expect(target.style.left).toBe('20px');
@@ -173,9 +179,9 @@ test('get target Offset', () => {
 });
 test('set indent for target to OnStop', () =>{
     const target: HTMLElement = createElement('div', 'slider-element');
-    const coefficientPoint: number = 2;
-    const currentValue: number = 25;
-    const shiftToMinValue: number = 10;
+    const coefficientPoint = 2;
+    const currentValue = 25;
+    const shiftToMinValue = 10;
 
     configuratorHorizontal.setIndentForTargetToOnStop(target, coefficientPoint, currentValue, shiftToMinValue);
     expect(target.style.left).toBe('40px');
@@ -183,12 +189,12 @@ test('set indent for target to OnStop', () =>{
 test('update LineSpan', () => {
     const elementSliderLineSpan: HTMLElement = configuratorHorizontal.createElementActivRange();
     const elements: HTMLElement[] = [];
-    const elementCount: number = 4;
+    const elementCount = 4;
     for(let i = 0; i < elementCount; i++) {
         const element: HTMLElement = createElement('div', 'slider-element');
         elements.push(element);
     }
-    let calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
+    const calculateElementOffsetleft = sinon.stub(configuratorHorizontal, 'getElementOffset');
     calculateElementOffsetleft.onCall(0).returns(30);
     calculateElementOffsetleft.onCall(1).returns(95);
     calculateElementOffsetleft.onCall(2).returns(30);

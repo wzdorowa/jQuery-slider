@@ -7,7 +7,7 @@ interface IData {
     index: number
 }
 
-let state: IModelState = {
+const state: IModelState = {
     min: 0,
     max: 100,
     thumbsValues: [20,40,60,80],

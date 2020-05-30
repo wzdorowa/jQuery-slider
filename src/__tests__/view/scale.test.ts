@@ -5,7 +5,7 @@ import {IModelState} from '../../slider/interfaces/iModelState';
 import {configuratorHorizontal} from '../../slider/view/configurators/configuratorHorizontal';
 import {configuratorVertical} from '../../slider/view/configurators/configuratorVertical';
 
-let state: IModelState = {
+const state: IModelState = {
     min: 0,
     max: 100,
     thumbsValues: [20,30,40,50],
@@ -39,7 +39,7 @@ describe('Модульные тесты', () => {
     });
     test('Проверка смены ориентации', () => {
         state.orientation = 'vertical';
-        scale.changeOrientation(sliders.setThumbToNewPosition, state, configuratorVertical);
+        scale.changeOrientation(sliders.setThumbToNewPosition.bind(sliders), state, configuratorVertical);
         const scaleToDelete = window.document.querySelector('.slider-line');
         const activeRangeToDelite = window.document.querySelector('.slider-line-span');
 

@@ -1,4 +1,4 @@
-import {IModelState} from './interfaces/iModelState';
+import { IModelState } from './interfaces/iModelState';
 import { EventEmitter } from './eventEmitter';
 
 interface IData {
@@ -45,13 +45,13 @@ export class Model {
         if (state.min > this.state.thumbsValues[0]) {
             this.state.thumbsValues[0] = state.min;
             this.notifyStateChanged();
-        };
+        }
     }
     private checkMaxValueInArrayThumbsValues(state: IModelState): void {
         if (state.max < this.state.thumbsValues[this.state.thumbsValues.length - 1]) {
             this.state.thumbsValues[this.state.thumbsValues.length - 1] = state.max;
             this.notifyStateChanged();
-        };
+        }
     }
     //Высчитать значения ползунков в зависимости от размера шага
     private checkThumbsValues(state: IModelState): void {
@@ -59,12 +59,12 @@ export class Model {
             const newValue: number = element;
             const remainderOfTheDivision: number = newValue % state.step;
             const newCurrentValue: number = newValue - remainderOfTheDivision;
-            let maxPossibleValue: number = (state.max - (state.max % state.step)) - (((state.thumbsValues.length - 1) - i) * state.step);
+            const maxPossibleValue: number = (state.max - (state.max % state.step)) - (((state.thumbsValues.length - 1) - i) * state.step);
             let minPossibleValue: number = (state.min - (state.min % state.step)) + (i * state.step);
 
             if(minPossibleValue < state.min) {
                 minPossibleValue = minPossibleValue + state.step;
-            };
+            }
 
             if (newCurrentValue > maxPossibleValue) {
                 this.state.thumbsValues[i] = maxPossibleValue;
@@ -80,7 +80,7 @@ export class Model {
             if (newCurrentValue < state.min) {
                 this.state.thumbsValues[i] = minPossibleValue;
                 this.notifyStateChanged(); 
-            };
+            }
             if (newCurrentValue > state.max) {
                 this.state.thumbsValues[i] = maxPossibleValue;
                 this.notifyStateChanged(); 

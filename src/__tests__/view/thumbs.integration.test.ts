@@ -6,8 +6,8 @@ interface IRectNextThumb {
     left: number,
     bottom: number,
     right: number
-};
-let state: IModelState = {
+}
+const state: IModelState = {
     min: 0,
     max: 100,
     thumbsValues: [20,30,40,50],
@@ -18,14 +18,14 @@ let state: IModelState = {
 };
 
 describe('Интеграционные тесты для горизонтального вида', () => {
-    let browser: any;
-    let page: any;
+    let browser: puppeteer.Browser;
+    let page: puppeteer.Page;
 
     beforeEach(async () => {
         const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
         if(element !== null || element !== undefined) {
             element?.remove();
-        }; 
+        }
         browser = await puppeteer.launch({ headless: false});
         page = await browser.newPage();
     });
@@ -49,13 +49,13 @@ describe('Интеграционные тесты для горизонталь�
          /* метод рассчитывает текущее значение ползунка */
          const calculateValue = (modelState: IModelState, currentValueAxis: number, coefficientPoint: number) => {
              let currentValue: number = Math.floor(currentValueAxis / coefficientPoint) + modelState.min;
-             let multi: number = Math.floor(currentValue / modelState.step);
+             const multi: number = Math.floor(currentValue / modelState.step);
              return currentValue = modelState.step * multi;
          }
          /* метод рассчитывает значение места бегунка на шкале */
          const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetThumb: number, scaleLength: number, max: number, min: number, startPointSlider: number) => {
-             let coefficientPoint = getCoefficientPoint(scaleLength, max, min);
-             let shiftToMinValue = Math.ceil(coefficientPoint * modelState.min);
+             const coefficientPoint = getCoefficientPoint(scaleLength, max, min);
+             const shiftToMinValue = Math.ceil(coefficientPoint * modelState.min);
              let currentValue: number = calculateValue(modelState, offsetThumb, coefficientPoint);
              const halfStep = Math.floor((currentValue + (modelState.step / 2)) * coefficientPoint) - shiftToMinValue;
  
@@ -65,7 +65,7 @@ describe('Интеграционные тесты для горизонталь�
              return Math.ceil((currentValue * coefficientPoint) + startPointSlider);
          }
         // Найти координаты линии слайдера
-        const scale: HTMLDivElement = await page.$('.slider-line');
+        const scale: puppeteer.ElementHandle<Element> | null = await page.$('.slider-line');
         const rectScale = await page.evaluate((sliderLine: HTMLDivElement) => {
             const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -73,8 +73,8 @@ describe('Интеграционные тесты для горизонталь�
         const scaleWidth: number = rectScale.right - rectScale.left;
         
         //Найти первый ползунок и его ширину
-        const thumbElements: HTMLDivElement[] = await page.$$('.slider-touch');
-        const firstElement: HTMLDivElement = thumbElements[0];
+        const thumbElements: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-touch');
+        const firstElement: puppeteer.ElementHandle<Element> = thumbElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -82,15 +82,14 @@ describe('Интеграционные тесты для горизонталь�
         const elementWidth: number = rectFirstElement.right - rectFirstElement.left;
         
         //Найти координаты второго ползунка
-        const secondElement: HTMLDivElement = thumbElements[1];
-        let rectSecondElement = await page.evaluate((element: HTMLDivElement) => {
+        const secondElement: puppeteer.ElementHandle<Element> = thumbElements[1];
+        const rectSecondElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, secondElement);
 
         //Точки начала и конца линии слайдера
         const startPointSlider = rectScale.left - (elementWidth/2);
-        //@ts-ignore
         const endPointSlider = rectScale.right + (elementWidth/2);
 
         //Определить значения и коэффициенты перед проверкой работы первого ползунка
@@ -140,14 +139,14 @@ describe('Интеграционные тесты для горизонталь�
 
         // Проверить корректность работы одного из промежуточных ползунков, например, третьего
         //Найти координаты третьего ползунка
-        const thirdElement: HTMLDivElement = thumbElements[2];
+        const thirdElement: puppeteer.ElementHandle<Element> = thumbElements[2];
         let rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, thirdElement);
 
         // Найти координаты последнего ползунка
-        const lastElement: HTMLDivElement = thumbElements[3];
+        const lastElement: puppeteer.ElementHandle<Element> = thumbElements[3];
         let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -234,19 +233,18 @@ describe('Интеграционные тесты для горизонталь�
     });
 });
 describe('Интеграционные тесты для вертикального вида', () => {
-    let browser: any;
-    let page: any;
+    let browser: puppeteer.Browser;
+    let page: puppeteer.Page;
 
     beforeEach(async () => {
         const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
         if(element !== null || element !== undefined) {
             element?.remove();
-        }; 
+        } 
         browser = await puppeteer.launch({ headless: false});
         page = await browser.newPage();
     });
     afterEach(async () => {
-        //@ts-ignore
         await browser.close();
     });
     test('Checking the location of the sliders on the slider', async () => {
@@ -265,13 +263,13 @@ describe('Интеграционные тесты для вертикально�
         /* метод рассчитывает текущее значение бегунка */
         const calculateValue = (modelState: IModelState, currentValueAxis: number, coefficientPoint: number) => {
             let currentValue: number = Math.floor(currentValueAxis / coefficientPoint) + modelState.min;
-            let multi: number = Math.floor(currentValue / modelState.step);
+            const multi: number = Math.floor(currentValue / modelState.step);
             return currentValue = modelState.step * multi;
         }
         /* метод рассчитывает значение места бегунка на шкале */
         const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetThumb: number, scaleLength: number, max: number, min: number, startPointSlider: number) => {
-            let coefficientPoint = getCoefficientPoint(scaleLength, max, min);
-            let shiftToMinValue = Math.ceil(coefficientPoint * modelState.min);
+            const coefficientPoint = getCoefficientPoint(scaleLength, max, min);
+            const shiftToMinValue = Math.ceil(coefficientPoint * modelState.min);
             let currentValue: number = calculateValue(modelState, offsetThumb, coefficientPoint);
             const halfStep = Math.floor((currentValue + (modelState.step / 2)) * coefficientPoint) - shiftToMinValue;
 
@@ -286,7 +284,7 @@ describe('Интеграционные тесты для вертикально�
         await page.waitFor(500);
 
         // Найти координаты линии слайдера
-        const scale: HTMLDivElement = await page.$('.slider-line-for-verticalView');
+        const scale: puppeteer.ElementHandle<Element> | null = await page.$('.slider-line-for-verticalView');
         const rectScale = await page.evaluate((scale: HTMLDivElement) => {
             const {top, left, bottom, right} = scale.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -294,8 +292,8 @@ describe('Интеграционные тесты для вертикально�
         const scaleLength: number = rectScale.bottom - rectScale.top;
         
         //Найти первый ползунок и его ширину
-        const thumbsElements: HTMLDivElement[] = await page.$$('.slider-touch');
-        const firstElement: HTMLDivElement = thumbsElements[0];
+        const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-touch');
+        const firstElement: puppeteer.ElementHandle<Element> = thumbsElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -303,8 +301,8 @@ describe('Интеграционные тесты для вертикально�
         const elementHeight: number = rectFirstElement.bottom - rectFirstElement.top;
         
         //Найти координаты второго ползунка
-        const secondElement: HTMLDivElement = thumbsElements[1];
-        let rectSecondElement: IRectNextThumb = await page.evaluate((element: HTMLDivElement): IRectNextThumb => {
+        const secondElement: puppeteer.ElementHandle<Element> = thumbsElements[1];
+        const rectSecondElement: IRectNextThumb = await page.evaluate((element: HTMLDivElement): IRectNextThumb => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, secondElement);
@@ -346,14 +344,14 @@ describe('Интеграционные тесты для вертикально�
 
         // Проверить корректность работы одного из промежуточных ползунков, например, третьего
         //Найти координаты третьего ползунка
-        const thirdElement: HTMLDivElement = thumbsElements[2];
+        const thirdElement: puppeteer.ElementHandle<Element> = thumbsElements[2];
         let rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
         }, thirdElement);
 
         // Найти координаты последнего ползунка
-        const lastElement: HTMLDivElement = thumbsElements[3];
+        const lastElement: puppeteer.ElementHandle<Element> = thumbsElements[3];
         let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};

@@ -3,8 +3,9 @@ import { EventEmitter } from '../../slider/eventEmitter';
 import {IModelState} from '../../slider/interfaces/iModelState';
 import { View } from '../../slider/view/view';
 import {Thumbs} from '../../slider/view/thumbs';
+import sinonLib = require('sinon');
 
-let state: IModelState = {
+const state: IModelState = {
     min: 0,
     max: 100,
     thumbsValues: [20,30,40,50],
@@ -20,10 +21,9 @@ describe('Модульные тесты', () => {
     window.document.body.appendChild(element);
     
     const eventEmitter = new EventEmitter();
-    let emitter = eventEmitter;
+    const emitter = eventEmitter;
     
-    //@ts-ignore
-    const view = new View(element, eventEmitter);
+    new View(element, eventEmitter);
     const thumbs = new Thumbs(element, eventEmitter);
     
     test('Проверка корректного создания элементов', () => {
@@ -36,12 +36,11 @@ describe('Модульные тесты', () => {
         expect(sliderSpans.length).toBe(state.amount);
     });
     test('Проверить наличие родителей у созданных элементов', () => {
-        const parentThumbsElements = window.document.querySelectorAll('.slider-touch')[0].parentNode;
-        const parentSliderSpans = window.document.querySelectorAll('.slider-span')[0].parentNode;
+        const parentThumbsElements = window.document.querySelectorAll('.slider-touch')[0].parentNode as HTMLElement;
+        const parentSliderSpans = window.document.querySelectorAll('.slider-span')[0].parentNode as HTMLElement;
     
-        //@ts-ignore
+        
         expect(parentThumbsElements.className).toContain('js-slider-test');
-        //@ts-ignore
         expect(parentSliderSpans.className).toBe('slider-touch');
     });
     test('Проверить изменение количества созданных элементов при изменении количества бегунков в большую сторону', () => {
@@ -71,7 +70,7 @@ describe('Модульные тесты', () => {
     });
     test('Проверить корректность рассчета текущего значения ползунка', () => {
         thumbs.state.coefficientPoint = 3.5;
-        let currentValue: number = thumbs.calculateValue(state, 345);
+        const currentValue: number = thumbs.calculateValue(state, 345);
         expect(currentValue).toBe(98);
     });
     test('Проверка рассчета значения места бегунка на шкале', () => {
@@ -82,13 +81,13 @@ describe('Модульные тесты', () => {
         expect(thumbs.state.currentValue).toBe(86);
     });
     test('Проверка установки ближайшего ползунка на место клика по шкале слайдера', () => {
-        var sinon = require('sinon');
+        const sinon: sinonLib.SinonStatic = sinonLib;
 
         const configurator = configuratorHorizontal;
         const activeRange: HTMLElement = configurator.createElementActivRange();
         const scale: HTMLElement = configurator.createElementScale();
 
-        let event = new MouseEvent("click", {
+        const event = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
             clientX: 100,
@@ -113,16 +112,16 @@ describe('Модульные тесты', () => {
 
     });
     test('Тест вызова onStart', () => {
-        var sinon = require('sinon');
+        const sinon: sinonLib.SinonStatic = sinonLib;
 
         thumbs.configurator = configuratorHorizontal;
         const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
         const scale: HTMLElement = thumbs.configurator.createElementScale();
-        const i: number = 0;
+        const i = 0;
         const setCurrentTooltipValue = () => {
             return
         };
-        let event = new MouseEvent("click", {
+        const event = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
             clientX: 100,
@@ -139,16 +138,16 @@ describe('Модульные тесты', () => {
         sinon.reset();
     });
     test('Проверка onMove для первого ползунка', () => {
-        var sinon = require('sinon');
+        const sinon: sinonLib.SinonStatic = sinonLib;
 
         thumbs.configurator = configuratorHorizontal;
         const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
-        let elements: HTMLElement[] = thumbs.state.thumbs;
+        const elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
         };
-        let event = new MouseEvent("click", {
+        const event = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
             clientX: 100,
@@ -164,7 +163,7 @@ describe('Модульные тесты', () => {
         const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
         const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
 
-        const i: number = 0;
+        const i = 0;
         const target: HTMLElement = elements[i];
 
         //Если ползунок на шкале один
@@ -195,16 +194,16 @@ describe('Модульные тесты', () => {
         updateLineSpan.restore();
     });
     test('Проверка onMove для любого ползунка кроме первого и последнего', () => {
-        var sinon = require('sinon');
+        const sinon: sinonLib.SinonStatic = sinonLib;
 
         thumbs.configurator = configuratorHorizontal;
         const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
-        let elements: HTMLElement[] = thumbs.state.thumbs;
+        const elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
         };
-        let event = new MouseEvent("click", {
+        const event = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
             clientX: 100,
@@ -225,7 +224,7 @@ describe('Модульные тесты', () => {
         const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
         const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
 
-        const i: number = 1;
+        const i = 1;
         const target: HTMLElement = elements[i];
 
         //Если значение любого кроме первого и последнего ползунка превышает значение следующего за ним ползунка
@@ -244,23 +243,23 @@ describe('Модульные тесты', () => {
         updateLineSpan.restore();
     });
     test('Проверка onMove для последнего ползунка', () => {
-        var sinon = require('sinon');
+        const sinon: sinonLib.SinonStatic = sinonLib;
 
         thumbs.configurator = configuratorHorizontal;
         const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
-        let elements: HTMLElement[] = thumbs.state.thumbs;
+        const elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
         };
-        let event = new MouseEvent("click", {
+        const event = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
             clientX: 100,
             clientY: 100
         });
 
-        const i: number = 3;
+        const i = 3;
         const target: HTMLElement = elements[i];
 
         const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove');
@@ -289,22 +288,22 @@ describe('Модульные тесты', () => {
         updateLineSpan.restore();
     });
     test('Проверка onStop', () => {
-        var sinon = require('sinon');
+        const sinon: sinonLib.SinonStatic = sinonLib;
 
         thumbs.configurator = configuratorHorizontal;
         const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
-        let elements: HTMLElement[] = thumbs.state.thumbs;
+        const elements: HTMLElement[] = thumbs.state.thumbs;
         
         const setCurrentTooltipValue = () => {
             return
         };
-        let event = new MouseEvent("click", {
+        const event = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
             clientX: 100,
             clientY: 100
         });
-        const i: number = 1;
+        const i = 1;
         const target: HTMLElement = elements[i];
 
         sinon.stub(configuratorHorizontal, 'setIndentForTargetToOnStop').callsFake(function () { return; });

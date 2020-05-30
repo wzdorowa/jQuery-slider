@@ -3,7 +3,7 @@ import {IModelState} from '../../slider/interfaces/iModelState';
 import { View } from '../../slider/view/view';
 import puppeteer from 'puppeteer';
 
-let state: IModelState = {
+const state: IModelState = {
     min: 0,
     max: 100,
     thumbsValues: [20,30,40,50],
@@ -19,15 +19,9 @@ describe('Модульные тесты', () => {
     window.document.body.appendChild(element);
 
     const eventEmitter = new EventEmitter();
-    //@ts-ignore
-    const view = new View(element, eventEmitter);
-    // const tooltips = new Tooltips(element, eventEmitter);
-    // const sliders = new Sliders(element, eventEmitter);
-    //const scale = new Scale(element);
+    new View(element, eventEmitter);
 
     test('Проверка корректности создания тултипов', () => {
-        // sliders.createSliders(state.amount);
-        // tooltips.createTooltips(state.amount, sliders.state.sliders, configuratorHorizontal);
         eventEmitter.emit('model:state-changed', state);
 
         const tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
@@ -142,14 +136,14 @@ describe('Модульные тесты', () => {
     });
 });
 describe('Интеграционные тесты для горизонтального вида', () => {
-    let browser: any;
-    let page: any;
+    let browser: puppeteer.Browser;
+    let page: puppeteer.Page;
 
     beforeEach(async () => {
         const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
         if(element !== null || element !== undefined) {
             element?.remove();
-        }; 
+        } 
         browser = await puppeteer.launch({ headless: false});
         page = await browser.newPage();
     });
@@ -166,12 +160,12 @@ describe('Интеграционные тесты для горизонталь�
         };
         const calculateValue = (offsetLeft: number, startSlider: number) => {
             let currentValueX: number = Math.floor((offsetLeft - startSlider) / coefficientPoint) + state.min;
-            let multi: number = Math.floor(currentValueX / state.step);
+            const multi: number = Math.floor(currentValueX / state.step);
             currentValueX = state.step * multi;
             return currentValueX;
         }
         // Найти координаты линии слайдера
-        const sliderLine: HTMLDivElement = await page.$('.slider-line');
+        const sliderLine: puppeteer.ElementHandle<Element> | null = await page.$('.slider-line');
         const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
             const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -179,8 +173,8 @@ describe('Интеграционные тесты для горизонталь�
         const sliderLineWidth: number = rectSliderLine.right - rectSliderLine.left;
 
         //Найти первый ползунок и его ширину
-        const thumbsElements: HTMLDivElement[] = await page.$$('.slider-touch');
-        const firstElement: HTMLDivElement = thumbsElements[0];
+        const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-touch');
+        const firstElement: puppeteer.ElementHandle<Element> = thumbsElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -189,8 +183,7 @@ describe('Интеграционные тесты для горизонталь�
 
         //Точки начала и конца линии слайдера
         const startPointSlider = rectSliderLine.left - (elementWidth/2);
-        //@ts-ignore
-        const endPointSlider = rectSliderLine.right + (elementWidth/2);
+        //const endPointSlider = rectSliderLine.right + (elementWidth/2);
 
         await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
         await page.mouse.down();
@@ -206,15 +199,14 @@ describe('Интеграционные тесты для горизонталь�
 
         const coefficientPoint = getCoefficientPoint(sliderLineWidth, state.max, state.min);
         let currentValueTooltip = String(calculateValue(rectFirstElement.left, startPointSlider));
-        let tooltipsText = await page.$$('.slider-tooltip-text');
-        let tooltipText = tooltipsText[0];
-        //@ts-ignore
-        let innerHTMLTooltip = await page.evaluateHandle(element => element.innerHTML, tooltipText);
+        let tooltipsText: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-tooltip-text');
+        let tooltipText: puppeteer.ElementHandle<Element> = tooltipsText[0];
+        let innerHTMLTooltip = await page.evaluateHandle((element: HTMLElement) => element.innerHTML, tooltipText);
 
         expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
 
         // Найти координаты последнего ползунка
-        const lastElement: HTMLDivElement = thumbsElements[thumbsElements.length - 1];
+        const lastElement: puppeteer.ElementHandle<Element> = thumbsElements[thumbsElements.length - 1];
         let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -235,8 +227,7 @@ describe('Интеграционные тесты для горизонталь�
         currentValueTooltip = String(calculateValue(rectLastElement.left, startPointSlider));
         tooltipsText = await page.$$('.slider-tooltip-text');
         tooltipText = tooltipsText[tooltipsText.length - 1];
-        //@ts-ignore
-        innerHTMLTooltip = await page.evaluateHandle(element => element.innerHTML, tooltipText);
+        innerHTMLTooltip = await page.evaluateHandle((element: HTMLElement) => element.innerHTML, tooltipText);
 
         expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
     });

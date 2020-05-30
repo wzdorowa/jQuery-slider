@@ -1,5 +1,12 @@
+import {IModelState} from './interfaces/iModelState';
+
+interface IData {
+    currentValue: number
+    index: number
+}
+type CallbackFunctionVariadic = (...args: any[]) => void;
 interface StringArray {
-    [index: string]: Function[];
+    [index: string]: CallbackFunctionVariadic[];
 }
 export class EventEmitter {
     handlersByEvent: StringArray;
@@ -7,7 +14,7 @@ export class EventEmitter {
     constructor() {
         this.handlersByEvent = {}
     }
-    public subscribe(eventName: string, fn: Function): Function {
+    public subscribe(eventName: string, fn: CallbackFunctionVariadic): () => void {
         if(!this.handlersByEvent[eventName]) {
             this.handlersByEvent[eventName] = [];
         }
@@ -17,8 +24,8 @@ export class EventEmitter {
             this.handlersByEvent[eventName] = this.handlersByEvent[eventName].filter(eventFn => fn !== eventFn);
         }
     }
-    public emit(eventName: string, data: object): void {
-        const handlers: Function[] = this.handlersByEvent[eventName];
+    public emit(eventName: string, data: IModelState | IData | number[]): void {
+        const handlers: CallbackFunctionVariadic[] = this.handlersByEvent[eventName];
         if(handlers) {
             handlers.forEach(fn => { fn.call(null, data) } );
         }
