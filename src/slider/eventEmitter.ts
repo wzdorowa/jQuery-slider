@@ -9,7 +9,7 @@ interface StringArray {
     [index: string]: CallbackFunctionVariadic[];
 }
 export class EventEmitter {
-    handlersByEvent: StringArray;
+    private handlersByEvent: StringArray;
 
     constructor() {
         this.handlersByEvent = {}
