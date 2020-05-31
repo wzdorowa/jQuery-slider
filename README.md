@@ -2,46 +2,49 @@
 Плагин для jQuery, который реализовывает функционал «бегунка» (также называемого слайдером) — специальный контрол, который позволяет перетягиванием задавать какое-то числовое значение.
 
 ## Клонирование
-    `git clone https://github.com/wzdorowa/jQuery-slider`
+`git clone https://github.com/wzdorowa/jQuery-slider`
+
 ## Установка пакетов
-    `npm install`
+`npm install`
+
 ## Команды
-    Сборка проекта: `npm run dev`
+Сборка проекта: `npm run dev`
 
-    Запуск тестов: `npm run test`
+Запуск тестов: `npm run test`
+
 ## Использование
-    Для подключения слайдера на страницу необходимо вызвать функцию slider() на html-элементе:
+Для подключения слайдера на страницу необходимо вызвать функцию slider() на html-элементе:
 
-    `$('.js-slider-test').slider();`
+`$('.js-slider-test').slider();`
 
-    Изменение параметров слайдера извне или получение данных об актуальном состоянии слайдера достигается путем 
-    вызова определенных методов на элементе слайдера для передачи данных.
+Изменение параметров слайдера извне или получение данных об актуальном состоянии слайдера достигается путем 
+вызова определенных методов на элементе слайдера для передачи данных.
 
-    Под `element` в примерах ниже подразумевается html-блок на котором отрисовывается слайдер.
+Под `element` в примерах ниже подразумевается html-блок на котором отрисовывается слайдер.
 
-    `element.getState()` - получить актуальное состояние слайдера;
+`element.getState()` - получить актуальное состояние слайдера;
 
-    `element.setNewValueMin(value)` - передать данные для установки нового минимального значения слайдера;
+`element.setNewValueMin(value)` - передать данные для установки нового минимального значения слайдера;
 
-    `element.setNewValueMax(value)` - передать данные для установки нового максимального значения слайдера;
+`element.setNewValueMax(value)` - передать данные для установки нового максимального значения слайдера;
 
-    `element.setNewValueAmount(value)` - передать данные для установки нового количества бегунков;
+`element.setNewValueAmount(value)` - передать данные для установки нового количества бегунков;
 
-    `element.setNewValueThumbsValues(value, index)` - передать данные для установки нового значения бегунка. 
-    Аргумент index в данном случает означает порядковый номер бегунка. (Нумерация бегунков начинается с нуля, 
-    то есть если новое значение нужно установить для третьего бегунка, то его index будет равен двум).
+`element.setNewValueThumbsValues(value, index)` - передать данные для установки нового значения бегунка. 
+Аргумент index в данном случает означает порядковый номер бегунка. (Нумерация бегунков начинается с нуля, 
+то есть если новое значение нужно установить для третьего бегунка, то его index будет равен двум).
 
-    `element.setNewValueStep(value)` - передать данные для установки нового значения размера шага;
+`element.setNewValueStep(value)` - передать данные для установки нового значения размера шага;
 
-    `element.setNewValueOrientation(value)` - передать данные для установки ориентации слайдера.
-    Возможные варианты значений: 'horizontal' или 'vertical';
+`element.setNewValueOrientation(value)` - передать данные для установки ориентации слайдера.
+Возможные варианты значений: 'horizontal' или 'vertical';
 
-    `element.setNewValueTooltip(value)` - передать данные для установки видимости тултипов. 
-    Возможные варианты значений: `true` или `false`;
+`element.setNewValueTooltip(value)` - передать данные для установки видимости тултипов. 
+Возможные варианты значений: `true` или `false`;
 
-    `element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs,
-             setValueToInputFromModelState, setValueToStepFromModelState, setValueToMinInputFromModelState,
-             setValueMaxInputFromModelState)` - подписаться на изменения состояния слайдера, для получения актуальных значений (например, при движении бегунка);
+`element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs,
+            setValueToInputFromModelState, setValueToStepFromModelState, setValueToMinInputFromModelState,
+            setValueMaxInputFromModelState)` - подписаться на изменения состояния слайдера, для получения актуальных значений (например, при движении бегунка);
 
 # Архитектура приложения
 ![UML-diagram](architectureDiagram.svg)
