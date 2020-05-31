@@ -13,6 +13,31 @@
     Для подключения слайдера на страницу необходимо вызвать функцию slider() на html-элементе:
 
     `$('.js-slider-test').slider();`
+
+    Изменение параметров слайдера извне или получение данных об актуальном состоянии слайдера достигается путем вызова определенных методов на элементе слайдера для передачи данных.
+
+    Под `element` в примерах ниже подразумевается html-блок на котором отрисовывается слайдер.
+
+    `element.getState()` - получить актуальное состояние слайдера;
+
+    `element.setNewValueMin(value)` - передать данные для установки нового минимального значения слайдера;
+
+    `element.setNewValueMax(value)` - передать данные для установки нового максимального значения слайдера;
+
+    `element.setNewValueAmount(value)` - передать данные для установки нового количества бегунков;
+
+    `element.setNewValueThumbsValues(value, index)` - передать данные для установки нового значения бегунка. Аргумент index в данном случает означает порядковый номер бегунка. (Нумерация бегунков начинается с нуля, то есть если новое значение нужно установить для третьего бегунка, то его index будет равен двум).
+
+    `element.setNewValueStep(value)` - передать данные для установки нового значения размера шага;
+
+    `element.setNewValueOrientation(value)` - передать данные для установки ориентации слайдера. Возможные варианты значений: 'horizontal' или 'vertical';
+
+    `element.setNewValueTooltip(value)` - передать данные для установки видимости тултипов. Возможные варианты значений: `true` или `false`;
+
+    `element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs,
+             setValueToInputFromModelState, setValueToStepFromModelState, setValueToMinInputFromModelState,
+             setValueMaxInputFromModelState)` - подписаться на изменения состояния слайдера, для получения актуальных значений (например, при движении бегунка);
+             
 # Архитектура приложения
 ![UML-diagram](architectureDiagram.svg)
 
