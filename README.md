@@ -61,12 +61,19 @@
 * tooltip - наличие тултипов слайдера
 
 Предоставляет доступ к методам:
+
 `setNewValueMin(min: number): void` - принимает на вход число и устанавливает его в state.min модели
+
 `setNewValueMax(max: number): void` - принимает на вход число и устанавливает его в state.max модели
+
 `setNewValueAmount(amount: number): void` - принимает на вход число и устанавливает его в state.amount модели
+
 `setNewValueThumbsValues(thumbValue: number, index: number): void` - принимает на вход численное значение для бегунка и его индекс и устанавливает его значение по индексу в state.thumbsValues модели
+
 `setNewValueStep(step: number): void` - принимает на вход число и устанавливает его в state.step модели
+
 `setNewValueTooltip(value: boolean): void` - принимает на вход boolean-значение и устанавливает его в state.tooltip модели
+
 `setNewValueOrientation(value: string): void` - принимает на вход строковое значение и устанавливает его в state.orientation модели
 
 ### View
