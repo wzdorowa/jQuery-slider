@@ -117,7 +117,7 @@ export class Thumbs {
         this.state.shiftToMinValue = Math.ceil(this.state.coefficientPoint * modelState.min);
         configurator.setInPlaceNewThumb(this.state.thumbs, this.state.currentThumbIndex, this.state.coefficientPoint, modelState, this.state.shiftToMinValue, activeRange);
     }
-    /* метод рассчитывает текущее значение ползунка */
+    /* метод рассчитывает текущее значение бегунка */
     calculateValue(modelState: IModelState, currentValueAxis: number): number {
         let currentValue: number = Math.floor(currentValueAxis / this.state.coefficientPoint) + modelState.min;
         const multi: number = Math.floor(currentValue / modelState.step);

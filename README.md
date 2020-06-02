@@ -132,6 +132,46 @@
 ### Thumbs
 Реализует интерфейс IThumbsState. Отвечает за отрисовку бегунков слайдера их корректную расстановку на шкале и перемещение. Использует EventEmitter для оповещения об изменении текущего значения перемещаемого бегунка или о значении бегунка перемещенного в место клика по шкале. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
 
+Предоставляет доступ к публичным свойствам:
+
+`state: IThumbsState` - хранит в себе полученное текущее состояние модели;
+
+`configurator: IConfigurator | null` - хранит в себе корректный конфигуратор в зависомости от данных об ориентации из стейта модели;
+
+Предоставляет доступ к публичным методам:
+
+`createThumbs(amount: number): void` - добавляет бегунки в родительский элемент слайдера;
+
+`changeAmountThumbs(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - изменяет количество отрисованных на шкале бегунков;
+
+`listenThumbsEventsWhenChangingOrientation(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - перенавешивает обработчик событий 'mousedown' на каждый бегунок при смене ориентации слайдера;
+
+`listenThumbsEvents(modelState: IModelState,configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - навешивает обработчик событий 'mousedown' на каждый созданный бегунок;
+
+`listenNewThumbsEvents(amount: number, modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - навешивает обработчик событий 'mousedown' на каждый добавленный бегунок;
+
+`listenSizeWindow(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, configurator: IConfigurator): void` - слушает событие 'resize' на странице со слайдером;
+
+`setValueToNewThumb(amount: number, modelState: IModelState): void` - устанавливает значение для каждого добавленного бегунка;
+
+`setValuesThumbs(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, configurator: IConfigurator): void` - расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений;
+
+`setNewValuesForThumbs(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, configurator: IConfigurator): void` - расставляет бегунки по слайдеру в зависимости от полученных новых значений;
+
+`calculateValue(modelState: IModelState, currentValueAxis: number): number` - рассчитывает текущее значение бегунка;
+
+`calculateValueOfPlaceOnScale(modelState: IModelState, i: number): void` - рассчитывает значение места бегунка на шкале;
+
+`calculateValueOfPlaceClickOnScale(modelState: IModelState, currentValueAxis: number): number` - рассчитывает потенциальное значение бегунка на месте клика на шкале;
+
+`setThumbToNewPosition(event: MouseEvent, modelState: IModelState, configurator: IConfigurator): [number, number | null]` - метод для установки ближайшего ползунка на место клика по шкале слайдера;
+
+`onStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mousedown';
+
+`onMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mousemove';
+
+`onStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue:  (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mouseup';
+
 ### ConfiguratorHorizontal
 Реализует интерфейс IConfigurator. Используется для обработки операций связанных с работой горизонтального вида.
 
