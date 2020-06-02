@@ -18,8 +18,8 @@ export const configuratorHorizontal: IConfigurator = {
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
         return Array.from($(slider).find('.slider-tooltip-text-for-verticalView'));
     },
-    calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number {
-        return (elementSliderLine.offsetWidth / (max - min));
+    calculateCoefficientPoint(scale: HTMLElement, max: number, min: number): number {
+        return (scale.offsetWidth / (max - min));
     },
     searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line-for-verticalView');
@@ -27,17 +27,17 @@ export const configuratorHorizontal: IConfigurator = {
     searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
         return $(slider).find('.slider-line-span-for-verticalView');
     },
-    setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void {
+    setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, activRange: HTMLElement, scale: HTMLElement): void {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                elements[i].style.left = String(Math.ceil(configuratorHorizontal.calculateCoefficientPoint(elementSliderLine, modelState.max, modelState.min) * modelState.thumbsValues[i])) + 'px';
+                elements[i].style.left = String(Math.ceil(configuratorHorizontal.calculateCoefficientPoint(scale, modelState.max, modelState.min) * modelState.thumbsValues[i])) + 'px';
             })
 
-        elementSliderLineSpan.style.marginLeft = String(configuratorHorizontal.getElementOffset(elements[0])) + 'px';
-        elementSliderLineSpan.style.width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1]) - configuratorHorizontal.getElementOffset(elements[0]))) + 'px';
+        activRange.style.marginLeft = String(configuratorHorizontal.getElementOffset(elements[0])) + 'px';
+        activRange.style.width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1]) - configuratorHorizontal.getElementOffset(elements[0]))) + 'px';
     },
-    setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void {
+    setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, activRange: HTMLElement): void {
         new Array(elements.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
@@ -46,11 +46,11 @@ export const configuratorHorizontal: IConfigurator = {
                     elements[i].style.left = String((Math.ceil(coefficientPoint * modelState.thumbsValues[i]) - shiftToMinValue)) + 'px';
                 }
             })
-        elementSliderLineSpan.style.marginTop = "";
-        elementSliderLineSpan.style.height = "";
+        activRange.style.marginTop = "";
+        activRange.style.height = "";
 
-        elementSliderLineSpan.style.marginLeft = String(configuratorHorizontal.getElementOffset(elements[0])) + 'px';
-        elementSliderLineSpan.style.width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1]) - configuratorHorizontal.getElementOffset(elements[0]))) + 'px';
+        activRange.style.marginLeft = String(configuratorHorizontal.getElementOffset(elements[0])) + 'px';
+        activRange.style.width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1]) - configuratorHorizontal.getElementOffset(elements[0]))) + 'px';
     },
     getCurrentValueAxisToOnStart(target: HTMLElement): number {
         return target.offsetLeft;
@@ -58,8 +58,8 @@ export const configuratorHorizontal: IConfigurator = {
     getStartValueAxisToOnStart(eventThumb: MouseEvent, currentXorY: number): number {
         return eventThumb.pageX - currentXorY;
     },
-    getMaxValueAxisToOnStart(elementSliderLine: HTMLElement): number {
-        return elementSliderLine.offsetWidth;
+    getMaxValueAxisToOnStart(scale: HTMLElement): number {
+        return scale.offsetWidth;
     },
     getCurrentValueAxisToOnMove(eventThumb: MouseEvent, startXorY: number): number {
         return eventThumb.pageX - startXorY;
@@ -73,9 +73,9 @@ export const configuratorHorizontal: IConfigurator = {
     setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void {
         target.style.left = String(Math.ceil(coefficientPoint * currentValue) - shiftToMinValue)  + 'px';
     },
-    updateActiveRange(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void {
-        elementSliderLineSpan.style.marginLeft = String(configuratorHorizontal.getElementOffset(elements[0])) + 'px';
-        elementSliderLineSpan.style.width = String((configuratorHorizontal.getElementOffset(elements[elements.length -1]) - configuratorHorizontal.getElementOffset(elements[0]))) + 'px';
+    updateActiveRange(activRange: HTMLElement, elements: HTMLElement[]): void {
+        activRange.style.marginLeft = String(configuratorHorizontal.getElementOffset(elements[0])) + 'px';
+        activRange.style.width = String((configuratorHorizontal.getElementOffset(elements[elements.length -1]) - configuratorHorizontal.getElementOffset(elements[0]))) + 'px';
     },
     calculateClickLocation(event: MouseEvent, target: HTMLElement): number {
         return event.offsetX + target.offsetLeft;
