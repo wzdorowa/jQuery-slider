@@ -86,7 +86,23 @@
 Создает экземпляры Scale, Thumbs, Tooltips. Использует EventEmitter для корректного реагирования на изменения в модели. При измененияя состояния модели, регулирует работу созданных экземпляров scale, thumbs, tooltips. Использует интерфейс IModelState для передачи текущего состояния в методы созданных экзкмпляров scale, thumbs, tooltips по необходимости. Использует интерфейс IConfigurator для возможности использовать модули configuratorHorizontal и configuratorVertical. Использует модули configuratorHorizontal и configuratorVertical для корректного реагирования на свойство "orientation" текущего состояния модели и для передачи этих модулей в методы экземпляров scale, thumbs, tooltips.
 
 ### Scale
-Отвечает за отрисовку основной шкалы слайдера и за отрисовку шкалы активного интервала значений. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы. 
+Отвечает за отрисовку основной шкалы слайдера и за отрисовку шкалы активного интервала значений. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
+
+Предоставляет доступ к публичным свойствам:
+
+`slider: HTMLElement` - хранит в себе элемент слайдера;
+
+`scale!: HTMLElement` - хранит в себе элемент шкалы;
+
+`activeRange!: HTMLElement` - хранит в себе элемент активной линии шкалы;
+
+Предоставляет доступ к публичным методам:
+
+`createScale(configurator: IConfigurator): void` - добавляет элементы шкалы в основную html-структуру слайдера;
+
+`changeOrientation(setThumbToNewPosition: (event: MouseEvent, modelState: IModelState, configurator: IConfigurator) => void, modelState: IModelState, configurator: IConfigurator): void` - перерисовывает элементы шкалы в случае смены ориентации слайдера;
+
+`listenScaleEvents(setThumbToNewPosition: (event: MouseEvent, modelState: IModelState, configurator: IConfigurator) => void, modelState: IModelState, configurator: IConfigurator): void` - навешивает обработчик события 'click' на элемент шкалы. Если событие происходит, запускает функцию `setThumbToNewPosition`, которая устанавливает ближайший бегунок на место клика;
 
 ### Tooltips
 Отвечает за отрисовку или скрытие тултипов. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
@@ -101,7 +117,7 @@
 Реализует интерфейс IConfigurator. Используется для обработки операций связанных с работой вертикального вида.
 
 ### IConfigurator 
-Описывает интерфейс для обработки операций связанных с работой горизонтального или вертикального видов. Предоставляет доступ к методам:
+Описывает интерфейс для обработки операций связанных с работой горизонтального или вертикального видов. Описывает доступные для реализации методы:
 
 `getElementOffset(element: HTMLElement): number` - принимает на вход html-элемент и возвращает координату его начала на странице; 
 
