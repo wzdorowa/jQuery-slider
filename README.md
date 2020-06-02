@@ -52,9 +52,9 @@
 
 Предоставляет доступ к методам:
 
-`subscribe(eventName: string, fn: Function): Function` - этот метод принимает в качестве аргументов название события в строковом виде (например, 'event:name-changed') и функцию, которая будет вызываться, когда будет инициироваться транслируемое событие.
+`subscribe(eventName: string, fn: Function): Function` - этот метод принимает в качестве аргументов название события в строковом виде (например, 'event:name-changed') и функцию, которая будет вызываться, когда будет инициироваться транслируемое событие;
 
-`emit(eventName: string, data: object): void` - этот метод принимает имя события в строковом виде, которое мы хотим всем транслировать, и данные, которые будут отправляться в момент этого события. Если в экземпляре класса сохранены какие-то подписанные на него события, мы проходимся по каждому из них и вызываем каждое, передавая ему данные, которые хотим транслировать.
+`emit(eventName: string, data: object): void` - этот метод принимает имя события в строковом виде, которое мы хотим всем транслировать, и данные, которые будут отправляться в момент этого события. Если в экземпляре класса сохранены какие-то подписанные на него события, мы проходимся по каждому из них и вызываем каждое, передавая ему данные, которые хотим транслировать;
 
 ### Model
 Реализует интерфейс IModelState, который описывает стуктуру данных, находящихся в публичном поле модели state. Хранит в себе текущее состояние слайдера и логику для изменения этого состояния. Использует EventEmitter для корректного реагирования на события, происходящие в других модулях, а также для извещения других модулей об изменении текущего состояния слайдера. Предоставляет доступ к данным:
@@ -68,28 +68,22 @@
 
 Предоставляет доступ к методам:
 
-`setNewValueMin(min: number): void` - принимает на вход число и устанавливает его в state.min модели
+`setNewValueMin(min: number): void` - принимает на вход число и устанавливает его в state.min модели;
 
-`setNewValueMax(max: number): void` - принимает на вход число и устанавливает его в state.max модели
+`setNewValueMax(max: number): void` - принимает на вход число и устанавливает его в state.max модели;
 
-`setNewValueAmount(amount: number): void` - принимает на вход число и устанавливает его в state.amount модели
+`setNewValueAmount(amount: number): void` - принимает на вход число и устанавливает его в state.amount модели;
 
-`setNewValueThumbsValues(thumbValue: number, index: number): void` - принимает на вход численное значение для бегунка и его индекс и устанавливает его значение по индексу в state.thumbsValues модели
+`setNewValueThumbsValues(thumbValue: number, index: number): void` - принимает на вход численное значение для бегунка и его индекс и устанавливает его значение по индексу в state.thumbsValues модели;
 
-`setNewValueStep(step: number): void` - принимает на вход число и устанавливает его в state.step модели
+`setNewValueStep(step: number): void` - принимает на вход число и устанавливает его в state.step модели;
 
-`setNewValueTooltip(value: boolean): void` - принимает на вход boolean-значение и устанавливает его в state.tooltip модели
+`setNewValueTooltip(value: boolean): void` - принимает на вход boolean-значение и устанавливает его в state.tooltip модели;
 
-`setNewValueOrientation(value: string): void` - принимает на вход строковое значение и устанавливает его в state.orientation модели
+`setNewValueOrientation(value: string): void` - принимает на вход строковое значение и устанавливает его в state.orientation модели;
 
 ### View
-Создает экземпляры Scale, Thumbs, Tooltips. Использует EventEmitter для корректного реагирования на изменения в модели. При измененияя состояния модели, регулирует работу созданных экземпляров scale, thumbs, tooltips. Использует интерфейс IModelState для передачи текущего состояния в методы созданных экзкмпляров scale, thumbs, tooltips по необходимости. Использует интерфейс IConfigurator для возможности использовать модули configuratorHorizontal и configuratorVertical. Использует модули configuratorHorizontal и configuratorVertical для корректного реагирования на свойство "orientation" текущегосостояния модели и для передачи данных модулей в методы экземпляров scale, thumbs, tooltips.
-
-### ConfiguratorHorizontal
-Реализует интерфейс IConfigurator. Используется для обработки операций связанных с работой горизонтального вида.
-
-### ConfiguratorVertical
-Реализует интерфейс IConfigurator. Используется для обработки операций связанных с работой вертикального вида.
+Создает экземпляры Scale, Thumbs, Tooltips. Использует EventEmitter для корректного реагирования на изменения в модели. При измененияя состояния модели, регулирует работу созданных экземпляров scale, thumbs, tooltips. Использует интерфейс IModelState для передачи текущего состояния в методы созданных экзкмпляров scale, thumbs, tooltips по необходимости. Использует интерфейс IConfigurator для возможности использовать модули configuratorHorizontal и configuratorVertical. Использует модули configuratorHorizontal и configuratorVertical для корректного реагирования на свойство "orientation" текущего состояния модели и для передачи этих модулей в методы экземпляров scale, thumbs, tooltips.
 
 ### Scale
 Отвечает за отрисовку основной шкалы слайдера и за отрисовку шкалы активного интервала значений. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы. 
@@ -99,3 +93,52 @@
 
 ### Thumbs
 Реализует интерфейс IThumbsState. Отвечает за отрисовку бегунков слайдера их корректную расстановку на шкале и перемещение. Использует EventEmitter для оповещения об изменении текущего значения перемещаемого бегунка или о значении бегунка перемещенного в место клика по шкале. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
+
+### ConfiguratorHorizontal
+Реализует интерфейс IConfigurator. Используется для обработки операций связанных с работой горизонтального вида.
+
+### ConfiguratorVertical
+Реализует интерфейс IConfigurator. Используется для обработки операций связанных с работой вертикального вида.
+
+### IConfigurator 
+Описывает интерфейс для обработки операций связанных с работой горизонтального или вертикального видов. Предоставляет доступ к методам:
+
+`getElementOffset(element: HTMLElement): number` - принимает на вход html-элемент и возвращает координату его начала на странице; 
+
+`createElementTooltipText(): HTMLElement` - создает и возвращает html-элемент `span` для корректной отрисовки тултипов;
+
+`createElementScale(): HTMLElement` - создает и возвращает html-элемент `div` для корректной отрисовки шкалы слайдера;
+
+`createElementActivRange(): HTMLElement` - создает и возвращает html-элемент `span` для корректной отрисовки активной линии шкалы слайдера;
+
+`searchElementsTooltipText(slider: HTMLElement): HTMLElement[]` - принимает на вход элемент слайдера и ищет в нем, а затем возвращает массив найденных элементов для текстового содержимого тултипа;
+
+`calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number` - прнимает на вход элемент шкалы, минимальное и максимальное значения слайдера и высчитывает, а затем возвращает коэффициент одного деления шкалы слайдера;
+
+`searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>` - принимает на вход элемент слайдера и ищет в нем, а затем возвращает найденный необходимый элемент для для удаления из разметки;
+
+`searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>` - принимает на вход элемент слайдера и ищет в нем, а затем возвращает найденный необходимый элемент для для удаления из разметки;
+
+`setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void` - высчитывает место на шкале и устанавлевает на него бегунок в соответствии с его значением, а так же меняет ширину активной линии шкалы; 
+
+`setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void` - высчитывает место на шкале и устанавлевает на него добавленный бегунок в соответствии с его значением, а так же меняет ширину активной линии шкалы;
+
+`getCurrentValueAxisToOnStart(target: HTMLElement): number` - принимает на вход активный элемент бегунка и возвращает его необходимую координату;
+
+`getStartValueAxisToOnStart(eventThumb: MouseEvent, currentXorY: number): number` - вычисляет и возвращает координату начала движения бегунка;
+
+`getMaxValueAxisToOnStart(elementSliderLine: HTMLElement): number` - вычисляет и возвращает максимально возможную координату для движения бегунка;
+
+`getCurrentValueAxisToOnMove(eventThumb: MouseEvent, startXorY: number): number` - вычисляет и возвращает текущее значение координаты для активного бегунка;
+
+`setIndentForTarget(target: HTMLElement, currentXorY: number): void` - устанавливает необходимый отступ для активного ползунка в стили элемента при его движении;
+
+`getTargetWidth(target: HTMLElement): number` - вычисляет и возвращает ширину полученного на вход элемена;
+
+`setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void` - устанавливает необходимый отступ для активного ползунка в стили элемента при его остановке;
+
+`updateActiveRange(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void` - обновляет ширину активной линии слайдера;
+
+`calculateClickLocation(event: MouseEvent, target: HTMLElement): number` - высчитывает и возвращает координату клика, если клик произошел на активной линии шкалы;
+
+`getOffsetFromClick(event: MouseEvent): number` - - высчитывает и возвращает координату клика, если клик произошел на основной линии шкалы;
