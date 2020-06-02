@@ -94,6 +94,11 @@ export class Thumbs {
     listenSizeWindow(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, configurator: IConfigurator): void {
         window.addEventListener('resize', () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator));
     }
+    listenSizeWindowWhenChangingOrientation(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement): void {
+        this.configurator = configurator;
+        window.removeEventListener('resize', () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator));
+        window.addEventListener('resize', () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator));
+    }
     /* устанавливает значение для каждого добавленного бегунка */
     setValueToNewThumb(amount: number, modelState: IModelState): void {
         if (this.state.thumbs.length === modelState.thumbsValues.length) {

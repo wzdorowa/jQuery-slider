@@ -45,7 +45,8 @@ export class View {
                     this.tooltips.changeOrientation(this.configurator); 
                     this.thumbs.setValuesThumbs(this.modelState, this.scale.activeRange, this.scale.scale, this.configurator);
                     this.tooltips.setTooltipsValues(this.modelState);
-                    this.thumbs.listenThumbsEventsWhenChangingOrientation(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips))
+                    this.thumbs.listenThumbsEventsWhenChangingOrientation(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange, this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
+                    this.thumbs.listenSizeWindowWhenChangingOrientation(this.modelState, this.configurator, this.scale.scale, this.scale.activeRange);
                 }
             }
             if(!this.isCreatedSlider) {
