@@ -107,6 +107,28 @@
 ### Tooltips
 Отвечает за отрисовку или скрытие тултипов. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
 
+Предоставляет доступ к публичным свойствам:
+
+`tooltipsElements: HTMLElement[]` - хранит в себе элементы тултипов;
+
+`textInTooltips!: HTMLElement[]` - хранит в себе элементы для текстового содержимого тултипов;
+
+Предоставляет доступ к публичным методам:
+
+`createTooltips(amount: number, sliders: HTMLElement[], configurator: IConfigurator): void` - добавляет элементы тултипов в основную html-структуру слайдера;
+
+`setTooltipsValues(modelState: IModelState): void` - устанавливает значения бегунков по-умолчанию в соответствующие им тултипы;
+
+`changeAmountTooltips(sliders: HTMLElement[], configurator: IConfigurator, modelState: IModelState): void` - изменяет количество отрисованных тултипов;
+
+`changeOrientation(configurator: IConfigurator): void` - перерисовывает тултипы при смене ориентации;
+
+`setCurrentTooltipValue(modelState: IModelState, i: number): void` - метод устанавливает текущее значение в тултип ползунка при его движении;
+
+`hideTooltip(): void` - метод скрывает туллтипы ползунков;
+
+`showTooltip(): void` - метод показывает тултипы ползунков;
+
 ### Thumbs
 Реализует интерфейс IThumbsState. Отвечает за отрисовку бегунков слайдера их корректную расстановку на шкале и перемещение. Использует EventEmitter для оповещения об изменении текущего значения перемещаемого бегунка или о значении бегунка перемещенного в место клика по шкале. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
 

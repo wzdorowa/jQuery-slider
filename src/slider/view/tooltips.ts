@@ -26,7 +26,7 @@ export class Tooltips {
                 this.textInTooltips.push(textInTooltips);
             })
     }
-    /* устанавливает значения ползунков по-умолчанию в соответствующие им тултипы  */
+    /* устанавливает значения бегунков по-умолчанию в соответствующие им тултипы  */
     setTooltipsValues(modelState: IModelState): void {
         modelState.thumbsValues.forEach((element: number, i: number) => {
             this.textInTooltips[i].innerHTML = String(element);
@@ -63,7 +63,7 @@ export class Tooltips {
             this.textInTooltips.push(tooltipText);
         });
     }
-    /* метод устанавливает текущее значение в тултип ползунка */
+    /* метод устанавливает текущее значение в тултип ползунка при его движении */
     setCurrentTooltipValue(modelState: IModelState, i: number): void {
         this.textInTooltips[i].innerHTML = String(modelState.thumbsValues[i]);
     }
