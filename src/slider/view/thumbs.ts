@@ -32,9 +32,6 @@ export class Thumbs {
             .fill(1)
             .forEach(() => {
                 const thumb: HTMLElement = createElement('div', 'slider-touch');
-                const thumbSpan: HTMLElement = createElement('span', 'slider-span');
-                
-                thumb.append(thumbSpan);
                 
                 this.slider.append(thumb);
                 this.state.thumbs.push(thumb);
