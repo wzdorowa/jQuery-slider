@@ -29,7 +29,7 @@ export class View {
         this.tooltips = new Tooltips(this.slider)
         
 
-        this.emitter.subscribe('model:state-changed', (state: IModelState) => {
+        this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
             this.modelState = state;
             if (this.modelState.orientation === 'horizontal') {
                 this.configurator = configuratorHorizontal;

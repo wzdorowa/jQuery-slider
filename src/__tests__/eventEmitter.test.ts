@@ -20,7 +20,7 @@ const assignValues = (state: IData): void =>  {
 };
 
 test('testing subscription method', () => {
-    eventEmitter.subscribe('eventEmitter-verification', (state: IData) => {
+    eventEmitter.makeSubscribe('eventEmitter-verification', (state: IData) => {
         assignValues(state);
     });
     expect(eventEmitter.handlersByEvent['eventEmitter-verification'].length).toBe(1);

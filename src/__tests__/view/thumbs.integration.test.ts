@@ -332,7 +332,7 @@ describe('Интеграционные тесты для вертикально�
         await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
         await page.mouse.down();
         await page.waitFor(200);
-        await page.mouse.move(rectFirstElement.left,  rectFirstElement.top + 140, { steps: 1});
+        await page.mouse.move(rectFirstElement.left,  rectFirstElement.top + 150, { steps: 1});
         await page.waitFor(200);
         await  page.mouse.up();
 

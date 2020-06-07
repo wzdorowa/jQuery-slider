@@ -183,23 +183,26 @@ $( () => {
         const minValue: IHTMLElement = minMaxValues[0];
         const maxValue: IHTMLElement = minMaxValues[1];
 
-        minValue.addEventListener('blur', () => {
+        const onBlurForMinValue = () => {
             const min = Number(minValue.value);
             element.setNewValueMin(min);
-        });
-        maxValue.addEventListener('blur', () => {
+        };
+        const onBlurForMaxValue = () => {
             const max = Number(maxValue.value);
             element.setNewValueMax(max);
-        });
+        };
+        minValue.addEventListener('blur', onBlurForMinValue);
+        maxValue.addEventListener('blur', onBlurForMaxValue);
 
         // получить из поля ввода и передать новое значение количества ползунков введенное пользователем
         // из панели конфигураций в объект newConfig
         const amountSliderThumbs: IHTMLElement[] = Array.from($(sliderConfig[index]).find('.field-group-numberValues-container__content'));
 
-        amountSliderThumbs[0].addEventListener('blur', () => {
+        const onBlurForAmountSliderThumbs = () => {
             const amount = Number(amountSliderThumbs[0].value);
             element.setNewValueAmount(amount);
-        });
+        };
+        amountSliderThumbs[0].addEventListener('blur', onBlurForAmountSliderThumbs);
         // получить из поля ввода и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций
         const toFindinputsSliderThumbs = (): IHTMLElement[] => {
@@ -211,20 +214,22 @@ $( () => {
         new Array(inputsSliderThumbs.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                inputsSliderThumbs[i].addEventListener('blur', () => {
+                const onBlurInputsSliderThumbs = () => {
                     const thumbsValue = Number(inputsSliderThumbs[i].value);
                     element.setNewValueThumbsValues(thumbsValue, i);
-                })
+                };
+                inputsSliderThumbs[i].addEventListener('blur', onBlurInputsSliderThumbs)
             })
 
         // получить из поля ввода и передать новое значение размера шага введенного пользователем
         // из панели конфигураций в объект newConfig
         const stepSize: IHTMLElement[] = Array.from($(sliderConfig[index]).find('.field-group-stepSize-container__content'));
 
-        stepSize[0].addEventListener('blur', () => {
+        const onBlurStepSize = () => {
             const step = Number(stepSize[0].value);
             element.setNewValueStep(step);
-        });
+        }
+        stepSize[0].addEventListener('blur', onBlurStepSize);
 
         // получить из поля ввода и передать новое значение ориентации слайдера
         const orientationSlider: IHTMLElement[] = Array.from($(sliderConfig[index]).find('.radio-button-container'));
@@ -232,19 +237,20 @@ $( () => {
         new Array(orientationSlider.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                orientationSlider[i].addEventListener('click', () => {
+                const onClickOrientationSlider = () => {
                     let orientation = '';
                     if(i === 0) { orientation = 'horizontal';}
                     if(i === 1) { orientation = 'vertical';}
                     element.setNewValueOrientation(orientation);
-                })
+                };
+                orientationSlider[i].addEventListener('click', onClickOrientationSlider)
             })
 
         // получить из поля ввода и передать новое значение наличия тултипа
         const checkboxContainer: IHTMLElement[] = Array.from($(sliderConfig[index]).find('.checkbox-button-container'));
         const checkboxInput: IHTMLElement[] = Array.from($(sliderConfig[index]).find('.checkbox-button-container__content'));
 
-        checkboxContainer[0].addEventListener('click', () => {
+        const onClickCheckboxContainer = () => {
             let checked = true;
             if(checkboxInput[0].checked === true) {
                 checked = true;
@@ -253,7 +259,8 @@ $( () => {
                 checked = false;
             }
             element.setNewValueTooltip(checked);
-        });
+        };
+        checkboxContainer[0].addEventListener('click', onClickCheckboxContainer);
 
         const setValueOfInputsSliderThumbs = () => {
             const inputsSliderThumbs: IHTMLElement[] = toFindinputsSliderThumbs();
@@ -267,25 +274,26 @@ $( () => {
         }
 
         const form: IHTMLElement[] = Array.from(document.querySelectorAll('.panel-configuration'));
+        const onSubmitElementForm: (event: Event) => void = (event): void => {
+            const currentEvent: Event = event;
+            currentEvent.preventDefault();
+
+            const min = Number(minValue.value);
+            element.setNewValueMin(min);
+
+            const max = Number(maxValue.value);
+            element.setNewValueMax(max);
+
+            const amount = Number(amountSliderThumbs[0].value);
+            element.setNewValueAmount(amount);
+
+            setValueOfInputsSliderThumbs();
+
+            const step = Number(stepSize[0].value);
+            element.setNewValueStep(step);
+         }
         form.forEach((elementForm: HTMLElement) => {
-            elementForm.addEventListener('submit', (event): void => {
-                const currentEvent: Event = event;
-                currentEvent.preventDefault();
-    
-                const min = Number(minValue.value);
-                element.setNewValueMin(min);
-    
-                const max = Number(maxValue.value);
-                element.setNewValueMax(max);
-    
-                const amount = Number(amountSliderThumbs[0].value);
-                element.setNewValueAmount(amount);
-    
-                setValueOfInputsSliderThumbs();
-    
-                const step = Number(stepSize[0].value);
-                element.setNewValueStep(step);
-             });
+            elementForm.addEventListener('submit', onSubmitElementForm);
         });
     });
 });

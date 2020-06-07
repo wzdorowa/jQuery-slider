@@ -9,12 +9,12 @@ interface StringArray {
     [index: string]: CallbackFunctionVariadic[];
 }
 export class EventEmitter {
-    private handlersByEvent: StringArray;
+    public handlersByEvent: StringArray;
 
     constructor() {
         this.handlersByEvent = {}
     }
-    public subscribe(eventName: string, fn: CallbackFunctionVariadic): () => void {
+    public makeSubscribe(eventName: string, fn: CallbackFunctionVariadic): () => void {
         if(!this.handlersByEvent[eventName]) {
             this.handlersByEvent[eventName] = [];
         }

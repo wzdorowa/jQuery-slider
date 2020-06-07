@@ -43,7 +43,7 @@ export class Controller {
         element.subscribeToStateModel = (handler: (state: IModelState) => void, isCreatedInput: boolean, amountInputs: () => Element[], changeAmountInputs: (state: IModelState) => void,
                 setValueToInputFromModelState: (state: IModelState) => void, setValueToStepFromModelState: (state: IModelState) => void,
                 setValueToMinInputFromModelState: (state: IModelState) => void, setValueMaxInputFromModelState: (state: IModelState) => void): void => {
-            eventEmitter.subscribe('model:state-changed', (state: IModelState): void => {
+            eventEmitter.makeSubscribe('model:state-changed', (state: IModelState): void => {
                 if(!isCreatedInput) {
                     handler(state);
                     isCreatedInput = true;

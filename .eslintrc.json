@@ -10,6 +10,7 @@
     },
     // Наборы правил
     "extends": [
+		"plugin:fsd/all",
 		// Базовый набор правил eslint
 		"eslint:recommended",
 		// Отключаем правила из базового набора
@@ -27,6 +28,16 @@
 		"tsconfigRootDir": "."
 	},
 	// Плагин с наборами правил для TypeScript
-	"plugins": ["@typescript-eslint"],
-	"rules": {}
+	"plugins": [
+		"@typescript-eslint",
+		"fsd"
+	],
+	"rules": {
+		"fsd/hof-name-prefix": "error",
+		"fsd/no-heavy-constructor": "error",
+		"fsd/jq-cache-dom-elements": "error",
+		"fsd/jq-use-js-prefix-in-selector": "error",
+		"fsd/no-function-declaration-in-event-listener": "error",
+		"fsd/split-conditionals": "error"
+	}
 }

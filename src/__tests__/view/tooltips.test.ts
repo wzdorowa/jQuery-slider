@@ -63,7 +63,7 @@ describe('Модульные тесты', () => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);
         });
         slidersElements.forEach((element, i: number) => {
-            expect(String(element.childNodes[1])).toBe(String(tooltipsElements[i]));
+            expect(String(element.childNodes[0])).toContain(String(tooltipsElements[i]));
         });
 
         state.amount = 4;

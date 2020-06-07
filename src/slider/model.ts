@@ -23,18 +23,18 @@ export class Model {
         this.emitter = eventEmitter;
         this.notifyStateChanged();
 
-        this.emitter.subscribe('model:state-changed', (state: IModelState) => {
+        this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
             this.checkMinValueInArrayThumbsValues(state);
             this.checkMaxValueInArrayThumbsValues(state);
             this.checkThumbsValues(state);
             this.checkThumbsValuesForOverlap();
         });
 
-        this.emitter.subscribe('view:amountThumbs-changed', (thumbsValues: number[]) => {
+        this.emitter.makeSubscribe('view:amountThumbs-changed', (thumbsValues: number[]) => {
             this.overwriteCurrentThumbsValues(thumbsValues);
         });
 
-        this.emitter.subscribe('view:thumbsValues-changed', (data: IData) => {
+        this.emitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
             this.setCurrentThumbsValues(data.currentValue, data.index);
         });
     }

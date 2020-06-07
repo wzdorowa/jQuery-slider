@@ -64,17 +64,17 @@ export class Thumbs {
     listenThumbsEventsWhenChangingOrientation(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         this.configurator = configurator;
         this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-            element.removeEventListener('mousedown', event => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue));
-        });
-        this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-            element.addEventListener('mousedown', event => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue));
+            const start: (event: MouseEvent) => void = (event) => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue);
+            element.removeEventListener("mousedown", start);
+            element.addEventListener("mousedown", start);
         });
     }
     /* навешивает обработчик событий 'mousedown' на каждый созданный бегунок */
     listenThumbsEvents(modelState: IModelState,configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
         this.configurator = configurator;
         this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-            element.addEventListener('mousedown', event => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue));
+            const start: (event: MouseEvent) => void = (event) => this.onStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue);
+            element.addEventListener('mousedown', start);
         });
     }
     /* навешивает обработчик событий 'mousedown' на каждый добавленный бегунок */
@@ -84,17 +84,20 @@ export class Thumbs {
             .fill(1)
             .forEach((_element: number, i: number) => {
                 const index = this.state.thumbs.length - (amount - i);
-                this.state.thumbs[this.state.thumbs.length - (amount - i)].addEventListener('mousedown', event => this.onStart(modelState, event, index, scale, activeRange, setCurrentTooltipValue));
+                const start: (event: MouseEvent) => void = (event) => this.onStart(modelState, event, index, scale, activeRange, setCurrentTooltipValue);
+                this.state.thumbs[this.state.thumbs.length - (amount - i)].addEventListener('mousedown', start);
             })
     }
     /* слушает событие 'resize' на странице со слайдером */
     listenSizeWindow(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, configurator: IConfigurator): void {
-        window.addEventListener('resize', () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator));
+        const onResize = () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator);
+        window.addEventListener('resize', onResize);
     }
     listenSizeWindowWhenChangingOrientation(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement): void {
         this.configurator = configurator;
-        window.removeEventListener('resize', () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator));
-        window.addEventListener('resize', () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator));
+        const onResize = () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator);
+        window.removeEventListener('resize', onResize);
+        window.addEventListener('resize', onResize);
     }
     /* устанавливает значение для каждого добавленного бегунка */
     setValueToNewThumb(amount: number, modelState: IModelState): void {
@@ -154,7 +157,9 @@ export class Thumbs {
         event.preventDefault();
         const target: HTMLDivElement = event.target as HTMLDivElement;
         let clickLocationAxis = 0;
-        if (target != null && target.className === 'slider-line-span' || target != null && target.className === 'slider-line-span-for-verticalView') {
+        if (target != null && target.className === 'slider-line-span') {
+            clickLocationAxis = configurator.calculateClickLocation(event, target);
+        } else if (target != null && target.className === 'slider-line-span-for-verticalView') {
             clickLocationAxis = configurator.calculateClickLocation(event, target);
         } else {
             clickLocationAxis = configurator.getOffsetFromClick(event);
