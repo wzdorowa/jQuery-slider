@@ -1,10 +1,6 @@
 import { IModelState } from './interfaces/iModelState';
 import { EventEmitter } from './eventEmitter';
 
-interface IData {
-    currentValue: number
-    index: number
-}
 export class Model {
      public state: IModelState
      private emitter: EventEmitter
@@ -28,14 +24,6 @@ export class Model {
             this.checkMaxValueInArrayThumbsValues(state);
             this.checkThumbsValues(state);
             this.checkThumbsValuesForOverlap();
-        });
-
-        this.emitter.makeSubscribe('view:amountThumbs-changed', (thumbsValues: number[]) => {
-            this.overwriteCurrentThumbsValues(thumbsValues);
-        });
-
-        this.emitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
-            this.setCurrentThumbsValues(data.currentValue, data.index);
         });
     }
     private notifyStateChanged(): void {
@@ -179,11 +167,11 @@ export class Model {
         }
         this.notifyStateChanged();
     }
-    private overwriteCurrentThumbsValues(thumbsValues: number[]): void {
+    public overwriteCurrentThumbsValues(thumbsValues: number[]): void {
         this.state.thumbsValues = thumbsValues;
         this.notifyStateChanged();
     }
-    private setCurrentThumbsValues(value: number, index: number): void {
+    public setCurrentThumbsValues(value: number, index: number): void {
         this.state.thumbsValues[index] = value;
         this.notifyStateChanged();
     }

@@ -4,6 +4,11 @@ import {View} from './view/view';
 import {EventEmitter} from './eventEmitter';
 import {IModelState} from './interfaces/iModelState';
 
+interface IData {
+    currentValue: number
+    index: number
+}
+
 export class Controller {
     public slider: IHTMLElement
 
@@ -39,7 +44,6 @@ export class Controller {
         element.setNewValueTooltip = (value: boolean): void => {
             model.setNewValueTooltip(value);
         }
-
         element.subscribeToStateModel = (handler: (state: IModelState) => void, isCreatedInput: boolean, amountInputs: () => Element[], changeAmountInputs: (state: IModelState) => void,
                 setValueToInputFromModelState: (state: IModelState) => void, setValueToStepFromModelState: (state: IModelState) => void,
                 setValueToMinInputFromModelState: (state: IModelState) => void, setValueMaxInputFromModelState: (state: IModelState) => void): void => {
@@ -58,5 +62,12 @@ export class Controller {
                 setValueMaxInputFromModelState(state);
             })
         }
+        eventEmitter.makeSubscribe('view:amountThumbs-changed', (thumbsValues: number[]) => {
+            model.overwriteCurrentThumbsValues(thumbsValues);
+        });
+
+        eventEmitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
+            model.setCurrentThumbsValues(data.currentValue, data.index);
+        });
     }
 }
