@@ -5,30 +5,30 @@ import sinonLib = require('sinon');
 
 const sinon = sinonLib;
 
-test('Create element with class "slider-tooltip-text-for-verticalView"', () => {
+test('Create element with class "js-slider__vertical-tooltip-text"', () => {
     const elementTooltip = configuratorVertical.createElementTooltipText();
     expect(elementTooltip.tagName).toBe('SPAN');
-    expect(elementTooltip.className).toBe('slider-tooltip-text-for-verticalView');
+    expect(elementTooltip.className).toBe('js-slider__vertical-tooltip-text');
 });
-test('Create element with class "slider-line-for-verticalView"', () => {
+test('Create element with class "js-slider__vertical-scale"', () => {
     const elementScale = configuratorVertical.createElementScale();
     expect(elementScale.tagName).toBe('DIV');
-    expect(elementScale.className).toBe('slider-line-for-verticalView');
+    expect(elementScale.className).toBe('js-slider__vertical-scale');
 });
-test('Create element with class "slider-line-span"', () => {
+test('Create element with class "js-slider__active-range"', () => {
     const elementActivRange = configuratorVertical.createElementActivRange();
     expect(elementActivRange.tagName).toBe('SPAN');
-    expect(elementActivRange.className).toBe('slider-line-span-for-verticalView');
+    expect(elementActivRange.className).toBe('js-slider__vertical-active-range');
 });
-test('Find element with class "slider-tooltip-text"', () => {
-    const tooltipText: HTMLElement = createElement('span', 'slider-tooltip-text');
+test('Find element with class "slider__tooltip-text"', () => {
+    const tooltipText: HTMLElement = createElement('span', 'slider__tooltip-text');
     const parentTooltipText: HTMLElement = createElement('div', 'search-elements-tooltip-text');
     const elementCount = 4;
     for(let i = 0; i < elementCount; i++) {
         parentTooltipText.append(tooltipText);
     }
     const searchElementsTooltipText: HTMLElement[] = configuratorVertical.searchElementsTooltipText(parentTooltipText);
-    expect(searchElementsTooltipText[0].className).toBe('slider-tooltip-text');
+    expect(searchElementsTooltipText[0].className).toBe('slider__tooltip-text');
 });
 test('Calculate point coefficient', () => {
     const elementScale = configuratorVertical.createElementScale();
@@ -36,12 +36,12 @@ test('Calculate point coefficient', () => {
     const calculateCoefficientPoint = configuratorVertical.calculateCoefficientPoint(elementScale, 100, 0);
     expect(calculateCoefficientPoint).toBe(2);
 });
-test('Find element with class "slider-line" for delete', () => {
-    const lineVerticalView: HTMLElement = createElement('span', 'slider-line');
-    const parentLineVerticalView: HTMLElement = createElement('div', 'parent-slider-line');
+test('Find element with class "js-slider__scale" for delete', () => {
+    const lineVerticalView: HTMLElement = createElement('span', 'js-slider__scale');
+    const parentLineVerticalView: HTMLElement = createElement('div', 'parent-scale');
     parentLineVerticalView.append(lineVerticalView);
     const elementScaleToDelete: JQuery<HTMLElement> = configuratorVertical.searchElementScaleToDelete(parentLineVerticalView);
-    expect(elementScaleToDelete[0].className).toBe('slider-line');
+    expect(elementScaleToDelete[0].className).toBe('js-slider__scale');
 });
 test('Calculate value slider thumbs', () => {
     const modelState: IModelState = {

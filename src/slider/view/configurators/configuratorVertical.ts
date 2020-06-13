@@ -7,22 +7,22 @@ export const configuratorVertical: IConfigurator = {
         return element.offsetTop;
     },
     createElementTooltipText(): HTMLElement {
-        return createElement('span', 'slider-tooltip-text-for-verticalView');
+        return createElement('span', 'slider__vertical-tooltip-text js-slider__vertical-tooltip-text');
     },
     createElementScale(): HTMLElement {
-        return createElement('div', 'slider-line-for-verticalView');
+        return createElement('div', 'slider__vertical-scale js-slider__vertical-scale');
     },
     createElementActivRange(): HTMLElement {
-        return createElement('span', 'slider-line-span-for-verticalView');
+        return createElement('span', 'slider__vertical-active-range js-slider__vertical-active-range');
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
-        return Array.from($(slider).find('.slider-tooltip-text'));
+        return Array.from($(slider).find('.js-slider__tooltip-text'));
     },
     searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.slider-line');
+        return $(slider).find('.js-slider__scale');
     },
     searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.slider-line-span');
+        return $(slider).find('.js-slider__active-range');
     },
     calculateCoefficientPoint(scale: HTMLElement, max: number, min: number): number {
         return (scale.offsetHeight / (max - min));

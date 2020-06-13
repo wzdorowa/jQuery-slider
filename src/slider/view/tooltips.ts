@@ -17,7 +17,7 @@ export class Tooltips {
         new Array(amount)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                const tooltip: HTMLElement = createElement('div', 'slider-tooltip');
+                const tooltip: HTMLElement = createElement('div', 'slider__tooltip js-slider__tooltip');
                 const textInTooltips: HTMLElement = configurator.createElementTooltipText();
 
                 tooltip.append(textInTooltips);
@@ -51,7 +51,7 @@ export class Tooltips {
     }
     /* перерисовывает тултипы при смене ориентации */
     changeOrientation(configurator: IConfigurator): void {
-        const tooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
+        const tooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
         this.textInTooltips = [];
         const textInTooltips: HTMLElement[] = configurator.searchElementsTooltipText(this.slider);
         textInTooltips.forEach((element: HTMLElement) => {
@@ -69,16 +69,16 @@ export class Tooltips {
     }
     /* метод hideTooltip скрывает туллтипы ползунков */
     hideTooltip(): void {
-        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
+        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
         allTooltips.forEach((element: HTMLElement): void => {
-            element.classList.add('slider-tooltip-hide');
+            element.classList.add('slider__tooltip-hide');
         });
     }
     /* метод showTooltip показывает тултипы ползунков */
     showTooltip(): void {
-        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.slider-tooltip'));
+        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
         allTooltips.forEach((element: HTMLElement): void => {
-            element.classList.remove('slider-tooltip-hide');
+            element.classList.remove('slider__tooltip-hide');
         });
     }
 }

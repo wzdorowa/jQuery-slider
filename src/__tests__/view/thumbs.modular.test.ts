@@ -29,25 +29,25 @@ describe('Модульные тесты', () => {
     test('Проверка корректного создания элементов', () => {
         emitter.emit('model:state-changed', state);
 
-        const thumbsElements = window.document.querySelectorAll('.slider-touch');
+        const thumbsElements = window.document.querySelectorAll('.js-slider__thumb');
         const sliderSpans = window.document.querySelectorAll('.slider-span');
     
         expect(thumbsElements.length).toBe(state.amount);
         expect(sliderSpans.length).toBe(state.amount);
     });
     test('Проверить наличие родителей у созданных элементов', () => {
-        const parentThumbsElements = window.document.querySelectorAll('.slider-touch')[0].parentNode as HTMLElement;
+        const parentThumbsElements = window.document.querySelectorAll('.js-slider__thumb')[0].parentNode as HTMLElement;
         const parentSliderSpans = window.document.querySelectorAll('.slider-span')[0].parentNode as HTMLElement;
     
         
         expect(parentThumbsElements.className).toContain('js-slider-test');
-        expect(parentSliderSpans.className).toBe('slider-touch');
+        expect(parentSliderSpans.className).toBe('js-slider__thumb');
     });
     test('Проверить изменение количества созданных элементов при изменении количества бегунков в большую сторону', () => {
         state.amount = 5;
         emitter.emit('model:state-changed', state);
     
-        const thumbsElements = window.document.querySelectorAll('.slider-touch');
+        const thumbsElements = window.document.querySelectorAll('.js-slider__thumb');
         const sliderSpans = window.document.querySelectorAll('.slider-span');
     
         expect(thumbsElements.length).toBe(state.amount);
@@ -61,7 +61,7 @@ describe('Модульные тесты', () => {
         state.amount = 3;
         emitter.emit('model:state-changed', state);
     
-        const thumbsElements = window.document.querySelectorAll('.slider-touch');
+        const thumbsElements = window.document.querySelectorAll('.js-slider__thumb');
         const sliderSpans = window.document.querySelectorAll('.slider-span');
     
         expect(thumbsElements.length).toBe(state.amount);

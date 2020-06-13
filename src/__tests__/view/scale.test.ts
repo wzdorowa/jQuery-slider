@@ -27,11 +27,11 @@ describe('Модульные тесты', () => {
     test('Проверка корректного создания элементов шкалы', () => {
         scale.createScale(configuratorHorizontal);
 
-        const scaleElement = window.document.querySelector('.slider-line');
-        const activeRange = window.document.querySelector('.slider-line-span');
+        const scaleElement = window.document.querySelector('.js-slider__scale');
+        const activeRange = window.document.querySelector('.js-slider__active-range');
 
-        expect(scaleElement?.className).toBe('slider-line');
-        expect(activeRange?.className).toBe('slider-line-span');
+        expect(scaleElement?.className).toBe('js-slider__scale');
+        expect(activeRange?.className).toBe('js-slider__active-range');
         expect(scale.slider.childElementCount).toBe(1);
         expect(scale.scale).toBe(scaleElement);
         expect(scale.activeRange).toBe(activeRange);
@@ -40,17 +40,17 @@ describe('Модульные тесты', () => {
     test('Проверка смены ориентации', () => {
         state.orientation = 'vertical';
         scale.changeOrientation(sliders.setThumbToNewPosition.bind(sliders), state, configuratorVertical);
-        const scaleToDelete = window.document.querySelector('.slider-line');
-        const activeRangeToDelite = window.document.querySelector('.slider-line-span');
+        const scaleToDelete = window.document.querySelector('.js-slider__scale');
+        const activeRangeToDelite = window.document.querySelector('.js-slider__active-range');
 
         expect(scaleToDelete).toBe(null);
         expect(activeRangeToDelite).toBe(null);
 
-        const scaleElement = window.document.querySelector('.slider-line-for-verticalView');
-        const activeRange = window.document.querySelector('.slider-line-span-for-verticalView');
+        const scaleElement = window.document.querySelector('.js-slider__vertical-scale');
+        const activeRange = window.document.querySelector('.js-slider__vertical-active-range');
 
-        expect(scaleElement?.className).toBe('slider-line-for-verticalView');
-        expect(activeRange?.className).toBe('slider-line-span-for-verticalView');
+        expect(scaleElement?.className).toBe('js-slider__vertical-scale');
+        expect(activeRange?.className).toBe('js-slider__vertical-active-range');
         expect(scale.slider.childElementCount).toBe(1);
         expect(scale.scale).toBe(scaleElement);
         expect(scale.activeRange).toBe(activeRange);        

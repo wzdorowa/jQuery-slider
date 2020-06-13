@@ -31,7 +31,7 @@ export class Thumbs {
         new Array(amount)
             .fill(1)
             .forEach(() => {
-                const thumb: HTMLElement = createElement('div', 'slider-touch');
+                const thumb: HTMLElement = createElement('div', 'slider__thumb js-slider__thumb');
                 
                 this.slider.append(thumb);
                 this.state.thumbs.push(thumb);
@@ -48,7 +48,7 @@ export class Thumbs {
             }
         if (this.state.thumbs.length > modelState.amount) {
             const excessAmount: number =  this.state.thumbs.length - modelState.amount;
-            const allThumbs: HTMLElement[] = Array.from($(this.slider).find('.slider-touch'));
+            const allThumbs: HTMLElement[] = Array.from($(this.slider).find('.slider-thumb'));
 
             new Array(excessAmount)
                 .fill(1)
@@ -157,9 +157,9 @@ export class Thumbs {
         event.preventDefault();
         const target: HTMLDivElement = event.target as HTMLDivElement;
         let clickLocationAxis = 0;
-        if (target != null && target.className === 'slider-line-span') {
+        if (target != null && target.className === 'js-slider__active-range') {
             clickLocationAxis = configurator.calculateClickLocation(event, target);
-        } else if (target != null && target.className === 'slider-line-span-for-verticalView') {
+        } else if (target != null && target.className === 'js-slider__vertical-active-range') {
             clickLocationAxis = configurator.calculateClickLocation(event, target);
         } else {
             clickLocationAxis = configurator.getOffsetFromClick(event);

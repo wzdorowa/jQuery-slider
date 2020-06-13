@@ -24,17 +24,17 @@ describe('Модульные тесты', () => {
     test('Проверка корректности создания тултипов', () => {
         eventEmitter.emit('model:state-changed', state);
 
-        const tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
-        const textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
-        const slidersElements = window.document.querySelectorAll('.slider-touch');
+        const tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
+        const textInTooltipsElements = window.document.querySelectorAll('.js-slider__tooltip-text');
+        const slidersElements = window.document.querySelectorAll('.js-slider__thumb');
 
         expect(tooltipsElements.length).toBe(state.amount);
         tooltipsElements.forEach((element) => {
-            expect(element.className).toBe('slider-tooltip');
+            expect(element.className).toBe('js-slider__tooltip');
         });
         expect(textInTooltipsElements.length).toBe(state.amount);
         textInTooltipsElements.forEach((element) => {
-            expect(element.className).toBe('slider-tooltip-text');
+            expect(element.className).toBe('js-slider__tooltip-text');
         });
         tooltipsElements.forEach((element, i: number) => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);
@@ -44,7 +44,7 @@ describe('Модульные тесты', () => {
         });
     });
     test('Проверка установки значений ползунков по-умолчанию в соответствующие им тултипы ', () => {
-        const textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
+        const textInTooltipsElements = window.document.querySelectorAll('.js-slider__tooltip-text');
         state.thumbsValues.forEach((element: number, i: number) => {
             expect(String(element)).toBe(textInTooltipsElements[i].innerHTML);
         });
@@ -53,9 +53,9 @@ describe('Модульные тесты', () => {
         state.amount = 6;
         eventEmitter.emit('model:state-changed', state);
 
-        let tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
-        let textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
-        let slidersElements = window.document.querySelectorAll('.slider-touch');
+        let tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
+        let textInTooltipsElements = window.document.querySelectorAll('.js-slider__tooltip-text');
+        let slidersElements = window.document.querySelectorAll('.js-slider__thumb');
 
         expect(tooltipsElements.length).toBe(state.amount);
         expect(textInTooltipsElements.length).toBe(state.amount);
@@ -69,9 +69,9 @@ describe('Модульные тесты', () => {
         state.amount = 4;
         eventEmitter.emit('model:state-changed', state);
 
-        tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
-        textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
-        slidersElements = window.document.querySelectorAll('.slider-touch');
+        tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
+        textInTooltipsElements = window.document.querySelectorAll('.js-slider__tooltip-text');
+        slidersElements = window.document.querySelectorAll('.js-slider__thumb');
 
         expect(tooltipsElements.length).toBe(state.amount);
         expect(textInTooltipsElements.length).toBe(state.amount);
@@ -86,11 +86,11 @@ describe('Модульные тесты', () => {
         state.orientation = 'vertical';
         eventEmitter.emit('model:state-changed', state);
 
-        let tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
-        let textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text-for-verticalView');
+        let tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
+        let textInTooltipsElements = window.document.querySelectorAll('.js-slider__vertical-tooltip-text');
 
         textInTooltipsElements.forEach((element) => {
-            expect(element.className).toBe('slider-tooltip-text-for-verticalView');
+            expect(element.className).toBe('js-slider__vertical-tooltip-text');
         });
         tooltipsElements.forEach((element, i: number) => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);
@@ -99,18 +99,18 @@ describe('Модульные тесты', () => {
         state.orientation = 'horizontal';
         eventEmitter.emit('model:state-changed', state);
 
-        tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
-        textInTooltipsElements = window.document.querySelectorAll('.slider-tooltip-text');
+        tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
+        textInTooltipsElements = window.document.querySelectorAll('.js-slider__tooltip-text');
 
         textInTooltipsElements.forEach((element) => {
-            expect(element.className).toBe('slider-tooltip-text');
+            expect(element.className).toBe('js-slider__tooltip-text');
         });
         tooltipsElements.forEach((element, i: number) => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);
         });
     });
     test('Проверить наличие значений в тултипах', () => {
-        const tooltipsText = window.document.querySelectorAll('.slider-tooltip-text');
+        const tooltipsText = window.document.querySelectorAll('.js-slider__tooltip-text');
     
         expect(tooltipsText[0].innerHTML).toContain('20');
         expect(tooltipsText[1].innerHTML).toContain('30');
@@ -120,18 +120,18 @@ describe('Модульные тесты', () => {
         state.tooltip = false
         eventEmitter.emit('model:state-changed', state);
 
-        const tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
+        const tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
         tooltipsElements.forEach((element) => {
-            expect(element.className).toContain('slider-tooltip-hide');
+            expect(element.className).toContain('slider__tooltip-hide');
         });
     });
     test('Проверка показа тултипов бегунков', () => {
         state.tooltip = true
         eventEmitter.emit('model:state-changed', state);
 
-        const tooltipsElements = window.document.querySelectorAll('.slider-tooltip');
+        const tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
         tooltipsElements.forEach((element) => {
-            expect(element.className).not.toContain('slider-tooltip-hide');
+            expect(element.className).not.toContain('slider__tooltip-hide');
         })
     });
 });
@@ -165,7 +165,7 @@ describe('Интеграционные тесты для горизонталь�
             return currentValueX;
         }
         // Найти координаты линии слайдера
-        const sliderLine: puppeteer.ElementHandle<Element> | null = await page.$('.slider-line');
+        const sliderLine: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__scale');
         const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
             const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -173,7 +173,7 @@ describe('Интеграционные тесты для горизонталь�
         const sliderLineWidth: number = rectSliderLine.right - rectSliderLine.left;
 
         //Найти первый ползунок и его ширину
-        const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-touch');
+        const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__thumb');
         const firstElement: puppeteer.ElementHandle<Element> = thumbsElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
@@ -199,7 +199,7 @@ describe('Интеграционные тесты для горизонталь�
 
         const coefficientPoint = getCoefficientPoint(sliderLineWidth, state.max, state.min);
         let currentValueTooltip = String(calculateValue(rectFirstElement.left, startPointSlider));
-        let tooltipsText: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-tooltip-text');
+        let tooltipsText: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__tooltip-text');
         let tooltipText: puppeteer.ElementHandle<Element> = tooltipsText[0];
         let innerHTMLTooltip = await page.evaluateHandle((element: HTMLElement) => element.innerHTML, tooltipText);
 
@@ -225,7 +225,7 @@ describe('Интеграционные тесты для горизонталь�
         }, lastElement);
 
         currentValueTooltip = String(calculateValue(rectLastElement.left, startPointSlider));
-        tooltipsText = await page.$$('.slider-tooltip-text');
+        tooltipsText = await page.$$('.js-slider__tooltip-text');
         tooltipText = tooltipsText[tooltipsText.length - 1];
         innerHTMLTooltip = await page.evaluateHandle((element: HTMLElement) => element.innerHTML, tooltipText);
 

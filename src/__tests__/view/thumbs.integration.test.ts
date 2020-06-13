@@ -65,7 +65,7 @@ describe('Интеграционные тесты для горизонталь�
              return Math.ceil((currentValue * coefficientPoint) + startPointSlider);
          }
         // Найти координаты линии слайдера
-        const scale: puppeteer.ElementHandle<Element> | null = await page.$('.slider-line');
+        const scale: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__scale');
         const rectScale = await page.evaluate((sliderLine: HTMLDivElement) => {
             const {top, left, bottom, right} = sliderLine.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -73,7 +73,7 @@ describe('Интеграционные тесты для горизонталь�
         const scaleWidth: number = rectScale.right - rectScale.left;
         
         //Найти первый ползунок и его ширину
-        const thumbElements: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-touch');
+        const thumbElements: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__thumb');
         const firstElement: puppeteer.ElementHandle<Element> = thumbElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();
@@ -284,7 +284,7 @@ describe('Интеграционные тесты для вертикально�
         await page.waitFor(500);
 
         // Найти координаты линии слайдера
-        const scale: puppeteer.ElementHandle<Element> | null = await page.$('.slider-line-for-verticalView');
+        const scale: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__vertical-scale');
         const rectScale = await page.evaluate((scale: HTMLDivElement) => {
             const {top, left, bottom, right} = scale.getBoundingClientRect();
             return {top, left, bottom, right};
@@ -292,7 +292,7 @@ describe('Интеграционные тесты для вертикально�
         const scaleLength: number = rectScale.bottom - rectScale.top;
         
         //Найти первый ползунок и его ширину
-        const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.slider-touch');
+        const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__thumb');
         const firstElement: puppeteer.ElementHandle<Element> = thumbsElements[0];
         let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
             const {top, left, bottom, right} = element.getBoundingClientRect();

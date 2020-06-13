@@ -7,25 +7,25 @@ export const configuratorHorizontal: IConfigurator = {
         return element.offsetLeft;
     },
     createElementTooltipText(): HTMLElement {
-        return createElement('span', 'slider-tooltip-text');
+        return createElement('span', 'slider__tooltip-text js-slider__tooltip-text');
     },
     createElementScale(): HTMLElement {
-        return createElement('div', 'slider-line');
+        return createElement('div', 'slider__scale js-slider__scale');
     },
     createElementActivRange(): HTMLElement {
-        return createElement('span', 'slider-line-span');
+        return createElement('span', 'slider__active-range js-slider__active-range');
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
-        return Array.from($(slider).find('.slider-tooltip-text-for-verticalView'));
+        return Array.from($(slider).find('.js-slider__vertical-tooltip-text'));
     },
     calculateCoefficientPoint(scale: HTMLElement, max: number, min: number): number {
         return (scale.offsetWidth / (max - min));
     },
     searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.slider-line-for-verticalView');
+        return $(slider).find('.js-slider__vertical-scale');
     },
     searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.slider-line-span-for-verticalView');
+        return $(slider).find('.js-slider__vertical-active-range');
     },
     setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, activRange: HTMLElement, scale: HTMLElement): void {
         new Array(elements.length)
