@@ -8,17 +8,17 @@ const sinon = sinonLib;
 test('Create element with class "slider__tooltip-text"', () => {
     const createElementTooltip = configuratorHorizontal.createElementTooltipText();
     expect(createElementTooltip.tagName).toBe('SPAN');
-    expect(createElementTooltip.className).toBe('slider__tooltip-text');
+    expect(createElementTooltip.className).toContain('slider__tooltip-text');
 });
 test('Create element with class "js-slider__scale"', () => {
     const createSliderLine = configuratorHorizontal.createElementScale();
     expect(createSliderLine.tagName).toBe('DIV');
-    expect(createSliderLine.className).toBe('js-slider__scale');
+    expect(createSliderLine.className).toContain('js-slider__scale');
 });
 test('Create element with class "js-slider__active-range"', () => {
     const elementActivRange = configuratorHorizontal.createElementActivRange();
     expect(elementActivRange.tagName).toBe('SPAN');
-    expect(elementActivRange.className).toBe('js-slider__active-range');
+    expect(elementActivRange.className).toContain('js-slider__active-range');
 });
 test('Find element with class "js-slider__vertical-tooltip-text"', () => {
     const tooltipText: HTMLElement = createElement('span', 'js-slider__vertical-tooltip-text');

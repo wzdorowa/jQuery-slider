@@ -1,0 +1,37 @@
+include ../../elements/radio-button/radio-button.pug
+include ../../elements/checkbox-button/checkbox-button.pug
+
+mixin configuration-panel()
+    .configuration.js-configuration
+        .configuratoin__view.view
+            h2.view__title Вид:
+            .view__buttons
+                +radio-button('Горизонтальный', 'view', 'checked')
+                +radio-button('Вертикальный', 'view')
+        .configuration__min-max-values.min-max-values
+            h2.min-max-values__title Минимальное и максимальное значения слайдера:
+            .min-max-values__input-group
+                .min-max-values__input-item
+                    .min-max-values__input-field
+                        .min-max-values__label от
+                        input.min-max-values__value.js-min-max-values__value(type="text", value='0')
+                .min-max-values__input-item
+                    .min-max-values__input-field
+                        .min-max-values__label до
+                        input.min-max-values__value.js-min-max-values__value(type="text", value='100')  
+        .configuration__amount-thumb.amount-thumb
+            h2.amount-thumb__title Количество ползунков:
+            input.amount-thumb__value.js-amount-thumb__value(type='text', value='4')     
+        .configuration__thumbs-values.thumbs-values
+            .thumbs-values__current-value.js-thumbs-values__current-value
+                h3.thumbs-values__title Текущее значение:
+                ol.thumbs-values__list.js-thumbs-values__list
+            .thumbs-values__interval-value.js-thumbs-values__interval-value
+                h3.thumbs-values__title Доступный диапазон:
+                ol.thumbs-values__list.js-thumbs-values__list 
+        .configuration__step-size.step-size
+            h2.step-size__title Размер шага:
+            input.step-size__value.js-step-size__value(type='text', value='1')
+        .configuration__tooltip-checkbox.tooltip-checkbox
+            +checkbox-button('Наличие тултипа', 'checked')
+    

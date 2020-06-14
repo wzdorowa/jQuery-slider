@@ -48,7 +48,7 @@ export class Thumbs {
             }
         if (this.state.thumbs.length > modelState.amount) {
             const excessAmount: number =  this.state.thumbs.length - modelState.amount;
-            const allThumbs: HTMLElement[] = Array.from($(this.slider).find('.slider-thumb'));
+            const allThumbs: HTMLElement[] = Array.from($(this.slider).find('.js-slider__thumb'));
 
             new Array(excessAmount)
                 .fill(1)

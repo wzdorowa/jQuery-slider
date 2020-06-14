@@ -8,27 +8,27 @@ const sinon = sinonLib;
 test('Create element with class "js-slider__vertical-tooltip-text"', () => {
     const elementTooltip = configuratorVertical.createElementTooltipText();
     expect(elementTooltip.tagName).toBe('SPAN');
-    expect(elementTooltip.className).toBe('js-slider__vertical-tooltip-text');
+    expect(elementTooltip.className).toContain('js-slider__vertical-tooltip-text');
 });
 test('Create element with class "js-slider__vertical-scale"', () => {
     const elementScale = configuratorVertical.createElementScale();
     expect(elementScale.tagName).toBe('DIV');
-    expect(elementScale.className).toBe('js-slider__vertical-scale');
+    expect(elementScale.className).toContain('js-slider__vertical-scale');
 });
 test('Create element with class "js-slider__active-range"', () => {
     const elementActivRange = configuratorVertical.createElementActivRange();
     expect(elementActivRange.tagName).toBe('SPAN');
-    expect(elementActivRange.className).toBe('js-slider__vertical-active-range');
+    expect(elementActivRange.className).toContain('js-slider__vertical-active-range');
 });
 test('Find element with class "slider__tooltip-text"', () => {
-    const tooltipText: HTMLElement = createElement('span', 'slider__tooltip-text');
-    const parentTooltipText: HTMLElement = createElement('div', 'search-elements-tooltip-text');
+    const tooltipText: HTMLElement = createElement('span', 'js-slider__tooltip-text');
+    const parentTooltipText: HTMLElement = createElement('div', 'js-search-elements-tooltip-text');
     const elementCount = 4;
     for(let i = 0; i < elementCount; i++) {
         parentTooltipText.append(tooltipText);
     }
     const searchElementsTooltipText: HTMLElement[] = configuratorVertical.searchElementsTooltipText(parentTooltipText);
-    expect(searchElementsTooltipText[0].className).toBe('slider__tooltip-text');
+    expect(searchElementsTooltipText[0].className).toContain('js-slider__tooltip-text');
 });
 test('Calculate point coefficient', () => {
     const elementScale = configuratorVertical.createElementScale();

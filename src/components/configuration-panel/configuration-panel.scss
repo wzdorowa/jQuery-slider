@@ -1,4 +1,4 @@
-.slider-config {
+.configuration {
     width: 350px;
     min-height: 420px;
     box-sizing: border-box;
@@ -12,13 +12,13 @@
     flex-direction: column;
     justify-content: space-between;
 }
-.field-group-view {
+.view {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     min-height: 60px;
 }
-.title-field-group {
+.view__title {
     font-family: 'Fire Sans';
     font-weight: 400;
     font-size: 20px;
@@ -26,29 +26,37 @@
     color: grey;
     padding-right: 20px;
 }
-.buttons-group {
+.view__buttons {
     display: flex;
 }
-.field-group-valuesMinMax {
+.min-max-values {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     min-height: 100px;
 }
-.input-container {
+.min-max-values__title {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 20px;
+    margin: 0;
+    color: grey;
+    padding-right: 20px;
+}
+.min-max-values__input-group {
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding-left: 0;
 }
-.input-item {
+.min-max-values__input-item {
     display: flex;
     box-sizing: border-box;
 
     width: 49%;
     margin: 0;
 }
-.input-field {
+.min-max-values__input-field {
     display: flex;
     position: relative;
     overflow: hidden;
@@ -59,7 +67,7 @@
     border-radius: 2px;
     margin: 0;
 }
-.label {
+.min-max-values__label {
     font-family: 'Fire Sans';
     font-weight: 400;
     font-size: 15px;
@@ -74,7 +82,7 @@
     margin-bottom: auto;
     margin-right: 5px;
 }
-.minMaxValue {
+.min-max-values__value {
     width: 50%;
     padding: 8px 0;
     color: #202020;
@@ -86,10 +94,18 @@
     font-weight: 400;
     font-size: 16px;
 }
-.field-group-numberValues {
+.amount-thumb {
     display: flex;
 }
-.field-group-numberValues-container__content {
+.amount-thumb__title {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 20px;
+    margin: 0;
+    color: grey;
+    padding-right: 20px;
+}
+.amount-thumb__value {
     width: 30px;
     padding-left: 10px;
     border: 1px solid #eee;
@@ -100,43 +116,45 @@
     font-weight: 400;
     font-size: 16px;
 }
-.field-group-rangeOfValues {
+.thumbs-values {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     min-height: 110px;
     margin-bottom: 10px;
 }
-.titles-field-group-for-rangeOfValues {
+.thumbs-values__title {
     display: flex;
     flex-wrap: nowrap;
     
-
     font-family: 'Fire Sans';
     font-weight: 400;
-    font-size: 17px;
+    font-size: 20px;
     color: grey;
-    margin-top: 10px;
-    margin-left: 40px;
+    width: 100px;
 }
-.rangeOfValues-list {
+.thumbs-values__current-value {
+    width: 35%;
+}
+.thumbs-values__interval-value {
+    width: 65%;
+}
+.thumbs-values__list {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     min-height: 75px;
     margin: 0;
+    padding-left: 30px;
 
     font-family: 'Fire Sans';
     font-weight: 400;
     font-size: 18px;
     color: grey;
 }
-.rangeOfValues-set {
-    display: grid;
-    grid-template-columns: repeat(3, 85px);
-    grid-column-gap: 10px;
+.thumbs-values__set {
+    display: flex;
+    justify-content: space-between;
 }
-.input-rangeOfValues {
+.thumbs-values__value {
     width: 80%;
     height: 30px;
     border: 1px solid #eee;
@@ -148,8 +166,8 @@
     font-weight: 400;
     font-size: 16px;
 }
-.input-rangeOfValues-from {
-    width: 90%;
+.thumbs-values__value-from {
+    width: 40%;
     height: 30px;
     border: 1px solid #eee;
     border-radius: 2px;
@@ -161,8 +179,8 @@
     font-weight: 400;
     font-size: 16px;
 }
-.input-rangeOfValues-to {
-    width: 90%;
+.thumbs-values__value-to {
+    width: 40%;
     height: 30px;
     border: 1px solid #eee;
     border-radius: 2px;
@@ -173,10 +191,18 @@
     font-weight: 400;
     font-size: 16px;
 }
-.field-group-stepSize {
+.step-size {
     display: flex;
 }
-.field-group-stepSize-container__content {
+.step-size__title {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 20px;
+    margin: 0;
+    color: grey;
+    padding-right: 20px;
+}
+.step-size__value {
     width: 30px;
     padding-left: 10px;
     border: 1px solid #eee;
@@ -187,6 +213,6 @@
     font-weight: 400;
     font-size: 16px;
 }
-.field-group-tooltip {
+.tooltip-checkbox {
     display: flex;
 }

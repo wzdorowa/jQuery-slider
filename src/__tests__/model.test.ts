@@ -2,11 +2,6 @@ import {Model} from '../slider/model';
 import {IModelState} from '../slider/interfaces/iModelState';
 import { EventEmitter } from '../slider/eventEmitter';
 
-interface IData {
-    currentValue: number
-    index: number
-}
-
 const state: IModelState = {
     min: 0,
     max: 100,
@@ -142,17 +137,5 @@ describe('Model testing', () => {
         expect(model.state.thumbsValues[0]).toBe(35);
         expect(model.state.thumbsValues[1]).toBe(40);
 
-    });
-    test('Проверить подписку на событие "view:amountThumbs-changed"', () => {
-        eventEmitter.emit('view:amountThumbs-changed', state.thumbsValues);
-        expect(model.state.thumbsValues).toBe(state.thumbsValues);
-    });
-    test('Проверить подписку на событие "view:thumbsValues-changed"', () => {
-        const data: IData = {
-            currentValue: 45,
-            index: 1
-        }
-        eventEmitter.emit('view:thumbsValues-changed', data);
-        expect(model.state.thumbsValues[1]).toBe(data.currentValue);
     });
 })

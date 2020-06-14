@@ -30,8 +30,8 @@ describe('Модульные тесты', () => {
         const scaleElement = window.document.querySelector('.js-slider__scale');
         const activeRange = window.document.querySelector('.js-slider__active-range');
 
-        expect(scaleElement?.className).toBe('js-slider__scale');
-        expect(activeRange?.className).toBe('js-slider__active-range');
+        expect(scaleElement?.className).toContain('js-slider__scale');
+        expect(activeRange?.className).toContain('js-slider__active-range');
         expect(scale.slider.childElementCount).toBe(1);
         expect(scale.scale).toBe(scaleElement);
         expect(scale.activeRange).toBe(activeRange);
@@ -49,8 +49,8 @@ describe('Модульные тесты', () => {
         const scaleElement = window.document.querySelector('.js-slider__vertical-scale');
         const activeRange = window.document.querySelector('.js-slider__vertical-active-range');
 
-        expect(scaleElement?.className).toBe('js-slider__vertical-scale');
-        expect(activeRange?.className).toBe('js-slider__vertical-active-range');
+        expect(scaleElement?.className).toContain('js-slider__vertical-scale');
+        expect(activeRange?.className).toContain('js-slider__vertical-active-range');
         expect(scale.slider.childElementCount).toBe(1);
         expect(scale.scale).toBe(scaleElement);
         expect(scale.activeRange).toBe(activeRange);        

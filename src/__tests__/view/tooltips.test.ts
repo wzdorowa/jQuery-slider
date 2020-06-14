@@ -30,11 +30,11 @@ describe('Модульные тесты', () => {
 
         expect(tooltipsElements.length).toBe(state.amount);
         tooltipsElements.forEach((element) => {
-            expect(element.className).toBe('js-slider__tooltip');
+            expect(element.className).toContain('js-slider__tooltip');
         });
         expect(textInTooltipsElements.length).toBe(state.amount);
         textInTooltipsElements.forEach((element) => {
-            expect(element.className).toBe('js-slider__tooltip-text');
+            expect(element.className).toContain('js-slider__tooltip-text');
         });
         tooltipsElements.forEach((element, i: number) => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);
@@ -90,7 +90,7 @@ describe('Модульные тесты', () => {
         let textInTooltipsElements = window.document.querySelectorAll('.js-slider__vertical-tooltip-text');
 
         textInTooltipsElements.forEach((element) => {
-            expect(element.className).toBe('js-slider__vertical-tooltip-text');
+            expect(element.className).toContain('js-slider__vertical-tooltip-text');
         });
         tooltipsElements.forEach((element, i: number) => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);
@@ -103,7 +103,7 @@ describe('Модульные тесты', () => {
         textInTooltipsElements = window.document.querySelectorAll('.js-slider__tooltip-text');
 
         textInTooltipsElements.forEach((element) => {
-            expect(element.className).toBe('js-slider__tooltip-text');
+            expect(element.className).toContain('js-slider__tooltip-text');
         });
         tooltipsElements.forEach((element, i: number) => {
             expect(element.childNodes).toContain(textInTooltipsElements[i]);

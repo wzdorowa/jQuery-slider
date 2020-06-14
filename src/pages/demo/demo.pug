@@ -1,4 +1,4 @@
-include ../../components/slider-config/slider-config.pug
+include ../../components/configuration-panel/configuration-panel.pug
 
 doctype html
 html
@@ -15,20 +15,20 @@ html
     body
         block content
             .slider-container
-                form.panel-configuration
-                    +slider-config()
+                form.panel-configuration.js-panel-configuration
+                    +configuration-panel()
                     input.slider-update(type='submit')
                 .slider-ui
                     .js-slider-test
             .slider-container
                 form.panel-configuration
-                    +slider-config()
+                    +configuration-panel()
                     input.slider-update(type='submit')
                 .slider-ui
                     .js-slider-test
             .slider-container
                 form.panel-configuration
-                    +slider-config()
+                    +configuration-panel()
                     input.slider-update(type='submit')
                 .slider-ui
                     .js-slider-test
