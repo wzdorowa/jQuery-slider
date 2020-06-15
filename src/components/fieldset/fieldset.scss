@@ -1,0 +1,25 @@
+.field {
+    border: none;
+}
+.field__legend {
+    font-family: 'Fire Sans';
+    font-weight: 400;
+    font-size: 18px;
+    
+    line-height: 22px;
+    color: #9b9b9b;
+    text-align: left;
+
+    margin: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 5px;
+}
+.field__min-max {
+    display: flex;
+    justify-content: space-between;
+}
+.field__thumbs-values {
+    display: flex;
+    justify-content: space-between;
+}

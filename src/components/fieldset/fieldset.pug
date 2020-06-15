@@ -1,0 +1,5 @@
+mixin fieldset(text, fieldName)
+    fieldset.field
+        legend.field__legend= text
+        div(class="field__" + fieldName)
+            block

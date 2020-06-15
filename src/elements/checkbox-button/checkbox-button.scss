@@ -1,4 +1,7 @@
-.checkbox-button-container {
+.checkbox-button {
+    position: relative;
+    display: flex;
+
     font-family: 'Fire Sans';
     font-weight: normal;
     font-size: 14px;
@@ -6,12 +9,7 @@
 
     color: rgba(31, 32, 65, 0.5);
 }
-.checkbox-button-container__filter {
-    position: relative;
-
-    display: flex;
-}
-.checkbox-button-container__indicator {
+.checkbox-button__indicator {
 	position: absolute;
 	
 	left: 1px;
@@ -21,7 +19,7 @@
     border: 1px solid rgba(31, 32, 65, 0.25);
     border-radius: 4px;
 }
-.checkbox-button-container__value {
+.checkbox-button__description {
 	font-family: 'Fire Sans';
     font-weight: normal;
     font-size: 15px;
@@ -29,20 +27,10 @@
 	
     padding-left: 28px;
 }
-.checkbox-button-container__description {
-	font-family: 'Fire Sans';
-    font-style: normal;
-    font-weight: normal;
-    font-size: 10.9px;
-	line-height: 13px;
-	
-	padding-left: 28px;
-	padding-top: 5px;
-}
-.checkbox-button-container__filter input[type="checkbox"]:checked + .checkbox-button-container__indicator {
+.checkbox-button input[type="checkbox"]:checked + .checkbox-button__indicator {
     border: 1px solid #b3d4fc;
 }
-.checkbox-button-container__filter input[type="checkbox"]:checked + .checkbox-button-container__indicator::before {
+.checkbox-button input[type="checkbox"]:checked + .checkbox-button__indicator::before {
     content: "";
 
     position: absolute;
@@ -55,15 +43,6 @@
     border-right: 2px solid #b3d4fc;
 
     transform: rotate(135deg); 
-}
-.checkbox-button-container__value_weight-bold {
-    font-family: 'Fire Sans';
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12.7px;
-    line-height: 18px;
-
-    color: rgba(31, 32, 65, 0.75);
 }
 .visually-hidden:not(:focus):not(:active),
  input[type="checkbox"].visually-hidden,

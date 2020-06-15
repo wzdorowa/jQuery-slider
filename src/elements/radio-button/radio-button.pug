@@ -1,6 +1,5 @@
-mixin radio-button(text, nameGroup, checked)
-    .radio-button-container.js-radio-button-container
-        label.radio-button-container__filter
-            input.radio-button-container__content.visually-hidden(type='radio', name='radio-button-'+nameGroup, checked=checked || false)
-            span.radio-button-container__indicator
-            span.radio-button-container__description=text
+mixin radio-button(text, аttributeName, checked)
+    label.radio-button.js-radio-button
+        input.radio-button__content.visually-hidden(type='radio', name='radio-button-'+аttributeName, checked=checked || false)
+        span.radio-button__indicator
+        span.radio-button__description=text

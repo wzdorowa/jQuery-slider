@@ -1,0 +1,6 @@
+mixin input(text, value, parentName)
+    label(class='input-' + parentName)
+        span(class='input-' + parentName + '__description')=text
+        input(class='input-' + parentName + '__value', class='js-input-' + parentName + '__value' type='text',
+         name='input-'+ parentName, value=value)
+        

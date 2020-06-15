@@ -12,81 +12,25 @@
     flex-direction: column;
     justify-content: space-between;
 }
-.view {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 60px;
-}
-.view__title {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 20px;
-    margin: 0;
-    color: grey;
-    padding-right: 20px;
-}
-.view__buttons {
-    display: flex;
-}
-.min-max-values {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 100px;
-}
-.min-max-values__title {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 20px;
-    margin: 0;
-    color: grey;
-    padding-right: 20px;
-}
-.min-max-values__input-group {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding-left: 0;
-}
-.min-max-values__input-item {
-    display: flex;
-    box-sizing: border-box;
-
-    width: 49%;
+.configuration__thumbs-current-value-list {
+    width: 35%;
+    padding-left: 20px;
     margin: 0;
 }
-.min-max-values__input-field {
-    display: flex;
-    position: relative;
-    overflow: hidden;
-    height: 35px;
-    padding: 0 10px 0 10px;
-    background: #fff;
+.configuration__thumbs-interval-value-list {
+    width: 65%;
+    padding-left: 20px;
+    margin: 0;
+}
+.configuration__update {
+    visibility: hidden;
+}
+.configuration__thumbs-value {
+    width: 45%;
+    padding: 8px 10px;
+    color: #202020;
     border: 1px solid #eee;
     border-radius: 2px;
-    margin: 0;
-}
-.min-max-values__label {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 15px;
-
-    width: 20px;
-    line-height: 22px;
-    color: #9b9b9b;
-    text-align: left;
-
-    margin: 0;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 5px;
-}
-.min-max-values__value {
-    width: 50%;
-    padding: 8px 0;
-    color: #202020;
-    border: none;
     vertical-align: baseline;
     outline: none;
 
@@ -94,125 +38,33 @@
     font-weight: 400;
     font-size: 16px;
 }
-.amount-thumb {
-    display: flex;
-}
-.amount-thumb__title {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 20px;
-    margin: 0;
-    color: grey;
-    padding-right: 20px;
-}
-.amount-thumb__value {
-    width: 30px;
-    padding-left: 10px;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    outline: none;
-
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 16px;
-}
-.thumbs-values {
-    display: flex;
-    min-height: 110px;
-    margin-bottom: 10px;
-}
-.thumbs-values__title {
-    display: flex;
-    flex-wrap: nowrap;
-    
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 20px;
-    color: grey;
-    width: 100px;
-}
-.thumbs-values__current-value {
-    width: 35%;
-}
-.thumbs-values__interval-value {
-    width: 65%;
-}
-.thumbs-values__list {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 75px;
-    margin: 0;
-    padding-left: 30px;
-
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 18px;
-    color: grey;
-}
-.thumbs-values__set {
+.configuration__thumbs-set {
     display: flex;
     justify-content: space-between;
 }
-.thumbs-values__value {
-    width: 80%;
-    height: 30px;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    padding-left: 10px;
-    outline: none;
-
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 16px;
-}
-.thumbs-values__value-from {
+.configuration__thumbs-value-from {
     width: 40%;
-    height: 30px;
+    padding: 8px 10px;
+    color: #202020;
     border: 1px solid #eee;
     border-radius: 2px;
-    padding-left: 10px;
+    vertical-align: baseline;
     outline: none;
-
 
     font-family: 'Fire Sans';
     font-weight: 400;
     font-size: 16px;
 }
-.thumbs-values__value-to {
+.configuration__thumbs-value-to {
     width: 40%;
-    height: 30px;
+    padding: 8px 10px;
+    color: #202020;
     border: 1px solid #eee;
     border-radius: 2px;
-    padding-left: 10px;
+    vertical-align: baseline;
     outline: none;
 
     font-family: 'Fire Sans';
     font-weight: 400;
     font-size: 16px;
-}
-.step-size {
-    display: flex;
-}
-.step-size__title {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 20px;
-    margin: 0;
-    color: grey;
-    padding-right: 20px;
-}
-.step-size__value {
-    width: 30px;
-    padding-left: 10px;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    outline: none;
-
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 16px;
-}
-.tooltip-checkbox {
-    display: flex;
 }

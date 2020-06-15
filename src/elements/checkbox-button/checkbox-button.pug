@@ -1,7 +1,6 @@
-mixin checkbox-button(value, checked, weight, description)
-    .checkbox-button-container.js-checkbox-button-container
-        label.checkbox-button-container__filter
-            input.checkbox-button-container__content.js-checkbox-button-container__content.visually-hidden(type='checkbox',
-             name='checkbox-button-container__content', checked=checked || false)
-            span.checkbox-button-container__indicator
-            span.checkbox-button-container__value(class='checkbox-button-container__value_weight-'+weight || false)=value
+mixin checkbox-button(text, checked, weight)
+    label.checkbox-button.js-checkbox-button
+        input.checkbox-button__content.js-checkbox-button__content.visually-hidden(type='checkbox',
+            name='checkbox-button__content', checked=checked || false)
+        span.checkbox-button__indicator
+        span.checkbox-button__description=text
