@@ -7,25 +7,31 @@ export const configuratorHorizontal: IConfigurator = {
         return element.offsetLeft;
     },
     createElementTooltipText(): HTMLElement {
-        return createElement('span', 'slider__tooltip-text js-slider__tooltip-text');
+        const element: HTMLElement = createElement('span', 'slider__tooltip-text js-slider__tooltip-text');
+        return element;
     },
     createElementScale(): HTMLElement {
-        return createElement('div', 'slider__scale js-slider__scale');
+        const element: HTMLElement = createElement('div', 'slider__scale js-slider__scale');
+        return element;
     },
     createElementActivRange(): HTMLElement {
-        return createElement('span', 'slider__active-range js-slider__active-range');
+        const element: HTMLElement = createElement('span', 'slider__active-range js-slider__active-range');
+        return element;
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
-        return Array.from($(slider).find('.js-slider__vertical-tooltip-text'));
+        const $elements: HTMLElement[] = Array.from($(slider).find('.js-slider__vertical-tooltip-text'));
+        return $elements;
     },
     calculateCoefficientPoint(scale: HTMLElement, max: number, min: number): number {
         return (scale.offsetWidth / (max - min));
     },
     searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.js-slider__vertical-scale');
+        const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__vertical-scale');
+        return $element;
     },
     searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.js-slider__vertical-active-range');
+        const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__vertical-active-range');
+        return $element;
     },
     setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, activRange: HTMLElement, scale: HTMLElement): void {
         new Array(elements.length)

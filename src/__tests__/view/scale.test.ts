@@ -53,6 +53,6 @@ describe('Модульные тесты', () => {
         expect(activeRange?.className).toContain('js-slider__vertical-active-range');
         expect(scale.slider.childElementCount).toBe(1);
         expect(scale.scale).toBe(scaleElement);
-        expect(scale.activeRange).toBe(activeRange);        
+        expect(scale.activeRange).toBe(activeRange);
     })
 })

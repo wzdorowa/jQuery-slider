@@ -51,13 +51,13 @@ export class Tooltips {
     }
     /* перерисовывает тултипы при смене ориентации */
     changeOrientation(configurator: IConfigurator): void {
-        const tooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
+        const $tooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
         this.textInTooltips = [];
         const textInTooltips: HTMLElement[] = configurator.searchElementsTooltipText(this.slider);
         textInTooltips.forEach((element: HTMLElement) => {
             element.remove();
         });
-        tooltips.forEach((element: HTMLElement) => {
+        $tooltips.forEach((element: HTMLElement) => {
             const tooltipText: HTMLElement = configurator.createElementTooltipText();
             element.append(tooltipText);
             this.textInTooltips.push(tooltipText);
@@ -69,15 +69,15 @@ export class Tooltips {
     }
     /* метод hideTooltip скрывает туллтипы ползунков */
     hideTooltip(): void {
-        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
-        allTooltips.forEach((element: HTMLElement): void => {
+        const $allTooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
+        $allTooltips.forEach((element: HTMLElement): void => {
             element.classList.add('slider__tooltip-hide');
         });
     }
     /* метод showTooltip показывает тултипы ползунков */
     showTooltip(): void {
-        const allTooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
-        allTooltips.forEach((element: HTMLElement): void => {
+        const $allTooltips: HTMLElement[] = Array.from($(this.slider).find('.js-slider__tooltip'));
+        $allTooltips.forEach((element: HTMLElement): void => {
             element.classList.remove('slider__tooltip-hide');
         });
     }

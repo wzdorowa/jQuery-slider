@@ -48,15 +48,15 @@ export class Thumbs {
             }
         if (this.state.thumbs.length > modelState.amount) {
             const excessAmount: number =  this.state.thumbs.length - modelState.amount;
-            const allThumbs: HTMLElement[] = Array.from($(this.slider).find('.js-slider__thumb'));
+            const $allThumbs: HTMLElement[] = Array.from($(this.slider).find('.js-slider__thumb'));
 
             new Array(excessAmount)
                 .fill(1)
                 .forEach((_element: number, i: number) => {
                     modelState.thumbsValues.splice(-1, 1);
                     this.state.thumbs.splice(-1, 1);
-                    const newLength = allThumbs.length - i;
-                    allThumbs[newLength - 1].remove();
+                    const newLength = $allThumbs.length - i;
+                    $allThumbs[newLength - 1].remove();
                 })
             this.emitter.emit('view:amountThumbs-changed', modelState.thumbsValues);
         }

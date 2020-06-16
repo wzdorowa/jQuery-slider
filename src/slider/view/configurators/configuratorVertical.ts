@@ -7,22 +7,28 @@ export const configuratorVertical: IConfigurator = {
         return element.offsetTop;
     },
     createElementTooltipText(): HTMLElement {
-        return createElement('span', 'slider__vertical-tooltip-text js-slider__vertical-tooltip-text');
+        const element: HTMLElement = createElement('span', 'slider__vertical-tooltip-text js-slider__vertical-tooltip-text');
+        return element;
     },
     createElementScale(): HTMLElement {
-        return createElement('div', 'slider__vertical-scale js-slider__vertical-scale');
+        const element: HTMLElement = createElement('div', 'slider__vertical-scale js-slider__vertical-scale');
+        return element;
     },
     createElementActivRange(): HTMLElement {
-        return createElement('span', 'slider__vertical-active-range js-slider__vertical-active-range');
+        const element: HTMLElement = createElement('span', 'slider__vertical-active-range js-slider__vertical-active-range');
+        return element;
     },
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[] {
-        return Array.from($(slider).find('.js-slider__tooltip-text'));
+        const $elements: HTMLElement[] = Array.from($(slider).find('.js-slider__tooltip-text'));
+        return $elements;
     },
     searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.js-slider__scale');
+        const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__scale');
+        return $element;
     },
     searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
-        return $(slider).find('.js-slider__active-range');
+        const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__active-range');
+        return $element;
     },
     calculateCoefficientPoint(scale: HTMLElement, max: number, min: number): number {
         return (scale.offsetHeight / (max - min));

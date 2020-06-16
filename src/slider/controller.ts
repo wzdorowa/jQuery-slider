@@ -14,6 +14,7 @@ export class Controller {
 
     constructor(element: IHTMLElement) {
         this.slider = element;
+        this.slider.classList.add('slider');
 
         const eventEmitter = new EventEmitter();
         new View(this.slider, eventEmitter);
