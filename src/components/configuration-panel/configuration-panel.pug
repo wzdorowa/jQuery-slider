@@ -5,16 +5,16 @@ include ../../components/fieldset/fieldset.pug
 
 mixin configuration-panel()
     form.configuration.js-configuration
-        +fieldset('Вид:', 'view')
-            +radio-button('Горизонтальный', 'view', 'checked')
-            +radio-button('Вертикальный', 'view')
-        +fieldset('min и max значения слайдера:', 'min-max')
-            +input('от:', '0', 'min-max')
-            +input('до:', '100', 'min-max')
-        +input('Количество ползунков:', '4', 'amount-thumb') 
-        +fieldset('Знечения ползунков:', 'thumbs-values')   
+        +fieldset("Вид:", "view")
+            +radio-button("Горизонтальный", "view", "checked")
+            +radio-button("Вертикальный", "view")
+        +fieldset("min и max значения слайдера:", "min-max")
+            +input("от:", "0", "min-max")
+            +input("до:", "100", "min-max")
+        +input("Количество ползунков:", "4", "amount-thumb") 
+        +fieldset("Знечения ползунков:", "thumbs-values")   
             ol.configuration__thumbs-current-value-list.js-configuration__thumbs-current-value-list
             ol.configuration__thumbs-interval-value-list.js-configuration__thumbs-interval-value-list
-        +input('Размер шага:', '2', 'step-size')
-        +checkbox-button('Наличие тултипа', 'checked')
+        +input("Размер шага:", "2", "step-size")
+        +checkbox-button("Наличие тултипа", "checked")
         input.configuration__update(type="submit")
