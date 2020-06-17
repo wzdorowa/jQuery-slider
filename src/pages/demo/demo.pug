@@ -8,10 +8,6 @@ html
         title Document
         link(rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
         link(rel="stylesheet", href="demo.scss")
-        block scripts
-            script(src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous")
-            script(src="../../slider/slider.ts")
-            script(src="demo.ts")
     body
         block content
             .slider-container
@@ -27,3 +23,6 @@ html
                 .slider-ui
                     .js-slider-test
         block scripts
+            script(src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous")
+            script(src="../../slider/slider.ts")
+            script(src="demo.ts")

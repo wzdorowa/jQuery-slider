@@ -17,8 +17,10 @@ $( () => {
 
         const createInput = (state: IModelState) => {
             const thumbsCurrentValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-current-value-list'));
-            
             const thumbsIntervalValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-interval-value-list'));
+
+            const fragmentCurrentValueList = document.createDocumentFragment();
+            const fragmentIntervalValueList = document.createDocumentFragment();
 
             new Array(state.amount)
                 .fill(1)
@@ -29,7 +31,7 @@ $( () => {
                     currentValueInput.setAttribute('value', String(state.thumbsValues[i]));
 
                     currentValueItem.append(currentValueInput);
-                    thumbsCurrentValuesList[index].append(currentValueItem);
+                    fragmentCurrentValueList.append(currentValueItem);
 
                     const intervalValuesSet: HTMLElement = createElement('li', 'configuration__thumbs-set js-configuration__thumbs-set');
 
@@ -52,8 +54,10 @@ $( () => {
 
                     intervalValuesSet.append(valueFrom);
                     intervalValuesSet.append(valueTo)
-                    thumbsIntervalValuesList[index].append(intervalValuesSet);
-                })
+                    fragmentIntervalValueList.append(intervalValuesSet);
+                });
+            thumbsCurrentValuesList[index].append(fragmentCurrentValueList);
+            thumbsIntervalValuesList[index].append(fragmentIntervalValueList);
             if(!isCreatedInput) {
                 isCreatedInput = true;
             }
@@ -67,6 +71,8 @@ $( () => {
             if ($amountInputs.length < state.thumbsValues.length) {
                 const missingAmount: number = state.thumbsValues.length - $amountInputs.length;
 
+                const fragmentCurrentValueList = document.createDocumentFragment();
+                const fragmentIntervalValueList = document.createDocumentFragment();
                 new Array(missingAmount)
                     .fill(1)
                     .forEach((_element: number, i: number) => {
@@ -77,7 +83,7 @@ $( () => {
                         currentValueInput.setAttribute('value', String(state.thumbsValues[i]));
 
                         currentValueItem.append(currentValueInput);
-                        thumbsCurrentValuesList[index].append(currentValueItem);
+                        fragmentCurrentValueList.append(currentValueItem);
 
                         const intervalValuesSet: HTMLElement = createElement('div', 'configuration__thumbs-set js-configuration__thumbs-set');
 
@@ -91,10 +97,12 @@ $( () => {
                         
                         intervalValuesSet.append(valueFrom);
                         intervalValuesSet.append(valueTo);
-                        thumbsIntervalValuesList[index].append(intervalValuesSet);
+                        fragmentIntervalValueList.append(intervalValuesSet);
     
                         setNewValueToNewInputs(state);
                     })
+                thumbsCurrentValuesList[index].append(fragmentCurrentValueList);
+                thumbsIntervalValuesList[index].append(fragmentIntervalValueList);
             }
             if ($amountInputs.length > state.thumbsValues.length) {
                 const excessAmount: number = $amountInputs.length - state.thumbsValues.length;

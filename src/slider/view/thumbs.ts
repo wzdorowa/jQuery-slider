@@ -28,14 +28,16 @@ export class Thumbs {
     }
  /* функция CreateSlider добавляет бегунки в родительский элемент слайдера */
     createThumbs(amount: number): void {
+        const fragment = document.createDocumentFragment();
         new Array(amount)
             .fill(1)
             .forEach(() => {
                 const thumb: HTMLElement = createElement('div', 'slider__thumb js-slider__thumb');
                 
-                this.slider.append(thumb);
+                fragment.append(thumb);
                 this.state.thumbs.push(thumb);
             })
+        this.slider.append(fragment);
     }
     /* изменяет количество отрисованных на шкале бегунков */
     changeAmountThumbs(modelState: IModelState, configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
