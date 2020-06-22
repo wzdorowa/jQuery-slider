@@ -1,88 +1,88 @@
 .input-min-max {
-    display: flex;
-    width: 40%;
-    overflow: hidden;
-    height: 35px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 2px;
+  display: flex;
+  width: 40%;
+  overflow: hidden;
+  height: 35px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 2px;
 }
 .input-min-max__description {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 15px;
+  font-family: 'Fire Sans';
+  font-weight: 400;
+  font-size: 15px;
 
-    width: 20px;
-    line-height: 22px;
-    color: #9b9b9b;
-    text-align: left;
+  width: 20px;
+  line-height: 22px;
+  color: #9b9b9b;
+  text-align: left;
 }
 .input-min-max__value {
-    width: 100%;
-    color: #202020;
-    border: none;
-    vertical-align: baseline;
-    outline: none;
+  width: 100%;
+  color: #202020;
+  border: none;
+  vertical-align: baseline;
+  outline: none;
 
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 16px;
+  font-family: 'Fire Sans';
+  font-weight: 400;
+  font-size: 16px;
 }
 .input-amount-thumb {
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    overflow: hidden;
-    height: 35px;
-    background: #fff;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  overflow: hidden;
+  height: 35px;
+  background: #fff;
 }
 .input-amount-thumb__description {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 18px;
+  font-family: 'Fire Sans';
+  font-weight: 400;
+  font-size: 18px;
 
-    line-height: 22px;
-    color: #9b9b9b;
-    text-align: left;
+  line-height: 22px;
+  color: #9b9b9b;
+  text-align: left;
 }
 .input-amount-thumb__value {
-    width: 20%;
-    color: #202020;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
+  width: 20%;
+  color: #202020;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  vertical-align: baseline;
+  outline: none;
 
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 16px;
+  font-family: 'Fire Sans';
+  font-weight: 400;
+  font-size: 16px;
 }
 .input-step-size {
-    display: flex;
-    justify-content: flex-start;
-    width: 90%;
-    overflow: hidden;
-    height: 35px;
-    background: #fff;
+  display: flex;
+  justify-content: flex-start;
+  width: 90%;
+  overflow: hidden;
+  height: 35px;
+  background: #fff;
 }
 .input-step-size__description {
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 18px;
-    
-    line-height: 22px;
-    color: #9b9b9b;
-    text-align: left;
+  font-family: 'Fire Sans';
+  font-weight: 400;
+  font-size: 18px;
+
+  line-height: 22px;
+  color: #9b9b9b;
+  text-align: left;
 }
 .input-step-size__value {
-    width: 10%;
-    color: #202020;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
+  width: 10%;
+  color: #202020;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  vertical-align: baseline;
+  outline: none;
 
-    font-family: 'Fire Sans';
-    font-weight: 400;
-    font-size: 16px;
+  font-family: 'Fire Sans';
+  font-weight: 400;
+  font-size: 16px;
 }

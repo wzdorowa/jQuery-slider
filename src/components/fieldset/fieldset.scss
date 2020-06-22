@@ -10,6 +10,9 @@
     color: #9b9b9b;
     text-align: left;
 }
+.field__view {
+    display: flex;
+}
 .field__min-max {
     display: flex;
     justify-content: space-between;

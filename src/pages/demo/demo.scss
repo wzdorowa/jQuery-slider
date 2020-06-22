@@ -7,20 +7,17 @@
 @import "src/components/configuration-panel/configuration-panel.scss";
 
 .slider-container {
-    display: flex;
+  display: flex;
 }
 .slider-ui {
-    width: 35%;
-    margin: 30px;
-    margin-top: 30px;
-    margin-bottom: 0px;
-    box-sizing: border-box;
+  width: 35%;
+  box-sizing: border-box;
 }
 .js-slider-test {
-    display: block;
-    position: relative;
-    user-select:none;
-    min-width: 300px;
-    width: 100%;
-    height: 100%;
+  display: block;
+  position: relative;
+  user-select:none;
+  min-width: 300px;
+  width: 100%;
+  height: 100%;
 }
