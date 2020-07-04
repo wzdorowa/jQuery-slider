@@ -1,5 +1,6 @@
 .configuration {
-    width: 350px;
+    min-width: 320px;
+    width: 25%;
     min-height: 420px;
     box-sizing: border-box;
     border: 1px solid #eee;
@@ -25,9 +26,12 @@
     vertical-align: baseline;
     outline: none;
 
-    font-family: 'Fire Sans';
+    font-family: "Fire Sans", Arial, sans-serif;
     font-weight: 400;
     font-size: 16px;
+}
+.configuration__thumbs-value:focus {
+    border-color: #b3d4fc;
 }
 .configuration__thumbs-set {
     display: flex;
@@ -41,9 +45,12 @@
     vertical-align: baseline;
     outline: none;
 
-    font-family: 'Fire Sans';
+    font-family: "Fire Sans", Arial, sans-serif;
     font-weight: 400;
     font-size: 16px;
+}
+.configuration__thumbs-value-from:focus {
+    border-color: #b3d4fc;
 }
 .configuration__thumbs-value-to {
     width: 40%;
@@ -53,7 +60,10 @@
     vertical-align: baseline;
     outline: none;
 
-    font-family: 'Fire Sans';
+    font-family: "Fire Sans", Arial, sans-serif;
     font-weight: 400;
     font-size: 16px;
+}
+.configuration__thumbs-value-to:focus {
+    border-color: #b3d4fc;
 }

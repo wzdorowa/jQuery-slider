@@ -1,7 +1,7 @@
 .radio-button {
   position: relative;
 
-  font-family: 'Fire Sans';
+  font-family: "Fire Sans", Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
@@ -20,6 +20,7 @@
 .radio-button__description {
   padding-left: 27px;
   padding-right: 20px;
+  cursor: pointer;
 }
 .radio-button input[type="radio"]:checked + .radio-button__indicator {
   border: 1px solid rgba(31, 32, 65, 0.25);
@@ -43,7 +44,6 @@
 
   width: 1px;
   height: 1px;
-  margin: -1px;
   border: 0;
   padding: 0;
 
