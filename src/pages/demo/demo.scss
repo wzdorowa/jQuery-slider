@@ -12,10 +12,13 @@ html {
   font-family: "Fire Sans", Arial, sans-serif;
   font-size: medium;
 }
-.slider-container {
+.slider-container__wrapper {
+  margin-top: 15px;
   display: flex;
 }
-.slider-ui {
+.slider-container__content {
+  padding-top: 40px;
+  padding-left: 20px;
   width: 35%;
   box-sizing: border-box;
 }

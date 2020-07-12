@@ -1,5 +1,7 @@
 .field {
     border: none;
+    margin: 0;
+    padding: 0;
 }
 .field__legend {
     font-family: "Fire Sans", Arial, sans-serif;
@@ -12,10 +14,13 @@
 }
 .field__view {
     display: flex;
+    margin-top: 5px;
 }
 .field__min-max {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+
+    margin-top: 5px;
 }
 .field__thumbs-values {
     display: flex;
