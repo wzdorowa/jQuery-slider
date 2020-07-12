@@ -5,5 +5,5 @@ export interface IModelState {
     orientation: string,
     amount: number,
     step: number,
-    tooltip: boolean,
+    isTooltip: boolean,
 }

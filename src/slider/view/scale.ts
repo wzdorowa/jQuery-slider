@@ -30,7 +30,7 @@ export class Scale {
         this.listenScaleEvents(setThumbToNewPosition, modelState, configurator);
     }
     listenScaleEvents(setThumbToNewPosition: (event: MouseEvent, modelState: IModelState, configurator: IConfigurator) => void, modelState: IModelState, configurator: IConfigurator): void {
-        const onClick: (event: MouseEvent) => void = event => setThumbToNewPosition(event, modelState, configurator)
-        this.scale.addEventListener('click', onClick);
+        const handleScaleClick: (event: MouseEvent) => void = event => setThumbToNewPosition(event, modelState, configurator)
+        this.scale.addEventListener('click', handleScaleClick);
     }
 }

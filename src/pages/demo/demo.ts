@@ -209,26 +209,26 @@ $( () => {
         const minValue: IHTMLElement = $minMaxValues[0];
         const maxValue: IHTMLElement = $minMaxValues[1];
 
-        const onBlurForMinValue = () => {
+        const handleMinValueBlur = () => {
             const min = Number(minValue.value);
             element.setNewValueMin(min);
         };
-        const onBlurForMaxValue = () => {
+        const handleMaxValueBlur = () => {
             const max = Number(maxValue.value);
             element.setNewValueMax(max);
         };
-        minValue.addEventListener('blur', onBlurForMinValue);
-        maxValue.addEventListener('blur', onBlurForMaxValue);
+        minValue.addEventListener('blur', handleMinValueBlur);
+        maxValue.addEventListener('blur', handleMaxValueBlur);
 
         // получить из поля ввода и передать новое значение количества ползунков введенное пользователем
         // из панели конфигураций
         const $amountSliderThumbs: IHTMLElement[] = Array.from($(configurationPanel[index]).find('.js-input-amount-thumb__value'));
 
-        const onBlurForAmountSliderThumbs = () => {
+        const handleAmountSliderThumbsBlur = () => {
             const amount = Number($amountSliderThumbs[0].value);
             element.setNewValueAmount(amount);
         };
-        $amountSliderThumbs[0].addEventListener('blur', onBlurForAmountSliderThumbs);
+        $amountSliderThumbs[0].addEventListener('blur', handleAmountSliderThumbsBlur);
         // получить из поля ввода и передать новые значения текущих состояний ползунков введенных пользователем
         // из панели конфигураций
         const toFindinputsSliderThumbs = (): IHTMLElement[] => {
@@ -241,22 +241,22 @@ $( () => {
         new Array(inputsSliderThumbs.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                const onBlurInputsSliderThumbs = () => {
+                const handleInputsSliderThumbsBlur = () => {
                     const thumbsValue = Number(inputsSliderThumbs[i].value);
                     element.setNewValueThumbsValues(thumbsValue, i);
                 };
-                inputsSliderThumbs[i].addEventListener('blur', onBlurInputsSliderThumbs)
+                inputsSliderThumbs[i].addEventListener('blur', handleInputsSliderThumbsBlur)
             })
 
         // получить из поля ввода и передать новое значение размера шага введенного пользователем
         // из панели конфигураций в объект newConfig
         const $stepSize: IHTMLElement[] = Array.from($(configurationPanel[index]).find('.js-input-step-size__value'));
 
-        const onBlurStepSize = () => {
+        const handleStepSizeBlur = () => {
             const step = Number($stepSize[0].value);
             element.setNewValueStep(step);
         }
-        $stepSize[0].addEventListener('blur', onBlurStepSize);
+        $stepSize[0].addEventListener('blur', handleStepSizeBlur);
 
         // получить из поля ввода и передать новое значение ориентации слайдера
         const $orientationSlider: IHTMLElement[] = Array.from($(configurationPanel[index]).find('.js-radio-button'));
@@ -264,20 +264,20 @@ $( () => {
         new Array($orientationSlider.length)
             .fill(1)
             .forEach((_element: number, i: number) => {
-                const onClickOrientationSlider = () => {
+                const handleOrientationSliderClick = () => {
                     let orientation = '';
                     if(i === 0) { orientation = 'horizontal';}
                     if(i === 1) { orientation = 'vertical';}
                     element.setNewValueOrientation(orientation);
                 };
-                $orientationSlider[i].addEventListener('click', onClickOrientationSlider)
+                $orientationSlider[i].addEventListener('click', handleOrientationSliderClick)
             })
 
         // получить из поля ввода и передать новое значение наличия тултипа
         const $checkboxContainer: IHTMLElement[] = Array.from($(configurationPanel[index]).find('.js-checkbox-button'));
         const $checkboxInput: IHTMLElement[] = Array.from($(configurationPanel[index]).find('.js-checkbox-button__content'));
 
-        const onClickCheckboxContainer = () => {
+        const handleCheckboxContainerClick = () => {
             let checked = true;
             if($checkboxInput[0].checked === true) {
                 checked = true;
@@ -287,7 +287,7 @@ $( () => {
             }
             element.setNewValueTooltip(checked);
         };
-        $checkboxContainer[0].addEventListener('click', onClickCheckboxContainer);
+        $checkboxContainer[0].addEventListener('click', handleCheckboxContainerClick);
 
         const setValueOfInputsSliderThumbs = () => {
             const inputsSliderThumbs: IHTMLElement[] = toFindinputsSliderThumbs();
@@ -301,7 +301,7 @@ $( () => {
         }
 
         const form: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration'));
-        const onSubmitElementForm: (event: Event) => void = (event): void => {
+        const handleElementFormSubmit: (event: Event) => void = (event): void => {
             const currentEvent: Event = event;
             currentEvent.preventDefault();
 
@@ -320,7 +320,7 @@ $( () => {
             element.setNewValueStep(step);
          }
         form.forEach((elementForm: HTMLElement) => {
-            elementForm.addEventListener('submit', onSubmitElementForm);
+            elementForm.addEventListener('submit', handleElementFormSubmit);
         });
     });
 });

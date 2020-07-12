@@ -58,16 +58,16 @@ export const configuratorHorizontal: IConfigurator = {
         activRange.style.marginLeft = String(configuratorHorizontal.getElementOffset(elements[0])) + 'px';
         activRange.style.width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1]) - configuratorHorizontal.getElementOffset(elements[0]))) + 'px';
     },
-    getCurrentValueAxisToOnStart(target: HTMLElement): number {
+    getCurrentValueAxisToProcessStart(target: HTMLElement): number {
         return target.offsetLeft;
     },
-    getStartValueAxisToOnStart(eventThumb: MouseEvent, currentXorY: number): number {
+    getStartValueAxisToProcessStart(eventThumb: MouseEvent, currentXorY: number): number {
         return eventThumb.pageX - currentXorY;
     },
-    getMaxValueAxisToOnStart(scale: HTMLElement): number {
+    getMaxValueAxisToProcessStart(scale: HTMLElement): number {
         return scale.offsetWidth;
     },
-    getCurrentValueAxisToOnMove(eventThumb: MouseEvent, startXorY: number): number {
+    getCurrentValueAxisToProcessMove(eventThumb: MouseEvent, startXorY: number): number {
         return eventThumb.pageX - startXorY;
     },
     setIndentForTarget(target: HTMLElement, currentXorY: number): void {
@@ -76,7 +76,7 @@ export const configuratorHorizontal: IConfigurator = {
     getTargetWidth(target: HTMLElement): number {
         return target.offsetWidth;
     },
-    setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void {
+    setIndentForTargetToProcessStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void {
         target.style.left = String(Math.ceil(coefficientPoint * currentValue) - shiftToMinValue)  + 'px';
     },
     updateActiveRange(activRange: HTMLElement, elements: HTMLElement[]): void {

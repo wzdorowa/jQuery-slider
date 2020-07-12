@@ -58,16 +58,16 @@ export const configuratorVertical: IConfigurator = {
         activeRange.style.marginTop = String(configuratorVertical.getElementOffset(elements[0])) + 'px';
         activeRange.style.height = String((configuratorVertical.getElementOffset(elements[elements.length - 1]) - configuratorVertical.getElementOffset(elements[0]))) + 'px';
     },
-    getCurrentValueAxisToOnStart(target: HTMLElement): number {
+    getCurrentValueAxisToProcessStart(target: HTMLElement): number {
         return target.offsetTop;
     },
-    getStartValueAxisToOnStart(eventThumb: MouseEvent, currentXorY: number): number {
+    getStartValueAxisToProcessStart(eventThumb: MouseEvent, currentXorY: number): number {
         return eventThumb.pageY - currentXorY;
     },
-    getMaxValueAxisToOnStart(scale: HTMLElement): number {
+    getMaxValueAxisToProcessStart(scale: HTMLElement): number {
         return scale.offsetHeight;
     },
-    getCurrentValueAxisToOnMove(eventThumb: MouseEvent, startXorY: number): number {
+    getCurrentValueAxisToProcessMove(eventThumb: MouseEvent, startXorY: number): number {
         return eventThumb.pageY - startXorY;
     },
     setIndentForTarget(target: HTMLElement, currentXorY: number): void {
@@ -76,7 +76,7 @@ export const configuratorVertical: IConfigurator = {
     getTargetWidth(target: HTMLElement): number {
         return target.offsetHeight;
     },
-    setIndentForTargetToOnStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void {
+    setIndentForTargetToProcessStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void {
         target.style.top = String(Math.ceil(coefficientPoint * currentValue) - shiftToMinValue)  + 'px';
     },
     updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void {

@@ -13,7 +13,7 @@ export class Model {
             orientation: 'horizontal',
             amount: 4,
             step: 2,
-            tooltip: true,
+            isTooltip: true,
         };
 
         this.emitter = eventEmitter;
@@ -153,8 +153,8 @@ export class Model {
     }
     //установить новое значение для поля tultip//
     public setNewValueTooltip(value: boolean): void {
-        if(value !==  this.state.tooltip) {
-            this.state.tooltip = value;
+        if(value !==  this.state.isTooltip) {
+            this.state.isTooltip = value;
             this.notifyStateChanged();
         }
     }

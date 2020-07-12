@@ -66,10 +66,10 @@ export class View {
             if(this.tooltips.tooltipsElements.length != this.modelState.thumbsValues.length) {
                 this.tooltips.changeAmountTooltips(this.thumbs.state.thumbs, this.configurator, this.modelState);
             }
-            if (this.modelState.tooltip === false) {
+            if (this.modelState.isTooltip === false) {
                 this.tooltips.hideTooltip();
             }
-            if (this.modelState.tooltip === true) {
+            if (this.modelState.isTooltip === true) {
                 this.tooltips.showTooltip();
             }
             this.thumbs.setNewValuesForThumbs(this.scale.scale, this.scale.activeRange, this.modelState, this.configurator);
