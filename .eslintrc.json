@@ -18,7 +18,9 @@
 		// Базовые правила для TypeScript
 		"plugin:@typescript-eslint/recommended",
 		 // Правила TS, требующие инфо о типах
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+		"plugin:@typescript-eslint/recommended-requiring-type-checking",
+		//конфигурации Airbnb
+		"airbnb"
 	],
 	// Движок парсинга
 	"parser": "@typescript-eslint/parser",
@@ -38,6 +40,8 @@
 		"fsd/jq-cache-dom-elements": "error",
 		"fsd/jq-use-js-prefix-in-selector": "error",
 		"fsd/no-function-declaration-in-event-listener": "error",
-		"fsd/split-conditionals": "error"
+		"fsd/split-conditionals": "error",
+		"import/no-unresolved": "off",
+		"import/extensions": "off"
 	}
 }

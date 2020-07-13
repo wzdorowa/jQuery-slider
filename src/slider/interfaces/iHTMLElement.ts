@@ -12,7 +12,10 @@ export interface IHTMLElement extends HTMLElement {
     setNewValueStep(step: number): void
     setNewValueOrientation(value: string): void
     setNewValueTooltip(value: boolean): void
-    subscribeToStateModel(handler: (state: IModelState) => void, isCreatedInput: boolean, amountInputs: () => Element[], changeAmountInputs: (state: IModelState) => void,
-        setValueToInputFromModelState: (state: IModelState) => void, setValueToStepFromModelState: (state: IModelState) => void,
-        setValueToMinInputFromModelState: (state: IModelState) => void, setValueMaxInputFromModelState: (state: IModelState) => void): void
-  }
+    subscribeToStateModel(handler: (state: IModelState) => void, isCreatedInput: boolean,
+        amountInputs: () => Element[], changeAmountInputs: (state: IModelState) => void,
+        setValueToInputFromModelState: (state: IModelState) => void,
+        setValueToStepFromModelState: (state: IModelState) => void,
+        setValueToMinInputFromModelState: (state: IModelState) => void,
+        setValueMaxInputFromModelState: (state: IModelState) => void): void
+}
