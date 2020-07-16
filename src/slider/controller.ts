@@ -1,11 +1,11 @@
 import { IHTMLElement } from './interfaces/iHTMLElement';
-import { Model } from './model';
-import { View } from './view/view';
-import { EventEmitter } from './eventEmitter';
+import Model from './model';
+import View from './view/view';
+import EventEmitter from './eventEmitter';
 import { IModelState } from './interfaces/iModelState';
 
 interface IData {
-    currentValue: number
+    value: number
     index: number
 }
 
@@ -20,34 +20,38 @@ export default class Controller {
       new View(this.slider, eventEmitter);
       const model: Model = new Model(eventEmitter);
 
-      element.getState = (): IModelState => {
+      this.slider.getState = (): IModelState => {
         const modelState: IModelState = model.state;
         return modelState;
       };
-      element.setNewValueMin = (min: number): void => {
+      this.slider.setNewValueMin = (min: number): void => {
         model.setNewValueMin(min);
       };
-      element.setNewValueMax = (max: number): void => {
+      this.slider.setNewValueMax = (max: number): void => {
         model.setNewValueMax(max);
       };
-      element.setNewValueAmount = (amount: number): void => {
+      this.slider.setNewValueAmount = (amount: number): void => {
         model.setNewValueAmount(amount);
       };
-      element.setNewValueThumbsValues = (touchValue: number, index: number): void => {
+      this.slider.setNewValueThumbsValues = (touchValue: number, index: number): void => {
         model.setNewValueThumbsValues(touchValue, index);
       };
-      element.setNewValueStep = (step: number): void => {
+      this.slider.setNewValueStep = (step: number): void => {
         model.setNewValueStep(step);
       };
-      element.setNewValueOrientation = (value: string): void => {
+      this.slider.setNewValueOrientation = (value: string): void => {
         model.setNewValueOrientation(value);
       };
-      element.setNewValueTooltip = (value: boolean): void => {
+      this.slider.setNewValueTooltip = (value: boolean): void => {
         model.setNewValueTooltip(value);
       };
-      element.subscribeToStateModel = (handler: (state: IModelState) => void, isCreatedInput: boolean, amountInputs: () => Element[], changeAmountInputs: (state: IModelState) => void,
-        setValueToInputFromModelState: (state: IModelState) => void, setValueToStepFromModelState: (state: IModelState) => void,
-        setValueToMinInputFromModelState: (state: IModelState) => void, setValueMaxInputFromModelState: (state: IModelState) => void): void => {
+      this.slider.subscribeToStateModel = (handler: (state: IModelState) => void,
+        isCreatedInput: boolean, amountInputs: () => Element[],
+        changeAmountInputs: (state: IModelState) => void,
+        setValueToInputFromModelState: (state: IModelState) => void,
+        setValueToStepFromModelState: (state: IModelState) => void,
+        setValueToMinInputFromModelState: (state: IModelState) => void,
+        setValueMaxInputFromModelState: (state: IModelState) => void): void => {
         eventEmitter.makeSubscribe('model:state-changed', (state: IModelState): void => {
           if (!isCreatedInput) {
             handler(state);
@@ -68,7 +72,7 @@ export default class Controller {
       });
 
       eventEmitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
-        model.setCurrentThumbsValues(data.currentValue, data.index);
+        model.setCurrentThumbsValues(data.value, data.index);
       });
     }
 }

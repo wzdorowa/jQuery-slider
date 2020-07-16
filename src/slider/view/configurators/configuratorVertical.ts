@@ -116,4 +116,4 @@ const configuratorVertical: IConfigurator = {
     return event.offsetY;
   },
 };
-export default { configuratorVertical };
+export default configuratorVertical;

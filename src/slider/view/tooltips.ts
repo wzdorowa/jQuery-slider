@@ -1,4 +1,4 @@
-import { createElement } from '../functions/createElement';
+import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IConfigurator } from '../interfaces/iConfigurator';
 

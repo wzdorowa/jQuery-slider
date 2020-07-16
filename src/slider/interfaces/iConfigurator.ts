@@ -1,4 +1,4 @@
-import {IModelState} from './iModelState';
+import { IModelState } from './iModelState';
 
 export interface IConfigurator {
     getElementOffset(element: HTMLElement): number

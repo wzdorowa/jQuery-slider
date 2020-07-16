@@ -6,7 +6,9 @@
 		// Включаем возможности ES6
 		"es6": true,
 		// Добавляем возможности ES2017
-		"es2017": true
+		"es2017": true,
+		// Добавляем Jest
+		"jest": true
     },
     // Наборы правил
     "extends": [
@@ -41,8 +43,11 @@
 		"fsd/jq-use-js-prefix-in-selector": "error",
 		"fsd/no-function-declaration-in-event-listener": "error",
 		"fsd/split-conditionals": "error",
+		"import": "off",
+		"import/extensions": "off",
 		"import/no-unresolved": "off",
-		"import/extensions": "off"
+		"import/first": "off",
+		"import/order": "off"
 	},
 	"globals": {
         "$": true

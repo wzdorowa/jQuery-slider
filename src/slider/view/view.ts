@@ -1,11 +1,11 @@
-import { configuratorHorizontal } from './configurators/configuratorHorizontal';
-import { configuratorVertical } from './configurators/configuratorVertical';
-import { EventEmitter } from '../eventEmitter';
+import configuratorHorizontal from './configurators/configuratorHorizontal';
+import configuratorVertical from './configurators/configuratorVertical';
+import EventEmitter from '../eventEmitter';
 import { IModelState } from '../interfaces/iModelState';
 import { IConfigurator } from '../interfaces/iConfigurator';
-import { Scale } from '../view/scale';
-import { Thumbs } from './thumbs';
-import { Tooltips } from '../view/tooltips';
+import Scale from '../view/scale';
+import Thumbs from './thumbs';
+import Tooltips from '../view/tooltips';
 
 export default class View {
     private slider: HTMLElement

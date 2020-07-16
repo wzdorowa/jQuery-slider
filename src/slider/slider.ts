@@ -1,4 +1,4 @@
-import { Controller } from './controller';
+import Controller from './controller';
 import { IHTMLElement } from './interfaces/iHTMLElement';
 
 (function($){

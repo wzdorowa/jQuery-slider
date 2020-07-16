@@ -116,4 +116,4 @@ const configuratorHorizontal: IConfigurator = {
     return event.offsetX;
   },
 };
-export default { configuratorHorizontal };
+export default configuratorHorizontal;
