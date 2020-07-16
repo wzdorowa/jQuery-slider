@@ -35,31 +35,45 @@ const configuratorVertical: IConfigurator = {
   },
   setInPlaceThumb(elements: HTMLElement[], modelState: IModelState,
     activeRange: HTMLElement, scale: HTMLElement): void {
+    const range = activeRange;
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
-        elements[i].style.top = String((Math.ceil(configuratorVertical.calculateCoefficientPoint(scale, modelState.max, modelState.min) * modelState.thumbsValues[i]))) + 'px';
+        const element = elements[i];
+        const indentTop = String((Math.ceil(configuratorVertical.calculateCoefficientPoint(scale,
+          modelState.max, modelState.min) * modelState.thumbsValues[i])));
+        element.style.top = `${indentTop} px`;
       });
 
-    activeRange.style.marginTop = String(configuratorVertical.getElementOffset(elements[0])) + 'px';
-    activeRange.style.height = String((configuratorVertical.getElementOffset(elements[elements.length - 1]) - configuratorVertical.getElementOffset(elements[0]))) + 'px';
+    const marginTop = String(configuratorVertical.getElementOffset(elements[0]));
+    const height = String((configuratorVertical.getElementOffset(elements[elements.length - 1])
+    - configuratorVertical.getElementOffset(elements[0])));
+    range.style.marginTop = `${marginTop} px`;
+    range.style.height = `${height} px`;
   },
   setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null,
     coefficientPoint: number, modelState: IModelState, shiftToMinValue: number,
     activeRange: HTMLElement): void {
+    const range = activeRange;
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
         if (i !== currentThumbIndex) {
-          elements[i].style.left = "";
-          elements[i].style.top = String((Math.ceil(coefficientPoint * modelState.thumbsValues[i]) - shiftToMinValue)) + 'px';
+          const element = elements[i];
+          const indentTop = String((Math.ceil(coefficientPoint * modelState.thumbsValues[i])
+          - shiftToMinValue));
+          element.style.left = '';
+          element.style.top = `${indentTop} px`;
         }
       });
-    activeRange.style.marginLeft = "";
-    activeRange.style.width = "";
+    range.style.marginLeft = '';
+    range.style.width = '';
 
-    activeRange.style.marginTop = String(configuratorVertical.getElementOffset(elements[0])) + 'px';
-    activeRange.style.height = String((configuratorVertical.getElementOffset(elements[elements.length - 1]) - configuratorVertical.getElementOffset(elements[0]))) + 'px';
+    const marginTop = String(configuratorVertical.getElementOffset(elements[0]));
+    const height = String((configuratorVertical.getElementOffset(elements[elements.length - 1])
+    - configuratorVertical.getElementOffset(elements[0])));
+    range.style.marginTop = `${marginTop} px`;
+    range.style.height = `${height} px`;
   },
   getCurrentValueAxisToProcessStart(target: HTMLElement): number {
     return target.offsetTop;
@@ -74,18 +88,26 @@ const configuratorVertical: IConfigurator = {
     return eventThumb.pageY - startXorY;
   },
   setIndentForTarget(target: HTMLElement, currentXorY: number): void {
-    target.style.top = String(currentXorY) + 'px';
+    const element = target;
+    const indentTop = String(currentXorY);
+    element.style.top = `${indentTop} px`;
   },
   getTargetWidth(target: HTMLElement): number {
     return target.offsetHeight;
   },
   setIndentForTargetToProcessStop(target: HTMLElement, coefficientPoint: number,
     currentValue: number, shiftToMinValue: number): void {
-    target.style.top = String(Math.ceil(coefficientPoint * currentValue) - shiftToMinValue)  + 'px';
+    const element = target;
+    const indentTop = String(Math.ceil(coefficientPoint * currentValue) - shiftToMinValue);
+    element.style.top = `${indentTop} px`;
   },
   updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void {
-    activeRange.style.marginTop = String(configuratorVertical.getElementOffset(elements[0])) + 'px';
-    activeRange.style.height = String((configuratorVertical.getElementOffset(elements[elements.length -1]) - configuratorVertical.getElementOffset(elements[0]))) + 'px';
+    const range = activeRange;
+    const marginTop = String(configuratorVertical.getElementOffset(elements[0]));
+    const height = String((configuratorVertical.getElementOffset(elements[elements.length - 1])
+    - configuratorVertical.getElementOffset(elements[0])));
+    range.style.marginTop = `${marginTop} px`;
+    range.style.height = `${height} px`;
   },
   calculateClickLocation(event: MouseEvent, target: HTMLElement): number {
     return event.offsetY + target.offsetTop;

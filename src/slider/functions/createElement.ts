@@ -4,4 +4,4 @@ const createElement = (teg: string, className: string): HTMLElement => {
   element.className = className;
   return element;
 };
-export default { createElement };
+export default createElement;
