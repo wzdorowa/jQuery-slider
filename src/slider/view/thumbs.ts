@@ -1,5 +1,5 @@
-import { EventEmitter } from '../eventEmitter';
-import { createElement } from '../functions/createElement';
+import EventEmitter from '../eventEmitter';
+import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IThumbsState } from '../interfaces/IThumbsState';
 import { IConfigurator } from '../interfaces/iConfigurator';
@@ -77,7 +77,8 @@ export default class Thumbs {
       setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
       this.configurator = configurator;
       this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-        const start: (event: MouseEvent) => void = (event) => this.processStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue);
+        const start: (event: MouseEvent) => void = (event) => this.processStart(modelState,
+          event, i, scale, activeRange, setCurrentTooltipValue);
         element.removeEventListener('mousedown', start);
         element.addEventListener('mousedown', start);
       });
@@ -89,7 +90,8 @@ export default class Thumbs {
       (modelState: IModelState, i: number) => void): void {
       this.configurator = configurator;
       this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-        const start: (event: MouseEvent) => void = (event) => this.processStart(modelState, event, i, scale, activeRange, setCurrentTooltipValue);
+        const start: (event: MouseEvent) => void = (event) => this.processStart(modelState,
+          event, i, scale, activeRange, setCurrentTooltipValue);
         element.addEventListener('mousedown', start);
       });
     }
@@ -103,7 +105,8 @@ export default class Thumbs {
         .fill(1)
         .forEach((_element: number, i: number) => {
           const index = this.state.thumbs.length - (amount - i);
-          const start: (event: MouseEvent) => void = (event) => this.processStart(modelState, event, index, scale, activeRange, setCurrentTooltipValue);
+          const start: (event: MouseEvent) => void = (event) => this.processStart(modelState,
+            event, index, scale, activeRange, setCurrentTooltipValue);
           this.state.thumbs[this.state.thumbs.length - (amount - i)].addEventListener('mousedown', start);
         });
     }
@@ -119,20 +122,24 @@ export default class Thumbs {
     listenSizeWindowWhenChangingOrientation(modelState: IModelState,
       configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement): void {
       this.configurator = configurator;
-      const handleWindowResize = () => this.setNewValuesForThumbs(scale, activeRange, modelState, configurator);
+      const handleWindowResize = () => this.setNewValuesForThumbs(scale, activeRange,
+        modelState, configurator);
       window.removeEventListener('resize', handleWindowResize);
       window.addEventListener('resize', handleWindowResize);
     }
 
     /* устанавливает значение для каждого добавленного бегунка */
     setValueToNewThumb(amount: number, modelState: IModelState): void {
-      if (this.state.thumbs.length === modelState.thumbsValues.length) {
+      const currentState = modelState;
+      if (this.state.thumbs.length === currentState.thumbsValues.length) {
         return;
       }
       new Array(amount)
         .fill(1)
         .forEach((_element: number, i: number) => {
-          modelState.thumbsValues[this.state.thumbs.length - (amount - i)] = (modelState.thumbsValues[(this.state.thumbs.length - 1) - (amount - i)] + (modelState.step));
+          currentState.thumbsValues[this.state.thumbs.length - (amount
+            - i)] = (currentState.thumbsValues[(this.state.thumbs.length - 1)
+              - (amount - i)] + (currentState.step));
         });
       this.emitter.emit('view:amountThumbs-changed', modelState.thumbsValues);
     }
@@ -146,10 +153,12 @@ export default class Thumbs {
     /* расставляет бегунки по слайдеру в зависимости от полученных новых значений */
     setNewValuesForThumbs(scale: HTMLElement, activeRange: HTMLElement,
       modelState: IModelState, configurator: IConfigurator): void {
-      this.state.coefficientPoint = configurator.calculateCoefficientPoint(scale, modelState.max, modelState.min);
+      this.state.coefficientPoint = configurator.calculateCoefficientPoint(scale,
+        modelState.max, modelState.min);
 
       this.state.shiftToMinValue = Math.ceil(this.state.coefficientPoint * modelState.min);
-      configurator.setInPlaceNewThumb(this.state.thumbs, this.state.currentThumbIndex, this.state.coefficientPoint, modelState, this.state.shiftToMinValue, activeRange);
+      configurator.setInPlaceNewThumb(this.state.thumbs, this.state.currentThumbIndex,
+        this.state.coefficientPoint, modelState, this.state.shiftToMinValue, activeRange);
     }
 
     /* метод рассчитывает текущее значение бегунка */
@@ -157,7 +166,8 @@ export default class Thumbs {
       let currentValue: number = Math.floor(currentValueAxis / this.state.coefficientPoint)
        + modelState.min;
       const multi: number = Math.floor(currentValue / modelState.step);
-      return currentValue = modelState.step * multi;
+      currentValue = modelState.step * multi;
+      return currentValue;
     }
 
     /* метод рассчитывает значение места бегунка на шкале */
@@ -167,10 +177,10 @@ export default class Thumbs {
        * this.state.coefficientPoint) - this.state.shiftToMinValue;
 
       if (this.state.currentValueAxis > halfStep) {
-        this.state.currentValue = this.state.currentValue + modelState.step;
+        this.state.currentValue += modelState.step;
       }
-      if (modelState.thumbsValues[i] != this.state.currentValue) {
-        this.emitter.emit('view:thumbsValues-changed', {currentValue: this.state.currentValue, index: i});
+      if (modelState.thumbsValues[i] !== this.state.currentValue) {
+        this.emitter.emit('view:thumbsValues-changed', { value: this.state.currentValue, index: i });
       }
     }
 
@@ -182,7 +192,7 @@ export default class Thumbs {
          * this.state.coefficientPoint) - this.state.shiftToMinValue;
 
         if (this.state.currentValueAxis > halfStep) {
-          this.state.currentValue = this.state.currentValue + modelState.step;
+          this.state.currentValue += modelState.step;
         }
       }
       return currentValue;
@@ -201,7 +211,8 @@ export default class Thumbs {
       } else {
         clickLocationAxis = configurator.getOffsetFromClick(event);
       }
-      const currentValue: number | null | undefined = this.calculateValueOfPlaceClickOnScale(modelState, clickLocationAxis);
+      const currentValue: number | null
+      | undefined = this.calculateValueOfPlaceClickOnScale(modelState, clickLocationAxis);
       let nearestThumbIndex: number | null = null;
       modelState.thumbsValues.forEach((element: number, i: number) => {
         if (currentValue !== null && currentValue !== undefined) {
@@ -221,13 +232,16 @@ export default class Thumbs {
           }
         }
       });
-      if (nearestThumbIndex != null && modelState.thumbsValues[nearestThumbIndex] !== this.state.currentValue) {
-        this.emitter.emit('view:thumbsValues-changed', {currentValue: currentValue, index: nearestThumbIndex});
+      if (nearestThumbIndex != null
+        && modelState.thumbsValues[nearestThumbIndex] !== this.state.currentValue) {
+        this.emitter.emit('view:thumbsValues-changed', { value: currentValue, index: nearestThumbIndex });
       }
       return [currentValue, nearestThumbIndex];
     }
 
-    processStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
+    processStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement,
+      activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState,
+        i: number) => void): void {
       this.state.currentThumbIndex = i;
       event.preventDefault();
 
@@ -237,23 +251,29 @@ export default class Thumbs {
 
       if (this.configurator !== null) {
         this.state.currentValueAxis = this.configurator.getCurrentValueAxisToProcessStart(target);
-        this.state.startValueAxis = this.configurator.getStartValueAxisToProcessStart(eventThumb, this.state.currentValueAxis);
+        this.state.startValueAxis = this.configurator.getStartValueAxisToProcessStart(eventThumb,
+          this.state.currentValueAxis);
         this.state.maxValueAxis = this.configurator.getMaxValueAxisToProcessStart(scale);
       }
       this.state.currentValue = modelState.thumbsValues[i];
 
-      const handleMove = (event: MouseEvent) => this.processMove(modelState, event, i, target, activeRange, setCurrentTooltipValue);
+      const handleMove = () => this.processMove(modelState, event,
+        i, target, activeRange, setCurrentTooltipValue);
       document.addEventListener('mousemove', handleMove);
 
-      const handleStop = (event: MouseEvent) => this.processStop(handleMove, handleStop, event, i, target, modelState, setCurrentTooltipValue);
+      const handleStop = () => this.processStop(handleMove, handleStop,
+        event, i, target, modelState, setCurrentTooltipValue);
       document.addEventListener('mouseup', handleStop);
     }
 
-    processMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
+    processMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement,
+      activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState,
+        i: number) => void): void {
       const elements: HTMLElement[] = this.state.thumbs;
       const eventThumb: MouseEvent = event;
       if (this.configurator !== null) {
-        this.state.currentValueAxis = this.configurator.getCurrentValueAxisToProcessMove(eventThumb, this.state.startValueAxis);
+        this.state.currentValueAxis = this.configurator.getCurrentValueAxisToProcessMove(eventThumb,
+          this.state.startValueAxis);
         if (i === 0) {
           if (elements.length === 1) {
             if (this.state.currentValueAxis > this.state.maxValueAxis) {
@@ -261,7 +281,8 @@ export default class Thumbs {
             }
           }
           if (elements.length !== 1) {
-            const offsetNextSlider: number = this.configurator.getElementOffset(elements[i + 1]) - this.configurator.getTargetWidth(target);
+            const offsetNextSlider: number = this.configurator.getElementOffset(elements[i + 1])
+            - this.configurator.getTargetWidth(target);
             if (this.state.currentValueAxis > offsetNextSlider) {
               this.state.currentValueAxis = offsetNextSlider;
             }
@@ -273,25 +294,28 @@ export default class Thumbs {
           this.configurator.setIndentForTarget(target, this.state.currentValueAxis);
         }
         if (i > 0 && i < elements.length - 1) {
-          const offsetNextThumb: number = this.configurator.getElementOffset(elements[i + 1]) - this.configurator.getTargetWidth(target);
-          const offsetPreviousThumb: number = this.configurator.getElementOffset(elements[i - 1]) + this.configurator.getTargetWidth(target);
-          const currentValueAxis: number = this.state.currentValueAxis;
+          const offsetNextThumb: number = this.configurator.getElementOffset(elements[i + 1])
+          - this.configurator.getTargetWidth(target);
+          const offsetPreviousThumb: number = this.configurator.getElementOffset(elements[i - 1])
+          + this.configurator.getTargetWidth(target);
+          const { currentValueAxis: valueAxis } = this.state;
 
-          if (currentValueAxis > offsetNextThumb) {
+          if (valueAxis > offsetNextThumb) {
             this.state.currentValueAxis = offsetNextThumb;
           }
-          if (currentValueAxis < offsetPreviousThumb) {
+          if (valueAxis < offsetPreviousThumb) {
             this.state.currentValueAxis = offsetPreviousThumb;
           }
           this.configurator.setIndentForTarget(target, this.state.currentValueAxis);
         }
         if (i === elements.length - 1 && i !== 0) {
-          const offsetPreviousThumb: number = this.configurator.getElementOffset(elements[i - 1]) + this.configurator.getTargetWidth(target);
-          const currentValueAxis: number = this.state.currentValueAxis;
-          if (currentValueAxis < offsetPreviousThumb) {
+          const offsetPreviousThumb: number = this.configurator.getElementOffset(elements[i - 1])
+          + this.configurator.getTargetWidth(target);
+          const { currentValueAxis: valueAxis } = this.state;
+          if (valueAxis < offsetPreviousThumb) {
             this.state.currentValueAxis = offsetPreviousThumb;
           }
-          if (currentValueAxis > this.state.maxValueAxis) {
+          if (valueAxis > this.state.maxValueAxis) {
             this.state.currentValueAxis = this.state.maxValueAxis;
           }
           this.configurator.setIndentForTarget(target, this.state.currentValueAxis);
@@ -304,10 +328,13 @@ export default class Thumbs {
       setCurrentTooltipValue(modelState, i);
     }
 
-    processStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
+    processStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void,
+      _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState,
+      setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
       setCurrentTooltipValue(modelState, i);
       if (this.state.currentValue !== null && this.configurator !== null) {
-        this.configurator.setIndentForTargetToProcessStop(target, this.state.coefficientPoint, this.state.currentValue, this.state.shiftToMinValue);
+        this.configurator.setIndentForTargetToProcessStop(target, this.state.coefficientPoint,
+          this.state.currentValue, this.state.shiftToMinValue);
       }
 
       document.removeEventListener('mousemove', handleMove);
