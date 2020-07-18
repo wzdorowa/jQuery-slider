@@ -22,7 +22,8 @@ export default class EventEmitter {
 
       this.handlersByEvent[eventName].push(fn);
       return (): void => {
-        this.handlersByEvent[eventName] = this.handlersByEvent[eventName].filter((eventFn) => fn !== eventFn);
+        this.handlersByEvent[eventName] = this.handlersByEvent[eventName]
+          .filter((eventFn) => fn !== eventFn);
       };
     }
 

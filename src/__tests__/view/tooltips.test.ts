@@ -14,12 +14,12 @@ const state: IModelState = {
 };
 
 describe('Модульные тесты', () => {
-  const element = window.document.createElement('div');
-  element.className = 'js-slider-test';
-  window.document.body.appendChild(element);
+  const slider = window.document.createElement('div');
+  slider.className = 'js-slider-test';
+  window.document.body.appendChild(slider);
 
   const eventEmitter = new EventEmitter();
-  new View(element, eventEmitter);
+  const view = new View(slider, eventEmitter);
 
   test('Проверка корректности создания тултипов', () => {
     eventEmitter.emit('model:state-changed', state);
@@ -141,8 +141,8 @@ describe('Интеграционные тесты для горизонталь�
 
   beforeEach(async () => {
     const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
-    if (element !== null || element !== undefined) {
-        element?.remove();
+    if (element !== null && element !== undefined) {
+      element.remove();
     }
     browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
@@ -159,18 +159,19 @@ describe('Интеграционные тесты для горизонталь�
       const value = sliderLineWidth / (max - min);
       return value;
     };
-    const calculateValue = (offsetLeft: number, startSlider: number) => {
-      let currentValueX: number = Math.floor((offsetLeft - startSlider) / coefficientPoint) + state.min;
+    const calculateValue = (offsetLeft: number, startSlider: number, coefficientPoint: number) => {
+      let currentValueX: number = Math.floor((offsetLeft - startSlider)
+      / coefficientPoint) + state.min;
       const multi: number = Math.floor(currentValueX / state.step);
       currentValueX = state.step * multi;
       return currentValueX;
     };
       // Найти координаты линии слайдера
     const sliderLine: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__scale');
-    const rectSliderLine = await page.evaluate((sliderLine: HTMLDivElement) => {
+    const rectSliderLine = await page.evaluate((element: HTMLDivElement) => {
       const {
         top, left, bottom, right,
-      } = sliderLine.getBoundingClientRect();
+      } = element.getBoundingClientRect();
       return {
         top, left, bottom, right,
       };
@@ -191,7 +192,7 @@ describe('Интеграционные тесты для горизонталь�
     const elementWidth: number = rectFirstElement.right - rectFirstElement.left;
 
     // Точки начала и конца линии слайдера
-    const startPointSlider = rectSliderLine.left - (elementWidth/2);
+    const startPointSlider = rectSliderLine.left - (elementWidth / 2);
     // const endPointSlider = rectSliderLine.right + (elementWidth/2);
 
     await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
@@ -211,10 +212,12 @@ describe('Интеграционные тесты для горизонталь�
     }, firstElement);
 
     const coefficientPoint = getCoefficientPoint(sliderLineWidth, state.max, state.min);
-    let currentValueTooltip = String(calculateValue(rectFirstElement.left, startPointSlider));
+    let currentValueTooltip = String(calculateValue(rectFirstElement.left,
+      startPointSlider, coefficientPoint));
     let tooltipsText: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__tooltip-text');
     let tooltipText: puppeteer.ElementHandle<Element> = tooltipsText[0];
-    let innerHTMLTooltip = await page.evaluateHandle((element: HTMLElement) => element.innerHTML, tooltipText);
+    let innerHTMLTooltip = await page.evaluateHandle((element:
+      HTMLElement) => element.innerHTML, tooltipText);
 
     expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
 
@@ -245,10 +248,12 @@ describe('Интеграционные тесты для горизонталь�
       };
     }, lastElement);
 
-    currentValueTooltip = String(calculateValue(rectLastElement.left, startPointSlider));
+    currentValueTooltip = String(calculateValue(rectLastElement.left,
+      startPointSlider, coefficientPoint));
     tooltipsText = await page.$$('.js-slider__tooltip-text');
     tooltipText = tooltipsText[tooltipsText.length - 1];
-    innerHTMLTooltip = await page.evaluateHandle((element: HTMLElement) => element.innerHTML, tooltipText);
+    innerHTMLTooltip = await page.evaluateHandle((element:
+      HTMLElement) => element.innerHTML, tooltipText);
 
     expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
   });

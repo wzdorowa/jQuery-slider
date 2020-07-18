@@ -5,7 +5,7 @@ import EventEmitter from '../slider/eventEmitter';
 const state: IModelState = {
   min: 0,
   max: 100,
-  thumbsValues: [20,40,60,80],
+  thumbsValues: [20, 40, 60, 80],
   orientation: 'horizontal',
   amount: 4,
   step: 2,

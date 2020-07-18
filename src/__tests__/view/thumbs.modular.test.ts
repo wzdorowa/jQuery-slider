@@ -22,7 +22,7 @@ describe('Модульные тесты', () => {
   const eventEmitter = new EventEmitter();
   const emitter = eventEmitter;
 
-  new View(element, eventEmitter);
+  const view = new View(element, eventEmitter);
   const thumbs = new Thumbs(element, eventEmitter);
 
   test('Проверка корректного создания элементов', () => {
@@ -77,16 +77,16 @@ describe('Модульные тесты', () => {
     const activeRange: HTMLElement = configurator.createElementActivRange();
     const scale: HTMLElement = configurator.createElementScale();
 
-    const event = new MouseEvent("click", {
+    const event = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
       clientY: 100,
     });
 
-    sinon.stub(configuratorHorizontal, 'calculateCoefficientPoint').callsFake( function () { return 2; });
-    sinon.stub(configuratorHorizontal, 'getOffsetFromClick').callsFake( function () { return 100; });
-    sinon.stub(configuratorHorizontal, 'calculateClickLocation').callsFake( function () { return 130; });
+    sinon.stub(configuratorHorizontal, 'calculateCoefficientPoint').callsFake(() => 2);
+    sinon.stub(configuratorHorizontal, 'getOffsetFromClick').callsFake(() => 100);
+    sinon.stub(configuratorHorizontal, 'calculateClickLocation').callsFake(() => 130);
 
     scale.dispatchEvent(event);
     let currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [event, state, configurator]);
@@ -107,21 +107,19 @@ describe('Модульные тесты', () => {
     const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
     const scale: HTMLElement = thumbs.configurator.createElementScale();
     const i = 0;
-    const setCurrentTooltipValue = () => {
-      return
-    };
-    const event = new MouseEvent("click", {
+    const setCurrentTooltipValue = () => 0;
+    const event = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
       clientY: 100,
     });
 
-    sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnStart').callsFake( function () { return 90; });
-    sinon.stub(configuratorHorizontal, 'getStartValueAxisToOnStart').callsFake( function () { return 50; });
-    sinon.stub(configuratorHorizontal, 'getMaxValueAxisToOnStart').callsFake( function () { return 300; });
+    sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToProcessStart').callsFake(() => 90);
+    sinon.stub(configuratorHorizontal, 'getStartValueAxisToProcessStart').callsFake(() => 50);
+    sinon.stub(configuratorHorizontal, 'getMaxValueAxisToProcessStart').callsFake(() => 300);
 
-    thumbs.onStart(state, event, i, scale, activeRange, setCurrentTooltipValue);
+    thumbs.processStart(state, event, i, scale, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValue).toBe(state.thumbsValues[i]);
 
     sinon.reset();
@@ -133,24 +131,22 @@ describe('Модульные тесты', () => {
     const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
     const elements: HTMLElement[] = thumbs.state.thumbs;
 
-    const setCurrentTooltipValue = () => {
-      return
-    };
-    const event = new MouseEvent("click", {
+    const setCurrentTooltipValue = () => 0;
+    const event = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
       clientY: 100,
     });
 
-    const getCurrentValueAxisToOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove');
+    const getCurrentValueAxisToOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToProcessMove');
     getCurrentValueAxisToOnMove.onCall(0).returns(290);
     getCurrentValueAxisToOnMove.onCall(1).returns(290);
     getCurrentValueAxisToOnMove.onCall(2).returns(10);
-    const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(function () { return 290; });
-    const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(function () { return 24; });
-    const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
-    const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
+    const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(() => 290);
+    const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(() => 24);
+    const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(() => 0);
+    const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(() => 0);
 
     const i = 0;
     const target: HTMLElement = elements[i];
@@ -159,20 +155,20 @@ describe('Модульные тесты', () => {
     thumbs.state.maxValueAxis = 280;
     thumbs.state.thumbs.length = 1;
 
-    thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
     thumbs.state.maxValueAxis = 350;
 
     // Проверка первого ползунка, если ползунков на шкале много
     thumbs.state.thumbs.length = 4;
 
-    thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValueAxis).toBe(266);
 
     // Если значение первого ползунка становиться меньше минимально возможного значения
     state.min = 20;
 
-    thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValueAxis).toBe(state.min);
 
     // сбросить заглушки
@@ -189,40 +185,38 @@ describe('Модульные тесты', () => {
     const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
     const elements: HTMLElement[] = thumbs.state.thumbs;
 
-    const setCurrentTooltipValue = () => {
-      return;
-    };
-    const event = new MouseEvent("click", {
+    const setCurrentTooltipValue = () => 0;
+    const event = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
       clientY: 100,
     });
 
-    const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove');
+    const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToProcessMove');
     setCurrentXorYtoOnMove.onCall(0).returns(290);
     setCurrentXorYtoOnMove.onCall(1).returns(250);
 
-    const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(function () { return 290; });
+    const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(() => 290);
     elementOffset.onCall(0).returns(290);
     elementOffset.onCall(1).returns(250);
     elementOffset.onCall(2).returns(350);
     elementOffset.onCall(3).returns(250);
 
-    const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(function () { return 24; });
-    const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
-    const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
+    const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(() => 24);
+    const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(() => 0);
+    const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(() => 0);
 
     const i = 1;
     const target: HTMLElement = elements[i];
 
-    // Если значение любого кроме первого и последнего ползунка 
+    // Если значение любого кроме первого и последнего ползунка
     // превышает значение следующего за ним ползунка
-    thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValueAxis).toBe(266);
 
     // Если значение любого кроме первого и последнего ползунка меньше значения предыдущего ползунка
-    thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValueAxis).toBe(274);
 
     // сбросить заглушки
@@ -239,10 +233,8 @@ describe('Модульные тесты', () => {
     const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
     const elements: HTMLElement[] = thumbs.state.thumbs;
 
-    const setCurrentTooltipValue = () => {
-      return;
-    };
-    const event = new MouseEvent("click", {
+    const setCurrentTooltipValue = () => 0;
+    const event = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
@@ -252,22 +244,22 @@ describe('Модульные тесты', () => {
     const i = 3;
     const target: HTMLElement = elements[i];
 
-    const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToOnMove');
+    const setCurrentXorYtoOnMove = sinon.stub(configuratorHorizontal, 'getCurrentValueAxisToProcessMove');
     setCurrentXorYtoOnMove.onCall(0).returns(290);
     setCurrentXorYtoOnMove.onCall(1).returns(350);
 
-    const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(function () { return 290; });
-    const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(function () { return 24; });
-    const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(function () { return });
-    const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(function () { return });
+    const elementOffset = sinon.stub(configuratorHorizontal, 'getElementOffset').callsFake(() => 290);
+    const targetOffset = sinon.stub(configuratorHorizontal, 'getTargetWidth').callsFake(() => 24);
+    const setIndentForTarget = sinon.stub(configuratorHorizontal, 'setIndentForTarget').callsFake(() => 0);
+    const updateLineSpan = sinon.stub(configuratorHorizontal, 'updateActiveRange').callsFake(() => 0);
 
     // Если значение ползунка меньше значения предыдущего ползунка
-    thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValueAxis).toBe(314);
 
     thumbs.state.maxValueAxis = 280;
     // Если значение ползунка больше максимально допустимого значения предыдущего ползунка
-    thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
     expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
 
     // сбросить заглушки
@@ -284,10 +276,8 @@ describe('Модульные тесты', () => {
     const activeRange: HTMLElement = thumbs.configurator.createElementActivRange();
     const elements: HTMLElement[] = thumbs.state.thumbs;
 
-    const setCurrentTooltipValue = () => {
-      return;
-    };
-    const event = new MouseEvent("click", {
+    const setCurrentTooltipValue = () => 0;
+    const event = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
@@ -296,12 +286,14 @@ describe('Модульные тесты', () => {
     const i = 1;
     const target: HTMLElement = elements[i];
 
-    sinon.stub(configuratorHorizontal, 'setIndentForTargetToOnStop').callsFake(function () { return; });
+    sinon.stub(configuratorHorizontal, 'setIndentForTargetToProcessStop').callsFake(() => 0);
 
-    const handleMove = (event: MouseEvent) => thumbs.onMove(state, event, i, target, activeRange, setCurrentTooltipValue);
-    const handleStop = (event: MouseEvent) => thumbs.onStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
+    const handleMove = () => thumbs.processMove(state, event,
+      i, target, activeRange, setCurrentTooltipValue);
+    const handleStop = () => thumbs.processStop(handleMove, handleStop, event,
+      i, target, state, setCurrentTooltipValue);
 
-    thumbs.onStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
+    thumbs.processStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
     expect(thumbs.state.currentValue).toBe(null);
     expect(thumbs.state.currentThumbIndex).toBe(null);
   });

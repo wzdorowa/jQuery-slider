@@ -8,7 +8,7 @@ import configuratorVertical from '../../slider/view/configurators/configuratorVe
 const state: IModelState = {
   min: 0,
   max: 100,
-  thumbsValues: [20,30,40,50],
+  thumbsValues: [20, 30, 40, 50],
   orientation: 'horizontal',
   amount: 4,
   step: 2,
@@ -38,7 +38,8 @@ describe('Модульные тесты', () => {
   });
   test('Проверка смены ориентации', () => {
     state.orientation = 'vertical';
-    scale.changeOrientation(sliders.setThumbToNewPosition.bind(sliders), state, configuratorVertical);
+    scale.changeOrientation(sliders.setThumbToNewPosition.bind(sliders),
+      state, configuratorVertical);
     const scaleToDelete = window.document.querySelector('.js-slider__scale');
     const activeRangeToDelite = window.document.querySelector('.js-slider__active-range');
 

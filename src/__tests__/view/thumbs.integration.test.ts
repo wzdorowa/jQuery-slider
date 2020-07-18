@@ -23,8 +23,8 @@ describe('Интеграционные тесты для горизонталь�
 
   beforeEach(async () => {
     const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
-    if (element !== null || element !== undefined) {
-      element?.remove();
+    if (element !== null && element !== undefined) {
+      element.remove();
     }
     browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
@@ -307,8 +307,8 @@ describe('Интеграционные тесты для вертикально�
 
   beforeEach(async () => {
     const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
-    if (element !== null || element !== undefined) {
-      element?.remove();
+    if (element !== null && element !== undefined) {
+      element.remove();
     }
     browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
@@ -335,7 +335,7 @@ describe('Интеграционные тесты для вертикально�
       return value;
     };
     /* метод рассчитывает текущее значение бегунка */
-    const calculateValue = (modelState: IModelState, currentValueAxis: number, 
+    const calculateValue = (modelState: IModelState, currentValueAxis: number,
       coefficientPoint: number) => {
       let currentValue: number = Math.floor(currentValueAxis / coefficientPoint) + modelState.min;
       const multi: number = Math.floor(currentValue / modelState.step);
@@ -363,10 +363,10 @@ describe('Интеграционные тесты для вертикально�
 
     // Найти координаты линии слайдера
     const scale: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__vertical-scale');
-    const rectScale = await page.evaluate((scale: HTMLDivElement) => {
+    const rectScale = await page.evaluate((element: HTMLDivElement) => {
       const {
         top, left, bottom, right,
-      } = scale.getBoundingClientRect();
+      } = element.getBoundingClientRect();
       return {
         top, left, bottom, right,
       };

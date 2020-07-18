@@ -27,20 +27,23 @@ test('Find element with class "slider__tooltip-text"', () => {
   for (let i = 0; i < elementCount; i += 1) {
     parentTooltipText.append(tooltipText);
   }
-  const searchElementsTooltipText: HTMLElement[] = configuratorVertical.searchElementsTooltipText(parentTooltipText);
+  const searchElementsTooltipText:
+  HTMLElement[] = configuratorVertical.searchElementsTooltipText(parentTooltipText);
   expect(searchElementsTooltipText[0].className).toContain('js-slider__tooltip-text');
 });
 test('Calculate point coefficient', () => {
   const elementScale = configuratorVertical.createElementScale();
   elementScale.style.height = '200px';
-  const calculateCoefficientPoint = configuratorVertical.calculateCoefficientPoint(elementScale, 100, 0);
+  const calculateCoefficientPoint:
+  number = configuratorVertical.calculateCoefficientPoint(elementScale, 100, 0);
   expect(calculateCoefficientPoint).toBe(2);
 });
 test('Find element with class "js-slider__scale" for delete', () => {
   const lineVerticalView: HTMLElement = createElement('span', 'js-slider__scale');
   const parentLineVerticalView: HTMLElement = createElement('div', 'parent-scale');
   parentLineVerticalView.append(lineVerticalView);
-  const elementScaleToDelete: JQuery<HTMLElement> = configuratorVertical.searchElementScaleToDelete(parentLineVerticalView);
+  const elementScaleToDelete:
+  JQuery<HTMLElement> = configuratorVertical.searchElementScaleToDelete(parentLineVerticalView);
   expect(elementScaleToDelete[0].className).toBe('js-slider__scale');
 });
 test('Calculate value slider thumbs', () => {
@@ -66,7 +69,7 @@ test('Calculate value slider thumbs', () => {
   const elementScale: HTMLElement = configuratorVertical.createElementScale();
   const elementActivRange: HTMLElement = configuratorVertical.createElementActivRange();
 
-  sinon.stub(configuratorVertical, 'calculateCoefficientPoint').callsFake( function () { return 2; });
+  sinon.stub(configuratorVertical, 'calculateCoefficientPoint').callsFake(() => 2);
   const calculateElementOffsetTop = sinon.stub(configuratorVertical, 'getElementOffset');
   calculateElementOffsetTop.onCall(0).returns(40);
   calculateElementOffsetTop.onCall(1).returns(90);
@@ -111,7 +114,8 @@ test('Calculate new value slider thumbs', () => {
   calculateElementOffsetleft.onCall(1).returns(90);
   calculateElementOffsetleft.onCall(2).returns(40);
 
-  configuratorVertical.setInPlaceNewThumb(elements, currentThumbIndex, coefficientPoint, modelState, shiftToMinValue, elementSliderLineSpan);
+  configuratorVertical.setInPlaceNewThumb(elements, currentThumbIndex,
+    coefficientPoint, modelState, shiftToMinValue, elementSliderLineSpan);
   expect(elements[0].style.top).toBe('30px');
   expect(elements[1].style.top).toBe('40px');
   expect(elements[2].style.top).toBe('50px');
@@ -123,8 +127,8 @@ test('Calculate new value slider thumbs', () => {
 test('set currentY to OnStart', () => {
   const target: HTMLElement = createElement('div', 'slider-element');
 
-  sinon.stub(configuratorVertical, 'getCurrentValueAxisToOnStart').callsFake( function () { return 30; });
-  const targetOffsetLeft = configuratorVertical.getCurrentValueAxisToOnStart(target);
+  sinon.stub(configuratorVertical, 'getCurrentValueAxisToProcessStart').callsFake(() => 30);
+  const targetOffsetLeft = configuratorVertical.getCurrentValueAxisToProcessStart(target);
   expect(targetOffsetLeft).toBe(30);
   sinon.restore();
 });
@@ -132,16 +136,17 @@ test('set startY to OnStart', () => {
   const eventThumb = new MouseEvent('click');
   const currentXorY = 20;
 
-  sinon.stub(configuratorVertical, 'getStartValueAxisToOnStart').callsFake( function () { return 50; });
-  const setStartXorYtoOnStart = configuratorVertical.getStartValueAxisToOnStart(eventThumb, currentXorY);
+  sinon.stub(configuratorVertical, 'getStartValueAxisToProcessStart').callsFake(() => 50);
+  const setStartXorYtoOnStart:
+  number = configuratorVertical.getStartValueAxisToProcessStart(eventThumb, currentXorY);
   expect(setStartXorYtoOnStart).toBe(50);
   sinon.restore();
 });
 test('set MaxY to OnStart', () => {
   const elementSliderLine: HTMLElement = configuratorVertical.createElementScale();
 
-  sinon.stub(configuratorVertical, 'getMaxValueAxisToOnStart').callsFake( function () { return 150; });
-  const setMaxXorYtoOnStart = configuratorVertical.getMaxValueAxisToOnStart(elementSliderLine);
+  sinon.stub(configuratorVertical, 'getMaxValueAxisToProcessStart').callsFake(() => 150);
+  const setMaxXorYtoOnStart = configuratorVertical.getMaxValueAxisToProcessStart(elementSliderLine);
   expect(setMaxXorYtoOnStart).toBe(150);
   sinon.restore();
 });
@@ -149,8 +154,9 @@ test('set currentY to OnMove', () => {
   const eventThumb = new MouseEvent('click');
   const startXorY = 20;
 
-  sinon.stub(configuratorVertical, 'getCurrentValueAxisToOnMove').callsFake( function () { return 50; });
-  const setCurrentXorYtoOnMove = configuratorVertical.getCurrentValueAxisToOnMove(eventThumb, startXorY);
+  sinon.stub(configuratorVertical, 'getCurrentValueAxisToProcessMove').callsFake(() => 50);
+  const setCurrentXorYtoOnMove:
+  number = configuratorVertical.getCurrentValueAxisToProcessMove(eventThumb, startXorY);
   expect(setCurrentXorYtoOnMove).toBe(50);
   sinon.restore();
 });
@@ -164,7 +170,7 @@ test('set indent for target', () => {
 test('get element Offset', () => {
   const element: HTMLElement = createElement('div', 'slider-element');
 
-  sinon.stub(configuratorVertical, 'getElementOffset').callsFake( function () { return 120; });
+  sinon.stub(configuratorVertical, 'getElementOffset').callsFake(() => 120);
   const elementOffset: number = configuratorVertical.getElementOffset(element);
   expect(elementOffset).toBe(120);
   sinon.restore();
@@ -172,7 +178,7 @@ test('get element Offset', () => {
 test('get target Offset', () => {
   const target: HTMLElement = createElement('div', 'slider-element');
 
-  sinon.stub(configuratorVertical, 'getTargetWidth').callsFake( function () { return 60; });
+  sinon.stub(configuratorVertical, 'getTargetWidth').callsFake(() => 60);
   const targetOffset: number = configuratorVertical.getTargetWidth(target);
   expect(targetOffset).toBe(60);
   sinon.restore();
@@ -183,7 +189,8 @@ test('set indent for target to OnStop', () => {
   const currentValue = 25;
   const shiftToMinValue = 10;
 
-  configuratorVertical.setIndentForTargetToOnStop(target, coefficientPoint, currentValue, shiftToMinValue);
+  configuratorVertical.setIndentForTargetToProcessStop(target, coefficientPoint,
+    currentValue, shiftToMinValue);
   expect(target.style.top).toBe('40px');
 });
 test('update LineSpan', () => {

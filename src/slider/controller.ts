@@ -17,7 +17,7 @@ export default class Controller {
       this.slider.classList.add('slider');
 
       const eventEmitter = new EventEmitter();
-      new View(this.slider, eventEmitter);
+      const view = new View(this.slider, eventEmitter);
       const model: Model = new Model(eventEmitter);
 
       this.slider.getState = (): IModelState => {
