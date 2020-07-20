@@ -62,6 +62,13 @@ $(() => {
         isCreatedInput = true;
       }
     };
+    const setNewValueToNewInputs = (state: IModelState) => {
+      const thumbsCurrentValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-current-value-list'));
+
+      const $allThumbs: IHTMLElement[] = Array.from($(thumbsCurrentValuesList[index]).find('.js-configuration__thumbs-value'));
+      const indexNewInput: number = $allThumbs.length - 1;
+      $allThumbs[indexNewInput].value = state.thumbsValues[indexNewInput];
+    };
     const changeAmountInputs = (state: IModelState) => {
       const thumbsCurrentValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-current-value-list'));
       const $amountInputs: HTMLElement[] = Array.from($(thumbsCurrentValuesList[index]).find('.js-configuration__thumbs-item'));
@@ -107,10 +114,7 @@ $(() => {
       if ($amountInputs.length > state.thumbsValues.length) {
         const excessAmount: number = $amountInputs.length - state.thumbsValues.length;
 
-        const thumbsCurrentValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-current-value-list'));
         const $allCurrentValuesInputs: HTMLElement[] = Array.from($(thumbsCurrentValuesList[0]).find('.js-configuration__thumbs-item'));
-
-        const thumbsIntervalValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-interval-value-list'));
         const $allIntervalValuesInputs: HTMLElement[] = Array.from($(thumbsIntervalValuesList[0]).find('.js-configuration__thumbs-set'));
 
         new Array(excessAmount)
@@ -123,13 +127,6 @@ $(() => {
             $allIntervalValuesInputs.splice(-1, 1);
           });
       }
-    };
-    const setNewValueToNewInputs = (state: IModelState) => {
-      const thumbsCurrentValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-current-value-list'));
-
-      const $allThumbs: IHTMLElement[] = Array.from($(thumbsCurrentValuesList[index]).find('.js-configuration__thumbs-value'));
-      const indexNewInput: number = $allThumbs.length - 1;
-      $allThumbs[indexNewInput].value = state.thumbsValues[indexNewInput];
     };
     const setValueToInputFromModelState = (state: IModelState) => {
       const thumbsCurrentValuesList: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration__thumbs-current-value-list'));
@@ -232,7 +229,6 @@ $(() => {
     // получить из поля ввода и передать новые значения текущих состояний
     // ползунков введенных пользователем из панели конфигураций
     const toFindinputsSliderThumbs = (): IHTMLElement[] => {
-      const configurationPanel: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration'));
       const $element:IHTMLElement[] = Array.from($(configurationPanel[index]).find('.js-configuration__thumbs-value'));
       return $element;
     };
@@ -290,8 +286,6 @@ $(() => {
     $checkboxContainer[0].addEventListener('click', handleCheckboxContainerClick);
 
     const setValueOfInputsSliderThumbs = () => {
-      const inputsSliderThumbs: IHTMLElement[] = toFindinputsSliderThumbs();
-
       new Array(inputsSliderThumbs.length)
         .fill(1)
         .forEach((_element: number, i: number) => {

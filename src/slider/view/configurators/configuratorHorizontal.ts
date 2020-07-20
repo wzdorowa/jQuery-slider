@@ -41,15 +41,15 @@ const configuratorHorizontal: IConfigurator = {
         const element = elements[i];
         const indentLeft = String(Math.ceil(configuratorHorizontal.calculateCoefficientPoint(scale,
           modelState.max, modelState.min) * modelState.thumbsValues[i]));
-        element.style.left = `${indentLeft} px`;
+        element.style.left = `${indentLeft}px`;
       });
 
     const range = activRange;
     const marginLeft = String(configuratorHorizontal.getElementOffset(elements[0]));
     const width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1])
     - configuratorHorizontal.getElementOffset(elements[0])));
-    range.style.marginLeft = `${marginLeft} px`;
-    range.style.width = `${width} px`;
+    range.style.marginLeft = `${marginLeft}px`;
+    range.style.width = `${width}px`;
   },
   setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null,
     coefficientPoint: number, modelState: IModelState, shiftToMinValue: number,
@@ -59,11 +59,11 @@ const configuratorHorizontal: IConfigurator = {
       .fill(1)
       .forEach((_element: number, i: number) => {
         if (i !== currentThumbIndex) {
-          const element = elements[i];
+          const thumb = elements[i];
           const indentLeft = String((Math.ceil(coefficientPoint * modelState.thumbsValues[i])
           - shiftToMinValue));
-          element.style.top = '';
-          element.style.left = `${indentLeft} px`;
+          thumb.style.top = '';
+          thumb.style.left = `${indentLeft}px`;
         }
       });
     range.style.marginTop = '';
@@ -72,8 +72,8 @@ const configuratorHorizontal: IConfigurator = {
     const marginLeft = String(configuratorHorizontal.getElementOffset(elements[0]));
     const width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1])
     - configuratorHorizontal.getElementOffset(elements[0])));
-    range.style.marginLeft = `${marginLeft} px`;
-    range.style.width = `${width} px`;
+    range.style.marginLeft = `${marginLeft}px`;
+    range.style.width = `${width}px`;
   },
   getCurrentValueAxisToProcessStart(target: HTMLElement): number {
     return target.offsetLeft;
@@ -90,7 +90,7 @@ const configuratorHorizontal: IConfigurator = {
   setIndentForTarget(target: HTMLElement, currentXorY: number): void {
     const element = target;
     const indentLeft = String(currentXorY);
-    element.style.left = `${indentLeft} px`;
+    element.style.left = `${indentLeft}px`;
   },
   getTargetWidth(target: HTMLElement): number {
     return target.offsetWidth;
@@ -99,15 +99,15 @@ const configuratorHorizontal: IConfigurator = {
     currentValue: number, shiftToMinValue: number): void {
     const element = target;
     const indentLeft = String(Math.ceil(coefficientPoint * currentValue) - shiftToMinValue);
-    element.style.left = `${indentLeft} px`;
+    element.style.left = `${indentLeft}px`;
   },
   updateActiveRange(activRange: HTMLElement, elements: HTMLElement[]): void {
     const range = activRange;
     const marginLeft = String(configuratorHorizontal.getElementOffset(elements[0]));
     const width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1])
     - configuratorHorizontal.getElementOffset(elements[0])));
-    range.style.marginLeft = `${marginLeft} px`;
-    range.style.width = `${width} px`;
+    range.style.marginLeft = `${marginLeft}px`;
+    range.style.width = `${width}px`;
   },
   calculateClickLocation(event: MouseEvent, target: HTMLElement): number {
     return event.offsetX + target.offsetLeft;
