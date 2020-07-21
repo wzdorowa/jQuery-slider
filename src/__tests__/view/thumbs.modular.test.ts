@@ -1,9 +1,9 @@
+import sinonLib = require('sinon');
 import configuratorHorizontal from '../../slider/view/configurators/configuratorHorizontal';
-import EventEmitter from '../../slider/eventEmitter';
-import { IModelState } from '../../slider/interfaces/iModelState';
 import View from '../../slider/view/view';
 import Thumbs from '../../slider/view/thumbs';
-import sinonLib = require('sinon');
+import EventEmitter from '../../slider/eventEmitter';
+import { IModelState } from '../../slider/interfaces/iModelState';
 
 const state: IModelState = {
   min: 0,

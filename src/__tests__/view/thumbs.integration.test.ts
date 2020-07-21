@@ -1,5 +1,5 @@
-import { IModelState } from '../../slider/interfaces/iModelState';
 import puppeteer from 'puppeteer';
+import { IModelState } from '../../slider/interfaces/iModelState';
 
 interface IRectNextThumb {
     top: number,
@@ -23,8 +23,10 @@ describe('Интеграционные тесты для горизонталь�
 
   beforeEach(async () => {
     const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
-    if (element !== null && element !== undefined) {
-      element.remove();
+    if (element !== null) {
+      if (element !== undefined) {
+        element.remove();
+      }
     }
     browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
@@ -307,8 +309,10 @@ describe('Интеграционные тесты для вертикально�
 
   beforeEach(async () => {
     const element: HTMLDivElement | null = window.document.querySelector('.js-slider-test');
-    if (element !== null && element !== undefined) {
-      element.remove();
+    if (element !== null) {
+      if (element !== undefined) {
+        element.remove();
+      }
     }
     browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();

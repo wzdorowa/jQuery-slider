@@ -1,7 +1,7 @@
+import sinonLib = require('sinon');
 import configuratorVertical from '../slider/view/configurators/configuratorVertical';
 import createElement from '../slider/functions/createElement';
 import { IModelState } from '../slider/interfaces/iModelState';
-import sinonLib = require('sinon');
 
 const sinon = sinonLib;
 

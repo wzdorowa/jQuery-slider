@@ -1,7 +1,7 @@
 import { IModelState } from '../interfaces/iModelState';
 import { IConfigurator } from '../interfaces/iConfigurator';
 
-export default class Scale {
+class Scale {
     public slider: HTMLElement
 
     public scale!: HTMLElement
@@ -46,3 +46,4 @@ export default class Scale {
       this.scale.addEventListener('click', handleScaleClick);
     }
 }
+export default Scale;

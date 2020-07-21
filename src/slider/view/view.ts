@@ -7,7 +7,7 @@ import Scale from '../view/scale';
 import Thumbs from './thumbs';
 import Tooltips from '../view/tooltips';
 
-export default class View {
+class View {
     private slider: HTMLElement
 
     private isCreatedSlider: boolean
@@ -47,13 +47,18 @@ export default class View {
           if (this.isCreatedSlider) {
             this.scale.changeOrientation(this.thumbs.setThumbToNewPosition.bind(this.thumbs),
               this.modelState, this.configurator);
+
             this.tooltips.changeOrientation(this.configurator);
+
             this.thumbs.setValuesThumbs(this.modelState, this.scale.activeRange,
               this.scale.scale, this.configurator);
+
             this.tooltips.setTooltipsValues(this.modelState);
+
             this.thumbs.listenThumbsEventsWhenChangingOrientation(this.modelState,
               this.configurator, this.scale.scale, this.scale.activeRange,
               this.tooltips.setCurrentTooltipValue.bind(this.tooltips));
+
             this.thumbs.listenSizeWindowWhenChangingOrientation(this.modelState,
               this.configurator, this.scale.scale, this.scale.activeRange);
           }
@@ -96,3 +101,4 @@ export default class View {
       });
     }
 }
+export default View;

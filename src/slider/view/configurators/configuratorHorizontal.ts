@@ -38,10 +38,10 @@ const configuratorHorizontal: IConfigurator = {
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
-        const element = elements[i];
+        const thumb = elements[i];
         const indentLeft = String(Math.ceil(configuratorHorizontal.calculateCoefficientPoint(scale,
           modelState.max, modelState.min) * modelState.thumbsValues[i]));
-        element.style.left = `${indentLeft}px`;
+        thumb.style.left = `${indentLeft}px`;
       });
 
     const range = activRange;

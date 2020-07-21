@@ -1,7 +1,7 @@
 import { IModelState } from './interfaces/iModelState';
 import EventEmitter from './eventEmitter';
 
-export default class Model {
+class Model {
     public state: IModelState
 
     private emitter: EventEmitter
@@ -166,15 +166,19 @@ export default class Model {
         }
       });
     }
-    // Проверить перекрытие ползунков друг другом
 
+    // Проверить перекрытие ползунков друг другом
     private checkThumbsValuesForOverlap(): void {
       this.state.thumbsValues.forEach((element: number, i: number) => {
         const maxPossibleValue: number = this.state.max
         - (((this.state.thumbsValues.length - 1) - i) * this.state.step);
         const minPossibleValue: number = this.state.min + (i * this.state.step);
+        const isIntermediateThumb: boolean = i !== 0 && element <= this.state.thumbsValues[i - 1];
+        const isLastThumb: boolean = i
+        !== this.state.thumbsValues[this.state.thumbsValues.length - 1]
+        && element >= this.state.thumbsValues[i + 1];
 
-        if (i !== 0 && element <= this.state.thumbsValues[i - 1]) {
+        if (isIntermediateThumb) {
           this.state.thumbsValues[i - 1] = this.state.thumbsValues[i] - this.state.step;
           if (this.state.thumbsValues[i - 1] < minPossibleValue - this.state.step) {
             this.state.thumbsValues[i - 1] = minPossibleValue - this.state.step;
@@ -182,8 +186,7 @@ export default class Model {
           }
           this.notifyStateChanged();
         }
-        if (i !== this.state.thumbsValues[this.state.thumbsValues.length - 1]
-            && element >= this.state.thumbsValues[i + 1]) {
+        if (isLastThumb) {
           this.state.thumbsValues[i + 1] = this.state.thumbsValues[i] + this.state.step;
           if (this.state.thumbsValues[i + 1] > maxPossibleValue + this.state.step) {
             this.state.thumbsValues[i + 1] = maxPossibleValue + this.state.step;
@@ -194,3 +197,4 @@ export default class Model {
       });
     }
 }
+export default Model;

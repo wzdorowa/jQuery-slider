@@ -1,9 +1,9 @@
 import Scale from '../../slider/view/scale';
 import Thumbs from '../../slider/view/thumbs';
-import EventEmitter from '../../slider/eventEmitter';
-import { IModelState } from '../../slider/interfaces/iModelState';
 import configuratorHorizontal from '../../slider/view/configurators/configuratorHorizontal';
 import configuratorVertical from '../../slider/view/configurators/configuratorVertical';
+import EventEmitter from '../../slider/eventEmitter';
+import { IModelState } from '../../slider/interfaces/iModelState';
 
 const state: IModelState = {
   min: 0,

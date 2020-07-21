@@ -27,7 +27,7 @@
     visibility: hidden;
 }
 .configuration__thumbs-value {
-    width: 90%;
+    width: 85%;
     color: #202020;
     border: 1px solid #eee;
     border-radius: 2px;
@@ -40,6 +40,7 @@
     line-height: 30px;
 
     margin-top: 5px;
+    padding-left: 5px;
 }
 .configuration__thumbs-value:focus {
     border-color: #b3d4fc;
@@ -62,6 +63,7 @@
     line-height: 30px;
 
     margin-top: 5px;
+    padding-left: 5px;
 }
 .configuration__thumbs-value-from:focus {
     border-color: #b3d4fc;
@@ -80,6 +82,7 @@
     line-height: 30px;
 
     margin-top: 5px;
+    padding-left: 5px;
 }
 .configuration__thumbs-value-to:focus {
     border-color: #b3d4fc;

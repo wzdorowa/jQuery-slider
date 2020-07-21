@@ -8,7 +8,7 @@ type CallbackFunctionVariadic = (...args: any[]) => void;
 interface StringArray {
     [index: string]: CallbackFunctionVariadic[];
 }
-export default class EventEmitter {
+class EventEmitter {
     public handlersByEvent: StringArray;
 
     constructor() {
@@ -34,3 +34,4 @@ export default class EventEmitter {
       }
     }
 }
+export default EventEmitter;

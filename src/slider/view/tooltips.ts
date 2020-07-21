@@ -2,7 +2,7 @@ import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IConfigurator } from '../interfaces/iConfigurator';
 
-export default class Tooltips {
+class Tooltips {
     private slider: HTMLElement
 
     public tooltipsElements: HTMLElement[]
@@ -92,3 +92,4 @@ export default class Tooltips {
       });
     }
 }
+export default Tooltips;

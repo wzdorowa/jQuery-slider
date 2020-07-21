@@ -1,15 +1,15 @@
 import { IHTMLElement } from './interfaces/iHTMLElement';
+import { IModelState } from './interfaces/iModelState';
 import Model from './model';
 import View from './view/view';
 import EventEmitter from './eventEmitter';
-import { IModelState } from './interfaces/iModelState';
 
 interface IData {
     value: number
     index: number
 }
 
-export default class Controller {
+class Controller {
     public slider: IHTMLElement
 
     constructor(element: IHTMLElement) {
@@ -76,3 +76,4 @@ export default class Controller {
       });
     }
 }
+export default Controller;

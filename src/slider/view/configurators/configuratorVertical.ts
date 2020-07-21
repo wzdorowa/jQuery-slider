@@ -39,10 +39,10 @@ const configuratorVertical: IConfigurator = {
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
-        const element = elements[i];
+        const thumb = elements[i];
         const indentTop = String((Math.ceil(configuratorVertical.calculateCoefficientPoint(scale,
           modelState.max, modelState.min) * modelState.thumbsValues[i])));
-        element.style.top = `${indentTop}px`;
+        thumb.style.top = `${indentTop}px`;
       });
 
     const marginTop = String(configuratorVertical.getElementOffset(elements[0]));
@@ -59,11 +59,11 @@ const configuratorVertical: IConfigurator = {
       .fill(1)
       .forEach((_element: number, i: number) => {
         if (i !== currentThumbIndex) {
-          const element = elements[i];
+          const thumb = elements[i];
           const indentTop = String((Math.ceil(coefficientPoint * modelState.thumbsValues[i])
           - shiftToMinValue));
-          element.style.left = '';
-          element.style.top = `${indentTop}px`;
+          thumb.style.left = '';
+          thumb.style.top = `${indentTop}px`;
         }
       });
     range.style.marginLeft = '';
