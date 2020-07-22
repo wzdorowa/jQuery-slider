@@ -1,8 +1,8 @@
 import { IModelState } from '../../interfaces/iModelState';
-import { IConfigurator } from '../../interfaces/iConfigurator';
+import { IDriver } from '../../interfaces/iDriver';
 import createElement from '../../functions/createElement';
 
-const configuratorHorizontal: IConfigurator = {
+const driverHorizontal: IDriver = {
   getElementOffset(element: HTMLElement): number {
     return element.offsetLeft;
   },
@@ -14,7 +14,7 @@ const configuratorHorizontal: IConfigurator = {
     const element: HTMLElement = createElement('div', 'slider__scale js-slider__scale');
     return element;
   },
-  createElementActivRange(): HTMLElement {
+  createElementActiveRange(): HTMLElement {
     const element: HTMLElement = createElement('span', 'slider__active-range js-slider__active-range');
     return element;
   },
@@ -29,32 +29,32 @@ const configuratorHorizontal: IConfigurator = {
     const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__vertical-scale');
     return $element;
   },
-  searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
+  searchElementActiveRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
     const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__vertical-active-range');
     return $element;
   },
   setInPlaceThumb(elements: HTMLElement[], modelState: IModelState,
-    activRange: HTMLElement, scale: HTMLElement): void {
+    activeRange: HTMLElement, scale: HTMLElement): void {
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
         const thumb = elements[i];
-        const indentLeft = String(Math.ceil(configuratorHorizontal.calculateCoefficientPoint(scale,
+        const indentLeft = String(Math.ceil(driverHorizontal.calculateCoefficientPoint(scale,
           modelState.max, modelState.min) * modelState.thumbsValues[i]));
         thumb.style.left = `${indentLeft}px`;
       });
 
-    const range = activRange;
-    const marginLeft = String(configuratorHorizontal.getElementOffset(elements[0]));
-    const width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1])
-    - configuratorHorizontal.getElementOffset(elements[0])));
+    const range = activeRange;
+    const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
+    const width = String((driverHorizontal.getElementOffset(elements[elements.length - 1])
+    - driverHorizontal.getElementOffset(elements[0])));
     range.style.marginLeft = `${marginLeft}px`;
     range.style.width = `${width}px`;
   },
   setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null,
     coefficientPoint: number, modelState: IModelState, shiftToMinValue: number,
-    activRange: HTMLElement): void {
-    const range = activRange;
+    activeRange: HTMLElement): void {
+    const range = activeRange;
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
@@ -69,9 +69,9 @@ const configuratorHorizontal: IConfigurator = {
     range.style.marginTop = '';
     range.style.height = '';
 
-    const marginLeft = String(configuratorHorizontal.getElementOffset(elements[0]));
-    const width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1])
-    - configuratorHorizontal.getElementOffset(elements[0])));
+    const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
+    const width = String((driverHorizontal.getElementOffset(elements[elements.length - 1])
+    - driverHorizontal.getElementOffset(elements[0])));
     range.style.marginLeft = `${marginLeft}px`;
     range.style.width = `${width}px`;
   },
@@ -101,11 +101,11 @@ const configuratorHorizontal: IConfigurator = {
     const indentLeft = String(Math.ceil(coefficientPoint * currentValue) - shiftToMinValue);
     element.style.left = `${indentLeft}px`;
   },
-  updateActiveRange(activRange: HTMLElement, elements: HTMLElement[]): void {
-    const range = activRange;
-    const marginLeft = String(configuratorHorizontal.getElementOffset(elements[0]));
-    const width = String((configuratorHorizontal.getElementOffset(elements[elements.length - 1])
-    - configuratorHorizontal.getElementOffset(elements[0])));
+  updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void {
+    const range = activeRange;
+    const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
+    const width = String((driverHorizontal.getElementOffset(elements[elements.length - 1])
+    - driverHorizontal.getElementOffset(elements[0])));
     range.style.marginLeft = `${marginLeft}px`;
     range.style.width = `${width}px`;
   },
@@ -116,4 +116,4 @@ const configuratorHorizontal: IConfigurator = {
     return event.offsetX;
   },
 };
-export default configuratorHorizontal;
+export default driverHorizontal;

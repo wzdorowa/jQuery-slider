@@ -1,8 +1,8 @@
 import { IModelState } from '../../interfaces/iModelState';
-import { IConfigurator } from '../../interfaces/iConfigurator';
+import { IDriver } from '../../interfaces/iDriver';
 import createElement from '../../functions/createElement';
 
-const configuratorVertical: IConfigurator = {
+const driverVertical: IDriver = {
   getElementOffset(element: HTMLElement): number {
     return element.offsetTop;
   },
@@ -14,7 +14,7 @@ const configuratorVertical: IConfigurator = {
     const element: HTMLElement = createElement('div', 'slider__vertical-scale js-slider__vertical-scale');
     return element;
   },
-  createElementActivRange(): HTMLElement {
+  createElementActiveRange(): HTMLElement {
     const element: HTMLElement = createElement('span', 'slider__vertical-active-range js-slider__vertical-active-range');
     return element;
   },
@@ -26,7 +26,7 @@ const configuratorVertical: IConfigurator = {
     const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__scale');
     return $element;
   },
-  searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
+  searchElementActiveRangeToDelete(slider: HTMLElement): JQuery<HTMLElement> {
     const $element: JQuery<HTMLElement> = $(slider).find('.js-slider__active-range');
     return $element;
   },
@@ -40,14 +40,14 @@ const configuratorVertical: IConfigurator = {
       .fill(1)
       .forEach((_element: number, i: number) => {
         const thumb = elements[i];
-        const indentTop = String((Math.ceil(configuratorVertical.calculateCoefficientPoint(scale,
+        const indentTop = String((Math.ceil(driverVertical.calculateCoefficientPoint(scale,
           modelState.max, modelState.min) * modelState.thumbsValues[i])));
         thumb.style.top = `${indentTop}px`;
       });
 
-    const marginTop = String(configuratorVertical.getElementOffset(elements[0]));
-    const height = String((configuratorVertical.getElementOffset(elements[elements.length - 1])
-    - configuratorVertical.getElementOffset(elements[0])));
+    const marginTop = String(driverVertical.getElementOffset(elements[0]));
+    const height = String((driverVertical.getElementOffset(elements[elements.length - 1])
+    - driverVertical.getElementOffset(elements[0])));
     range.style.marginTop = `${marginTop}px`;
     range.style.height = `${height}px`;
   },
@@ -69,9 +69,9 @@ const configuratorVertical: IConfigurator = {
     range.style.marginLeft = '';
     range.style.width = '';
 
-    const marginTop = String(configuratorVertical.getElementOffset(elements[0]));
-    const height = String((configuratorVertical.getElementOffset(elements[elements.length - 1])
-    - configuratorVertical.getElementOffset(elements[0])));
+    const marginTop = String(driverVertical.getElementOffset(elements[0]));
+    const height = String((driverVertical.getElementOffset(elements[elements.length - 1])
+    - driverVertical.getElementOffset(elements[0])));
     range.style.marginTop = `${marginTop}px`;
     range.style.height = `${height}px`;
   },
@@ -103,9 +103,9 @@ const configuratorVertical: IConfigurator = {
   },
   updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void {
     const range = activeRange;
-    const marginTop = String(configuratorVertical.getElementOffset(elements[0]));
-    const height = String((configuratorVertical.getElementOffset(elements[elements.length - 1])
-    - configuratorVertical.getElementOffset(elements[0])));
+    const marginTop = String(driverVertical.getElementOffset(elements[0]));
+    const height = String((driverVertical.getElementOffset(elements[elements.length - 1])
+    - driverVertical.getElementOffset(elements[0])));
     range.style.marginTop = `${marginTop}px`;
     range.style.height = `${height}px`;
   },
@@ -116,4 +116,4 @@ const configuratorVertical: IConfigurator = {
     return event.offsetY;
   },
 };
-export default configuratorVertical;
+export default driverVertical;

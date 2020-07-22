@@ -1,5 +1,5 @@
 import { IModelState } from '../interfaces/iModelState';
-import { IConfigurator } from '../interfaces/iConfigurator';
+import { IDriver } from '../interfaces/iDriver';
 
 class Scale {
     public slider: HTMLElement
@@ -12,10 +12,10 @@ class Scale {
       this.slider = element;
     }
 
-    /* функция createScale добавляет элементы шкалы в основную html-структуру слайдера */
-    createScale(configurator: IConfigurator): void {
-      const scale: HTMLElement = configurator.createElementScale();
-      const activeRange: HTMLElement = configurator.createElementActivRange();
+    /* function createScale adds scale elements to the main html slider structure */
+    createScale(driver: IDriver): void {
+      const scale: HTMLElement = driver.createElementScale();
+      const activeRange: HTMLElement = driver.createElementActiveRange();
 
       this.slider.append(scale);
       scale.append(activeRange);
@@ -25,24 +25,24 @@ class Scale {
     }
 
     changeOrientation(setThumbToNewPosition: (event: MouseEvent, modelState: IModelState,
-    configurator: IConfigurator) => void, modelState: IModelState,
-    configurator: IConfigurator): void {
-      const activeRangeToDelite:
-        JQuery<HTMLElement> = configurator.searchElementActivRangeToDelete(this.slider);
-      activeRangeToDelite.remove();
+      driver: IDriver) => void, modelState: IModelState,
+    driver: IDriver): void {
+      const activeRangeToRemove:
+      JQuery<HTMLElement> = driver.searchElementActiveRangeToDelete(this.slider);
+      activeRangeToRemove.remove();
       const scaleToDelete:
-        JQuery<HTMLElement> = configurator.searchElementScaleToDelete(this.slider);
+        JQuery<HTMLElement> = driver.searchElementScaleToDelete(this.slider);
       scaleToDelete.remove();
 
-      this.createScale(configurator);
-      this.listenScaleEvents(setThumbToNewPosition, modelState, configurator);
+      this.createScale(driver);
+      this.listenScaleEvents(setThumbToNewPosition, modelState, driver);
     }
 
     listenScaleEvents(setThumbToNewPosition: (event: MouseEvent,
-    modelState: IModelState, configurator: IConfigurator) => void,
-    modelState: IModelState, configurator: IConfigurator): void {
+    modelState: IModelState, driver: IDriver) => void,
+    modelState: IModelState, driver: IDriver): void {
       const handleScaleClick: (event: MouseEvent) =>
-        void = (event) => setThumbToNewPosition(event, modelState, configurator);
+        void = (event) => setThumbToNewPosition(event, modelState, driver);
       this.scale.addEventListener('click', handleScaleClick);
     }
 }

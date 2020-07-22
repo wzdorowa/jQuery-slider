@@ -2,7 +2,7 @@ import EventEmitter from '../eventEmitter';
 import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IThumbsState } from '../interfaces/IThumbsState';
-import { IConfigurator } from '../interfaces/iConfigurator';
+import { IDriver } from '../interfaces/iDriver';
 
 class Thumbs {
     private slider: HTMLElement
@@ -11,12 +11,12 @@ class Thumbs {
 
     public state: IThumbsState
 
-    public configurator: IConfigurator | null
+    public driver: IDriver | null
 
     constructor(element: HTMLElement, eventEmitter: EventEmitter) {
       this.slider = element;
       this.emitter = eventEmitter;
-      this.configurator = null;
+      this.driver = null;
 
       this.state = {
         thumbs: [],
@@ -29,8 +29,8 @@ class Thumbs {
         maxValueAxis: 0,
       };
     }
-    /* функция CreateSlider добавляет бегунки в родительский элемент слайдера */
 
+    /* the CreateSlider function adds sliders to the parent of the slider */
     createThumbs(amount: number): void {
       const fragment = document.createDocumentFragment();
       new Array(amount)
@@ -43,16 +43,16 @@ class Thumbs {
         });
       this.slider.append(fragment);
     }
-    /* изменяет количество отрисованных на шкале бегунков */
 
-    changeAmountThumbs(modelState: IModelState, configurator: IConfigurator,
+    /* changes the number of sliders drawn on the scale */
+    changeAmountThumbs(modelState: IModelState, driver: IDriver,
       scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue:
       (modelState: IModelState, i: number) => void): void {
       if (this.state.thumbs.length < modelState.amount) {
         const amount: number = modelState.amount - this.state.thumbs.length;
 
         this.createThumbs(amount);
-        this.listenNewThumbsEvents(amount, modelState, configurator, scale,
+        this.listenNewThumbsEvents(amount, modelState, driver, scale,
           activeRange, setCurrentTooltipValue);
         this.setValueToNewThumb(amount, modelState);
       }
@@ -73,9 +73,9 @@ class Thumbs {
     }
 
     listenThumbsEventsWhenChangingOrientation(modelState: IModelState,
-      configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement,
+      driver: IDriver, scale: HTMLElement, activeRange: HTMLElement,
       setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
-      this.configurator = configurator;
+      this.driver = driver;
       this.state.thumbs.forEach((element: HTMLElement, i: number) => {
         const start: (event: MouseEvent) => void = (event) => this.processStart(modelState,
           event, i, scale, activeRange, setCurrentTooltipValue);
@@ -84,11 +84,11 @@ class Thumbs {
       });
     }
 
-    /* навешивает обработчик событий 'mousedown' на каждый созданный бегунок */
-    listenThumbsEvents(modelState: IModelState, configurator: IConfigurator,
+    /* hangs the 'mousedown' event handler for each created thumb */
+    listenThumbsEvents(modelState: IModelState, driver: IDriver,
       scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue:
       (modelState: IModelState, i: number) => void): void {
-      this.configurator = configurator;
+      this.driver = driver;
       this.state.thumbs.forEach((element: HTMLElement, i: number) => {
         const start: (event: MouseEvent) => void = (event) => this.processStart(modelState,
           event, i, scale, activeRange, setCurrentTooltipValue);
@@ -96,11 +96,11 @@ class Thumbs {
       });
     }
 
-    /* навешивает обработчик событий 'mousedown' на каждый добавленный бегунок */
+    /* hangs the 'mousedown' event handler for each added thumb */
     listenNewThumbsEvents(amount: number, modelState: IModelState,
-      configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement,
+      driver: IDriver, scale: HTMLElement, activeRange: HTMLElement,
       setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
-      this.configurator = configurator;
+      this.driver = driver;
       new Array(amount)
         .fill(1)
         .forEach((_element: number, i: number) => {
@@ -111,26 +111,26 @@ class Thumbs {
         });
     }
 
-    /* слушает событие 'resize' на странице со слайдером */
+    /* listens to the 'resize' event on the slider page */
     listenSizeWindow(scale: HTMLElement, activeRange: HTMLElement,
-      modelState: IModelState, configurator: IConfigurator): void {
+      modelState: IModelState, driver: IDriver): void {
       const handleWindowResize = () => this.setNewValuesForThumbs(scale, activeRange,
-        modelState, configurator);
+        modelState, driver);
       window.addEventListener('resize', handleWindowResize);
     }
 
     listenSizeWindowWhenChangingOrientation(modelState: IModelState,
-      configurator: IConfigurator, scale: HTMLElement, activeRange: HTMLElement): void {
-      this.configurator = configurator;
+      driver: IDriver, scale: HTMLElement, activeRange: HTMLElement): void {
+      this.driver = driver;
       const handleWindowResize = () => this.setNewValuesForThumbs(scale, activeRange,
-        modelState, configurator);
+        modelState, driver);
       window.removeEventListener('resize', handleWindowResize);
       window.addEventListener('resize', handleWindowResize);
     }
 
-    /* устанавливает значение для каждого добавленного бегунка */
+    /* sets a value for each added thumb */
     setValueToNewThumb(amount: number, modelState: IModelState): void {
-      const currentState = modelState;
+      const currentState = { ...modelState };
       if (this.state.thumbs.length === currentState.thumbsValues.length) {
         return;
       }
@@ -141,27 +141,27 @@ class Thumbs {
             - i)] = (currentState.thumbsValues[(this.state.thumbs.length - 1)
               - (amount - i)] + (currentState.step));
         });
-      this.emitter.emit('view:amountThumbs-changed', modelState.thumbsValues);
+      this.emitter.emit('view:amountThumbs-changed', currentState.thumbsValues);
     }
 
-    /* расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений */
+    /* places thumbs on the slider based on default values */
     setValuesThumbs(modelState: IModelState, activeRange: HTMLElement,
-      scale: HTMLElement, configurator: IConfigurator): void {
-      configurator.setInPlaceThumb(this.state.thumbs, modelState, activeRange, scale);
+      scale: HTMLElement, driver: IDriver): void {
+      driver.setInPlaceThumb(this.state.thumbs, modelState, activeRange, scale);
     }
 
-    /* расставляет бегунки по слайдеру в зависимости от полученных новых значений */
+    /* places thumbs on the slider depending on the received new value */
     setNewValuesForThumbs(scale: HTMLElement, activeRange: HTMLElement,
-      modelState: IModelState, configurator: IConfigurator): void {
-      this.state.coefficientPoint = configurator.calculateCoefficientPoint(scale,
+      modelState: IModelState, driver: IDriver): void {
+      this.state.coefficientPoint = driver.calculateCoefficientPoint(scale,
         modelState.max, modelState.min);
 
       this.state.shiftToMinValue = Math.ceil(this.state.coefficientPoint * modelState.min);
-      configurator.setInPlaceNewThumb(this.state.thumbs, this.state.currentThumbIndex,
+      driver.setInPlaceNewThumb(this.state.thumbs, this.state.currentThumbIndex,
         this.state.coefficientPoint, modelState, this.state.shiftToMinValue, activeRange);
     }
 
-    /* метод рассчитывает текущее значение бегунка */
+    /* the method calculates the current value of the thumb */
     calculateValue(modelState: IModelState, currentValueAxis: number): number {
       let currentValue: number = Math.floor(currentValueAxis / this.state.coefficientPoint)
        + modelState.min;
@@ -170,7 +170,7 @@ class Thumbs {
       return currentValue;
     }
 
-    /* метод рассчитывает значение места бегунка на шкале */
+    /* the method calculates the value of the position of the thumb on the scale */
     calculateValueOfPlaceOnScale(modelState: IModelState, i: number): void {
       this.state.currentValue = this.calculateValue(modelState, this.state.currentValueAxis);
       const halfStep = Math.floor((this.state.currentValue + (modelState.step / 2))
@@ -184,7 +184,7 @@ class Thumbs {
       }
     }
 
-    /* рассчитывает потенциальное значение бегунка на месте клика на шкале */
+    /* calculates the potential value of the thumb at the point of click on the scale */
     calculateValueOfPlaceClickOnScale(modelState: IModelState, currentValueAxis: number): number {
       const currentValue: number | null = this.calculateValue(modelState, currentValueAxis);
       if (this.state.currentValue !== null) {
@@ -198,20 +198,20 @@ class Thumbs {
       return currentValue;
     }
 
-    /* метод для установки ближайшего ползунка на место клика по шкале слайдера */
+    /* method for setting the closest slider to the clicked position on the slider scale */
     setThumbToNewPosition(event: MouseEvent, modelState: IModelState,
-      configurator: IConfigurator): [number, number | null] {
+      driver: IDriver): [number, number | null] {
       event.preventDefault();
       const target: HTMLDivElement = event.target as HTMLDivElement;
       let clickLocationAxis = 0;
       const isHorizontalTarget: boolean = target != null && target.className === 'js-slider__active-range';
       const isVerticalTarget: boolean = target != null && target.className === 'js-slider__vertical-active-range';
       if (isHorizontalTarget) {
-        clickLocationAxis = configurator.calculateClickLocation(event, target);
+        clickLocationAxis = driver.calculateClickLocation(event, target);
       } else if (isVerticalTarget) {
-        clickLocationAxis = configurator.calculateClickLocation(event, target);
+        clickLocationAxis = driver.calculateClickLocation(event, target);
       } else {
-        clickLocationAxis = configurator.getOffsetFromClick(event);
+        clickLocationAxis = driver.getOffsetFromClick(event);
       }
       const currentValue: number | null
       | undefined = this.calculateValueOfPlaceClickOnScale(modelState, clickLocationAxis);
@@ -259,11 +259,11 @@ class Thumbs {
       const target: HTMLElement = elements[i];
       const eventThumb: MouseEvent = event;
 
-      if (this.configurator !== null) {
-        this.state.currentValueAxis = this.configurator.getCurrentValueAxisToProcessStart(target);
-        this.state.startValueAxis = this.configurator.getStartValueAxisToProcessStart(eventThumb,
+      if (this.driver !== null) {
+        this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessStart(target);
+        this.state.startValueAxis = this.driver.getStartValueAxisToProcessStart(eventThumb,
           this.state.currentValueAxis);
-        this.state.maxValueAxis = this.configurator.getMaxValueAxisToProcessStart(scale);
+        this.state.maxValueAxis = this.driver.getMaxValueAxisToProcessStart(scale);
       }
       this.state.currentValue = modelState.thumbsValues[i];
 
@@ -288,9 +288,9 @@ class Thumbs {
       const isOneThumb: boolean = elements.length === 1;
       const isMultipleThumbs: boolean = elements.length !== 1;
 
-      if (this.configurator !== null) {
-        const targetWidth: number = this.configurator.getTargetWidth(target);
-        this.state.currentValueAxis = this.configurator.getCurrentValueAxisToProcessMove(eventThumb,
+      if (this.driver !== null) {
+        const targetWidth: number = this.driver.getTargetWidth(target);
+        this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessMove(eventThumb,
           this.state.startValueAxis);
         if (isFirstThumb) {
           if (isOneThumb) {
@@ -299,7 +299,7 @@ class Thumbs {
             }
           }
           if (isMultipleThumbs) {
-            const offsetNextSlider: number = this.configurator.getElementOffset(elements[i + 1])
+            const offsetNextSlider: number = this.driver.getElementOffset(elements[i + 1])
             - targetWidth;
             if (this.state.currentValueAxis > offsetNextSlider) {
               this.state.currentValueAxis = offsetNextSlider;
@@ -309,12 +309,12 @@ class Thumbs {
             this.state.currentValueAxis = modelState.min;
           }
 
-          this.configurator.setIndentForTarget(target, this.state.currentValueAxis);
+          this.driver.setIndentForTarget(target, this.state.currentValueAxis);
         }
         if (isIntermediateThumb) {
-          const offsetNextThumb: number = this.configurator.getElementOffset(elements[i + 1])
+          const offsetNextThumb: number = this.driver.getElementOffset(elements[i + 1])
           - targetWidth;
-          const offsetPreviousThumb: number = this.configurator.getElementOffset(elements[i - 1])
+          const offsetPreviousThumb: number = this.driver.getElementOffset(elements[i - 1])
           + targetWidth;
           const { currentValueAxis: valueAxis } = this.state;
 
@@ -324,10 +324,10 @@ class Thumbs {
           if (valueAxis < offsetPreviousThumb) {
             this.state.currentValueAxis = offsetPreviousThumb;
           }
-          this.configurator.setIndentForTarget(target, this.state.currentValueAxis);
+          this.driver.setIndentForTarget(target, this.state.currentValueAxis);
         }
         if (isLastThumb) {
-          const offsetPreviousThumb: number = this.configurator.getElementOffset(elements[i - 1])
+          const offsetPreviousThumb: number = this.driver.getElementOffset(elements[i - 1])
           + targetWidth;
           const { currentValueAxis: valueAxis } = this.state;
           if (valueAxis < offsetPreviousThumb) {
@@ -336,11 +336,11 @@ class Thumbs {
           if (valueAxis > this.state.maxValueAxis) {
             this.state.currentValueAxis = this.state.maxValueAxis;
           }
-          this.configurator.setIndentForTarget(target, this.state.currentValueAxis);
+          this.driver.setIndentForTarget(target, this.state.currentValueAxis);
         }
 
         // update line span
-        this.configurator.updateActiveRange(activeRange, elements);
+        this.driver.updateActiveRange(activeRange, elements);
       }
       this.calculateValueOfPlaceOnScale(modelState, i);
       setCurrentTooltipValue(modelState, i);
@@ -350,9 +350,9 @@ class Thumbs {
       _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState,
       setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void {
       setCurrentTooltipValue(modelState, i);
-      if (this.configurator !== null) {
+      if (this.driver !== null) {
         if (this.state.currentValue !== null) {
-          this.configurator.setIndentForTargetToProcessStop(target, this.state.coefficientPoint,
+          this.driver.setIndentForTargetToProcessStop(target, this.state.coefficientPoint,
             this.state.currentValue, this.state.shiftToMinValue);
         }
       }

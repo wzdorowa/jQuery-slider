@@ -21,7 +21,7 @@ class Controller {
       const model: Model = new Model(eventEmitter);
 
       this.slider.getState = (): IModelState => {
-        const modelState: IModelState = model.state;
+        const modelState: IModelState = { ...model.state };
         return modelState;
       };
       this.slider.setNewValueMin = (min: number): void => {

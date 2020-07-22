@@ -27,8 +27,8 @@ class Model {
         this.checkThumbsValuesForOverlap();
       });
     }
-    // установить новое значение min
 
+    // set new min value
     public setNewValueMin(min: number): void {
       if (this.state.min === min) {
         return;
@@ -36,8 +36,8 @@ class Model {
       this.state.min = min;
       this.notifyStateChanged();
     }
-    // установить новое значение max
 
+    // set new value max
     public setNewValueMax(max: number): void {
       if (this.state.max === max) {
         return;
@@ -45,8 +45,8 @@ class Model {
       this.state.max = max;
       this.notifyStateChanged();
     }
-    // установить новое количество ползунков
 
+    // set a new number of thumbs
     public setNewValueAmount(amount: number): void {
       if (this.state.amount === amount) {
         return;
@@ -60,8 +60,8 @@ class Model {
       }
       this.notifyStateChanged();
     }
-    // установить новое значение для состояния ползунка
 
+    // set a new value for the thumb state
     public setNewValueThumbsValues(thumbValue: number, index: number): void {
       if (this.state.thumbsValues[index] === thumbValue) {
         return;
@@ -69,8 +69,8 @@ class Model {
       this.state.thumbsValues[index] = thumbValue;
       this.notifyStateChanged();
     }
-    // установить новое значение для шага перемещения ползунков
 
+    // set a new value for the step of moving the thumbs
     public setNewValueStep(step: number): void {
       if (this.state.step === step) {
         return;
@@ -84,16 +84,16 @@ class Model {
       }
       this.notifyStateChanged();
     }
-    // установить новое значение для поля tultip
 
+    // set a new value for the tooltip field
     public setNewValueTooltip(value: boolean): void {
       if (value !== this.state.isTooltip) {
         this.state.isTooltip = value;
         this.notifyStateChanged();
       }
     }
-    // установить новое значение для поля orientation
 
+    // set new value for orientation field
     public setNewValueOrientation(value: string): void {
       if (value === 'horizontal') {
         this.state.orientation = 'horizontal';
@@ -130,8 +130,8 @@ class Model {
         this.notifyStateChanged();
       }
     }
-    // Высчитать значения ползунков в зависимости от размера шага
 
+    // Calculate thumbs values ​​based on step size
     private checkThumbsValues(state: IModelState): void {
       state.thumbsValues.forEach((element: number, i: number) => {
         const newValue: number = element;
@@ -167,7 +167,7 @@ class Model {
       });
     }
 
-    // Проверить перекрытие ползунков друг другом
+    // Check sliders overlap
     private checkThumbsValuesForOverlap(): void {
       this.state.thumbsValues.forEach((element: number, i: number) => {
         const maxPossibleValue: number = this.state.max

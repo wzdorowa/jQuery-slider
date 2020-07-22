@@ -1,19 +1,19 @@
 import { IModelState } from './iModelState';
 
-export interface IConfigurator {
+export interface IDriver{
     getElementOffset(element: HTMLElement): number
     createElementTooltipText(): HTMLElement
     createElementScale(): HTMLElement
-    createElementActivRange(): HTMLElement
+    createElementActiveRange(): HTMLElement
     searchElementsTooltipText(slider: HTMLElement): HTMLElement[]
     calculateCoefficientPoint(scale: HTMLElement, max: number, min: number): number
     searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>
-    searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>
+    searchElementActiveRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>
     setInPlaceThumb(elements: HTMLElement[], modelState: IModelState,
-        activRange: HTMLElement, scale: HTMLElement): void
+        activeRange: HTMLElement, scale: HTMLElement): void
     setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null,
         coefficientPoint: number, modelState: IModelState, shiftToMinValue: number,
-        activRange: HTMLElement): void
+        activeRange: HTMLElement): void
     getCurrentValueAxisToProcessStart(target: HTMLElement): number
     getStartValueAxisToProcessStart(eventThumb: MouseEvent, currentXorY: number): number
     getMaxValueAxisToProcessStart(scale: HTMLElement): number
@@ -22,7 +22,7 @@ export interface IConfigurator {
     getTargetWidth(target: HTMLElement): number
     setIndentForTargetToProcessStop(target: HTMLElement, coefficientPoint: number,
         currentValue: number, shiftToMinValue: number): void
-    updateActiveRange(activRange: HTMLElement, elements: HTMLElement[]): void
+    updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void
     calculateClickLocation(event: MouseEvent, target: HTMLElement): number
     getOffsetFromClick(event: MouseEvent): number
 }
