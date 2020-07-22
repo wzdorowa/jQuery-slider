@@ -13,7 +13,7 @@ const state: IModelState = {
   isTooltip: true,
 };
 
-describe('Модульные тесты', () => {
+describe('Unit tests', () => {
   const slider = window.document.createElement('div');
   slider.className = 'js-slider-test';
   window.document.body.appendChild(slider);
@@ -21,7 +21,7 @@ describe('Модульные тесты', () => {
   const eventEmitter = new EventEmitter();
   const view = new View(slider, eventEmitter);
 
-  test('Проверка корректности создания тултипов', () => {
+  test('Checking the correctness of tooltips creation', () => {
     eventEmitter.emit('model:state-changed', state);
 
     const tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
@@ -43,13 +43,13 @@ describe('Модульные тесты', () => {
       expect(element.childNodes).toContain(tooltipsElements[i]);
     });
   });
-  test('Проверка установки значений ползунков по-умолчанию в соответствующие им тултипы ', () => {
+  test('Checking the setting of default sliders values ​​in their corresponding tooltips', () => {
     const textInTooltipsElements = window.document.querySelectorAll('.js-slider__tooltip-text');
     state.thumbsValues.forEach((element: number, i: number) => {
       expect(String(element)).toBe(textInTooltipsElements[i].innerHTML);
     });
   });
-  test('Проверка изменения количества отрисованных тултипов при изменении количества ползунков', () => {
+  test('Checking the change in the number of rendered tooltips when changing the number of sliders', () => {
     state.amount = 6;
     eventEmitter.emit('model:state-changed', state);
 
@@ -82,7 +82,7 @@ describe('Модульные тесты', () => {
       expect(element.childNodes).toContain(tooltipsElements[i]);
     });
   });
-  test('Проверка перерисовки тултипов при смене ориентации', () => {
+  test('Checking redrawing of tooltips when changing orientation', () => {
     state.orientation = 'vertical';
     eventEmitter.emit('model:state-changed', state);
 
@@ -109,14 +109,14 @@ describe('Модульные тесты', () => {
       expect(element.childNodes).toContain(textInTooltipsElements[i]);
     });
   });
-  test('Проверить наличие значений в тултипах', () => {
+  test('Check for the presence of values ​​in tooltips', () => {
     const tooltipsText = window.document.querySelectorAll('.js-slider__tooltip-text');
 
     expect(tooltipsText[0].innerHTML).toContain('20');
     expect(tooltipsText[1].innerHTML).toContain('30');
     expect(tooltipsText[2].innerHTML).toContain('40');
   });
-  test('Проверка скрытия тултипов бегунков', () => {
+  test('Checking if thumbs tooltips are hidden', () => {
     state.isTooltip = false;
     eventEmitter.emit('model:state-changed', state);
 
@@ -125,7 +125,7 @@ describe('Модульные тесты', () => {
       expect(element.className).toContain('slider__tooltip-hide');
     });
   });
-  test('Проверка показа тултипов бегунков', () => {
+  test('Checking the display of thumbs tooltips', () => {
     state.isTooltip = true;
     eventEmitter.emit('model:state-changed', state);
 
@@ -135,7 +135,7 @@ describe('Модульные тесты', () => {
     });
   });
 });
-describe('Интеграционные тесты для горизонтального вида', () => {
+describe('Integration tests for horizontal view', () => {
   let browser: puppeteer.Browser;
   let page: puppeteer.Page;
 
@@ -152,11 +152,11 @@ describe('Интеграционные тесты для горизонталь�
   afterEach(async () => {
     await browser.close();
   });
-  test('Проверить корректность изменений значений в тултипах горизонтального вида', async () => {
+  test('Check the correctness of value changes in horizontal tooltips', async () => {
     await page.goto('http://localhost:1234');
     await page.waitFor(500);
 
-    // Функция для нахождения коэффициента единичного значения слайдера в пикселях
+    // Function for finding the slider scale division factor in pixels
     const getCoefficientPoint = (sliderLineWidth: number, max: number, min: number) => {
       const value = sliderLineWidth / (max - min);
       return value;
@@ -168,7 +168,7 @@ describe('Интеграционные тесты для горизонталь�
       currentValueX = state.step * multi;
       return currentValueX;
     };
-      // Найти координаты линии слайдера
+      // Find slider scale coordinates
     const sliderLine: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__scale');
     const rectSliderLine = await page.evaluate((element: HTMLDivElement) => {
       const {
@@ -180,7 +180,7 @@ describe('Интеграционные тесты для горизонталь�
     }, sliderLine);
     const sliderLineWidth: number = rectSliderLine.right - rectSliderLine.left;
 
-    // Найти первый ползунок и его ширину
+    // Find the first thumb and its width
     const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__thumb');
     const firstElement: puppeteer.ElementHandle<Element> = thumbsElements[0];
     let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
@@ -193,7 +193,7 @@ describe('Интеграционные тесты для горизонталь�
     }, firstElement);
     const elementWidth: number = rectFirstElement.right - rectFirstElement.left;
 
-    // Точки начала и конца линии слайдера
+    // Slider scale start and end points
     const startPointSlider = rectSliderLine.left - (elementWidth / 2);
     // const endPointSlider = rectSliderLine.right + (elementWidth/2);
 
@@ -223,7 +223,7 @@ describe('Интеграционные тесты для горизонталь�
 
     expect(await innerHTMLTooltip.jsonValue()).toBe(currentValueTooltip);
 
-    // Найти координаты последнего ползунка
+    // Find the coordinates of the last thumb
     const lastElement: puppeteer.ElementHandle<Element> = thumbsElements[thumbsElements.length - 1];
     let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
       const {

@@ -17,7 +17,7 @@ const state: IModelState = {
   isTooltip: true,
 };
 
-describe('Интеграционные тесты для горизонтального вида', () => {
+describe('Integration tests for horizontal view', () => {
   let browser: puppeteer.Browser;
   let page: puppeteer.Page;
 
@@ -34,18 +34,18 @@ describe('Интеграционные тесты для горизонталь�
   afterEach(async () => {
     await browser.close();
   });
-  test('Checking the location of the sliders on the slider', async () => {
+  test('Checking the location of the thumbs on the slider', async () => {
     await page.goto('http://localhost:1234');
     await page.waitFor(300);
 
-    // Функция для нахождения коэффициента единичного значения слайдера в пикселях
+    // Function for finding the scale division factor in pixels
     const getCoefficientPoint = (scaleLength: number, max: number, min: number) => {
       const value = scaleLength / (max - min);
       return value;
     };
-    const getOffsetNextThumb = (rectNextThums: IRectNextThumb,
-      widthNextThums: number, startPointThums: number): number => {
-      const value = Math.ceil(rectNextThums.left - widthNextThums - startPointThums);
+    const getOffsetNextThumb = (rectNextThumbs: IRectNextThumb,
+      widthNextThumbs: number, startPointThumbs: number): number => {
+      const value = Math.ceil(rectNextThumbs.left - widthNextThumbs - startPointThumbs);
       return value;
     };
     const getOffsetPreviousThumb = (rectPreviousThumb: IRectNextThumb,
@@ -53,7 +53,7 @@ describe('Интеграционные тесты для горизонталь�
       const value = Math.ceil(rectPreviousThumb.left + widthNextThumb - startPointThumb);
       return value;
     };
-    /* метод рассчитывает текущее значение ползунка */
+    /* the method calculates the current value of the thumb */
     const calculateValue = (modelState: IModelState, currentValueAxis: number,
       coefficientPoint: number) => {
       let currentValue: number = Math.floor(currentValueAxis / coefficientPoint) + modelState.min;
@@ -61,7 +61,7 @@ describe('Интеграционные тесты для горизонталь�
       currentValue = modelState.step * multi;
       return currentValue;
     };
-    /* метод рассчитывает значение места бегунка на шкале */
+    /* the method calculates the value of the position of the thumb on the scale */
     const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetThumb: number,
       scaleLength: number, max: number, min: number, startPointSlider: number) => {
       const coefficientPoint = getCoefficientPoint(scaleLength, max, min);
@@ -75,7 +75,7 @@ describe('Интеграционные тесты для горизонталь�
       }
       return Math.ceil((currentValue * coefficientPoint) + startPointSlider);
     };
-    // Найти координаты линии слайдера
+    // Find slider scale coordinates
     const scale: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__scale');
     const rectScale = await page.evaluate((sliderLine: HTMLDivElement) => {
       const {
@@ -87,7 +87,7 @@ describe('Интеграционные тесты для горизонталь�
     }, scale);
     const scaleWidth: number = rectScale.right - rectScale.left;
 
-    // Найти первый ползунок и его ширину
+    // Find the first thumb and its width
     const thumbElements: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__thumb');
     const firstElement: puppeteer.ElementHandle<Element> = thumbElements[0];
     let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
@@ -100,7 +100,7 @@ describe('Интеграционные тесты для горизонталь�
     }, firstElement);
     const elementWidth: number = rectFirstElement.right - rectFirstElement.left;
 
-    // Найти координаты второго ползунка
+    // Find the coordinates of the second thumb
     const secondElement: puppeteer.ElementHandle<Element> = thumbElements[1];
     const rectSecondElement = await page.evaluate((element: HTMLDivElement) => {
       const {
@@ -111,17 +111,17 @@ describe('Интеграционные тесты для горизонталь�
       };
     }, secondElement);
 
-    // Точки начала и конца линии слайдера
+    // Slider scale start and end points
     const startPointSlider = rectScale.left - (elementWidth / 2);
     const endPointSlider = rectScale.right + (elementWidth / 2);
 
-    // Определить значения и коэффициенты перед проверкой работы первого ползунка
+    // Determine the values, ratios before testing the first thumb
     let offsetNextThumb: number = getOffsetNextThumb(rectSecondElement,
       elementWidth, startPointSlider);
     let currentValue: number = calculateValueOfPlaceOnScale(state, offsetNextThumb,
       scaleWidth, state.max, state.min, startPointSlider);
 
-    // Проверить корректность работы первого ползунка
+    // Check if the first thumb works correctly
     await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
     await page.mouse.down();
     await page.waitFor(200);
@@ -156,7 +156,7 @@ describe('Интеграционные тесты для горизонталь�
     }, firstElement);
     expect(rectFirstElement.left).toBe(currentValue);
 
-    // Проверить корректность перемещения ползунка при клике по шкале
+    // Check the correct movement of the thumb when clicking on the scale
     await page.waitFor(200);
     await page.mouse.click(rectScale.left + 30, rectScale.top);
     await page.waitFor(200);
@@ -175,8 +175,8 @@ describe('Интеграционные тесты для горизонталь�
       state.max, state.min, startPointSlider);
     expect(rectFirstElement.left).toBe(currentValue);
 
-    // Проверить корректность работы одного из промежуточных ползунков, например, третьего
-    // Найти координаты третьего ползунка
+    // Check the correct operation of one of the intermediate thumbs, for example, the third
+    // Find the coordinates of the third thumb
     const thirdElement: puppeteer.ElementHandle<Element> = thumbElements[2];
     let rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
       const {
@@ -187,7 +187,7 @@ describe('Интеграционные тесты для горизонталь�
       };
     }, thirdElement);
 
-    // Найти координаты последнего ползунка
+    // Find the coordinates of the last thumb
     const lastElement: puppeteer.ElementHandle<Element> = thumbElements[3];
     let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
       const {
@@ -242,7 +242,7 @@ describe('Интеграционные тесты для горизонталь�
 
     expect(rectThirdElement.left).toBe(currentValue);
 
-    // Проверить корректность работы последнего ползунка
+    // Check the correctness of the last thumb
     offsetPreviousThumb = getOffsetPreviousThumb(rectThirdElement, elementWidth, startPointSlider);
     currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousThumb,
       scaleWidth, state.max, state.min, startPointSlider);
@@ -283,7 +283,7 @@ describe('Интеграционные тесты для горизонталь�
 
     expect(rectLastElement.right).toBe(endPointSlider);
 
-    // Проверить корректность перемещения ползунка при клике по шкале
+    // Check the correct movement of the thumb when clicking on the scale
     await page.waitFor(200);
     await page.mouse.click(endPointSlider - 50, rectScale.top);
     await page.waitFor(200);
@@ -303,7 +303,7 @@ describe('Интеграционные тесты для горизонталь�
     expect(rectLastElement.left).toBe(currentValue);
   });
 });
-describe('Интеграционные тесты для вертикального вида', () => {
+describe('Integration tests for vertical view', () => {
   let browser: puppeteer.Browser;
   let page: puppeteer.Page;
 
@@ -338,7 +338,7 @@ describe('Интеграционные тесты для вертикально�
       const value = Math.ceil(rectPreviousThumb.top + widthNextThumb - startPointThumb);
       return value;
     };
-    /* метод рассчитывает текущее значение бегунка */
+    /* the method calculates the current value of the thumb */
     const calculateValue = (modelState: IModelState, currentValueAxis: number,
       coefficientPoint: number) => {
       let currentValue: number = Math.floor(currentValueAxis / coefficientPoint) + modelState.min;
@@ -346,7 +346,7 @@ describe('Интеграционные тесты для вертикально�
       currentValue = modelState.step * multi;
       return currentValue;
     };
-    /* метод рассчитывает значение места бегунка на шкале */
+    /* the method calculates the value of the position of the thumb on the scale */
     const calculateValueOfPlaceOnScale = (modelState: IModelState, offsetThumb: number,
       scaleLength: number, max: number, min: number, startPointSlider: number) => {
       const coefficientPoint = getCoefficientPoint(scaleLength, max, min);
@@ -361,11 +361,11 @@ describe('Интеграционные тесты для вертикально�
       return Math.ceil((currentValue * coefficientPoint) + startPointSlider);
     };
 
-    // Переключиться на вертикальный вид
+    // Switch to vertical view
     await page.mouse.click(213.5, 69);
     await page.waitFor(500);
 
-    // Найти координаты линии слайдера
+    // Find slider scale coordinates
     const scale: puppeteer.ElementHandle<Element> | null = await page.$('.js-slider__vertical-scale');
     const rectScale = await page.evaluate((element: HTMLDivElement) => {
       const {
@@ -377,7 +377,7 @@ describe('Интеграционные тесты для вертикально�
     }, scale);
     const scaleLength: number = rectScale.bottom - rectScale.top;
 
-    // Найти первый ползунок и его ширину
+    // Find the first thumb and its width
     const thumbsElements: puppeteer.ElementHandle<Element>[] = await page.$$('.js-slider__thumb');
     const firstElement: puppeteer.ElementHandle<Element> = thumbsElements[0];
     let rectFirstElement = await page.evaluate((element: HTMLDivElement) => {
@@ -390,7 +390,7 @@ describe('Интеграционные тесты для вертикально�
     }, firstElement);
     const elementHeight: number = rectFirstElement.bottom - rectFirstElement.top;
 
-    // Найти координаты второго ползунка
+    // Find the coordinates of the second thumb
     const secondElement: puppeteer.ElementHandle<Element> = thumbsElements[1];
     const rectSecondElement: IRectNextThumb = await
     page.evaluate((element: HTMLDivElement): IRectNextThumb => {
@@ -402,17 +402,17 @@ describe('Интеграционные тесты для вертикально�
       };
     }, secondElement);
 
-    // Точки начала и конца линии слайдера
+    // Slider scale start and end points
     const startPointSlider = rectScale.top - (elementHeight / 2);
     const endPointSlider = rectScale.bottom - (elementHeight / 2);
 
-    // Определить значения и коэффициенты перед проверкой работы первого ползунка
+    // Determine the values, ratios before testing the first thumb
     let offsetNextThumb: number = getOffsetNextThumb(rectSecondElement, elementHeight,
       startPointSlider);
     let currentValue = calculateValueOfPlaceOnScale(state, offsetNextThumb,
       scaleLength, state.max, state.min, startPointSlider);
 
-    // Проверить корректность работы первого ползунка
+    // Check if the first thumb works correctly
     await page.mouse.move(rectFirstElement.left, rectFirstElement.top);
     await page.mouse.down();
     await page.waitFor(200);
@@ -447,8 +447,8 @@ describe('Интеграционные тесты для вертикально�
     }, firstElement);
     expect(rectFirstElement.top).toBe(currentValue);
 
-    // Проверить корректность работы одного из промежуточных ползунков, например, третьего
-    // Найти координаты третьего ползунка
+    // Check the correct operation of one of the intermediate thumbs, for example, the third
+    // Find the coordinates of the third thumb
     const thirdElement: puppeteer.ElementHandle<Element> = thumbsElements[2];
     let rectThirdElement = await page.evaluate((element: HTMLDivElement) => {
       const {
@@ -459,7 +459,7 @@ describe('Интеграционные тесты для вертикально�
       };
     }, thirdElement);
 
-    // Найти координаты последнего ползунка
+    // Find the coordinates of the last thumb
     const lastElement: puppeteer.ElementHandle<Element> = thumbsElements[3];
     let rectLastElement = await page.evaluate((element: HTMLDivElement) => {
       const {
@@ -514,7 +514,7 @@ describe('Интеграционные тесты для вертикально�
 
     expect(rectThirdElement.top).toBe(currentValue);
 
-    // Проверить корректность работы последнего ползунка
+    // Check the correctness of the last thumb
     offsetPreviousThumb = getOffsetPreviousThumb(rectThirdElement,
       elementHeight, startPointSlider);
     currentValue = calculateValueOfPlaceOnScale(state, offsetPreviousThumb,

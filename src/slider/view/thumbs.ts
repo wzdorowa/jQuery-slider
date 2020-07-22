@@ -257,21 +257,21 @@ class Thumbs {
 
       const elements: HTMLElement[] = this.state.thumbs;
       const target: HTMLElement = elements[i];
-      const eventThumb: MouseEvent = event;
+      // const eventThumb: MouseEvent = event;
 
       if (this.driver !== null) {
         this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessStart(target);
-        this.state.startValueAxis = this.driver.getStartValueAxisToProcessStart(eventThumb,
+        this.state.startValueAxis = this.driver.getStartValueAxisToProcessStart(event,
           this.state.currentValueAxis);
         this.state.maxValueAxis = this.driver.getMaxValueAxisToProcessStart(scale);
       }
       this.state.currentValue = modelState.thumbsValues[i];
 
-      const handleMove = () => this.processMove(modelState, event,
+      const handleMove = (event: MouseEvent) => this.processMove(modelState, event,
         i, target, activeRange, setCurrentTooltipValue);
       document.addEventListener('mousemove', handleMove);
 
-      const handleStop = () => this.processStop(handleMove, handleStop,
+      const handleStop = (event: MouseEvent) => this.processStop(handleMove, handleStop,
         event, i, target, modelState, setCurrentTooltipValue);
       document.addEventListener('mouseup', handleStop);
     }
@@ -280,7 +280,6 @@ class Thumbs {
       activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState,
         i: number) => void): void {
       const elements: HTMLElement[] = this.state.thumbs;
-      const eventThumb: MouseEvent = event;
 
       const isFirstThumb: boolean = i === 0;
       const isIntermediateThumb: boolean = i > 0 && i < elements.length - 1;
@@ -290,7 +289,7 @@ class Thumbs {
 
       if (this.driver !== null) {
         const targetWidth: number = this.driver.getTargetWidth(target);
-        this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessMove(eventThumb,
+        this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessMove(event,
           this.state.startValueAxis);
         if (isFirstThumb) {
           if (isOneThumb) {
@@ -329,7 +328,7 @@ class Thumbs {
         if (isLastThumb) {
           const offsetPreviousThumb: number = this.driver.getElementOffset(elements[i - 1])
           + targetWidth;
-          const { currentValueAxis: valueAxis } = this.state;
+          const valueAxis = this.state.currentValueAxis;
           if (valueAxis < offsetPreviousThumb) {
             this.state.currentValueAxis = offsetPreviousThumb;
           }

@@ -1,7 +1,7 @@
 import Scale from '../../slider/view/scale';
 import Thumbs from '../../slider/view/thumbs';
-import configuratorHorizontal from '../../slider/view/configurators/configuratorHorizontal';
-import configuratorVertical from '../../slider/view/configurators/configuratorVertical';
+import driverHorizontal from '../../slider/view/drivers/driverHorizontal';
+import driverVertical from '../../slider/view/drivers/driverVertical';
 import EventEmitter from '../../slider/eventEmitter';
 import { IModelState } from '../../slider/interfaces/iModelState';
 
@@ -15,7 +15,7 @@ const state: IModelState = {
   isTooltip: true,
 };
 
-describe('Модульные тесты', () => {
+describe('Unit tests', () => {
   const element = window.document.createElement('div');
   element.className = 'js-slider-test';
   window.document.body.appendChild(element);
@@ -24,8 +24,8 @@ describe('Модульные тесты', () => {
   const scale = new Scale(element);
   const sliders = new Thumbs(element, eventEmitter);
 
-  test('Проверка корректного создания элементов шкалы', () => {
-    scale.createScale(configuratorHorizontal);
+  test('Checking the correct creation of scale elements', () => {
+    scale.createScale(driverHorizontal);
 
     const scaleElement = window.document.querySelector('.js-slider__scale');
     const activeRange = window.document.querySelector('.js-slider__active-range');
@@ -36,15 +36,15 @@ describe('Модульные тесты', () => {
     expect(scale.scale).toBe(scaleElement);
     expect(scale.activeRange).toBe(activeRange);
   });
-  test('Проверка смены ориентации', () => {
+  test('Checking orientation change', () => {
     state.orientation = 'vertical';
     scale.changeOrientation(sliders.setThumbToNewPosition.bind(sliders),
-      state, configuratorVertical);
+      state, driverVertical);
     const scaleToDelete = window.document.querySelector('.js-slider__scale');
-    const activeRangeToDelite = window.document.querySelector('.js-slider__active-range');
+    const activeRangeToRemove = window.document.querySelector('.js-slider__active-range');
 
     expect(scaleToDelete).toBe(null);
-    expect(activeRangeToDelite).toBe(null);
+    expect(activeRangeToRemove).toBe(null);
 
     const scaleElement = window.document.querySelector('.js-slider__vertical-scale');
     const activeRange = window.document.querySelector('.js-slider__vertical-active-range');

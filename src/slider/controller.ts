@@ -53,9 +53,10 @@ class Controller {
         setValueToMinInputFromModelState: (state: IModelState) => void,
         setValueMaxInputFromModelState: (state: IModelState) => void): void => {
         eventEmitter.makeSubscribe('model:state-changed', (state: IModelState): void => {
-          if (!isCreatedInput) {
+          let isCreatedElement = isCreatedInput;
+          if (!isCreatedElement) {
             handler(state);
-            isCreatedInput = true;
+            isCreatedElement = true;
           }
           const arrayAmountInputs = amountInputs();
           if (arrayAmountInputs.length !== state.thumbsValues.length) {

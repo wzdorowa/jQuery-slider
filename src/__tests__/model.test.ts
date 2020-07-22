@@ -92,21 +92,21 @@ describe('Model testing', () => {
     expect(model.state.orientation).toBe('horizontal');
   });
   test('check thumbs values', () => {
-    // Проверка значения первого ползунка при установки большего минимального значния
-    // чем значение ползунка
+    // Checking the value of the first thumb when setting a
+    // larger minimum value than the value of the thumb
     state.min = 25;
     model.setNewValueMin(state.min);
     expect(model.state.min).toBe(state.min);
     expect(model.state.thumbsValues[0]).toBe(26);
 
-    // Проверка значения последнего ползунка при установки меньшего максимального значения
-    // чем значение ползунка
+    // Checking the value of the last thumb when setting a
+    // lower maximum value than the value of the thumb
     state.max = 75;
     model.setNewValueMax(state.max);
     expect(model.state.max).toBe(state.max);
     expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(74);
 
-    // Проверка изменения значений ползунков в зависимости от размера шага
+    // Check that thumbs change when you change the step size
     state.step = 3;
     model.setNewValueStep(state.step);
     expect(model.state.step).toBe(state.step);
@@ -121,7 +121,7 @@ describe('Model testing', () => {
     expect(model.state.thumbsValues[1]).toBe(35);
     expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(70);
 
-    // проверка значений ползунков на перекрытие друг друга
+    // check for overlapping adjacent thumbs
     state.thumbsValues[0] = 38;
     model.setNewValueThumbsValues(state.thumbsValues[0], 0);
     expect(model.state.thumbsValues[0]).toBe(35);
