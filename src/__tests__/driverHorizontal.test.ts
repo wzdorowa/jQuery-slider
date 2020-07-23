@@ -107,21 +107,21 @@ test('Calculate new value slider thumbs', () => {
   const coefficientPoint = 2;
   const shiftToMinValue = 10;
 
-  const elementSliderLineSpan: HTMLElement = driverHorizontal.createElementActiveRange();
+  const activeRange: HTMLElement = driverHorizontal.createElementActiveRange();
 
-  const calculateElementOffsetleft = sinon.stub(driverHorizontal, 'getElementOffset');
-  calculateElementOffsetleft.onCall(0).returns(40);
-  calculateElementOffsetleft.onCall(1).returns(90);
-  calculateElementOffsetleft.onCall(2).returns(40);
+  const calculateElementOffsetLeft = sinon.stub(driverHorizontal, 'getElementOffset');
+  calculateElementOffsetLeft.onCall(0).returns(40);
+  calculateElementOffsetLeft.onCall(1).returns(90);
+  calculateElementOffsetLeft.onCall(2).returns(40);
 
   driverHorizontal.setInPlaceNewThumb(elements,
-    currentThumbIndex, coefficientPoint, modelState, shiftToMinValue, elementSliderLineSpan);
+    currentThumbIndex, coefficientPoint, modelState, shiftToMinValue, activeRange);
   expect(elements[0].style.left).toBe('30px');
   expect(elements[1].style.left).toBe('40px');
   expect(elements[2].style.left).toBe('50px');
   expect(elements[3].style.left).toBe('');
-  expect(elementSliderLineSpan.style.marginLeft).toBe('40px');
-  expect(elementSliderLineSpan.style.width).toBe('50px');
+  expect(activeRange.style.marginLeft).toBe('40px');
+  expect(activeRange.style.width).toBe('50px');
   sinon.restore();
 });
 test('set currentX to OnStart', () => {
@@ -195,18 +195,18 @@ test('set indent for target to OnStop', () => {
   expect(target.style.left).toBe('40px');
 });
 test('update LineSpan', () => {
-  const elementSliderLineSpan: HTMLElement = driverHorizontal.createElementActiveRange();
+  const elementActiveRange: HTMLElement = driverHorizontal.createElementActiveRange();
   const elements: HTMLElement[] = [];
   const elementCount = 4;
   for (let i = 0; i < elementCount; i += 1) {
     const element: HTMLElement = createElement('div', 'slider-element');
     elements.push(element);
   }
-  const calculateElementOffsetleft = sinon.stub(driverHorizontal, 'getElementOffset');
-  calculateElementOffsetleft.onCall(0).returns(30);
-  calculateElementOffsetleft.onCall(1).returns(95);
-  calculateElementOffsetleft.onCall(2).returns(30);
-  driverHorizontal.updateActiveRange(elementSliderLineSpan, elements);
-  expect(elementSliderLineSpan.style.marginLeft).toBe('30px');
-  expect(elementSliderLineSpan.style.width).toBe('65px');
+  const calculateElementOffsetLeft = sinon.stub(driverHorizontal, 'getElementOffset');
+  calculateElementOffsetLeft.onCall(0).returns(30);
+  calculateElementOffsetLeft.onCall(1).returns(95);
+  calculateElementOffsetLeft.onCall(2).returns(30);
+  driverHorizontal.updateActiveRange(elementActiveRange, elements);
+  expect(elementActiveRange.style.marginLeft).toBe('30px');
+  expect(elementActiveRange.style.width).toBe('65px');
 });

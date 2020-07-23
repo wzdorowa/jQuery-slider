@@ -17,7 +17,7 @@ class Controller {
       this.slider.classList.add('slider');
 
       const eventEmitter = new EventEmitter();
-      const view = new View(this.slider, eventEmitter);
+      new View(this.slider, eventEmitter);
       const model: Model = new Model(eventEmitter);
 
       this.slider.getState = (): IModelState => {

@@ -22,7 +22,7 @@ describe('Unit tests', () => {
   const eventEmitter = new EventEmitter();
   const emitter = eventEmitter;
 
-  const view = new View(element, eventEmitter);
+  new View(element, eventEmitter);
   const thumbs = new Thumbs(element, eventEmitter);
 
   test('Checking the correct creation of elements', () => {

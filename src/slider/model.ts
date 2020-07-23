@@ -131,7 +131,7 @@ class Model {
       }
     }
 
-    // Calculate thumbs values ​​based on step size
+    // Calculate thumbs values based on step size
     private checkThumbsValues(state: IModelState): void {
       state.thumbsValues.forEach((element: number, i: number) => {
         const newValue: number = element;

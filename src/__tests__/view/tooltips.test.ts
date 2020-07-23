@@ -19,7 +19,7 @@ describe('Unit tests', () => {
   window.document.body.appendChild(slider);
 
   const eventEmitter = new EventEmitter();
-  const view = new View(slider, eventEmitter);
+  new View(slider, eventEmitter);
 
   test('Checking the correctness of tooltips creation', () => {
     eventEmitter.emit('model:state-changed', state);

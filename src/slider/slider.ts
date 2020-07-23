@@ -1,9 +1,9 @@
 import Controller from './controller';
 import { IHTMLElement } from './interfaces/iHTMLElement';
 
-((function ($) {
+((function callSlider($) {
   const $jquery = $;
-  $jquery.fn.slider = function () {
+  $jquery.fn.slider = function renderSlider() {
     const elements: IHTMLElement[] = Array.from(this) as IHTMLElement[];
     elements.forEach((element: IHTMLElement) => {
       new Controller(element);
