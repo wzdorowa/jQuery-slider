@@ -1,9 +1,9 @@
 import { IModelState } from './iModelState';
 
 export interface IHTMLElement extends HTMLElement {
-    type: string
-    value: number
-    checked: boolean
+    // type: string
+    // value: number
+    // checked: boolean
     getState(): IModelState
     setNewValueMin(min: number): void
     setNewValueMax(max: number): void

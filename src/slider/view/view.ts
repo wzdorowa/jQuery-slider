@@ -39,7 +39,7 @@ class View {
       });
     }
 
-    renderView(state: IModelState): void {
+    private renderView(state: IModelState): void {
       this.modelState = { ...state };
       if (this.modelState.orientation === 'horizontal') {
         this.driver = driverHorizontal;

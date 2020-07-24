@@ -20,6 +20,18 @@ class Controller {
       new View(this.slider, eventEmitter);
       const model: Model = new Model(eventEmitter);
 
+      this.attachPublicMethods(model, eventEmitter);
+
+      eventEmitter.makeSubscribe('view:amountThumbs-changed', (thumbsValues: number[]) => {
+        model.overwriteCurrentThumbsValues(thumbsValues);
+      });
+
+      eventEmitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
+        model.setCurrentThumbsValues(data.value, data.index);
+      });
+    }
+
+    private attachPublicMethods(model: Model, eventEmitter: EventEmitter) {
       this.slider.getState = (): IModelState => {
         const modelState: IModelState = { ...model.state };
         return modelState;
@@ -68,13 +80,6 @@ class Controller {
           setValueMaxInputFromModelState(state);
         });
       };
-      eventEmitter.makeSubscribe('view:amountThumbs-changed', (thumbsValues: number[]) => {
-        model.overwriteCurrentThumbsValues(thumbsValues);
-      });
-
-      eventEmitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
-        model.setCurrentThumbsValues(data.value, data.index);
-      });
     }
 }
 export default Controller;
