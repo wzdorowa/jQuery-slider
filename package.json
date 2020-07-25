@@ -24,22 +24,20 @@
     "npm": "6.4.1"
   },
   "dependencies": {
+    "jest": "^25.5.4",
+    "jquery": "3.4.1",
+    "jsdom": "16.2.2",
     "parcel-bundler": "^1.12.4",
     "pug": "^2.0.4",
     "sass": "^1.26.10",
-    "jquery": "3.4.1",
-    "typescript": "^3.9.7",
-    "jest": "^25.5.4",
+    "sinon": "^9.0.2",
     "ts-jest": "^25.5.1",
-    "jsdom": "16.2.2",
-    "puppeteer": "^2.1.1",
-    "sinon": "^9.0.2"
+    "typescript": "^3.9.7"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "@types/jquery": "^3.5.0",
     "@types/node": "^13.13.14",
-    "@types/puppeteer": "^2.1.1",
     "@types/sinon": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^3.7.0",
     "@typescript-eslint/parser": "^3.7.0",

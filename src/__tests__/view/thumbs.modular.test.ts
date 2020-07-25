@@ -95,8 +95,8 @@ describe('Unit tests', () => {
 
     activeRange.dispatchEvent(event);
     currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [event, state, driver]);
-    expect(currentValues[0]).toBe(40);
-    expect(currentValues[1]).toBe(2);
+    expect(currentValues[0]).toBe(30);
+    expect(currentValues[1]).toBe(1);
 
     sinon.reset();
   });
