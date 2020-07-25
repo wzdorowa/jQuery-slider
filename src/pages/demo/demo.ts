@@ -186,15 +186,14 @@ $(() => {
     setValueToMinInputFromModelState(modelState);
     setValueMaxInputFromModelState(modelState);
 
-    // переименовать функцию
-    const amountInputs = () => {
+    const getAmountInputs = () => {
       const configurationPanel: HTMLDivElement[] = Array.from(document.querySelectorAll('.js-configuration'));
 
       const $amountInputs: HTMLElement[] = Array.from($(configurationPanel[index]).find('.js-configuration__thumbs-value'));
       return $amountInputs;
     };
 
-    element.subscribeToStateModel(createInput, isCreatedInput, amountInputs, changeAmountInputs,
+    element.subscribeToStateModel(createInput, isCreatedInput, getAmountInputs, changeAmountInputs,
       setValueToInputFromModelState, setValueToStepFromModelState, setValueToMinInputFromModelState,
       setValueMaxInputFromModelState);
 
