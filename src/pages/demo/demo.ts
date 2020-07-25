@@ -199,8 +199,8 @@ $(() => {
 
     const configurationPanel: IHTMLElement[] = Array.from(document.querySelectorAll('.js-configuration'));
 
-    // получить из поля ввода и передать новые введеные пользователем мин и макс значения слайдера
-    // из панели конфигураций в объект newConfig
+    // get from the input field and transfer the new user-entered min
+    // and max values of the slider from the configuration panel
     const $minMaxValues: HTMLInputElement[] = Array.from($(configurationPanel[index]).find('.js-input-min-max__value')) as HTMLInputElement[];
     const minValue: HTMLInputElement = $minMaxValues[0];
     const maxValue: HTMLInputElement = $minMaxValues[1];
@@ -216,8 +216,8 @@ $(() => {
     minValue.addEventListener('blur', handleMinValueBlur);
     maxValue.addEventListener('blur', handleMaxValueBlur);
 
-    // получить из поля ввода и передать новое значение количества ползунков введенное пользователем
-    // из панели конфигураций
+    // get from the input field and pass the new value of the number
+    // of sliders entered by the user from the configuration panel
     const $amountSliderThumbs: HTMLInputElement[] = Array.from($(configurationPanel[index]).find('.js-input-amount-thumb__value')) as HTMLInputElement[];
 
     const handleAmountSliderThumbsBlur = () => {
@@ -225,13 +225,13 @@ $(() => {
       element.setNewValueAmount(amount);
     };
     $amountSliderThumbs[0].addEventListener('blur', handleAmountSliderThumbsBlur);
-    // получить из поля ввода и передать новые значения текущих состояний
-    // ползунков введенных пользователем из панели конфигураций
-    const toFindinputsSliderThumbs = (): IHTMLElement[] => {
+    // get from the input field and pass the new values of the current
+    // states of the thumbs entered by the user from the configuration panel
+    const toFindInputsSliderThumbs = (): IHTMLElement[] => {
       const $element: HTMLInputElement[] = Array.from($(configurationPanel[index]).find('.js-configuration__thumbs-value')) as HTMLInputElement[];
       return $element;
     };
-    const inputsSliderThumbs: HTMLInputElement[] = toFindinputsSliderThumbs();
+    const inputsSliderThumbs: HTMLInputElement[] = toFindInputsSliderThumbs();
 
     new Array(inputsSliderThumbs.length)
       .fill(1)
@@ -243,8 +243,8 @@ $(() => {
         inputsSliderThumbs[i].addEventListener('blur', handleInputsSliderThumbsBlur);
       });
 
-    // получить из поля ввода и передать новое значение размера шага введенного пользователем
-    // из панели конфигураций в объект newConfig
+    // get from the input field and pass the new value of the step size
+    // entered by the user from the configuration panel
     const $stepSize: HTMLInputElement[] = Array.from($(configurationPanel[index]).find('.js-input-step-size__value')) as HTMLInputElement[];
 
     const handleStepSizeBlur = () => {
@@ -253,7 +253,7 @@ $(() => {
     };
     $stepSize[0].addEventListener('blur', handleStepSizeBlur);
 
-    // получить из поля ввода и передать новое значение ориентации слайдера
+    // get from input field and pass new slider orientation value
     const $orientationSlider: HTMLElement[] = Array.from($(configurationPanel[index]).find('.js-radio-button'));
 
     new Array($orientationSlider.length)
@@ -268,7 +268,7 @@ $(() => {
         $orientationSlider[i].addEventListener('click', handleOrientationSliderClick);
       });
 
-    // получить из поля ввода и передать новое значение наличия тултипа
+    // get from the input field and pass the new value of the tooltip presence
     const $checkboxContainer: HTMLInputElement[] = Array.from($(configurationPanel[index]).find('.js-checkbox-button')) as HTMLInputElement[];
     const $checkboxInput: HTMLInputElement[] = Array.from($(configurationPanel[index]).find('.js-checkbox-button__content')) as HTMLInputElement[];
 
