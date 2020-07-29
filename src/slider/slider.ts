@@ -1,7 +1,7 @@
 import Controller from './controller';
 import { IHTMLElement } from './interfaces/iHTMLElement';
 
-((function callSlider($) {
+(function callSlider($) {
   const $jquery = $;
   $jquery.fn.slider = function renderSlider() {
     const elements: IHTMLElement[] = Array.from(this) as IHTMLElement[];
@@ -9,4 +9,4 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
       new Controller(element);
     });
   };
-})(jQuery));
+})(jQuery);

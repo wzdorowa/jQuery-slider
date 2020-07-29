@@ -28,12 +28,16 @@ describe('Unit tests', () => {
   test('Checking the correct creation of elements', () => {
     emitter.emit('model:state-changed', state);
 
-    const thumbsElements = window.document.querySelectorAll('.js-slider__thumb');
+    const thumbsElements = window.document.querySelectorAll(
+      '.js-slider__thumb',
+    );
 
     expect(thumbsElements.length).toBe(state.amount);
   });
   test('Check if the created elements have parents', () => {
-    const parentThumbsElements = window.document.querySelectorAll('.js-slider__thumb')[0].parentNode as HTMLElement;
+    const parentThumbsElements = window.document.querySelectorAll(
+      '.js-slider__thumb',
+    )[0].parentNode as HTMLElement;
 
     expect(parentThumbsElements.className).toContain('js-slider-test');
   });
@@ -41,7 +45,9 @@ describe('Unit tests', () => {
     state.amount = 5;
     emitter.emit('model:state-changed', state);
 
-    const thumbsElements = window.document.querySelectorAll('.js-slider__thumb');
+    const thumbsElements = window.document.querySelectorAll(
+      '.js-slider__thumb',
+    );
 
     expect(thumbsElements.length).toBe(state.amount);
 
@@ -53,7 +59,9 @@ describe('Unit tests', () => {
     state.amount = 3;
     emitter.emit('model:state-changed', state);
 
-    const thumbsElements = window.document.querySelectorAll('.js-slider__thumb');
+    const thumbsElements = window.document.querySelectorAll(
+      '.js-slider__thumb',
+    );
 
     expect(thumbsElements.length).toBe(state.amount);
     expect(state.thumbsValues.length).toBe(3);
@@ -84,17 +92,27 @@ describe('Unit tests', () => {
       clientY: 100,
     });
 
-    sinon.stub(driverHorizontal, 'calculateCoefficientPoint').callsFake(() => 2);
+    sinon
+      .stub(driverHorizontal, 'calculateCoefficientPoint')
+      .callsFake(() => 2);
     sinon.stub(driverHorizontal, 'getOffsetFromClick').callsFake(() => 100);
     sinon.stub(driverHorizontal, 'calculateClickLocation').callsFake(() => 130);
 
     scale.dispatchEvent(event);
-    let currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [event, state, driver]);
+    let currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [
+      event,
+      state,
+      driver,
+    ]);
     expect(currentValues[0]).toBe(30);
     expect(currentValues[1]).toBe(1);
 
     activeRange.dispatchEvent(event);
-    currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [event, state, driver]);
+    currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [
+      event,
+      state,
+      driver,
+    ]);
     expect(currentValues[0]).toBe(30);
     expect(currentValues[1]).toBe(1);
 
@@ -115,11 +133,24 @@ describe('Unit tests', () => {
       clientY: 100,
     });
 
-    sinon.stub(driverHorizontal, 'getCurrentValueAxisToProcessStart').callsFake(() => 90);
-    sinon.stub(driverHorizontal, 'getStartValueAxisToProcessStart').callsFake(() => 50);
-    sinon.stub(driverHorizontal, 'getMaxValueAxisToProcessStart').callsFake(() => 300);
+    sinon
+      .stub(driverHorizontal, 'getCurrentValueAxisToProcessStart')
+      .callsFake(() => 90);
+    sinon
+      .stub(driverHorizontal, 'getStartValueAxisToProcessStart')
+      .callsFake(() => 50);
+    sinon
+      .stub(driverHorizontal, 'getMaxValueAxisToProcessStart')
+      .callsFake(() => 300);
 
-    thumbs.processStart(state, event, i, scale, activeRange, setCurrentTooltipValue);
+    thumbs.processStart({
+      modelState: state,
+      event,
+      i,
+      scale,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValue).toBe(state.thumbsValues[i]);
 
     sinon.reset();
@@ -139,14 +170,25 @@ describe('Unit tests', () => {
       clientY: 100,
     });
 
-    const getCurrentValueAxisToOnMove = sinon.stub(driverHorizontal, 'getCurrentValueAxisToProcessMove');
+    const getCurrentValueAxisToOnMove = sinon.stub(
+      driverHorizontal,
+      'getCurrentValueAxisToProcessMove',
+    );
     getCurrentValueAxisToOnMove.onCall(0).returns(290);
     getCurrentValueAxisToOnMove.onCall(1).returns(290);
     getCurrentValueAxisToOnMove.onCall(2).returns(10);
-    const elementOffset = sinon.stub(driverHorizontal, 'getElementOffset').callsFake(() => 290);
-    const targetOffset = sinon.stub(driverHorizontal, 'getTargetWidth').callsFake(() => 24);
-    const setIndentForTarget = sinon.stub(driverHorizontal, 'setIndentForTarget').callsFake(() => 0);
-    const updateLineSpan = sinon.stub(driverHorizontal, 'updateActiveRange').callsFake(() => 0);
+    const elementOffset = sinon
+      .stub(driverHorizontal, 'getElementOffset')
+      .callsFake(() => 290);
+    const targetOffset = sinon
+      .stub(driverHorizontal, 'getTargetWidth')
+      .callsFake(() => 24);
+    const setIndentForTarget = sinon
+      .stub(driverHorizontal, 'setIndentForTarget')
+      .callsFake(() => 0);
+    const updateLineSpan = sinon
+      .stub(driverHorizontal, 'updateActiveRange')
+      .callsFake(() => 0);
 
     const i = 0;
     const target: HTMLElement = elements[i];
@@ -155,20 +197,41 @@ describe('Unit tests', () => {
     thumbs.state.maxValueAxis = 280;
     thumbs.state.thumbs.length = 1;
 
-    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove({
+      modelState: state,
+      event,
+      i,
+      target,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
     thumbs.state.maxValueAxis = 350;
 
     // Checking the first thumb if there are many thumbs on the scale
     thumbs.state.thumbs.length = 4;
 
-    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove({
+      modelState: state,
+      event,
+      i,
+      target,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValueAxis).toBe(266);
 
     // If the value of the first thumb becomes less than the minimum possible value
     state.min = 20;
 
-    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove({
+      modelState: state,
+      event,
+      i,
+      target,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValueAxis).toBe(state.min);
 
     // reset stubs
@@ -193,30 +256,55 @@ describe('Unit tests', () => {
       clientY: 100,
     });
 
-    const setCurrentXorYtoOnMove = sinon.stub(driverHorizontal, 'getCurrentValueAxisToProcessMove');
+    const setCurrentXorYtoOnMove = sinon.stub(
+      driverHorizontal,
+      'getCurrentValueAxisToProcessMove',
+    );
     setCurrentXorYtoOnMove.onCall(0).returns(290);
     setCurrentXorYtoOnMove.onCall(1).returns(250);
 
-    const elementOffset = sinon.stub(driverHorizontal, 'getElementOffset').callsFake(() => 290);
+    const elementOffset = sinon
+      .stub(driverHorizontal, 'getElementOffset')
+      .callsFake(() => 290);
     elementOffset.onCall(0).returns(290);
     elementOffset.onCall(1).returns(250);
     elementOffset.onCall(2).returns(350);
     elementOffset.onCall(3).returns(250);
 
-    const targetOffset = sinon.stub(driverHorizontal, 'getTargetWidth').callsFake(() => 24);
-    const setIndentForTarget = sinon.stub(driverHorizontal, 'setIndentForTarget').callsFake(() => 0);
-    const updateLineSpan = sinon.stub(driverHorizontal, 'updateActiveRange').callsFake(() => 0);
+    const targetOffset = sinon
+      .stub(driverHorizontal, 'getTargetWidth')
+      .callsFake(() => 24);
+    const setIndentForTarget = sinon
+      .stub(driverHorizontal, 'setIndentForTarget')
+      .callsFake(() => 0);
+    const updateLineSpan = sinon
+      .stub(driverHorizontal, 'updateActiveRange')
+      .callsFake(() => 0);
 
     const i = 1;
     const target: HTMLElement = elements[i];
 
     // If the value of any other than the first and last thumb exceeds the value of the next thumb
-    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove({
+      modelState: state,
+      event,
+      i,
+      target,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValueAxis).toBe(266);
 
     // If the value of any other than the first and last thumb
     // is less than the value of the previous thumb
-    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove({
+      modelState: state,
+      event,
+      i,
+      target,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValueAxis).toBe(274);
 
     // reset stubs
@@ -244,22 +332,47 @@ describe('Unit tests', () => {
     const i = 3;
     const target: HTMLElement = elements[i];
 
-    const setCurrentXorYtoOnMove = sinon.stub(driverHorizontal, 'getCurrentValueAxisToProcessMove');
+    const setCurrentXorYtoOnMove = sinon.stub(
+      driverHorizontal,
+      'getCurrentValueAxisToProcessMove',
+    );
     setCurrentXorYtoOnMove.onCall(0).returns(290);
     setCurrentXorYtoOnMove.onCall(1).returns(350);
 
-    const elementOffset = sinon.stub(driverHorizontal, 'getElementOffset').callsFake(() => 290);
-    const targetOffset = sinon.stub(driverHorizontal, 'getTargetWidth').callsFake(() => 24);
-    const setIndentForTarget = sinon.stub(driverHorizontal, 'setIndentForTarget').callsFake(() => 0);
-    const updateLineSpan = sinon.stub(driverHorizontal, 'updateActiveRange').callsFake(() => 0);
+    const elementOffset = sinon
+      .stub(driverHorizontal, 'getElementOffset')
+      .callsFake(() => 290);
+    const targetOffset = sinon
+      .stub(driverHorizontal, 'getTargetWidth')
+      .callsFake(() => 24);
+    const setIndentForTarget = sinon
+      .stub(driverHorizontal, 'setIndentForTarget')
+      .callsFake(() => 0);
+    const updateLineSpan = sinon
+      .stub(driverHorizontal, 'updateActiveRange')
+      .callsFake(() => 0);
 
     // If the value of the thumb is less than the value of the previous thumb
-    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove({
+      modelState: state,
+      event,
+      i,
+      target,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValueAxis).toBe(314);
 
     thumbs.state.maxValueAxis = 280;
     // If the thumb value is greater than the maximum allowable value of the previous thumb
-    thumbs.processMove(state, event, i, target, activeRange, setCurrentTooltipValue);
+    thumbs.processMove({
+      modelState: state,
+      event,
+      i,
+      target,
+      activeRange,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
 
     // reset stubs
@@ -286,14 +399,39 @@ describe('Unit tests', () => {
     const i = 1;
     const target: HTMLElement = elements[i];
 
-    sinon.stub(driverHorizontal, 'setIndentForTargetToProcessStop').callsFake(() => 0);
+    sinon
+      .stub(driverHorizontal, 'setIndentForTargetToProcessStop')
+      .callsFake(() => 0);
 
-    const handleMove = () => thumbs.processMove(state, event,
-      i, target, activeRange, setCurrentTooltipValue);
-    const handleStop = () => thumbs.processStop(handleMove, handleStop, event,
-      i, target, state, setCurrentTooltipValue);
+    const handleMove = () =>
+      thumbs.processMove({
+        modelState: state,
+        event,
+        i,
+        target,
+        activeRange,
+        setCurrentTooltipValue,
+      });
+    const handleStop = () =>
+      thumbs.processStop({
+        handleMove,
+        handleStop,
+        _event: event,
+        i,
+        target,
+        modelState: state,
+        setCurrentTooltipValue,
+      });
 
-    thumbs.processStop(handleMove, handleStop, event, i, target, state, setCurrentTooltipValue);
+    thumbs.processStop({
+      handleMove,
+      handleStop,
+      _event: event,
+      i,
+      target,
+      modelState: state,
+      setCurrentTooltipValue,
+    });
     expect(thumbs.state.currentValue).toBe(null);
     expect(thumbs.state.currentThumbIndex).toBe(null);
   });

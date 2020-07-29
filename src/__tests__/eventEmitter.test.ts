@@ -1,11 +1,11 @@
 import EventEmitter from '../slider/eventEmitter';
 
 interface StateValue {
-    values: number[]
+  values: number[];
 }
 interface IData {
-    value: number
-    index: number
+  value: number;
+  index: number;
 }
 const eventEmitter = new EventEmitter();
 
@@ -24,7 +24,9 @@ test('testing subscription method', () => {
   eventEmitter.makeSubscribe('eventEmitter-verification', (state: IData) => {
     assignValues(state);
   });
-  expect(eventEmitter.handlersByEvent['eventEmitter-verification'].length).toBe(1);
+  expect(eventEmitter.handlersByEvent['eventEmitter-verification'].length).toBe(
+    1,
+  );
 });
 test('testing emit method', () => {
   eventEmitter.emit('eventEmitter-verification', stateData);

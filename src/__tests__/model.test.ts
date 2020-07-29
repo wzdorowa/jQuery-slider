@@ -104,7 +104,9 @@ describe('Model testing', () => {
     state.max = 75;
     model.setNewValueMax(state.max);
     expect(model.state.max).toBe(state.max);
-    expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(74);
+    expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(
+      74,
+    );
 
     // Check that thumbs change when you change the step size
     state.step = 3;
@@ -112,14 +114,18 @@ describe('Model testing', () => {
     expect(model.state.step).toBe(state.step);
     expect(model.state.thumbsValues[0]).toBe(27);
     expect(model.state.thumbsValues[1]).toBe(36);
-    expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(72);
+    expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(
+      72,
+    );
 
     state.step = 5;
     model.setNewValueStep(state.step);
     expect(model.state.step).toBe(state.step);
     expect(model.state.thumbsValues[0]).toBe(25);
     expect(model.state.thumbsValues[1]).toBe(35);
-    expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(70);
+    expect(model.state.thumbsValues[model.state.thumbsValues.length - 1]).toBe(
+      70,
+    );
 
     // check for overlapping adjacent thumbs
     state.thumbsValues[0] = 38;

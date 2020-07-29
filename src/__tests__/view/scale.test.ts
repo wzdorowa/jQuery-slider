@@ -28,7 +28,9 @@ describe('Unit tests', () => {
     scale.createScale(driverHorizontal);
 
     const scaleElement = window.document.querySelector('.js-slider__scale');
-    const activeRange = window.document.querySelector('.js-slider__active-range');
+    const activeRange = window.document.querySelector(
+      '.js-slider__active-range',
+    );
 
     expect(scaleElement?.className).toContain('js-slider__scale');
     expect(activeRange?.className).toContain('js-slider__active-range');
@@ -38,19 +40,30 @@ describe('Unit tests', () => {
   });
   test('Checking orientation change', () => {
     state.orientation = 'vertical';
-    scale.changeOrientation(sliders.setThumbToNewPosition.bind(sliders),
-      state, driverVertical);
+    scale.changeOrientation(
+      sliders.setThumbToNewPosition.bind(sliders),
+      state,
+      driverVertical,
+    );
     const scaleToDelete = window.document.querySelector('.js-slider__scale');
-    const activeRangeToRemove = window.document.querySelector('.js-slider__active-range');
+    const activeRangeToRemove = window.document.querySelector(
+      '.js-slider__active-range',
+    );
 
     expect(scaleToDelete).toBe(null);
     expect(activeRangeToRemove).toBe(null);
 
-    const scaleElement = window.document.querySelector('.js-slider__vertical-scale');
-    const activeRange = window.document.querySelector('.js-slider__vertical-active-range');
+    const scaleElement = window.document.querySelector(
+      '.js-slider__vertical-scale',
+    );
+    const activeRange = window.document.querySelector(
+      '.js-slider__vertical-active-range',
+    );
 
     expect(scaleElement?.className).toContain('js-slider__vertical-scale');
-    expect(activeRange?.className).toContain('js-slider__vertical-active-range');
+    expect(activeRange?.className).toContain(
+      'js-slider__vertical-active-range',
+    );
     expect(scale.slider.childElementCount).toBe(1);
     expect(scale.scale).toBe(scaleElement);
     expect(scale.activeRange).toBe(activeRange);

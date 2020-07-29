@@ -7,7 +7,8 @@
     "test": "jest --coverage",
     "dev": "parcel ./src/pages/demo/demo.pug",
     "eslint": "eslint --cache --ext .js,.ts, src",
-    "eslint:dump": "eslint --print-config ./.eslintrc.json"
+    "eslint:dump": "eslint --print-config ./.eslintrc.json",
+    "prettier": "prettier"
   },
   "repository": {
     "type": "git",
@@ -24,10 +25,14 @@
     "npm": "6.4.1"
   },
   "dependencies": {
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "jest": "^25.5.4",
     "jquery": "3.4.1",
     "jsdom": "16.2.2",
     "parcel-bundler": "^1.12.4",
+    "prettier": "^2.0.5",
     "pug": "^2.0.4",
     "sass": "^1.26.10",
     "sinon": "^9.0.2",
