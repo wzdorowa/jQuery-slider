@@ -558,7 +558,6 @@ class Thumbs {
   processStop({
     handleMove,
     handleStop,
-    _event,
     i,
     target,
     modelState,
