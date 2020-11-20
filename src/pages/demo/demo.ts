@@ -142,7 +142,7 @@ $(() => {
             );
             const currentValueItem: HTMLElement = createElement(
               'li',
-              'configuration__thumbs-item js-thumbs-values__item',
+              'configuration__thumbs-item js-configuration__thumbs-item',
             );
             const currentValueInput: HTMLElement = createElement(
               'input',
@@ -158,7 +158,7 @@ $(() => {
             fragmentCurrentValueList.append(currentValueItem);
 
             const intervalValuesSet: HTMLElement = createElement(
-              'div',
+              'li',
               'configuration__thumbs-set js-configuration__thumbs-set',
             );
 
@@ -196,12 +196,15 @@ $(() => {
           $amountInputs.length - state.thumbsValues.length;
 
         const $allCurrentValuesInputs: HTMLElement[] = Array.from(
-          $(thumbsCurrentValuesList[0]).find('.js-configuration__thumbs-item'),
+          $(thumbsCurrentValuesList[index]).find(
+            '.js-configuration__thumbs-item',
+          ),
         );
         const $allIntervalValuesInputs: HTMLElement[] = Array.from(
-          $(thumbsIntervalValuesList[0]).find('.js-configuration__thumbs-set'),
+          $(thumbsIntervalValuesList[index]).find(
+            '.js-configuration__thumbs-set',
+          ),
         );
-
         new Array(excessAmount).fill(1).forEach(() => {
           $allCurrentValuesInputs[$allCurrentValuesInputs.length - 1].remove();
           $allCurrentValuesInputs.splice(-1, 1);
@@ -372,7 +375,7 @@ $(() => {
     );
     // get from the input field and pass the new values of the current
     // states of the thumbs entered by the user from the configuration panel
-    const toFindInputsSliderThumbs = (): IHTMLElement[] => {
+    const toFindInputsSliderThumbs = (): HTMLInputElement[] => {
       const $element: HTMLInputElement[] = Array.from(
         $(configurationPanel[index]).find('.js-configuration__thumbs-value'),
       ) as HTMLInputElement[];
@@ -453,10 +456,11 @@ $(() => {
     );
 
     const setValueOfInputsSliderThumbs = () => {
-      new Array(inputsSliderThumbs.length)
+      const currentInputsSliderThumbs: HTMLInputElement[] = toFindInputsSliderThumbs();
+      new Array(currentInputsSliderThumbs.length)
         .fill(1)
         .forEach((_element: number, i: number) => {
-          const thumbsValue = Number(inputsSliderThumbs[i].value);
+          const thumbsValue = Number(currentInputsSliderThumbs[i].value);
           element.setNewValueThumbsValues(thumbsValue, i);
         });
     };
