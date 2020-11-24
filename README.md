@@ -1,6 +1,9 @@
 # Slider - plugin for jQuery
 Плагин для jQuery, который реализовывает функционал «бегунка» (также называемого слайдером) — специальный контрол, который позволяет перетягиванием задавать какое-то числовое значение.
 
+## GitHub Pages
+https://wzdorowa.github.io/jQuery-slider/
+
 ## Клонирование
 `git clone https://github.com/wzdorowa/jQuery-slider`
 
