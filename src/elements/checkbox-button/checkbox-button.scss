@@ -1,61 +1,57 @@
 .checkbox-button {
   position: relative;
   display: flex;
-
   font-family: "Fire Sans", Arial, sans-serif;
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
-
   color: rgba(31, 32, 65, 0.5);
-}
-.checkbox-button__indicator {
-  position: absolute;
 
-  width: 18px;
-  height: 18px;
-  border: 1px solid rgba(31, 32, 65, 0.25);
-  border-radius: 4px;
-}
-.checkbox-button input[type="checkbox"]:checked + .checkbox-button__indicator {
-  border: 1px solid #b3d4fc;
-}
-.checkbox-button input[type="checkbox"]:checked + .checkbox-button__indicator::before {
-  content: "";
+  &__indicator {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(31, 32, 65, 0.25);
+    border-radius: 4px;
+  }
 
-  position: absolute;
-  top: 4px;
-  left: 4px;
+  & input[type="checkbox"]:checked {
 
-  width: 7px;
-  height: 5px;
-  border-top: 2px solid #b3d4fc;
-  border-right: 2px solid #b3d4fc;
+    & + .checkbox-button__indicator {
+      border: 1px solid #b3d4fc;
 
-  transform: rotate(135deg); 
-}
-.checkbox-button__description {
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: normal;
-  font-size: 15px;
-  line-height: 20px;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 7px;
+        height: 5px;
+        border-top: 2px solid #b3d4fc;
+        border-right: 2px solid #b3d4fc;
+        transform: rotate(135deg); 
+      }
+    }
+  }
 
-  padding-left: 28px;
-
-  cursor: pointer;
+  &__description {
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 20px;
+    padding-left: 28px;
+    cursor: pointer;
+  }
 }
 .visually-hidden:not(:focus):not(:active),
  input[type="checkbox"].visually-hidden,
  input[type="radio"].visually-hidden {
   position: absolute;
-
   width: 1px;
   height: 1px;
   border: 0;
   padding: 0;
-
   white-space: nowrap;
-
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden; 

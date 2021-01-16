@@ -1,28 +1,30 @@
 .field {
-    border: none;
-    margin: 0;
-    padding: 0;
-}
-.field__legend {
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  &__legend {
     font-family: "Fire Sans", Arial, sans-serif;
     font-weight: 400;
     font-size: 18px;
-    
     line-height: 22px;
     color: #9b9b9b;
     text-align: left;
-}
-.field__view {
+  }
+
+  &__view {
     display: flex;
     margin-top: 5px;
-}
-.field__min-max {
+  }
+
+  &__min-max {
     display: flex;
     justify-content: space-around;
-
     margin-top: 5px;
-}
-.field__thumbs-values {
+  }
+
+  &__thumbs-values {
     display: flex;
     justify-content: space-between;
+  }
 }

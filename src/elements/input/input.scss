@@ -3,35 +3,33 @@
   width: 40%;
   overflow: hidden;
   height: 35px;
-  
-}
-.input-min-max__description {
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: 400;
-  font-size: 15px;
 
-  width: 30px;
-  padding-right: 5px;
-  line-height: 35px;
-  color: #9b9b9b;
-  text-align: left;
-}
-.input-min-max__value {
-  width: 100%;
-  color: #202020;
-  border: 1px solid #eee;
-  border-radius: 2px;
-  vertical-align: baseline;
-  outline: none;
+  &__description {
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    width: 30px;
+    padding-right: 5px;
+    line-height: 35px;
+    color: #9b9b9b;
+    text-align: left;
+  }
+  &__value {
+    width: 100%;
+    color: #202020;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    vertical-align: baseline;
+    outline: none;
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    padding-left: 10px;
 
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-
-  padding-left: 10px;
-}
-.input-min-max__value:focus{
-  border-color: #b3d4fc;
+    &:focus{
+      border-color: #b3d4fc;
+    }
+  }
 }
 .input-amount-thumb {
   display: flex;
@@ -40,32 +38,32 @@
   overflow: hidden;
   height: 35px;
   background: #fff;
-}
-.input-amount-thumb__description {
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: 400;
-  font-size: 18px;
 
-  line-height: 35px;
-  color: #9b9b9b;
-  text-align: left;
-}
-.input-amount-thumb__value {
-  width: 15%;
-  color: #202020;
-  border: 1px solid #eee;
-  border-radius: 2px;
-  vertical-align: baseline;
-  outline: none;
+  &__description {
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 35px;
+    color: #9b9b9b;
+    text-align: left;
+  }
 
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
+  &__value {
+    width: 15%;
+    color: #202020;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    vertical-align: baseline;
+    outline: none;
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    padding-left: 10px;
 
-  padding-left: 10px;
-}
-.input-amount-thumb__value:focus {
-  border-color: #b3d4fc;
+    &:focus {
+      border-color: #b3d4fc;
+    }
+  }
 }
 .input-step-size {
   display: flex;
@@ -74,31 +72,41 @@
   overflow: hidden;
   height: 35px;
   background: #fff;
-}
-.input-step-size__description {
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: 400;
-  font-size: 18px;
 
-  line-height: 30px;
-  color: #9b9b9b;
-  text-align: left;
+  &__description {
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 30px;
+    color: #9b9b9b;
+    text-align: left;
+    padding-right: 15px;
+  }
 
-  padding-right: 15px;
-}
-.input-step-size__value {
-  width: 10%;
-  color: #202020;
-  border: 1px solid #eee;
-  border-radius: 2px;
-  vertical-align: baseline;
-  outline: none;
+  &__description {
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 30px;
+    color: #9b9b9b;
+    text-align: left;
+    padding-right: 15px;
+  }
 
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  padding-left: 5px;
-}
-.input-step-size__value:focus {
-  border-color: #b3d4fc;
+  &__value {
+    width: 10%;
+    color: #202020;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    vertical-align: baseline;
+    outline: none;
+    font-family: "Fire Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    padding-left: 5px;
+
+    &:focus {
+      border-color: #b3d4fc;
+    }
+  }
 }
