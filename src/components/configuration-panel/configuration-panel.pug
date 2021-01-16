@@ -6,21 +6,47 @@ include ../../components/fieldset/fieldset.pug
 mixin configuration-panel()
     form.configuration.js-configuration
         .configuration__field
-            +fieldset("Вид:", "view")
-                +radio-button("Горизонтальный", "view", "checked")
-                +radio-button("Вертикальный", "view")
+            +fieldset('Вид:', 'view')
+                +radio-button({
+                  text: 'Горизонтальный',
+                  groupName: 'view',
+                  checked:'checked',
+                })
+                +radio-button({
+                  text: 'Вертикальный',
+                  groupName: 'view',
+                  })
         .configuration__field
-            +fieldset("min и max значения слайдера:", "min-max")
-                +input("от:", "0", "min-max")
-                +input("до:", "100", "min-max")
+            +fieldset('min и max значения слайдера:', 'min-max')
+                +input({
+                  text: 'от:',
+                  value: '0',
+                  parentName: 'min-max',
+                  })
+                +input({
+                  text:'до:',
+                  value: '100',
+                  parentName: 'min-max',
+                })
         .configuration__field
-            +input("Количество ползунков:", "4", "amount-thumb")
+            +input({
+              text: 'Количество ползунков:',
+              value: '4',
+              parentName: 'amount-thumb',
+              })
         .configuration__field
-            +fieldset("Знечения ползунков:", "thumbs-values")
+            +fieldset('Знечения ползунков:', 'thumbs-values')
                 ol.configuration__thumbs-current-value-list.js-configuration__thumbs-current-value-list
                 ol.configuration__thumbs-interval-value-list.js-configuration__thumbs-interval-value-list
         .configuration__field
-            +input("Размер шага:", "2", "step-size")
+            +input({
+              text: 'Размер шага:',
+              value: '2',
+              parentName: 'step-size',
+              })
         .configuration__field
-            +checkbox-button("Наличие тултипа", "checked")
-        input.configuration__update(type="submit")
+            +checkbox-button({
+              text: 'Наличие тултипа',
+              checked:'checked',
+              })
+        input.configuration__update(type='submit')
