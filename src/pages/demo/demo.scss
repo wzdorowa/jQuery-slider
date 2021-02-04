@@ -18,18 +18,25 @@ html {
     display: flex;
   }
 
+  &__configuration-panel {
+    width: 25%;
+  }
+
   &__content {
     padding-top: 40px;
     padding-left: 20px;
     width: 35%;
     box-sizing: border-box;
   }
+
+  &__slider-test {
+    min-width: 300px;
+  }
 }
-.js-slider-test {
+.slider-test {
   display: block;
   position: relative;
   user-select:none;
-  min-width: 300px;
   width: 100%;
   height: 100%;
 }

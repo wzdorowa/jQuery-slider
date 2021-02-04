@@ -1,13 +1,15 @@
 .configuration {
-  min-width: 320px;
-  width: 25%;
-  min-height: 420px;
-  box-sizing: border-box;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  &__wrapper {
+    min-width: 320px;
+    width: 100%;
+    min-height: 420px;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
   &__field {
     margin: 10px 10px;

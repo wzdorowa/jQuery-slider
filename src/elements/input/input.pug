@@ -1,5 +1,6 @@
 mixin input({text = 'текст', value = '0', parentName} = {text, value, parentName})
-    label(class='input-' + parentName)
+    label(class=`input-${parentName}`)
+      div(class=`input-${parentName}__wrapper`)
         span(class=`input-${parentName}__description`)=text
         input(class=`input-${parentName}__value`, class=`js-input-${parentName}__value` type='text',
          name=`input-${parentName}`, value=value)

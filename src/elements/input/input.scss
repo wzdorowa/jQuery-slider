@@ -1,8 +1,10 @@
 .input-min-max {
-  display: flex;
-  width: 40%;
-  overflow: hidden;
-  height: 35px;
+  &__wrapper {
+    display: flex;
+    width: 40%;
+    overflow: hidden;
+    height: 35px;
+  }
 
   &__description {
     font-family: "Fire Sans", Arial, sans-serif;
@@ -32,12 +34,14 @@
   }
 }
 .input-amount-thumb {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  overflow: hidden;
-  height: 35px;
-  background: #fff;
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    overflow: hidden;
+    height: 35px;
+    background: #fff;
+  }
 
   &__description {
     font-family: "Fire Sans", Arial, sans-serif;
@@ -66,12 +70,14 @@
   }
 }
 .input-step-size {
-  display: flex;
-  justify-content: flex-start;
-  width: 90%;
-  overflow: hidden;
-  height: 35px;
-  background: #fff;
+  &__wrapper {
+    display: flex;
+    justify-content: flex-start;
+    width: 90%;
+    overflow: hidden;
+    height: 35px;
+    background: #fff;
+  }
 
   &__description {
     font-family: "Fire Sans", Arial, sans-serif;

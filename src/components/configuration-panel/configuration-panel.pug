@@ -5,6 +5,7 @@ include ../../components/fieldset/fieldset.pug
 
 mixin configuration-panel()
     form.configuration.js-configuration
+      .configuration__wrapper
         .configuration__field
             +fieldset('Вид:', 'view')
                 +radio-button({
