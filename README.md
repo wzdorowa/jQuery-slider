@@ -175,7 +175,7 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `processMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mousemove';
 
-`processStop(handleMove: (event: MouseEvent) => void, handleStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue:  (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mouseup';
+`processStop(handleThumbMove: (event: MouseEvent) => void, handleThumbStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue:  (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mouseup';
 
 ## driverHorizontal
 Реализует интерфейс IDriver. Используется для обработки операций связанных с работой горизонтального вида.

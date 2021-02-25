@@ -403,7 +403,7 @@ describe('Unit tests', () => {
       .stub(driverHorizontal, 'setIndentForTargetToProcessStop')
       .callsFake(() => 0);
 
-    const handleMove = () =>
+    const handleThumbMove = () =>
       thumbs.processMove({
         modelState: state,
         event,
@@ -412,10 +412,10 @@ describe('Unit tests', () => {
         activeRange,
         setCurrentTooltipValue,
       });
-    const handleStop = () =>
+    const handleThumbStop = () =>
       thumbs.processStop({
-        handleMove,
-        handleStop,
+        handleThumbMove,
+        handleThumbStop,
         _event: event,
         i,
         target,
@@ -424,8 +424,8 @@ describe('Unit tests', () => {
       });
 
     thumbs.processStop({
-      handleMove,
-      handleStop,
+      handleThumbMove,
+      handleThumbStop,
       _event: event,
       i,
       target,

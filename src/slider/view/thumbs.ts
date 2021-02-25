@@ -104,7 +104,7 @@ class Thumbs {
   }): void {
     this.driver = driver;
     this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-      const start: (event: MouseEvent) => void = event =>
+      const handleThumbsMousedown: (event: MouseEvent) => void = event =>
         this.processStart({
           modelState,
           event,
@@ -113,8 +113,8 @@ class Thumbs {
           activeRange,
           setCurrentTooltipValue,
         });
-      element.removeEventListener('mousedown', start);
-      element.addEventListener('mousedown', start);
+      element.removeEventListener('mousedown', handleThumbsMousedown);
+      element.addEventListener('mousedown', handleThumbsMousedown);
     });
   }
 
@@ -134,7 +134,7 @@ class Thumbs {
   }): void {
     this.driver = driver;
     this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-      const start: (event: MouseEvent) => void = event =>
+      const handleThumbsMousedown: (event: MouseEvent) => void = event =>
         this.processStart({
           modelState,
           event,
@@ -143,7 +143,7 @@ class Thumbs {
           activeRange,
           setCurrentTooltipValue,
         });
-      element.addEventListener('mousedown', start);
+      element.addEventListener('mousedown', handleThumbsMousedown);
     });
   }
 
@@ -166,7 +166,7 @@ class Thumbs {
     this.driver = driver;
     new Array(amount).fill(1).forEach((_element: number, i: number) => {
       const index = this.state.thumbs.length - (amount - i);
-      const start: (event: MouseEvent) => void = event =>
+      const handleNewThumbsMousedown: (event: MouseEvent) => void = event =>
         this.processStart({
           modelState,
           event,
@@ -177,7 +177,7 @@ class Thumbs {
         });
       this.state.thumbs[
         this.state.thumbs.length - (amount - i)
-      ].addEventListener('mousedown', start);
+      ].addEventListener('mousedown', handleNewThumbsMousedown);
     });
   }
 
@@ -448,7 +448,7 @@ class Thumbs {
     }
     this.state.currentValue = modelState.thumbsValues[i];
 
-    const handleMove = (event: MouseEvent) =>
+    const handleThumbMove = (event: MouseEvent) =>
       this.processMove({
         modelState,
         event,
@@ -457,19 +457,19 @@ class Thumbs {
         activeRange,
         setCurrentTooltipValue,
       });
-    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mousemove', handleThumbMove);
 
-    const handleStop = (event: MouseEvent) =>
+    const handleThumbStop = (event: MouseEvent) =>
       this.processStop({
-        handleMove,
-        handleStop,
+        handleThumbMove,
+        handleThumbStop,
         _event: event,
         i,
         target,
         modelState,
         setCurrentTooltipValue,
       });
-    document.addEventListener('mouseup', handleStop);
+    document.addEventListener('mouseup', handleThumbStop);
   }
 
   processMove({
@@ -556,15 +556,15 @@ class Thumbs {
   }
 
   processStop({
-    handleMove,
-    handleStop,
+    handleThumbMove,
+    handleThumbStop,
     i,
     target,
     modelState,
     setCurrentTooltipValue,
   }: {
-    handleMove: (event: MouseEvent) => void;
-    handleStop: (event: MouseEvent) => void;
+    handleThumbMove: (event: MouseEvent) => void;
+    handleThumbStop: (event: MouseEvent) => void;
     _event: MouseEvent;
     i: number;
     target: HTMLElement;
@@ -583,8 +583,8 @@ class Thumbs {
       }
     }
 
-    document.removeEventListener('mousemove', handleMove);
-    document.removeEventListener('mouseup', handleStop);
+    document.removeEventListener('mousemove', handleThumbMove);
+    document.removeEventListener('mouseup', handleThumbStop);
 
     this.state.currentValue = null;
     this.state.currentThumbIndex = null;
