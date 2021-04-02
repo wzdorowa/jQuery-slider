@@ -1,14 +1,13 @@
-@font-face {
-    font-family: 'Fire Sans';
-    font-style: normal;
-    font-weight: 400;
-    src: url('/../src/fonts/fira-sans/regular/fira-sans-regular.woff2') format('woff2');
-    src: url('/../src/fonts/fira-sans/regular/fira-sans-regular.woff') format('woff');
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal) {
+  @font-face {
+      font-family: $font-family;
+      font-weight: $weight;
+      font-style: $style;
+      src: url('/../src/fonts/fira-sans/#{$file-path}.woff2') format('woff2');
+      src: url('/../src/fonts/fira-sans/#{$file-path}.woff') format('woff');
+  }
 }
-@font-face {
-    font-family: 'Fire Sans';
-    font-style: bold;
-    font-weight: 700;
-    src: url('/../src/fonts/fira-sans/bold/fira-sans-bold.woff2') format('woff2');
-    src: url('/../src/fonts/fira-sans/bold/fira-sans-bold.woff') format('woff');
-}
+
+@include font-face('Fire Sans', 'regular/fira-sans-regular', 400, normal);
+
+@include font-face('Fire Sans', 'bold/fira-sans-bold', 700, bold);
