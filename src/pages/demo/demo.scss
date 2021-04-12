@@ -20,17 +20,20 @@ html {
 
   &__configuration-panel {
     width: 25%;
+    min-width: 350px;
   }
 
   &__content {
     padding-top: 40px;
     padding-left: 20px;
     width: 35%;
+    min-height: 420px;
     box-sizing: border-box;
   }
 
   &__slider-test {
     min-width: 300px;
+    height: 100%;
   }
 }
 .slider-test {
