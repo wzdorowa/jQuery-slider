@@ -67,7 +67,7 @@ class View {
 
         this.tooltips.setTooltipsValues(this.modelState);
 
-        this.thumbs.listenThumbsEventsWhenChangingOrientation({
+        this.thumbs.overrideThumbsEventHandlers({
           modelState: this.modelState,
           driver: this.driver,
           scale: this.scale.scale,
@@ -93,6 +93,8 @@ class View {
         this.thumbs.state.thumbs,
         this.driver,
       );
+      this.thumbs.state.minValueSlider = this.modelState.min;
+      this.thumbs.state.maxValueSlider = this.modelState.max;
       this.isCreatedSlider = true;
       this.thumbs.setValuesThumbs({
         modelState: this.modelState,
@@ -120,6 +122,30 @@ class View {
         activeRange: this.scale.activeRange,
         modelState: this.modelState,
         driver: this.driver,
+      });
+    }
+    if (this.thumbs.state.minValueSlider !== this.modelState.min) {
+      this.thumbs.state.minValueSlider = this.modelState.min;
+      this.thumbs.overrideThumbsEventHandlers({
+        modelState: this.modelState,
+        driver: this.driver,
+        scale: this.scale.scale,
+        activeRange: this.scale.activeRange,
+        setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
+          this.tooltips,
+        ),
+      });
+    }
+    if (this.thumbs.state.maxValueSlider !== this.modelState.max) {
+      this.thumbs.state.maxValueSlider = this.modelState.max;
+      this.thumbs.overrideThumbsEventHandlers({
+        modelState: this.modelState,
+        driver: this.driver,
+        scale: this.scale.scale,
+        activeRange: this.scale.activeRange,
+        setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
+          this.tooltips,
+        ),
       });
     }
     if (this.thumbs.state.thumbs.length !== this.modelState.amount) {

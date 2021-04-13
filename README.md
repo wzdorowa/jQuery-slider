@@ -147,7 +147,7 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `changeAmountThumbs(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - изменяет количество отрисованных на шкале бегунков;
 
-`listenThumbsEventsWhenChangingOrientation(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - перенавешивает обработчик событий 'mousedown' на каждый бегунок при смене ориентации слайдера;
+`overrideThumbsEventHandlers(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - перенавешивает обработчик событий 'mousedown' на каждый бегунок при смене ориентации слайдера;
 
 `listenThumbsEvents(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - навешивает обработчик событий 'mousedown' на каждый созданный бегунок;
 

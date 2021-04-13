@@ -7,4 +7,6 @@ export interface IThumbsState {
   currentValueAxis: number;
   startValueAxis: number;
   maxValueAxis: number;
+  minValueSlider: number;
+  maxValueSlider: number;
 }

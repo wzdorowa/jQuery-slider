@@ -27,6 +27,8 @@ class Thumbs {
       currentValueAxis: 0,
       startValueAxis: 0,
       maxValueAxis: 0,
+      minValueSlider: 0,
+      maxValueSlider: 100,
     };
   }
 
@@ -89,7 +91,7 @@ class Thumbs {
     }
   }
 
-  listenThumbsEventsWhenChangingOrientation({
+  overrideThumbsEventHandlers({
     modelState,
     driver,
     scale,
@@ -291,6 +293,7 @@ class Thumbs {
     let currentValue: number =
       Math.floor(currentValueAxis / this.state.coefficientPoint) +
       modelState.min;
+
     const multi: number = Math.floor(currentValue / modelState.step);
     currentValue = modelState.step * multi;
     return currentValue;
@@ -302,11 +305,10 @@ class Thumbs {
       modelState,
       this.state.currentValueAxis,
     );
-    const halfStep =
-      Math.floor(
-        (this.state.currentValue + modelState.step / 2) *
-          this.state.coefficientPoint,
-      ) - this.state.shiftToMinValue;
+    const halfStep = Math.floor(
+      (this.state.currentValue + modelState.step / 2) *
+        this.state.coefficientPoint,
+    );
 
     if (this.state.currentValueAxis > halfStep) {
       this.state.currentValue += modelState.step;
@@ -438,6 +440,7 @@ class Thumbs {
       this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessStart(
         target,
       );
+
       this.state.startValueAxis = this.driver.getStartValueAxisToProcessStart(
         event,
         this.state.currentValueAxis,
@@ -501,6 +504,7 @@ class Thumbs {
         event,
         this.state.startValueAxis,
       );
+
       if (isFirstThumb) {
         if (isOneThumb) {
           if (this.state.currentValueAxis > this.state.maxValueAxis) {

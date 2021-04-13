@@ -115,15 +115,15 @@ const driverHorizontal: IDriver = {
     range.style.height = '';
 
     if (elements.length === 1) {
-      const width = String(driverHorizontal.getElementOffset(elements[0]));
+      const width =
+        driverHorizontal.getElementOffset(elements[0]) - shiftToMinValue;
       range.style.marginLeft = `0px`;
       range.style.width = `${width}px`;
     } else if (elements.length > 1) {
-      const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
-      const width = String(
+      const marginLeft = driverHorizontal.getElementOffset(elements[0]);
+      const width =
         driverHorizontal.getElementOffset(elements[elements.length - 1]) -
-          driverHorizontal.getElementOffset(elements[0]),
-      );
+        driverHorizontal.getElementOffset(elements[0]);
       range.style.marginLeft = `${marginLeft}px`;
       range.style.width = `${width}px`;
     }
