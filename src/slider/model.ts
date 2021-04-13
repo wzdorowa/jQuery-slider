@@ -21,6 +21,8 @@ class Model {
     this.notifyStateChanged();
 
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
+      this.checkStateValuesStepAndMin(state);
+      this.checkStateValuesStepAndMax(state);
       this.checkMinValueInArrayThumbsValues(state);
       this.checkMaxValueInArrayThumbsValues(state);
       this.checkThumbsValues(state);
@@ -115,6 +117,24 @@ class Model {
 
   private notifyStateChanged(): void {
     this.emitter.emit('model:state-changed', this.state);
+  }
+
+  private checkStateValuesStepAndMin(): void {
+    const minimumPossibleValue =
+      Math.floor(this.state.min / this.state.step) * this.state.step;
+    if (minimumPossibleValue !== this.state.min) {
+      this.state.min = minimumPossibleValue;
+      this.notifyStateChanged();
+    }
+  }
+
+  private checkStateValuesStepAndMax(): void {
+    const maximumPossibleValue =
+      Math.floor(this.state.max / this.state.step) * this.state.step;
+    if (maximumPossibleValue !== this.state.max) {
+      this.state.max = maximumPossibleValue;
+      this.notifyStateChanged();
+    }
   }
 
   private checkMinValueInArrayThumbsValues(state: IModelState): void {
