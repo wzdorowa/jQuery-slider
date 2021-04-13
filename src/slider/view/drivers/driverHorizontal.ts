@@ -75,13 +75,19 @@ const driverHorizontal: IDriver = {
       });
 
     const range = activeRange;
-    const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
-    const width = String(
-      driverHorizontal.getElementOffset(elements[elements.length - 1]) -
-        driverHorizontal.getElementOffset(elements[0]),
-    );
-    range.style.marginLeft = `${marginLeft}px`;
-    range.style.width = `${width}px`;
+    if (elements.length === 1) {
+      const width = String(driverHorizontal.getElementOffset(elements[0]));
+      range.style.marginLeft = `0px`;
+      range.style.width = `${width}px`;
+    } else if (elements.length > 1) {
+      const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
+      const width = String(
+        driverHorizontal.getElementOffset(elements[elements.length - 1]) -
+          driverHorizontal.getElementOffset(elements[0]),
+      );
+      range.style.marginLeft = `${marginLeft}px`;
+      range.style.width = `${width}px`;
+    }
   },
   setInPlaceNewThumb(
     elements: HTMLElement[],
@@ -108,13 +114,19 @@ const driverHorizontal: IDriver = {
     range.style.marginTop = '';
     range.style.height = '';
 
-    const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
-    const width = String(
-      driverHorizontal.getElementOffset(elements[elements.length - 1]) -
-        driverHorizontal.getElementOffset(elements[0]),
-    );
-    range.style.marginLeft = `${marginLeft}px`;
-    range.style.width = `${width}px`;
+    if (elements.length === 1) {
+      const width = String(driverHorizontal.getElementOffset(elements[0]));
+      range.style.marginLeft = `0px`;
+      range.style.width = `${width}px`;
+    } else if (elements.length > 1) {
+      const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
+      const width = String(
+        driverHorizontal.getElementOffset(elements[elements.length - 1]) -
+          driverHorizontal.getElementOffset(elements[0]),
+      );
+      range.style.marginLeft = `${marginLeft}px`;
+      range.style.width = `${width}px`;
+    }
   },
   getCurrentValueAxisToProcessStart(target: HTMLElement): number {
     return target.offsetLeft;
@@ -156,13 +168,20 @@ const driverHorizontal: IDriver = {
   },
   updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void {
     const range = activeRange;
-    const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
-    const width = String(
-      driverHorizontal.getElementOffset(elements[elements.length - 1]) -
-        driverHorizontal.getElementOffset(elements[0]),
-    );
-    range.style.marginLeft = `${marginLeft}px`;
-    range.style.width = `${width}px`;
+
+    if (elements.length === 1) {
+      const width = String(driverHorizontal.getElementOffset(elements[0]));
+      range.style.marginLeft = `0px`;
+      range.style.width = `${width}px`;
+    } else if (elements.length > 1) {
+      const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
+      const width = String(
+        driverHorizontal.getElementOffset(elements[elements.length - 1]) -
+          driverHorizontal.getElementOffset(elements[0]),
+      );
+      range.style.marginLeft = `${marginLeft}px`;
+      range.style.width = `${width}px`;
+    }
   },
   calculateClickLocation(event: MouseEvent, target: HTMLElement): number {
     return event.offsetX + target.offsetLeft;
