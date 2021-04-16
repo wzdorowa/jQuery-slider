@@ -305,10 +305,11 @@ class Thumbs {
       modelState,
       this.state.currentValueAxis,
     );
-    const halfStep = Math.floor(
-      (this.state.currentValue + modelState.step / 2) *
-        this.state.coefficientPoint,
-    );
+    const halfStep =
+      Math.floor(
+        (this.state.currentValue + modelState.step / 2) *
+          this.state.coefficientPoint,
+      ) - this.state.shiftToMinValue;
 
     if (this.state.currentValueAxis > halfStep) {
       this.state.currentValue += modelState.step;
@@ -352,18 +353,12 @@ class Thumbs {
   ): [number, number | null] {
     event.preventDefault();
     const target: HTMLDivElement = event.target as HTMLDivElement;
-    let clickLocationAxis = 0;
-    const isHorizontalTarget: boolean =
-      target != null && target.className === 'js-slider__active-range';
-    const isVerticalTarget: boolean =
-      target != null && target.className === 'js-slider__vertical-active-range';
-    if (isHorizontalTarget) {
-      clickLocationAxis = driver.calculateClickLocation(event, target);
-    } else if (isVerticalTarget) {
-      clickLocationAxis = driver.calculateClickLocation(event, target);
-    } else {
-      clickLocationAxis = driver.getOffsetFromClick(event);
-    }
+    const clickLocationAxis = driver.calculateClickLocation(
+      event,
+      target,
+      this.state.shiftToMinValue,
+    );
+
     const currentValue:
       | number
       | null
@@ -371,17 +366,17 @@ class Thumbs {
       modelState,
       clickLocationAxis,
     );
+
     let nearestThumbIndex: number | null = null;
 
-    modelState.thumbsValues.forEach((thumbsValues: number, i: number) => {
+    modelState.thumbsValues.forEach((thumbValue: number, i: number) => {
       const isCurrentValue: boolean =
         currentValue !== null && currentValue !== undefined;
-      const isFirstThumb: boolean = i === 0 && thumbsValues >= currentValue;
+      const isFirstThumb: boolean = i === 0 && thumbValue >= currentValue;
       const isLastThumb: boolean =
-        i === modelState.thumbsValues.length - 1 &&
-        thumbsValues <= currentValue;
+        i === modelState.thumbsValues.length - 1 && thumbValue <= currentValue;
       const isIntermediateThumb: boolean =
-        currentValue >= thumbsValues &&
+        currentValue >= thumbValue &&
         currentValue <= modelState.thumbsValues[i + 1];
 
       if (isCurrentValue) {
@@ -390,7 +385,7 @@ class Thumbs {
         } else if (isLastThumb) {
           nearestThumbIndex = i;
         } else if (isIntermediateThumb) {
-          const leftSpacing: number = currentValue - thumbsValues;
+          const leftSpacing: number = currentValue - thumbValue;
           const rightSpacing: number =
             modelState.thumbsValues[i + 1] - currentValue;
 

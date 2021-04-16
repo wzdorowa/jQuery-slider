@@ -183,8 +183,12 @@ const driverHorizontal: IDriver = {
       range.style.width = `${width}px`;
     }
   },
-  calculateClickLocation(event: MouseEvent, target: HTMLElement): number {
-    return event.offsetX + target.offsetLeft;
+  calculateClickLocation(
+    event: MouseEvent,
+    target: HTMLElement,
+    shiftToMinValue: number,
+  ): number {
+    return event.offsetX + target.offsetLeft + shiftToMinValue;
   },
   getOffsetFromClick(event: MouseEvent): number {
     return event.offsetX;

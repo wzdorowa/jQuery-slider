@@ -46,6 +46,10 @@ export interface IDriver {
     shiftToMinValue: number,
   ): void;
   updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void;
-  calculateClickLocation(event: MouseEvent, target: HTMLElement): number;
+  calculateClickLocation(
+    event: MouseEvent,
+    target: HTMLElement,
+    shiftToMinValue: number,
+  ): number;
   getOffsetFromClick(event: MouseEvent): number;
 }
