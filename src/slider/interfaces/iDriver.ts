@@ -33,6 +33,10 @@ export interface IDriver {
     currentXorY: number,
   ): number;
   getMaxValueAxisToProcessStart(scale: HTMLElement): number;
+  getThumbValueAxisToProcessStart(
+    eventThumb: MouseEvent,
+    startXorY: number,
+  ): number;
   getCurrentValueAxisToProcessMove(
     eventThumb: MouseEvent,
     startXorY: number,

@@ -21,10 +21,8 @@ class Model {
     this.notifyStateChanged();
 
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
-      this.checkStateValuesStepAndMin(state);
-      this.checkStateValuesStepAndMax(state);
-      this.checkMinValueInArrayThumbsValues(state);
-      this.checkMaxValueInArrayThumbsValues(state);
+      this.checkStateValuesStepAndMin();
+      this.checkStateValuesStepAndMax();
       this.checkThumbsValues(state);
       this.checkThumbsValuesForOverlap();
     });
@@ -36,6 +34,7 @@ class Model {
       return;
     }
     this.state.min = min;
+    this.checkMinValueInArrayThumbsValues(this.state.min);
     this.notifyStateChanged();
   }
 
@@ -45,6 +44,7 @@ class Model {
       return;
     }
     this.state.max = max;
+    this.checkMaxValueInArrayThumbsValues(this.state.max);
     this.notifyStateChanged();
   }
 
@@ -137,19 +137,18 @@ class Model {
     }
   }
 
-  private checkMinValueInArrayThumbsValues(state: IModelState): void {
-    if (state.min > this.state.thumbsValues[0]) {
-      this.state.thumbsValues[0] = state.min;
+  private checkMinValueInArrayThumbsValues(minValue: number): void {
+    if (minValue > this.state.thumbsValues[0]) {
+      this.state.thumbsValues[0] = minValue;
       this.notifyStateChanged();
     }
   }
 
-  private checkMaxValueInArrayThumbsValues(state: IModelState): void {
+  private checkMaxValueInArrayThumbsValues(maxValue: number): void {
     if (
-      state.max < this.state.thumbsValues[this.state.thumbsValues.length - 1]
+      maxValue < this.state.thumbsValues[this.state.thumbsValues.length - 1]
     ) {
-      this.state.thumbsValues[this.state.thumbsValues.length - 1] = state.max;
-      this.notifyStateChanged();
+      this.state.thumbsValues[this.state.thumbsValues.length - 1] = maxValue;
     }
   }
 

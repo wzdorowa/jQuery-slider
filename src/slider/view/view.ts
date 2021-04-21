@@ -67,22 +67,22 @@ class View {
 
         this.tooltips.setTooltipsValues(this.modelState);
 
-        this.thumbs.overrideThumbsEventHandlers({
-          modelState: this.modelState,
-          driver: this.driver,
-          scale: this.scale.scale,
-          activeRange: this.scale.activeRange,
-          setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-            this.tooltips,
-          ),
-        });
+        // this.thumbs.overrideThumbsEventHandlers({
+        //   modelState: this.modelState,
+        //   driver: this.driver,
+        //   scale: this.scale.scale,
+        //   activeRange: this.scale.activeRange,
+        //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
+        //     this.tooltips,
+        //   ),
+        // });
 
-        this.thumbs.listenSizeWindowWhenChangingOrientation({
-          modelState: this.modelState,
-          driver: this.driver,
-          scale: this.scale.scale,
-          activeRange: this.scale.activeRange,
-        });
+        // this.thumbs.listenSizeWindowWhenChangingOrientation({
+        //   modelState: this.modelState,
+        //   driver: this.driver,
+        //   scale: this.scale.scale,
+        //   activeRange: this.scale.activeRange,
+        // });
       }
     }
     if (!this.isCreatedSlider) {
@@ -95,6 +95,7 @@ class View {
       );
       this.thumbs.state.minValueSlider = this.modelState.min;
       this.thumbs.state.maxValueSlider = this.modelState.max;
+      this.thumbs.state.stepSlider = this.modelState.step;
       this.isCreatedSlider = true;
       this.thumbs.setValuesThumbs({
         modelState: this.modelState,
@@ -126,27 +127,41 @@ class View {
     }
     if (this.thumbs.state.minValueSlider !== this.modelState.min) {
       this.thumbs.state.minValueSlider = this.modelState.min;
-      this.thumbs.overrideThumbsEventHandlers({
-        modelState: this.modelState,
-        driver: this.driver,
-        scale: this.scale.scale,
-        activeRange: this.scale.activeRange,
-        setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-          this.tooltips,
-        ),
-      });
+      // this.thumbs.overrideThumbsEventHandlers({
+      //   modelState: this.modelState,
+      //   driver: this.driver,
+      //   scale: this.scale.scale,
+      //   activeRange: this.scale.activeRange,
+      //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
+      //     this.tooltips,
+      //   ),
+      // });
     }
     if (this.thumbs.state.maxValueSlider !== this.modelState.max) {
       this.thumbs.state.maxValueSlider = this.modelState.max;
-      this.thumbs.overrideThumbsEventHandlers({
-        modelState: this.modelState,
-        driver: this.driver,
-        scale: this.scale.scale,
-        activeRange: this.scale.activeRange,
-        setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-          this.tooltips,
-        ),
-      });
+
+      // this.thumbs.overrideThumbsEventHandlers({
+      //   modelState: this.modelState,
+      //   driver: this.driver,
+      //   scale: this.scale.scale,
+      //   activeRange: this.scale.activeRange,
+      //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
+      //     this.tooltips,
+      //   ),
+      // });
+    }
+    if (this.thumbs.state.stepSlider !== this.modelState.step) {
+      this.thumbs.state.stepSlider = this.modelState.step;
+
+      // this.thumbs.overrideThumbsEventHandlers({
+      //   modelState: this.modelState,
+      //   driver: this.driver,
+      //   scale: this.scale.scale,
+      //   activeRange: this.scale.activeRange,
+      //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
+      //     this.tooltips,
+      //   ),
+      // });
     }
     if (this.thumbs.state.thumbs.length !== this.modelState.amount) {
       this.thumbs.changeAmountThumbs({
@@ -175,11 +190,11 @@ class View {
     if (this.modelState.isTooltip === true) {
       this.tooltips.showTooltip();
     }
-    this.thumbs.setNewValuesForThumbs({
-      scale: this.scale.scale,
-      activeRange: this.scale.activeRange,
+    this.thumbs.updateThumbsPosition({
       modelState: this.modelState,
+      activeRange: this.scale.activeRange,
       driver: this.driver,
+      scale: this.scale.scale,
     });
     this.tooltips.setTooltipsValues(this.modelState);
   }

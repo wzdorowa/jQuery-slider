@@ -126,6 +126,12 @@ const driverVertical: IDriver = {
   getMaxValueAxisToProcessStart(scale: HTMLElement): number {
     return scale.offsetHeight;
   },
+  getThumbValueAxisToProcessStart(
+    eventThumb: MouseEvent,
+    startXorY: number,
+  ): number {
+    return eventThumb.pageY - startXorY;
+  },
   getCurrentValueAxisToProcessMove(
     eventThumb: MouseEvent,
     startXorY: number,

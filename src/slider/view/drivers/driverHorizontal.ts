@@ -58,6 +58,7 @@ const driverHorizontal: IDriver = {
     activeRange: HTMLElement,
     scale: HTMLElement,
   ): void {
+    console.log('я здесь');
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
@@ -140,6 +141,12 @@ const driverHorizontal: IDriver = {
   getMaxValueAxisToProcessStart(scale: HTMLElement): number {
     return scale.offsetWidth;
   },
+  getThumbValueAxisToProcessStart(
+    eventThumb: MouseEvent,
+    startXorY: number,
+  ): number {
+    return eventThumb.pageX - startXorY;
+  },
   getCurrentValueAxisToProcessMove(
     eventThumb: MouseEvent,
     startXorY: number,
@@ -160,9 +167,11 @@ const driverHorizontal: IDriver = {
     currentValue: number,
     shiftToMinValue: number,
   ): void {
+    console.log('currentValue в стоп', currentValue);
+
     const element = target;
     const indentLeft = String(
-      Math.ceil(coefficientPoint * currentValue) - shiftToMinValue,
+      Math.floor(coefficientPoint * currentValue) - shiftToMinValue,
     );
     element.style.left = `${indentLeft}px`;
   },
