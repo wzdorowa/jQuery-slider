@@ -32,12 +32,59 @@ class Thumbs {
       minValueSlider: 0,
       maxValueSlider: 100,
       stepSlider: 0,
-      modelState: null,
+      thumbsCount: 1,
+      thumbsValues: [],
+      //modelState: null,
+      orientation: null,
       target: null,
       activeRange: null,
       scale: null,
       setCurrentTooltipValue: null,
     };
+  }
+
+  initializeThumbs(state: IModelState) {
+    if (this.state.minValueSlider !== state.min) {
+      this.state.minValueSlider = state.min;
+    }
+    if (this.state.maxValueSlider !== state.max) {
+      this.state.maxValueSlider = state.max;
+    }
+    if (this.state.stepSlider !== state.step) {
+      this.state.stepSlider = state.step;
+    }
+    if (this.state.thumbsCount !== state.thumbsCount) {
+      this.state.thumbsCount = state.thumbsCount;
+    }
+    if (this.state.thumbsValues !== state.thumbsValues) {
+      this.state.thumbsValues = state.thumbsValues;
+    }
+    if (this.state.orientation !== state.orientation) {
+      this.state.orientation = state.orientation;
+    }
+
+    this.createThumbs(this.state.thumbsCount);
+    this.setValuesThumbs();
+    this.listenThumbsEvents();
+    this.listenSizeWindow();
+  }
+
+  setConfig(state: IModelState) {
+    if (this.state.minValueSlider !== state.min) {
+      this.state.minValueSlider = state.min;
+    }
+    if (this.state.maxValueSlider !== state.max) {
+      this.state.maxValueSlider = state.max;
+    }
+    if (this.state.stepSlider !== state.step) {
+      this.state.stepSlider = state.step;
+    }
+    if (this.state.thumbsCount !== state.thumbsCount) {
+      this.state.thumbsCount = state.thumbsCount;
+    }
+    if (this.state.orientation !== state.orientation) {
+      this.state.orientation = state.orientation;
+    }
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
@@ -110,43 +157,8 @@ class Thumbs {
     this.processStop.call(this, event);
   }
 
-  // overrideThumbsEventHandlers({
-  //   modelState,
-  //   driver,
-  //   scale,
-  //   activeRange,
-  //   setCurrentTooltipValue,
-  // }: {
-  //   modelState: IModelState;
-  //   driver: IDriver;
-  //   scale: HTMLElement;
-  //   activeRange: HTMLElement;
-  //   setCurrentTooltipValue: (modelState: IModelState, i: number) => void;
-  // }): void {
-  //   this.driver = driver;
-  //   this.state.thumbs.forEach((element: HTMLElement, i: number) => {
-  //     element.removeEventListener(
-  //       'mousedown',
-  //       this.handleThumbStart.bind(this, i),
-  //     );
-  //     element.addEventListener('mousedown', handle, false);
-  //   });
-  // }
-
   /* hangs the 'mousedown' event handler for each created thumb */
-  listenThumbsEvents({
-    modelState,
-    driver,
-    scale,
-    activeRange,
-    setCurrentTooltipValue,
-  }: {
-    modelState: IModelState;
-    driver: IDriver;
-    scale: HTMLElement;
-    activeRange: HTMLElement;
-    setCurrentTooltipValue: (modelState: IModelState, i: number) => void;
-  }): void {
+  listenThumbsEvents(): void {
     this.driver = driver;
     this.state.thumbs.forEach((element: HTMLElement, i: number) => {
       element.addEventListener(
@@ -186,17 +198,7 @@ class Thumbs {
   }
 
   /* listens to the 'resize' event on the slider page */
-  listenSizeWindow({
-    scale,
-    activeRange,
-    modelState,
-    driver,
-  }: {
-    scale: HTMLElement;
-    activeRange: HTMLElement;
-    modelState: IModelState;
-    driver: IDriver;
-  }): void {
+  listenSizeWindow(): void {
     this.state.scale = scale;
     this.state.activeRange = activeRange;
     this.state.modelState = modelState;
@@ -208,26 +210,6 @@ class Thumbs {
   handleWindowResize(): void {
     this.setNewValuesForThumbs.call(this);
   }
-
-  // listenSizeWindowWhenChangingOrientation({
-  //   modelState,
-  //   driver,
-  //   scale,
-  //   activeRange,
-  // }: {
-  //   modelState: IModelState;
-  //   driver: IDriver;
-  //   scale: HTMLElement;
-  //   activeRange: HTMLElement;
-  // }): void {
-  //   this.driver = driver;
-  //   this.state.modelState = modelState;
-  //   this.state.scale = scale;
-  //   this.state.activeRange = activeRange;
-
-  //   window.removeEventListener('resize', this.handleWindowResize.bind(this));
-  //   window.addEventListener('resize', this.handleWindowResize.bind(this));
-  // }
 
   /* sets a value for each added thumb */
   // setValueToNewThumb(amount: number, modelState: IModelState): void {
@@ -244,17 +226,7 @@ class Thumbs {
   // }
 
   /* places thumbs on the slider based on default values */
-  setValuesThumbs({
-    modelState,
-    activeRange,
-    scale,
-    driver,
-  }: {
-    modelState: IModelState;
-    activeRange: HTMLElement;
-    scale: HTMLElement;
-    driver: IDriver;
-  }): void {
+  setValuesThumbs(): void {
     driver.setInPlaceThumb(this.state.thumbs, modelState, activeRange, scale);
   }
 

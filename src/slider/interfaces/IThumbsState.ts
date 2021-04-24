@@ -12,6 +12,9 @@ export interface IThumbsState {
   minValueSlider: number;
   maxValueSlider: number;
   stepSlider: number;
+  thumbsCount: number;
+  thumbsValues: number[];
+  orientation: string | null;
   thumbValueAxis: number | null;
   modelState: IModelState | null;
   target: HTMLElement | null;

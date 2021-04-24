@@ -9,18 +9,49 @@ class Tooltips {
 
   public textInTooltips!: HTMLElement[];
 
+  public thumbsValues: number[];
+
+  public thumbsCount: number;
+
+  public orientation: string | null;
+
   constructor(element: HTMLElement) {
     this.slider = element;
     this.tooltipsElements = [];
     this.textInTooltips = [];
+    this.thumbsValues = [];
+    this.thumbsCount = 0;
+    this.orientation = null;
   }
 
+  initializeTooltips(state: IModelState) {
+    if (this.thumbsCount !== state.thumbsCount) {
+      this.thumbsCount = state.thumbsCount;
+    }
+    if (this.thumbsValues !== state.thumbsValues) {
+      this.thumbsValues = state.thumbsValues;
+    }
+    if (this.orientation !== state.orientation) {
+      this.orientation = state.orientation;
+    }
+
+    this.createTooltips(this.thumbsCount);
+    this.setTooltipsValues();
+  }
+
+  setConfig(state: IModelState) {
+    if (this.thumbsCount !== state.thumbsCount) {
+      this.thumbsCount = state.thumbsCount;
+    }
+    if (this.thumbsValues !== state.thumbsValues) {
+      this.thumbsValues = state.thumbsValues;
+    }
+    if (this.orientation !== state.orientation) {
+      this.orientation = state.orientation;
+    }
+  }
   /* createTooltips function adds tooltip elements to the main html slider structure */
-  createTooltips(
-    thumbsCount: number,
-    sliders: HTMLElement[],
-    driver: IDriver,
-  ): void {
+  createTooltips(thumbsCount: number): void {
     new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
       const tooltip: HTMLElement = createElement(
         'div',
@@ -36,8 +67,8 @@ class Tooltips {
   }
 
   /* sets the default sliders for their respective tooltips */
-  setTooltipsValues(modelState: IModelState): void {
-    modelState.thumbsValues.forEach((element: number, i: number) => {
+  setTooltipsValues(): void {
+    this.thumbsValues.forEach((element: number, i: number) => {
       this.textInTooltips[i].innerHTML = String(element);
     });
   }

@@ -8,12 +8,29 @@ class Scale {
 
   public activeRange!: HTMLElement;
 
+  public orientation: string | null;
+
   constructor(element: HTMLElement) {
     this.slider = element;
+    this.orientation = null;
   }
 
+  initializeScale(state: IModelState) {
+    if (this.orientation !== state.orientation) {
+      this.orientation = state.orientation;
+    }
+
+    this.createScale();
+    this.listenScaleEvents();
+  }
+
+  setConfig(state: IModelState) {
+    if (this.orientation !== state.orientation) {
+      this.orientation = state.orientation;
+    }
+  }
   /* function createScale adds scale elements to the main html slider structure */
-  createScale(driver: IDriver): void {
+  createScale(): void {
     const scale: HTMLElement = driver.createElementScale();
     const activeRange: HTMLElement = driver.createElementActiveRange();
 
@@ -24,15 +41,7 @@ class Scale {
     this.scale = scale;
   }
 
-  changeOrientation(
-    setThumbToNewPosition: (
-      event: MouseEvent,
-      modelState: IModelState,
-      driver: IDriver,
-    ) => void,
-    modelState: IModelState,
-    driver: IDriver,
-  ): void {
+  changeOrientation(): void {
     const activeRangeToRemove: JQuery<HTMLElement> = driver.searchElementActiveRangeToDelete(
       this.slider,
     );
@@ -46,15 +55,7 @@ class Scale {
     this.listenScaleEvents(setThumbToNewPosition, modelState, driver);
   }
 
-  listenScaleEvents(
-    setThumbToNewPosition: (
-      event: MouseEvent,
-      modelState: IModelState,
-      driver: IDriver,
-    ) => void,
-    modelState: IModelState,
-    driver: IDriver,
-  ): void {
+  listenScaleEvents(): void {
     const handleScaleClick: (event: MouseEvent) => void = event =>
       setThumbToNewPosition(event, modelState, driver);
     this.scale.addEventListener('click', handleScaleClick);

@@ -39,6 +39,22 @@ class View {
     });
   }
 
+  private initialize(state: IModelState) {
+    if (!this.isCreatedSlider) {
+      this.scale.initializeScale(state);
+      this.thumbs.initializeThumbs(state);
+      this.tooltips.initializeTooltips(state);
+
+      this.isCreatedSlider = true;
+    }
+  }
+
+  private rerender(state: IModelState) {
+    this.thumbs.setConfig(state);
+    this.scale.setConfig(state);
+    this.tooltips.setConfig(state);
+  }
+
   private renderView(state: IModelState): void {
     this.modelState = { ...state };
     if (this.modelState.orientation === 'horizontal') {
@@ -66,102 +82,16 @@ class View {
         });
 
         this.tooltips.setTooltipsValues(this.modelState);
-
-        // this.thumbs.overrideThumbsEventHandlers({
-        //   modelState: this.modelState,
-        //   driver: this.driver,
-        //   scale: this.scale.scale,
-        //   activeRange: this.scale.activeRange,
-        //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-        //     this.tooltips,
-        //   ),
-        // });
-
-        // this.thumbs.listenSizeWindowWhenChangingOrientation({
-        //   modelState: this.modelState,
-        //   driver: this.driver,
-        //   scale: this.scale.scale,
-        //   activeRange: this.scale.activeRange,
-        // });
       }
-    }
-    if (!this.isCreatedSlider) {
-      this.scale.createScale(this.driver);
-      this.thumbs.createThumbs(this.modelState.thumbsCount);
-      this.tooltips.createTooltips(
-        this.modelState.thumbsCount,
-        this.thumbs.state.thumbs,
-        this.driver,
-      );
-      this.thumbs.state.minValueSlider = this.modelState.min;
-      this.thumbs.state.maxValueSlider = this.modelState.max;
-      this.thumbs.state.stepSlider = this.modelState.step;
-      this.isCreatedSlider = true;
-      this.thumbs.setValuesThumbs({
-        modelState: this.modelState,
-        activeRange: this.scale.activeRange,
-        scale: this.scale.scale,
-        driver: this.driver,
-      });
-
-      this.thumbs.listenThumbsEvents({
-        modelState: this.modelState,
-        driver: this.driver,
-        scale: this.scale.scale,
-        activeRange: this.scale.activeRange,
-        setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-          this.tooltips,
-        ),
-      });
-      this.scale.listenScaleEvents(
-        this.thumbs.setThumbToNewPosition.bind(this.thumbs),
-        this.modelState,
-        this.driver,
-      );
-      this.thumbs.listenSizeWindow({
-        scale: this.scale.scale,
-        activeRange: this.scale.activeRange,
-        modelState: this.modelState,
-        driver: this.driver,
-      });
     }
     if (this.thumbs.state.minValueSlider !== this.modelState.min) {
       this.thumbs.state.minValueSlider = this.modelState.min;
-      // this.thumbs.overrideThumbsEventHandlers({
-      //   modelState: this.modelState,
-      //   driver: this.driver,
-      //   scale: this.scale.scale,
-      //   activeRange: this.scale.activeRange,
-      //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-      //     this.tooltips,
-      //   ),
-      // });
     }
     if (this.thumbs.state.maxValueSlider !== this.modelState.max) {
       this.thumbs.state.maxValueSlider = this.modelState.max;
-
-      // this.thumbs.overrideThumbsEventHandlers({
-      //   modelState: this.modelState,
-      //   driver: this.driver,
-      //   scale: this.scale.scale,
-      //   activeRange: this.scale.activeRange,
-      //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-      //     this.tooltips,
-      //   ),
-      // });
     }
     if (this.thumbs.state.stepSlider !== this.modelState.step) {
       this.thumbs.state.stepSlider = this.modelState.step;
-
-      // this.thumbs.overrideThumbsEventHandlers({
-      //   modelState: this.modelState,
-      //   driver: this.driver,
-      //   scale: this.scale.scale,
-      //   activeRange: this.scale.activeRange,
-      //   setCurrentTooltipValue: this.tooltips.setCurrentTooltipValue.bind(
-      //     this.tooltips,
-      //   ),
-      // });
     }
     if (this.thumbs.state.thumbs.length !== this.modelState.thumbsCount) {
       this.thumbs.changeAmountThumbs({
