@@ -41,9 +41,9 @@ class Thumbs {
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
-  createThumbs(amount: number): void {
+  createThumbs(thumbsCount: number): void {
     const fragment = document.createDocumentFragment();
-    new Array(amount).fill(1).forEach(() => {
+    new Array(thumbsCount).fill(1).forEach(() => {
       const thumb: HTMLElement = createElement(
         'div',
         'slider__thumb js-slider__thumb',
@@ -56,6 +56,7 @@ class Thumbs {
   }
 
   /* changes the number of sliders drawn on the scale */
+  // переписать метод без внесения изменений в стейт, так как расчеты там уже внесены
   changeAmountThumbs({
     modelState,
     driver,
@@ -69,22 +70,24 @@ class Thumbs {
     activeRange: HTMLElement;
     setCurrentTooltipValue: (modelState: IModelState, i: number) => void;
   }): void {
-    if (this.state.thumbs.length < modelState.amount) {
-      const amount: number = modelState.amount - this.state.thumbs.length;
+    if (this.state.thumbs.length < modelState.thumbsCount) {
+      const thumbsCount: number =
+        modelState.thumbsCount - this.state.thumbs.length;
 
-      this.createThumbs(amount);
+      this.createThumbs(thumbsCount);
       this.listenNewThumbsEvents({
-        amount,
+        thumbsCount,
         modelState,
         driver,
         scale,
         activeRange,
         setCurrentTooltipValue,
       });
-      this.setValueToNewThumb(amount, modelState);
+      // this.setValueToNewThumb(thumbsCount, modelState);
     }
-    if (this.state.thumbs.length > modelState.amount) {
-      const excessAmount: number = this.state.thumbs.length - modelState.amount;
+    if (this.state.thumbs.length > modelState.thumbsCount) {
+      const excessAmount: number =
+        this.state.thumbs.length - modelState.thumbsCount;
       const $allThumbs: HTMLElement[] = Array.from(
         $(this.slider).find('.js-slider__thumb'),
       );
@@ -159,14 +162,14 @@ class Thumbs {
 
   /* hangs the 'mousedown' event handler for each added thumb */
   listenNewThumbsEvents({
-    amount,
+    thumbsCount,
     modelState,
     driver,
     scale,
     activeRange,
     setCurrentTooltipValue,
   }: {
-    amount: number;
+    thumbsCount: number;
     modelState: IModelState;
     driver: IDriver;
     scale: HTMLElement;
@@ -174,10 +177,10 @@ class Thumbs {
     setCurrentTooltipValue: (modelState: IModelState, i: number) => void;
   }): void {
     this.driver = driver;
-    new Array(amount).fill(1).forEach((_element: number, i: number) => {
-      const index = this.state.thumbs.length - (amount - i);
+    new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
+      const index = this.state.thumbs.length - (thumbsCount - i);
       this.state.thumbs[
-        this.state.thumbs.length - (amount - i)
+        this.state.thumbs.length - (thumbsCount - i)
       ].addEventListener('mousedown', this.handleThumbStart.bind(this, i));
     });
   }
@@ -227,18 +230,18 @@ class Thumbs {
   // }
 
   /* sets a value for each added thumb */
-  setValueToNewThumb(amount: number, modelState: IModelState): void {
-    const currentState = { ...modelState };
-    if (this.state.thumbs.length === currentState.thumbsValues.length) {
-      return;
-    }
-    new Array(amount).fill(1).forEach((_element: number, i: number) => {
-      currentState.thumbsValues[this.state.thumbs.length - (amount - i)] =
-        currentState.thumbsValues[this.state.thumbs.length - 1 - (amount - i)] +
-        currentState.step;
-    });
-    this.emitter.emit('view:amountThumbs-changed', currentState.thumbsValues);
-  }
+  // setValueToNewThumb(amount: number, modelState: IModelState): void {
+  //   const currentState = { ...modelState };
+  //   if (this.state.thumbs.length === currentState.thumbsValues.length) {
+  //     return;
+  //   }
+  //   new Array(amount).fill(1).forEach((_element: number, i: number) => {
+  //     currentState.thumbsValues[this.state.thumbs.length - (amount - i)] =
+  //       currentState.thumbsValues[this.state.thumbs.length - 1 - (amount - i)] +
+  //       currentState.step;
+  //   });
+  //   this.emitter.emit('view:amountThumbs-changed', currentState.thumbsValues);
+  // }
 
   /* places thumbs on the slider based on default values */
   setValuesThumbs({

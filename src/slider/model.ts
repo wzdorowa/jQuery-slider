@@ -12,7 +12,7 @@ class Model {
       max: 100,
       thumbsValues: [20, 32, 44, 60],
       orientation: 'horizontal',
-      amount: 4,
+      thumbsCount: 4,
       step: 2,
       isTooltip: true,
     };
@@ -49,17 +49,42 @@ class Model {
   }
 
   // set a new number of thumbs
-  public setNewValueAmount(amount: number): void {
-    if (this.state.amount === amount) {
+  public setNewValueAmount(thumbsCount: number): void {
+    if (this.state.thumbsCount === thumbsCount) {
       return;
     }
-    if (amount <= 0) {
-      this.state.amount = 1;
-    } else if (amount >= 10) {
-      this.state.amount = 10;
-    } else {
-      this.state.amount = amount;
+    // установить значения для новых ползунков
+    if (this.state.thumbsCount !== thumbsCount) {
+      if (this.state.thumbsCount < thumbsCount) {
+        const thumbs = this.state.thumbsValues;
+        const missingQuantityThumbs = thumbsCount - this.state.thumbsCount;
+        new Array(missingQuantityThumbs)
+          .fill(1)
+          .forEach((_element: number, i: number) => {
+            this.state.thumbsValues[thumbs.length - (thumbsCount - i)] =
+              this.state.thumbsValues[thumbs.length - 1 - (thumbsCount - i)] +
+              this.state.step;
+          });
+        this.state.thumbsCount = thumbsCount;
+      }
+      if (this.state.thumbsCount > thumbsCount) {
+        const excessThumbs = this.state.thumbsCount - thumbsCount;
+        new Array(excessThumbs)
+          .fill(1)
+          .forEach((_element: number, i: number) => {
+            this.state.thumbsValues.splice(-1, 1);
+          });
+        this.state.thumbsCount = thumbsCount;
+      }
     }
+    // вынести проверку в метод normolizeState
+    // if (thumbsCount <= 0) {
+    //   this.state.thumbsCount = 1;
+    // } else if (thumbsCount >= 10) {
+    //   this.state.thumbsCount = 10;
+    // } else {
+    //   this.state.thumbsCount = thumbsCount;
+    // }
     this.notifyStateChanged();
   }
 

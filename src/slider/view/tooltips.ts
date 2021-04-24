@@ -17,11 +17,11 @@ class Tooltips {
 
   /* createTooltips function adds tooltip elements to the main html slider structure */
   createTooltips(
-    amount: number,
+    thumbsCount: number,
     sliders: HTMLElement[],
     driver: IDriver,
   ): void {
-    new Array(amount).fill(1).forEach((_element: number, i: number) => {
+    new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
       const tooltip: HTMLElement = createElement(
         'div',
         'slider__tooltip js-slider__tooltip',
@@ -29,7 +29,7 @@ class Tooltips {
       const textInTooltips: HTMLElement = driver.createElementTooltipText();
 
       tooltip.append(textInTooltips);
-      sliders[sliders.length - (amount - i)].append(tooltip);
+      sliders[sliders.length - (thumbsCount - i)].append(tooltip);
       this.tooltipsElements.push(tooltip);
       this.textInTooltips.push(textInTooltips);
     });
@@ -49,9 +49,9 @@ class Tooltips {
     modelState: IModelState,
   ): void {
     if (this.tooltipsElements.length < modelState.thumbsValues.length) {
-      const amount: number =
+      const thumbsCount: number =
         modelState.thumbsValues.length - this.tooltipsElements.length;
-      this.createTooltips(amount, sliders, driver);
+      this.createTooltips(thumbsCount, sliders, driver);
     }
     if (this.tooltipsElements.length > modelState.thumbsValues.length) {
       const excessAmount: number =

@@ -87,9 +87,9 @@ class View {
     }
     if (!this.isCreatedSlider) {
       this.scale.createScale(this.driver);
-      this.thumbs.createThumbs(this.modelState.amount);
+      this.thumbs.createThumbs(this.modelState.thumbsCount);
       this.tooltips.createTooltips(
-        this.modelState.amount,
+        this.modelState.thumbsCount,
         this.thumbs.state.thumbs,
         this.driver,
       );
@@ -163,7 +163,7 @@ class View {
       //   ),
       // });
     }
-    if (this.thumbs.state.thumbs.length !== this.modelState.amount) {
+    if (this.thumbs.state.thumbs.length !== this.modelState.thumbsCount) {
       this.thumbs.changeAmountThumbs({
         modelState: this.modelState,
         driver: this.driver,
