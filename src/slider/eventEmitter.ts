@@ -31,7 +31,10 @@ class EventEmitter {
     };
   }
 
-  public emit(eventName: string, data: IModelState | IData | number[]): void {
+  public emit(
+    eventName: string,
+    data: IModelState | IData | number[] | MouseEvent,
+  ): void {
     const handlers: CallbackFunctionVariadic[] = this.handlersByEvent[
       eventName
     ];

@@ -1,4 +1,3 @@
-import { IModelState } from '../../interfaces/iModelState';
 import { IDriver } from '../../interfaces/iDriver';
 import createElement from '../../functions/createElement';
 
@@ -44,30 +43,35 @@ const driverVertical: IDriver = {
     return $element;
   },
   calculateCoefficientPoint(
-    scale: HTMLElement,
+    slider: HTMLElement,
     max: number,
     min: number,
   ): number {
+    const $elements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__vertical-scale'),
+    );
+    const scale = $elements[0];
     return scale.offsetHeight / (max - min);
   },
   setInPlaceThumb(
     elements: HTMLElement[],
-    modelState: IModelState,
-    activeRange: HTMLElement,
-    scale: HTMLElement,
+    min: number,
+    max: number,
+    thumbsValues: number[],
+    slider: HTMLElement,
   ): void {
-    const range = activeRange;
+    const $activeRangeElement: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__vertical-active-range'),
+    );
+    const range = $activeRangeElement[0];
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
         const thumb = elements[i];
         const indentTop = String(
           Math.ceil(
-            driverVertical.calculateCoefficientPoint(
-              scale,
-              modelState.max,
-              modelState.min,
-            ) * modelState.thumbsValues[i],
+            driverVertical.calculateCoefficientPoint(slider, max, min) *
+              thumbsValues[i],
           ),
         );
         thumb.style.top = `${indentTop}px`;
@@ -85,19 +89,21 @@ const driverVertical: IDriver = {
     elements: HTMLElement[],
     currentThumbIndex: number | null,
     coefficientPoint: number,
-    modelState: IModelState,
+    thumbsValues: number[],
     shiftToMinValue: number,
-    activeRange: HTMLElement,
+    slider: HTMLElement,
   ): void {
-    const range = activeRange;
+    const $activeRangeElement: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__vertical-active-range'),
+    );
+    const range = $activeRangeElement[0];
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
         if (i !== currentThumbIndex) {
           const thumb = elements[i];
           const indentTop = String(
-            Math.ceil(coefficientPoint * modelState.thumbsValues[i]) -
-              shiftToMinValue,
+            Math.ceil(coefficientPoint * thumbsValues[i]) - shiftToMinValue,
           );
           thumb.style.left = '';
           thumb.style.top = `${indentTop}px`;
@@ -123,7 +129,11 @@ const driverVertical: IDriver = {
   ): number {
     return eventThumb.pageY - currentXorY;
   },
-  getMaxValueAxisToProcessStart(scale: HTMLElement): number {
+  getMaxValueAxisToProcessStart(slider: HTMLElement): number {
+    const $elements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__vertical-scale'),
+    );
+    const scale = $elements[0];
     return scale.offsetHeight;
   },
   getThumbValueAxisToProcessStart(
