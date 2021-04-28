@@ -3,6 +3,7 @@ import { IModelState } from '../interfaces/iModelState';
 import { IDriver } from '../interfaces/iDriver';
 import driverHorizontal from './drivers/driverHorizontal';
 import driverVertical from './drivers/driverVertical';
+import EventEmitter from '../eventEmitter';
 
 class Tooltips {
   private slider: HTMLElement;
@@ -11,7 +12,7 @@ class Tooltips {
 
   public textInTooltips!: HTMLElement[];
 
-  public thumbsValues: number[];
+  public tooltipsValues: number[];
 
   public thumbsCount: number;
 
@@ -21,11 +22,14 @@ class Tooltips {
 
   public isTooltip: boolean | null;
 
-  constructor(element: HTMLElement) {
+  public emitter: EventEmitter;
+
+  constructor(element: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = element;
+    this.emitter = eventEmitter;
     this.tooltipsElements = [];
     this.textInTooltips = [];
-    this.thumbsValues = [];
+    this.tooltipsValues = [];
     this.thumbsCount = 0;
     this.orientation = null;
     this.driver = null;
@@ -36,8 +40,8 @@ class Tooltips {
     if (this.thumbsCount !== state.thumbsCount) {
       this.thumbsCount = state.thumbsCount;
     }
-    if (this.thumbsValues !== state.thumbsValues) {
-      this.thumbsValues = state.thumbsValues;
+    if (this.tooltipsValues !== state.thumbsValues) {
+      this.tooltipsValues = state.thumbsValues;
     }
     if (this.orientation !== state.orientation) {
       this.orientation = state.orientation;
@@ -60,13 +64,12 @@ class Tooltips {
   }
 
   setConfig(state: IModelState): void {
-    if (this.thumbsCount !== state.thumbsCount) {
-      this.changeAmountTooltips();
-      this.thumbsCount = state.thumbsCount;
+    if (this.tooltipsValues !== state.thumbsValues) {
+      this.tooltipsValues = state.thumbsValues;
     }
-    if (this.thumbsValues !== state.thumbsValues) {
-      this.setTooltipsValues();
-      this.thumbsValues = state.thumbsValues;
+    if (this.thumbsCount !== state.thumbsCount) {
+      this.thumbsCount = state.thumbsCount;
+      this.changeAmountTooltips();
     }
     if (this.isTooltip !== state.isTooltip) {
       if (state.isTooltip) {
@@ -78,10 +81,17 @@ class Tooltips {
       }
     }
     if (this.orientation !== state.orientation) {
+      if (state.orientation === 'horizontal') {
+        this.driver = driverHorizontal;
+      }
+      if (state.orientation === 'vertical') {
+        this.driver = driverVertical;
+      }
+      this.orientation = state.orientation;
       this.changeOrientation();
       this.setTooltipsValues();
-      this.orientation = state.orientation;
     }
+    this.setTooltipsValues();
   }
 
   /* createTooltips function adds tooltip elements to the main html slider structure */
@@ -105,21 +115,21 @@ class Tooltips {
 
   /* sets the default sliders for their respective tooltips */
   setTooltipsValues(): void {
-    this.thumbsValues.forEach((element: number, i: number) => {
+    this.tooltipsValues.forEach((element: number, i: number) => {
       this.textInTooltips[i].innerHTML = String(element);
     });
   }
 
   /* changes the number of rendered tooltips */
   changeAmountTooltips(): void {
-    if (this.tooltipsElements.length < this.thumbsValues.length) {
+    if (this.tooltipsElements.length < this.thumbsCount) {
       const thumbsCount: number =
-        this.thumbsValues.length - this.tooltipsElements.length;
+        this.thumbsCount - this.tooltipsElements.length;
       this.createTooltips(thumbsCount);
     }
-    if (this.tooltipsElements.length > this.thumbsValues.length) {
+    if (this.tooltipsElements.length > this.thumbsCount) {
       const excessAmount: number =
-        this.tooltipsElements.length - this.thumbsValues.length;
+        this.tooltipsElements.length - this.thumbsCount;
 
       new Array(excessAmount).fill(1).forEach(() => {
         this.tooltipsElements.splice(-1, 1);
@@ -153,7 +163,7 @@ class Tooltips {
 
   /* the method sets the current value to the slider tooltip when it moves */
   setCurrentTooltipValue(i: number): void {
-    this.textInTooltips[i].innerHTML = String(this.thumbsValues[i]);
+    this.textInTooltips[i].innerHTML = String(this.tooltipsValues[i]);
   }
 
   /* hideTooltip method hides sliders tooltips */

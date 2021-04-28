@@ -122,6 +122,8 @@ class Model {
 
   // set new value for orientation field
   public setNewValueOrientation(value: string): void {
+    // console.log('value', value);
+
     if (value === 'horizontal') {
       this.state.orientation = 'horizontal';
     } else if (value === 'vertical') {

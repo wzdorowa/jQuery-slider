@@ -91,17 +91,21 @@ class Thumbs {
       this.state.stepSlider = state.step;
     }
     if (this.state.thumbsCount !== state.thumbsCount) {
-      this.changeAmountThumbs();
       this.state.thumbsCount = state.thumbsCount;
+      this.changeAmountThumbs();
     }
     if (this.state.orientation !== state.orientation) {
-      this.updateThumbsPosition();
+      if (state.orientation === 'horizontal') {
+        this.driver = driverHorizontal;
+      }
+      if (state.orientation === 'vertical') {
+        this.driver = driverVertical;
+      }
       this.state.orientation = state.orientation;
-    }
-    if (this.state.thumbsValues !== state.thumbsValues) {
       this.updateThumbsPosition();
-      this.state.thumbsValues = state.thumbsValues;
     }
+    this.updateThumbsPosition();
+    // this.state.thumbsValues = state.thumbsValues;
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
@@ -130,7 +134,6 @@ class Thumbs {
       this.listenNewThumbsEvents({
         thumbsCount,
       });
-      // this.setValueToNewThumb(thumbsCount, modelState);
     }
     if (this.state.thumbs.length > this.state.thumbsCount) {
       const excessAmount: number =
@@ -145,7 +148,6 @@ class Thumbs {
         const newLength = $allThumbs.length - i;
         $allThumbs[newLength - 1].remove();
       });
-      this.emitter.emit('view:amountThumbs-changed', this.state.thumbsValues);
     }
   }
 
@@ -189,20 +191,6 @@ class Thumbs {
   handleWindowResize(): void {
     this.setNewValuesForThumbs.call(this);
   }
-
-  /* sets a value for each added thumb */
-  // setValueToNewThumb(amount: number, modelState: IModelState): void {
-  //   const currentState = { ...modelState };
-  //   if (this.state.thumbs.length === currentState.thumbsValues.length) {
-  //     return;
-  //   }
-  //   new Array(amount).fill(1).forEach((_element: number, i: number) => {
-  //     currentState.thumbsValues[this.state.thumbs.length - (amount - i)] =
-  //       currentState.thumbsValues[this.state.thumbs.length - 1 - (amount - i)] +
-  //       currentState.step;
-  //   });
-  //   this.emitter.emit('view:amountThumbs-changed', currentState.thumbsValues);
-  // }
 
   /* places thumbs on the slider based on default values */
   setValuesThumbs(): void {
@@ -371,7 +359,6 @@ class Thumbs {
           index: nearestThumbIndex,
         });
       }
-      // return [currentValue, nearestThumbIndex];
     }
   }
 
@@ -508,9 +495,6 @@ class Thumbs {
 
               this.updateThumbPositionOnScale(index);
             }
-            // if (this.state.activeRange !== null) {
-            //   this.driver.updateActiveRange(this.state.activeRange, elements);
-            // }
           }
         }
       }
@@ -518,11 +502,6 @@ class Thumbs {
   }
 
   processStop(): void {
-    // if (this.state.setCurrentTooltipValue !== null) {
-    //   if (this.state.currentThumbIndex !== null) {
-    //     this.state.setCurrentTooltipValue(this.state.currentThumbIndex);
-    //   }
-    // }
     if (this.driver !== null) {
       if (this.state.target !== null) {
         if (this.state.currentValue !== null) {

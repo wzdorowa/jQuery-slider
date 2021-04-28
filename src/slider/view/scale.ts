@@ -46,17 +46,24 @@ class Scale {
   }
 
   setConfig(state: IModelState): void {
+    console.log('this.orientation', this.orientation);
+    console.log('state.orientation', state.orientation);
+
     if (this.orientation !== state.orientation) {
-      this.changeOrientation();
+      if (state.orientation === 'horizontal') {
+        this.driver = driverHorizontal;
+      }
+      if (state.orientation === 'vertical') {
+        this.driver = driverVertical;
+      }
       this.orientation = state.orientation;
+      this.changeOrientation();
     }
-    if (this.thumbsValues !== state.thumbsValues) {
-      const thumbs: HTMLElement[] = Array.from(
-        this.slider.querySelectorAll('.js-slider__thumb'),
-      );
-      this.driver?.updateActiveRange(this.activeRange, thumbs);
-      this.thumbsValues = state.thumbsValues;
-    }
+    const thumbs: HTMLElement[] = Array.from(
+      this.slider.querySelectorAll('.js-slider__thumb'),
+    );
+    this.driver?.updateActiveRange(this.activeRange, thumbs);
+    this.thumbsValues = state.thumbsValues;
   }
 
   /* function createScale adds scale elements to the main html slider structure */
