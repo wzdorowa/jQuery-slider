@@ -136,12 +136,6 @@ const driverVertical: IDriver = {
     const scale = $elements[0];
     return scale.offsetHeight;
   },
-  getThumbValueAxisToProcessStart(
-    eventThumb: MouseEvent,
-    startXorY: number,
-  ): number {
-    return eventThumb.pageY - startXorY;
-  },
   getCurrentValueAxisToProcessMove(
     eventThumb: MouseEvent,
     startXorY: number,
@@ -152,9 +146,6 @@ const driverVertical: IDriver = {
     const element = target;
     const indentTop = String(currentXorY);
     element.style.top = `${indentTop}px`;
-  },
-  getTargetWidth(target: HTMLElement): number {
-    return target.offsetHeight;
   },
   setIndentForTargetToProcessStop(
     target: HTMLElement,

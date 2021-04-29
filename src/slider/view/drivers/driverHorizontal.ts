@@ -149,12 +149,6 @@ const driverHorizontal: IDriver = {
     const scale = $elements[0];
     return scale.offsetWidth;
   },
-  getThumbValueAxisToProcessStart(
-    eventThumb: MouseEvent,
-    startXorY: number,
-  ): number {
-    return eventThumb.pageX - startXorY;
-  },
   getCurrentValueAxisToProcessMove(
     eventThumb: MouseEvent,
     startXorY: number,
@@ -166,9 +160,6 @@ const driverHorizontal: IDriver = {
     const indentLeft = String(currentXorY);
     element.style.left = `${indentLeft}px`;
   },
-  getTargetWidth(target: HTMLElement): number {
-    return target.offsetWidth;
-  },
   setIndentForTargetToProcessStop(
     target: HTMLElement,
     coefficientPoint: number,
@@ -177,7 +168,7 @@ const driverHorizontal: IDriver = {
   ): void {
     const element = target;
     const indentLeft = String(
-      Math.floor(coefficientPoint * currentValue) - shiftToMinValue,
+      Math.ceil(coefficientPoint * currentValue) - shiftToMinValue,
     );
     element.style.left = `${indentLeft}px`;
   },

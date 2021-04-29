@@ -6,7 +6,8 @@ export interface IThumbsState {
   currentValue: number | null;
   currentValueAxis: number;
   startValueAxis: number;
-  maxValueAxis: number;
+  stopValueAxis: number;
+  valueAxisFromStartMove: number;
   minValueSlider: number;
   maxValueSlider: number;
   stepSlider: number;
