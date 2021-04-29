@@ -19,13 +19,6 @@ class Model {
 
     this.emitter = eventEmitter;
     this.notifyStateChanged();
-
-    this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
-      this.checkStateValuesStepAndMin();
-      this.checkStateValuesStepAndMax();
-      this.checkThumbsValues(state);
-      this.checkThumbsValuesForOverlap();
-    });
   }
 
   // set new min value
@@ -34,8 +27,7 @@ class Model {
       return;
     }
     this.state.min = min;
-    this.checkMinValueInArrayThumbsValues(this.state.min);
-    this.notifyStateChanged();
+    this.normolizeState();
   }
 
   // set new value max
@@ -44,8 +36,7 @@ class Model {
       return;
     }
     this.state.max = max;
-    this.checkMaxValueInArrayThumbsValues(this.state.max);
-    this.notifyStateChanged();
+    this.normolizeState();
   }
 
   // set a new number of thumbs
@@ -56,36 +47,27 @@ class Model {
     // установить значения для новых ползунков
     if (this.state.thumbsCount !== thumbsCount) {
       if (this.state.thumbsCount < thumbsCount) {
-        const thumbs = this.state.thumbsValues;
         const missingQuantityThumbs = thumbsCount - this.state.thumbsCount;
+
         new Array(missingQuantityThumbs)
           .fill(1)
           .forEach((_element: number, i: number) => {
-            this.state.thumbsValues[thumbs.length - (thumbsCount - i)] =
-              this.state.thumbsValues[thumbs.length - 1 - (thumbsCount - i)] +
+            this.state.thumbsValues[this.state.thumbsValues.length - i] =
+              this.state.thumbsValues[this.state.thumbsValues.length - 1 - i] +
               this.state.step;
           });
+
         this.state.thumbsCount = thumbsCount;
       }
       if (this.state.thumbsCount > thumbsCount) {
         const excessThumbs = this.state.thumbsCount - thumbsCount;
-        new Array(excessThumbs)
-          .fill(1)
-          .forEach((_element: number, i: number) => {
-            this.state.thumbsValues.splice(-1, 1);
-          });
+        new Array(excessThumbs).fill(1).forEach(() => {
+          this.state.thumbsValues.splice(-1, 1);
+        });
         this.state.thumbsCount = thumbsCount;
       }
     }
-    // вынести проверку в метод normolizeState
-    // if (thumbsCount <= 0) {
-    //   this.state.thumbsCount = 1;
-    // } else if (thumbsCount >= 10) {
-    //   this.state.thumbsCount = 10;
-    // } else {
-    //   this.state.thumbsCount = thumbsCount;
-    // }
-    this.notifyStateChanged();
+    this.normolizeState();
   }
 
   // set a new value for the thumb state
@@ -94,7 +76,7 @@ class Model {
       return;
     }
     this.state.thumbsValues[index] = thumbValue;
-    this.notifyStateChanged();
+    this.normolizeState();
   }
 
   // set a new value for the step of moving the thumbs
@@ -102,14 +84,8 @@ class Model {
     if (this.state.step === step) {
       return;
     }
-    if (step <= 0) {
-      this.state.step = 1;
-    } else if (step >= this.state.max / this.state.thumbsValues.length - 1) {
-      this.state.step = this.state.max / this.state.thumbsValues.length - 1;
-    } else {
-      this.state.step = step;
-    }
-    this.notifyStateChanged();
+    this.state.step = step;
+    this.normolizeState();
   }
 
   // set a new value for the tooltip field
@@ -122,8 +98,6 @@ class Model {
 
   // set new value for orientation field
   public setNewValueOrientation(value: string): void {
-    // console.log('value', value);
-
     if (value === 'horizontal') {
       this.state.orientation = 'horizontal';
     } else if (value === 'vertical') {
@@ -134,97 +108,93 @@ class Model {
 
   public overwriteCurrentThumbsValues(thumbsValues: number[]): void {
     this.state.thumbsValues = thumbsValues;
-    this.notifyStateChanged();
+    this.normolizeState();
   }
 
   public setCurrentThumbsValues(value: number, index: number): void {
     this.state.thumbsValues[index] = value;
+    this.normolizeState();
+  }
+
+  private normolizeState() {
+    const minimumPossibleValue =
+      Math.floor(this.state.min / this.state.step) * this.state.step;
+    const maximumPossibleValue =
+      Math.floor(this.state.max / this.state.step) * this.state.step;
+    const maximumCountOfThumbs = this.state.max / (this.state.step * 2);
+
+    if (this.state.min > this.state.thumbsValues[0]) {
+      this.state.thumbsValues[0] = this.state.min;
+    }
+    if (this.state.min !== minimumPossibleValue) {
+      this.state.min = minimumPossibleValue;
+    }
+    if (
+      this.state.max <
+      this.state.thumbsValues[this.state.thumbsValues.length - 1]
+    ) {
+      this.state.thumbsValues[
+        this.state.thumbsValues.length - 1
+      ] = this.state.max;
+    }
+    if (this.state.max !== maximumPossibleValue) {
+      this.state.max = maximumPossibleValue;
+    }
+    if (this.state.thumbsCount <= 0) {
+      this.state.thumbsCount = 1;
+    } else if (this.state.thumbsCount >= maximumCountOfThumbs) {
+      this.state.thumbsCount = maximumCountOfThumbs;
+    }
+    if (this.state.step <= 0) {
+      this.state.step = 1;
+    } else if (
+      this.state.step >=
+      this.state.max / this.state.thumbsValues.length - 1
+    ) {
+      this.state.step = this.state.max / this.state.thumbsValues.length - 1;
+    }
+    this.checkThumbsValues();
     this.notifyStateChanged();
   }
 
-  private notifyStateChanged(): void {
-    this.emitter.emit('model:state-changed', this.state);
-  }
-
-  private checkStateValuesStepAndMin(): void {
-    const minimumPossibleValue =
-      Math.floor(this.state.min / this.state.step) * this.state.step;
-    if (minimumPossibleValue !== this.state.min) {
-      this.state.min = minimumPossibleValue;
-      this.notifyStateChanged();
-    }
-  }
-
-  private checkStateValuesStepAndMax(): void {
-    const maximumPossibleValue =
-      Math.floor(this.state.max / this.state.step) * this.state.step;
-    if (maximumPossibleValue !== this.state.max) {
-      this.state.max = maximumPossibleValue;
-      this.notifyStateChanged();
-    }
-  }
-
-  private checkMinValueInArrayThumbsValues(minValue: number): void {
-    if (minValue > this.state.thumbsValues[0]) {
-      this.state.thumbsValues[0] = minValue;
-      this.notifyStateChanged();
-    }
-  }
-
-  private checkMaxValueInArrayThumbsValues(maxValue: number): void {
-    if (
-      maxValue < this.state.thumbsValues[this.state.thumbsValues.length - 1]
-    ) {
-      this.state.thumbsValues[this.state.thumbsValues.length - 1] = maxValue;
-    }
-  }
-
   // Calculate thumbs values based on step size
-  private checkThumbsValues(state: IModelState): void {
-    state.thumbsValues.forEach((element: number, i: number) => {
+  private checkThumbsValues(): void {
+    this.state.thumbsValues.forEach((element: number, i: number) => {
       const newValue: number = element;
-      const remainderOfTheDivision: number = newValue % state.step;
+      const remainderOfTheDivision: number = newValue % this.state.step;
       const newCurrentValue: number = newValue - remainderOfTheDivision;
       const maxPossibleValue: number =
-        state.max -
-        (state.max % state.step) -
-        (state.thumbsValues.length - 1 - i) * state.step;
+        this.state.max -
+        (this.state.max % this.state.step) -
+        (this.state.thumbsValues.length - 1 - i) * this.state.step;
+      // const maxPossibleValue: number =
+      //   this.state.max -
+      //   (this.state.thumbsValues.length - 1 - i) * this.state.step;
       let minPossibleValue: number =
-        state.min - (state.min % state.step) + i * state.step;
+        this.state.min -
+        (this.state.min % this.state.step) +
+        i * this.state.step;
+      // const minPossibleValue: number = this.state.min + i * this.state.step;
 
-      if (minPossibleValue < state.min) {
-        minPossibleValue += state.step;
+      if (minPossibleValue < this.state.min) {
+        minPossibleValue = this.state.min;
       }
 
       if (newCurrentValue > maxPossibleValue) {
         this.state.thumbsValues[i] = maxPossibleValue;
-        this.notifyStateChanged();
       } else if (newCurrentValue < minPossibleValue) {
         this.state.thumbsValues[i] = minPossibleValue;
-        this.notifyStateChanged();
       } else if (this.state.thumbsValues[i] !== newCurrentValue) {
         this.state.thumbsValues[i] = newCurrentValue;
-        this.notifyStateChanged();
       }
 
-      if (newCurrentValue < state.min) {
-        this.state.thumbsValues[i] = minPossibleValue;
-        this.notifyStateChanged();
-      }
-      if (newCurrentValue > state.max) {
-        this.state.thumbsValues[i] = maxPossibleValue;
-        this.notifyStateChanged();
-      }
-    });
-  }
+      // if (newCurrentValue < state.min) {
+      //   this.state.thumbsValues[i] = minPossibleValue;
+      // }
+      // if (newCurrentValue > state.max) {
+      //   this.state.thumbsValues[i] = maxPossibleValue;
+      // }
 
-  // Check sliders overlap
-  private checkThumbsValuesForOverlap(): void {
-    this.state.thumbsValues.forEach((element: number, i: number) => {
-      const maxPossibleValue: number =
-        this.state.max -
-        (this.state.thumbsValues.length - 1 - i) * this.state.step;
-      const minPossibleValue: number = this.state.min + i * this.state.step;
       const isIntermediateThumb: boolean =
         i !== 0 && element <= this.state.thumbsValues[i - 1];
       const isLastThumb: boolean =
@@ -241,7 +211,6 @@ class Model {
           this.state.thumbsValues[i - 1] = minPossibleValue - this.state.step;
           this.state.thumbsValues[i] = minPossibleValue;
         }
-        this.notifyStateChanged();
       }
       if (isLastThumb) {
         this.state.thumbsValues[i + 1] =
@@ -253,9 +222,12 @@ class Model {
           this.state.thumbsValues[i + 1] = maxPossibleValue + this.state.step;
           this.state.thumbsValues[i] = maxPossibleValue;
         }
-        this.notifyStateChanged();
       }
     });
+  }
+
+  private notifyStateChanged(): void {
+    this.emitter.emit('model:state-changed', this.state);
   }
 }
 export default Model;

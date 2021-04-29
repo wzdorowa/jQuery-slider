@@ -46,9 +46,6 @@ class Scale {
   }
 
   setConfig(state: IModelState): void {
-    console.log('this.orientation', this.orientation);
-    console.log('state.orientation', state.orientation);
-
     if (this.orientation !== state.orientation) {
       if (state.orientation === 'horizontal') {
         this.driver = driverHorizontal;
