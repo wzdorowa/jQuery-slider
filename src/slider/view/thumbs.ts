@@ -12,9 +12,9 @@ class Thumbs {
 
   private emitter: EventEmitter;
 
-  public state: IThumbsState;
+  private state: IThumbsState;
 
-  public driver: IDriver | null;
+  private driver: IDriver | null;
 
   constructor(element: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = element;
@@ -48,7 +48,7 @@ class Thumbs {
     );
   }
 
-  initializeThumbs(state: IModelState): void {
+  public initializeThumbs(state: IModelState): void {
     if (this.state.minValueSlider !== state.min) {
       this.state.minValueSlider = state.min;
     }
@@ -80,7 +80,7 @@ class Thumbs {
     this.listenSizeWindow();
   }
 
-  setConfig(state: IModelState): void {
+  public setConfig(state: IModelState): void {
     if (this.state.minValueSlider !== state.min) {
       this.state.minValueSlider = state.min;
     }
@@ -109,7 +109,7 @@ class Thumbs {
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
-  createThumbs(thumbsCount: number): void {
+  private createThumbs(thumbsCount: number): void {
     const fragment = document.createDocumentFragment();
     new Array(thumbsCount).fill(1).forEach(() => {
       const thumb: HTMLElement = createElement(
@@ -125,7 +125,7 @@ class Thumbs {
 
   /* changes the number of sliders drawn on the scale */
   // переписать метод без внесения изменений в стейт, так как расчеты там уже внесены
-  changeAmountThumbs(): void {
+  private changeAmountThumbs(): void {
     if (this.state.thumbs.length < this.state.thumbsCount) {
       const thumbsCount: number =
         this.state.thumbsCount - this.state.thumbs.length;
@@ -151,16 +151,16 @@ class Thumbs {
     }
   }
 
-  handleThumbMove(event: MouseEvent): void {
+  private handleThumbMove(event: MouseEvent): void {
     this.processMove.call(this, event);
   }
 
-  handleThumbStop(): void {
+  private handleThumbStop(): void {
     this.processStop.call(this);
   }
 
   /* hangs the 'mousedown' event handler for each created thumb */
-  listenThumbsEvents(): void {
+  private listenThumbsEvents(): void {
     this.state.thumbs.forEach((element: HTMLElement, i: number) => {
       element.addEventListener(
         'mousedown',
@@ -169,12 +169,16 @@ class Thumbs {
     });
   }
 
-  handleThumbStart(index: number, event: MouseEvent): void {
+  private handleThumbStart(index: number, event: MouseEvent): void {
     this.processStart({ event, index });
   }
 
   /* hangs the 'mousedown' event handler for each added thumb */
-  listenNewThumbsEvents({ thumbsCount }: { thumbsCount: number }): void {
+  private listenNewThumbsEvents({
+    thumbsCount,
+  }: {
+    thumbsCount: number;
+  }): void {
     new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
       const index = this.state.thumbs.length - (thumbsCount - i);
       this.state.thumbs[
@@ -184,16 +188,16 @@ class Thumbs {
   }
 
   /* listens to the 'resize' event on the slider page */
-  listenSizeWindow(): void {
+  private listenSizeWindow(): void {
     window.addEventListener('resize', this.handleWindowResize.bind(this));
   }
 
-  handleWindowResize(): void {
+  private handleWindowResize(): void {
     this.setNewValuesForThumbs.call(this);
   }
 
   /* places thumbs on the slider based on default values */
-  setValuesThumbs(): void {
+  private setValuesThumbs(): void {
     if (this.driver !== null) {
       this.driver.setInPlaceThumb(
         this.state.thumbs,
@@ -206,7 +210,7 @@ class Thumbs {
   }
 
   /* places thumbs on the slider depending on the received new value */
-  setNewValuesForThumbs(): void {
+  private setNewValuesForThumbs(): void {
     if (this.driver !== null) {
       this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
         this.slider,
@@ -229,7 +233,7 @@ class Thumbs {
   }
 
   /* the method calculates the current value of the thumb */
-  calculateValue(currentValueAxis: number): number {
+  private calculateValue(currentValueAxis: number): number {
     if (this.driver !== null) {
       this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
         this.slider,
@@ -248,7 +252,7 @@ class Thumbs {
   }
 
   /* the method calculates the value of the position of the thumb on the scale */
-  calculateValueOfPlaceOnScale(i: number): void {
+  private calculateValueOfPlaceOnScale(i: number): void {
     this.state.currentValue = this.calculateValue(this.state.currentValueAxis);
 
     if (this.state.thumbsValues[i] !== this.state.currentValue) {
@@ -260,7 +264,7 @@ class Thumbs {
   }
 
   /* calculates the potential value of the thumb at the point of click on the scale */
-  calculateValueOfPlaceClickOnScale(currentValueAxis: number): number {
+  private calculateValueOfPlaceClickOnScale(currentValueAxis: number): number {
     const currentValue: number | null = this.calculateValue(currentValueAxis);
     if (this.state.currentValue !== null) {
       const halfStep =
@@ -276,7 +280,7 @@ class Thumbs {
     return currentValue;
   }
 
-  updateThumbsPosition(): void {
+  private updateThumbsPosition(): void {
     if (this.driver !== null) {
       this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
         this.slider,
@@ -299,12 +303,12 @@ class Thumbs {
     }
   }
 
-  updateThumbPositionOnScale(index: number): void {
+  private updateThumbPositionOnScale(index: number): void {
     this.calculateValueOfPlaceOnScale(index);
   }
 
   /* method for setting the closest slider to the clicked position on the slider scale */
-  setThumbToNewPosition(event: MouseEvent): void {
+  private setThumbToNewPosition(event: MouseEvent): void {
     event.preventDefault();
     if (this.driver !== null) {
       const target: HTMLDivElement = event.target as HTMLDivElement;
@@ -362,7 +366,13 @@ class Thumbs {
     }
   }
 
-  processStart({ event, index }: { event: MouseEvent; index: number }): void {
+  private processStart({
+    event,
+    index,
+  }: {
+    event: MouseEvent;
+    index: number;
+  }): void {
     this.state.currentThumbIndex = index;
 
     event.preventDefault();
@@ -393,7 +403,7 @@ class Thumbs {
     document.addEventListener('mouseup', this.handleThumbStop.bind(this));
   }
 
-  processMove(event: MouseEvent): void {
+  private processMove(event: MouseEvent): void {
     const elements: HTMLElement[] = this.state.thumbs;
     const index = this.state.currentThumbIndex;
 
@@ -501,7 +511,7 @@ class Thumbs {
     }
   }
 
-  processStop(): void {
+  private processStop(): void {
     if (this.driver !== null) {
       if (this.state.target !== null) {
         if (this.state.currentValue !== null) {

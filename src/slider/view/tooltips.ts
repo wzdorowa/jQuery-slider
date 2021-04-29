@@ -3,30 +3,26 @@ import { IModelState } from '../interfaces/iModelState';
 import { IDriver } from '../interfaces/iDriver';
 import driverHorizontal from './drivers/driverHorizontal';
 import driverVertical from './drivers/driverVertical';
-import EventEmitter from '../eventEmitter';
 
 class Tooltips {
   private slider: HTMLElement;
 
-  public tooltipsElements: HTMLElement[];
+  private tooltipsElements: HTMLElement[];
 
-  public textInTooltips!: HTMLElement[];
+  private textInTooltips!: HTMLElement[];
 
-  public tooltipsValues: number[];
+  private tooltipsValues: number[];
 
-  public thumbsCount: number;
+  private thumbsCount: number;
 
-  public orientation: string | null;
+  private orientation: string | null;
 
-  public driver: IDriver | null;
+  private driver: IDriver | null;
 
-  public isTooltip: boolean | null;
+  private isTooltip: boolean | null;
 
-  public emitter: EventEmitter;
-
-  constructor(element: HTMLElement, eventEmitter: EventEmitter) {
+  constructor(element: HTMLElement) {
     this.slider = element;
-    this.emitter = eventEmitter;
     this.tooltipsElements = [];
     this.textInTooltips = [];
     this.tooltipsValues = [];
@@ -36,7 +32,7 @@ class Tooltips {
     this.isTooltip = null;
   }
 
-  initializeTooltips(state: IModelState): void {
+  public initializeTooltips(state: IModelState): void {
     if (this.thumbsCount !== state.thumbsCount) {
       this.thumbsCount = state.thumbsCount;
     }
@@ -63,7 +59,7 @@ class Tooltips {
     this.setTooltipsValues();
   }
 
-  setConfig(state: IModelState): void {
+  public setConfig(state: IModelState): void {
     if (this.tooltipsValues !== state.thumbsValues) {
       this.tooltipsValues = state.thumbsValues;
     }
@@ -95,7 +91,7 @@ class Tooltips {
   }
 
   /* createTooltips function adds tooltip elements to the main html slider structure */
-  createTooltips(thumbsCount: number): void {
+  private createTooltips(thumbsCount: number): void {
     new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
       if (this.driver !== null) {
         const tooltip: HTMLElement = createElement(
@@ -114,14 +110,14 @@ class Tooltips {
   }
 
   /* sets the default sliders for their respective tooltips */
-  setTooltipsValues(): void {
+  private setTooltipsValues(): void {
     this.tooltipsValues.forEach((element: number, i: number) => {
       this.textInTooltips[i].innerHTML = String(element);
     });
   }
 
   /* changes the number of rendered tooltips */
-  changeAmountTooltips(): void {
+  private changeAmountTooltips(): void {
     if (this.tooltipsElements.length < this.thumbsCount) {
       const thumbsCount: number =
         this.thumbsCount - this.tooltipsElements.length;
@@ -139,7 +135,7 @@ class Tooltips {
   }
 
   /* redraws tooltips when orientation changes */
-  changeOrientation(): void {
+  private changeOrientation(): void {
     if (this.driver !== null) {
       const $tooltips: HTMLElement[] = Array.from(
         $(this.slider).find('.js-slider__tooltip'),
@@ -161,13 +157,8 @@ class Tooltips {
     }
   }
 
-  /* the method sets the current value to the slider tooltip when it moves */
-  setCurrentTooltipValue(i: number): void {
-    this.textInTooltips[i].innerHTML = String(this.tooltipsValues[i]);
-  }
-
   /* hideTooltip method hides sliders tooltips */
-  hideTooltip(): void {
+  private hideTooltip(): void {
     const $allTooltips: HTMLElement[] = Array.from(
       $(this.slider).find('.js-slider__tooltip'),
     );
@@ -177,7 +168,7 @@ class Tooltips {
   }
 
   /* showTooltip method shows sliders tooltips */
-  showTooltip(): void {
+  private showTooltip(): void {
     const $allTooltips: HTMLElement[] = Array.from(
       $(this.slider).find('.js-slider__tooltip'),
     );

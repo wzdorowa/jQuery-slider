@@ -23,7 +23,7 @@ class View {
     this.emitter = eventEmitter;
     this.scale = new Scale(this.slider, this.emitter);
     this.thumbs = new Thumbs(this.slider, this.emitter);
-    this.tooltips = new Tooltips(this.slider, this.emitter);
+    this.tooltips = new Tooltips(this.slider);
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
       this.initialize(state);
       this.rerender(state);

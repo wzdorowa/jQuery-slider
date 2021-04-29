@@ -5,19 +5,19 @@ import driverHorizontal from './drivers/driverHorizontal';
 import driverVertical from './drivers/driverVertical';
 
 class Scale {
-  public slider: HTMLElement;
+  private slider: HTMLElement;
 
-  public emitter: EventEmitter;
+  private emitter: EventEmitter;
 
-  public scale!: HTMLElement;
+  private scale!: HTMLElement;
 
-  public activeRange!: HTMLElement;
+  private activeRange!: HTMLElement;
 
-  public orientation: string | null;
+  private orientation: string | null;
 
-  public driver: IDriver | null;
+  private driver: IDriver | null;
 
-  public thumbsValues: number[];
+  private thumbsValues: number[];
 
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
@@ -27,7 +27,7 @@ class Scale {
     this.thumbsValues = [];
   }
 
-  initializeScale(state: IModelState): void {
+  public initializeScale(state: IModelState): void {
     if (this.orientation !== state.orientation) {
       this.orientation = state.orientation;
     }
@@ -45,7 +45,7 @@ class Scale {
     this.listenScaleEvents();
   }
 
-  setConfig(state: IModelState): void {
+  public setConfig(state: IModelState): void {
     if (this.orientation !== state.orientation) {
       if (state.orientation === 'horizontal') {
         this.driver = driverHorizontal;
@@ -64,7 +64,7 @@ class Scale {
   }
 
   /* function createScale adds scale elements to the main html slider structure */
-  createScale(): void {
+  private createScale(): void {
     if (this.driver !== null) {
       const scale: HTMLElement = this.driver.createElementScale();
       const activeRange: HTMLElement = this.driver.createElementActiveRange();
@@ -77,7 +77,7 @@ class Scale {
     }
   }
 
-  changeOrientation(): void {
+  private changeOrientation(): void {
     if (this.driver !== null) {
       const activeRangeToRemove: JQuery<HTMLElement> = this.driver.searchElementActiveRangeToDelete(
         this.slider,
@@ -93,7 +93,7 @@ class Scale {
     }
   }
 
-  listenScaleEvents(): void {
+  private listenScaleEvents(): void {
     const handleScaleClick: (event: MouseEvent) => void = event =>
       this.emitter.emit('view:click-on-scale', event);
     this.scale.addEventListener('click', handleScaleClick);
