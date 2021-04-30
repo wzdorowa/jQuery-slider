@@ -31,14 +31,19 @@ export interface IDriver {
     eventThumb: MouseEvent,
     startXorY: number,
   ): number;
-  setIndentForTarget(target: HTMLElement, currentXorY: number): void;
+  setIndentForTarget(
+    target: HTMLElement,
+    currentXorY: number,
+    slider: HTMLElement,
+  ): void;
   setIndentForTargetToProcessStop(
     target: HTMLElement,
     coefficientPoint: number,
     currentValue: number,
     shiftToMinValue: number,
+    slider: HTMLElement,
   ): void;
-  updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void;
+  updateActiveRange(slider: HTMLElement): void;
   calculateClickLocation(
     event: MouseEvent,
     target: HTMLElement,

@@ -11,8 +11,6 @@ class Scale {
 
   private scale!: HTMLElement;
 
-  private activeRange!: HTMLElement;
-
   private orientation: string | null;
 
   private driver: IDriver | null;
@@ -56,10 +54,7 @@ class Scale {
       this.orientation = state.orientation;
       this.changeOrientation();
     }
-    const thumbs: HTMLElement[] = Array.from(
-      this.slider.querySelectorAll('.js-slider__thumb'),
-    );
-    this.driver?.updateActiveRange(this.activeRange, thumbs);
+    this.driver?.updateActiveRange(this.slider);
     this.thumbsValues = state.thumbsValues;
   }
 
@@ -72,7 +67,6 @@ class Scale {
       this.slider.append(scale);
       scale.append(activeRange);
 
-      this.activeRange = activeRange;
       this.scale = scale;
     }
   }

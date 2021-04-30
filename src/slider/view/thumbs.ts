@@ -436,6 +436,8 @@ class Thumbs {
                   this.state.currentValueAxis < this.state.startValueAxis
                 ) {
                   this.setIndentForTarget(this.state.startValueAxis, index);
+                } else if (this.state.stepSlider === 1) {
+                  this.setIndentForTarget(this.state.currentValueAxis, index);
                 } else {
                   this.checkPreviousOrNextValueThumb(
                     previousStepValueAxis,
@@ -453,6 +455,8 @@ class Thumbs {
                   this.state.currentValueAxis < this.state.startValueAxis
                 ) {
                   this.setIndentForTarget(this.state.startValueAxis, index);
+                } else if (this.state.stepSlider === 1) {
+                  this.setIndentForTarget(this.state.currentValueAxis, index);
                 } else {
                   this.checkPreviousOrNextValueThumb(
                     previousStepValueAxis,
@@ -473,6 +477,8 @@ class Thumbs {
                 this.setIndentForTarget(offsetNextThumb, index);
               } else if (valueAxis < offsetPreviousThumb) {
                 this.setIndentForTarget(offsetPreviousThumb, index);
+              } else if (this.state.stepSlider === 1) {
+                this.setIndentForTarget(this.state.currentValueAxis, index);
               } else {
                 this.checkPreviousOrNextValueThumb(
                   previousStepValueAxis,
@@ -489,6 +495,8 @@ class Thumbs {
                 this.setIndentForTarget(offsetPreviousThumb, index);
               } else if (valueAxis > this.state.stopValueAxis) {
                 this.setIndentForTarget(this.state.stopValueAxis, index);
+              } else if (this.state.stepSlider === 1) {
+                this.setIndentForTarget(this.state.currentValueAxis, index);
               } else {
                 this.checkPreviousOrNextValueThumb(
                   previousStepValueAxis,
@@ -506,7 +514,11 @@ class Thumbs {
   private setIndentForTarget(valueAxis: number, index: number): void {
     if (this.driver !== null) {
       if (this.state.target !== null) {
-        this.driver.setIndentForTarget(this.state.target, valueAxis);
+        this.driver.setIndentForTarget(
+          this.state.target,
+          valueAxis,
+          this.slider,
+        );
       }
     }
     this.state.currentValueAxis = valueAxis;
@@ -522,13 +534,21 @@ class Thumbs {
     if (this.driver !== null) {
       if (this.state.target !== null) {
         if (this.state.currentValueAxis > nextValueAxis) {
-          this.driver.setIndentForTarget(this.state.target, nextValueAxis);
+          this.driver.setIndentForTarget(
+            this.state.target,
+            nextValueAxis,
+            this.slider,
+          );
           this.state.thumbValueAxis = nextValueAxis;
           this.state.currentValueAxis = nextValueAxis;
           this.updateThumbPositionOnScale(index);
         }
         if (this.state.currentValueAxis < previousValueAxis) {
-          this.driver.setIndentForTarget(this.state.target, previousValueAxis);
+          this.driver.setIndentForTarget(
+            this.state.target,
+            previousValueAxis,
+            this.slider,
+          );
           this.state.currentValueAxis = previousValueAxis;
           this.state.thumbValueAxis = previousValueAxis;
           this.updateThumbPositionOnScale(index);
@@ -546,6 +566,7 @@ class Thumbs {
             this.state.coefficientPoint,
             this.state.currentValue,
             this.state.shiftToMinValue,
+            this.slider,
           );
         }
       }

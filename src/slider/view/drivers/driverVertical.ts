@@ -61,10 +61,6 @@ const driverVertical: IDriver = {
     shiftToMinValue: number,
     slider: HTMLElement,
   ): void {
-    const $activeRangeElement: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__vertical-active-range'),
-    );
-    const range = $activeRangeElement[0];
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
@@ -77,23 +73,7 @@ const driverVertical: IDriver = {
           thumb.style.top = `${indentTop}px`;
         }
       });
-    range.style.marginLeft = '';
-    range.style.width = '';
-
-    if (elements.length === 1) {
-      const height = String(driverVertical.getElementOffset(elements[0]));
-
-      range.style.marginTop = `0px`;
-      range.style.height = `${height}px`;
-    } else if (elements.length > 1) {
-      const marginTop = String(driverVertical.getElementOffset(elements[0]));
-      const height = String(
-        driverVertical.getElementOffset(elements[elements.length - 1]) -
-          driverVertical.getElementOffset(elements[0]),
-      );
-      range.style.marginTop = `${marginTop}px`;
-      range.style.height = `${height}px`;
-    }
+    this.updateActiveRange(slider);
   },
   getCurrentValueAxisToProcessStart(target: HTMLElement): number {
     return target.offsetTop;
@@ -117,32 +97,57 @@ const driverVertical: IDriver = {
   ): number {
     return eventThumb.pageY - startXorY;
   },
-  setIndentForTarget(target: HTMLElement, currentXorY: number): void {
+  setIndentForTarget(
+    target: HTMLElement,
+    currentXorY: number,
+    slider: HTMLElement,
+  ): void {
     const element = target;
     const indentTop = String(currentXorY);
     element.style.top = `${indentTop}px`;
+
+    this.updateActiveRange(slider);
   },
   setIndentForTargetToProcessStop(
     target: HTMLElement,
     coefficientPoint: number,
     currentValue: number,
     shiftToMinValue: number,
+    slider: HTMLElement,
   ): void {
     const element = target;
     const indentTop = String(
       Math.ceil(coefficientPoint * currentValue) - shiftToMinValue,
     );
     element.style.top = `${indentTop}px`;
+
+    this.updateActiveRange(slider);
   },
-  updateActiveRange(activeRange: HTMLElement, elements: HTMLElement[]): void {
-    const range = activeRange;
-    const marginTop = String(driverVertical.getElementOffset(elements[0]));
-    const height = String(
-      driverVertical.getElementOffset(elements[elements.length - 1]) -
-        driverVertical.getElementOffset(elements[0]),
+  updateActiveRange(slider: HTMLElement): void {
+    const $activeRangeElement: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__vertical-active-range'),
     );
-    range.style.marginTop = `${marginTop}px`;
-    range.style.height = `${height}px`;
+    const range = $activeRangeElement[0];
+    const $allThumbs: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
+
+    range.style.marginLeft = '';
+    range.style.width = '';
+
+    if ($allThumbs.length === 1) {
+      const height = String(driverVertical.getElementOffset($allThumbs[0]));
+      range.style.marginTop = `0px`;
+      range.style.height = `${height}px`;
+    } else if ($allThumbs.length > 1) {
+      const marginTop = String(driverVertical.getElementOffset($allThumbs[0]));
+      const height = String(
+        driverVertical.getElementOffset($allThumbs[$allThumbs.length - 1]) -
+          driverVertical.getElementOffset($allThumbs[0]),
+      );
+      range.style.marginTop = `${marginTop}px`;
+      range.style.height = `${height}px`;
+    }
   },
   calculateClickLocation(event: MouseEvent, target: HTMLElement): number {
     return event.offsetY + target.offsetTop;
