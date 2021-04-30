@@ -200,9 +200,10 @@ class Thumbs {
     if (this.driver !== null) {
       this.driver.setInPlaceThumb(
         this.state.thumbs,
-        this.state.minValueSlider,
-        this.state.maxValueSlider,
+        this.state.currentThumbIndex,
+        this.state.coefficientPoint,
         this.state.thumbsValues,
+        this.state.shiftToMinValue,
         this.slider,
       );
     }
@@ -285,7 +286,7 @@ class Thumbs {
         this.state.coefficientPoint * this.state.minValueSlider,
       );
 
-      this.driver.setInPlaceNewThumb(
+      this.driver.setInPlaceThumb(
         this.state.thumbs,
         this.state.currentThumbIndex,
         this.state.coefficientPoint,

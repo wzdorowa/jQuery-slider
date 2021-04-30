@@ -161,8 +161,6 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `setValuesThumbs(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, driver: IDriver): void` - расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений;
 
-`setNewValuesForThumbs(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, driver: IDriver): void` - расставляет бегунки по слайдеру в зависимости от полученных новых значений;
-
 `calculateValue(modelState: IModelState, currentValueAxis: number): number` - рассчитывает текущее значение бегунка;
 
 `calculateValueOfPlaceOnScale(modelState: IModelState, i: number): void` - рассчитывает значение места бегунка на шкале;

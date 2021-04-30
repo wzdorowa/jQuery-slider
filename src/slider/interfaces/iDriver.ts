@@ -15,13 +15,6 @@ export interface IDriver {
   searchElementActiveRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>;
   setInPlaceThumb(
     elements: HTMLElement[],
-    min: number,
-    max: number,
-    thumbsValues: number[],
-    slider: HTMLElement,
-  ): void;
-  setInPlaceNewThumb(
-    elements: HTMLElement[],
     currentThumbIndex: number | null,
     coefficientPoint: number,
     thumbsValues: number[],
@@ -34,16 +27,11 @@ export interface IDriver {
     currentXorY: number,
   ): number;
   getMaxValueAxisToProcessStart(scale: HTMLElement): number;
-  getThumbValueAxisToProcessStart(
-    eventThumb: MouseEvent,
-    startXorY: number,
-  ): number;
   getCurrentValueAxisToProcessMove(
     eventThumb: MouseEvent,
     startXorY: number,
   ): number;
   setIndentForTarget(target: HTMLElement, currentXorY: number): void;
-  getTargetWidth(target: HTMLElement): number;
   setIndentForTargetToProcessStop(
     target: HTMLElement,
     coefficientPoint: number,

@@ -57,43 +57,6 @@ const driverHorizontal: IDriver = {
   },
   setInPlaceThumb(
     elements: HTMLElement[],
-    min: number,
-    max: number,
-    thumbsValues: number[],
-    slider: HTMLElement,
-  ): void {
-    new Array(elements.length)
-      .fill(1)
-      .forEach((_element: number, i: number) => {
-        const thumb = elements[i];
-        const indentLeft = String(
-          Math.ceil(
-            driverHorizontal.calculateCoefficientPoint(slider, max, min),
-          ) * thumbsValues[i],
-        );
-        thumb.style.left = `${indentLeft}px`;
-      });
-
-    const $activeRangeElement: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__active-range'),
-    );
-    const range = $activeRangeElement[0];
-    if (elements.length === 1) {
-      const width = String(driverHorizontal.getElementOffset(elements[0]));
-      range.style.marginLeft = `0px`;
-      range.style.width = `${width}px`;
-    } else if (elements.length > 1) {
-      const marginLeft = String(driverHorizontal.getElementOffset(elements[0]));
-      const width = String(
-        driverHorizontal.getElementOffset(elements[elements.length - 1]) -
-          driverHorizontal.getElementOffset(elements[0]),
-      );
-      range.style.marginLeft = `${marginLeft}px`;
-      range.style.width = `${width}px`;
-    }
-  },
-  setInPlaceNewThumb(
-    elements: HTMLElement[],
     currentThumbIndex: number | null,
     coefficientPoint: number,
     thumbsValues: number[],

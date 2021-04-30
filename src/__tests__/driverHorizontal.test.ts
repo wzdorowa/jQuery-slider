@@ -144,7 +144,7 @@ test('Calculate new value slider thumbs', () => {
   calculateElementOffsetLeft.onCall(1).returns(90);
   calculateElementOffsetLeft.onCall(2).returns(40);
 
-  driverHorizontal.setInPlaceNewThumb(
+  driverHorizontal.setInPlaceThumb(
     elements,
     currentThumbIndex,
     coefficientPoint,

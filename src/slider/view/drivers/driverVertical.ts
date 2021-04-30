@@ -55,43 +55,6 @@ const driverVertical: IDriver = {
   },
   setInPlaceThumb(
     elements: HTMLElement[],
-    min: number,
-    max: number,
-    thumbsValues: number[],
-    slider: HTMLElement,
-  ): void {
-    const $activeRangeElement: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__vertical-active-range'),
-    );
-    const range = $activeRangeElement[0];
-    new Array(elements.length)
-      .fill(1)
-      .forEach((_element: number, i: number) => {
-        const thumb = elements[i];
-        const indentTop = String(
-          Math.ceil(
-            driverVertical.calculateCoefficientPoint(slider, max, min) *
-              thumbsValues[i],
-          ),
-        );
-        thumb.style.top = `${indentTop}px`;
-      });
-    if (elements.length === 1) {
-      const height = String(driverVertical.getElementOffset(elements[0]));
-      range.style.marginTop = `0px`;
-      range.style.width = `${height}px`;
-    } else if (elements.length > 1) {
-      const marginTop = String(driverVertical.getElementOffset(elements[0]));
-      const height = String(
-        driverVertical.getElementOffset(elements[elements.length - 1]) -
-          driverVertical.getElementOffset(elements[0]),
-      );
-      range.style.marginTop = `${marginTop}px`;
-      range.style.height = `${height}px`;
-    }
-  },
-  setInPlaceNewThumb(
-    elements: HTMLElement[],
     currentThumbIndex: number | null,
     coefficientPoint: number,
     thumbsValues: number[],
