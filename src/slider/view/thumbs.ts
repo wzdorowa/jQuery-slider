@@ -192,7 +192,7 @@ class Thumbs {
   }
 
   private handleWindowResize(): void {
-    this.setNewValuesForThumbs.call(this);
+    this.updateThumbsPosition.call(this);
   }
 
   /* places thumbs on the slider based on default values */
@@ -203,29 +203,6 @@ class Thumbs {
         this.state.minValueSlider,
         this.state.maxValueSlider,
         this.state.thumbsValues,
-        this.slider,
-      );
-    }
-  }
-
-  /* places thumbs on the slider depending on the received new value */
-  private setNewValuesForThumbs(): void {
-    if (this.driver !== null) {
-      this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
-        this.slider,
-        this.state.maxValueSlider,
-        this.state.maxValueSlider,
-      );
-
-      this.state.shiftToMinValue = Math.ceil(
-        this.state.coefficientPoint * this.state.minValueSlider,
-      );
-      this.driver.setInPlaceNewThumb(
-        this.state.thumbs,
-        this.state.currentThumbIndex,
-        this.state.coefficientPoint,
-        this.state.thumbsValues,
-        this.state.shiftToMinValue,
         this.slider,
       );
     }
