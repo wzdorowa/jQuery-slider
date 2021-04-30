@@ -76,14 +76,19 @@ const driverVertical: IDriver = {
         );
         thumb.style.top = `${indentTop}px`;
       });
-
-    const marginTop = String(driverVertical.getElementOffset(elements[0]));
-    const height = String(
-      driverVertical.getElementOffset(elements[elements.length - 1]) -
-        driverVertical.getElementOffset(elements[0]),
-    );
-    range.style.marginTop = `${marginTop}px`;
-    range.style.height = `${height}px`;
+    if (elements.length === 1) {
+      const height = String(driverVertical.getElementOffset(elements[0]));
+      range.style.marginTop = `0px`;
+      range.style.width = `${height}px`;
+    } else if (elements.length > 1) {
+      const marginTop = String(driverVertical.getElementOffset(elements[0]));
+      const height = String(
+        driverVertical.getElementOffset(elements[elements.length - 1]) -
+          driverVertical.getElementOffset(elements[0]),
+      );
+      range.style.marginTop = `${marginTop}px`;
+      range.style.height = `${height}px`;
+    }
   },
   setInPlaceNewThumb(
     elements: HTMLElement[],
@@ -112,13 +117,20 @@ const driverVertical: IDriver = {
     range.style.marginLeft = '';
     range.style.width = '';
 
-    const marginTop = String(driverVertical.getElementOffset(elements[0]));
-    const height = String(
-      driverVertical.getElementOffset(elements[elements.length - 1]) -
-        driverVertical.getElementOffset(elements[0]),
-    );
-    range.style.marginTop = `${marginTop}px`;
-    range.style.height = `${height}px`;
+    if (elements.length === 1) {
+      const height = String(driverVertical.getElementOffset(elements[0]));
+
+      range.style.marginTop = `0px`;
+      range.style.height = `${height}px`;
+    } else if (elements.length > 1) {
+      const marginTop = String(driverVertical.getElementOffset(elements[0]));
+      const height = String(
+        driverVertical.getElementOffset(elements[elements.length - 1]) -
+          driverVertical.getElementOffset(elements[0]),
+      );
+      range.style.marginTop = `${marginTop}px`;
+      range.style.height = `${height}px`;
+    }
   },
   getCurrentValueAxisToProcessStart(target: HTMLElement): number {
     return target.offsetTop;

@@ -106,7 +106,6 @@ class Thumbs {
       this.updateThumbsPosition();
     }
     this.updateThumbsPosition();
-    // this.state.thumbsValues = state.thumbsValues;
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
@@ -125,7 +124,6 @@ class Thumbs {
   }
 
   /* changes the number of sliders drawn on the scale */
-  // переписать метод без внесения изменений в стейт, так как расчеты там уже внесены
   private changeAmountThumbs(): void {
     if (this.state.thumbs.length < this.state.thumbsCount) {
       const thumbsCount: number =
