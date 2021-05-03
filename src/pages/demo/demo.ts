@@ -445,10 +445,10 @@ $(() => {
 
     const handleCheckboxContainerClick = () => {
       let checked = true;
-      if ($checkboxInput[0].checked === true) {
+      if ($checkboxInput[0].checked) {
         checked = true;
       }
-      if ($checkboxInput[0].checked === false) {
+      if (!$checkboxInput[0].checked) {
         checked = false;
       }
       element.setNewValueTooltip(checked);
