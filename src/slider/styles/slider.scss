@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .slider {
   &__scale {
     box-sizing: border-box;
@@ -15,7 +17,7 @@
     display: block;
     height: 100%;
     width: 100%;
-    background: #b3d4fc;
+    background: $PaleCornflowerBlue;
   }
 
   &__vertical-scale {
@@ -34,7 +36,7 @@
     display: block;
     height: 100%;
     width: 100%;
-    background: #b3d4fc;
+    background: $PaleCornflowerBlue;
   }
 
   &__thumb {
@@ -53,7 +55,7 @@
   &__tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted #b3d4fc;
+    border-bottom: 1px dotted $PaleCornflowerBlue;
   }
 
   &__tooltip-text {
@@ -61,7 +63,7 @@
     font-weight: 400;
     font-size: 15px;
     width: 25px;
-    background-color: #b3d4fc;
+    background-color: $PaleCornflowerBlue;
     opacity: 0.7;
     color: white;
     text-align: center;
@@ -78,7 +80,7 @@
       left: 30%;
       border-width: 5px;
       border-style: solid;
-      border-color: #b3d4fc transparent transparent transparent;
+      border-color: $PaleCornflowerBlue transparent transparent transparent;
     }
   }
 
@@ -88,7 +90,7 @@
     font-size: 15px;
     width: 25px;
     height: 18px;
-    background-color: #b3d4fc;
+    background-color: $PaleCornflowerBlue;
     opacity: 0.7;
     color: white;
     text-align: center;
@@ -106,7 +108,7 @@
       left: -30%;
       border-width: 5px;
       border-style: solid;
-      border-color: transparent #b3d4fc transparent transparent;
+      border-color: transparent $PaleCornflowerBlue transparent transparent;
     }
   }
 

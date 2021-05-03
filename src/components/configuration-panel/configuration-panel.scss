@@ -34,7 +34,7 @@
 
   &__thumbs-value {
     width: 85%;
-    color: #202020;
+    color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
     vertical-align: baseline;
@@ -47,7 +47,7 @@
     padding-left: 5px;
 
     &:focus {
-      border-color: #b3d4fc;
+      border-color: $PaleCornflowerBlue;
     }
   }
 
@@ -58,7 +58,7 @@
 
   &__thumbs-value-from {
     width: 40%;
-    color: #202020;
+    color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
     vertical-align: baseline;
@@ -71,13 +71,13 @@
     padding-left: 5px;
 
     &:focus {
-      border-color: #b3d4fc;
+      border-color: $PaleCornflowerBlue;
     }
   }
 
   &__thumbs-value-to {
     width: 40%;
-    color: #202020;
+    color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
     vertical-align: baseline;
@@ -90,7 +90,7 @@
     padding-left: 5px;
 
     &:focus {
-      border-color: #b3d4fc;
+      border-color: $PaleCornflowerBlue;
     }
   }
 }

@@ -5,20 +5,20 @@
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
-  color: rgba(31, 32, 65, 0.5);
+  color: $Valhalla50;
 
   &__indicator {
     position: absolute;
     width: 18px;
     height: 18px;
-    border: 1px solid rgba(31, 32, 65, 0.25);
+    border: 1px solid $Valhalla25;
     border-radius: 4px;
   }
 
   & input[type="checkbox"]:checked {
 
     & + .checkbox-button__indicator {
-      border: 1px solid #b3d4fc;
+      border: 1px solid $PaleCornflowerBlue;
 
       &::before {
         content: "";
@@ -27,8 +27,8 @@
         left: 4px;
         width: 7px;
         height: 5px;
-        border-top: 2px solid #b3d4fc;
-        border-right: 2px solid #b3d4fc;
+        border-top: 2px solid $PaleCornflowerBlue;
+        border-right: 2px solid $PaleCornflowerBlue;
         transform: rotate(135deg); 
       }
     }

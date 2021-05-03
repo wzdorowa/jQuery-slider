@@ -5,13 +5,13 @@
   font-weight: normal;
   font-size: 15px;
   line-height: 20px;
-  color: rgba(31, 32, 65, 0.5);
+  color: $Valhalla50;
 
   &__indicator {
     position: absolute;
     width: 18px;
     height: 18px;
-    border: 1px solid rgba(31, 32, 65, 0.25);
+    border: 1px solid $Valhalla25;
     border-radius: 10px;
   }
 
@@ -24,7 +24,7 @@
   & input[type="radio"]:checked {
 
     & + .radio-button__indicator {
-      border: 1px solid rgba(31, 32, 65, 0.25);
+      border: 1px solid $Valhalla25;
 
       &::before {
         content: "";
@@ -33,7 +33,7 @@
         left: 3px;
         width: 12px;
         height: 12px;
-        background: #b3d4fc;
+        background: $PaleCornflowerBlue;
         border-radius: 10px;
       }
     }

@@ -13,13 +13,13 @@
     width: 30px;
     padding-right: 5px;
     line-height: 35px;
-    color: #9b9b9b;
+    color: $Nobel;
     text-align: left;
   }
 
   &__value {
     width: 100%;
-    color: #202020;
+    color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
     vertical-align: baseline;
@@ -30,7 +30,7 @@
     padding-left: 10px;
 
     &:focus{
-      border-color: #b3d4fc;
+      border-color: $PaleCornflowerBlue;
     }
   }
 }
@@ -50,13 +50,13 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 35px;
-    color: #9b9b9b;
+    color: $Nobel;
     text-align: left;
   }
 
   &__value {
     width: 15%;
-    color: #202020;
+    color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
     vertical-align: baseline;
@@ -67,7 +67,7 @@
     padding-left: 10px;
 
     &:focus {
-      border-color: #b3d4fc;
+      border-color: $PaleCornflowerBlue;
     }
   }
 }
@@ -86,7 +86,7 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 30px;
-    color: #9b9b9b;
+    color: $Nobel;
     text-align: left;
     padding-right: 15px;
   }
@@ -96,14 +96,14 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 30px;
-    color: #9b9b9b;
+    color: $Nobel;
     text-align: left;
     padding-right: 15px;
   }
 
   &__value {
     width: 10%;
-    color: #202020;
+    color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
     vertical-align: baseline;
@@ -114,7 +114,7 @@
     padding-left: 5px;
 
     &:focus {
-      border-color: #b3d4fc;
+      border-color: $PaleCornflowerBlue;
     }
   }
 }
