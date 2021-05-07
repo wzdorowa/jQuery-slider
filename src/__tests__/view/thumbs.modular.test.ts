@@ -1,8 +1,8 @@
 import sinonLib = require('sinon');
 import driverHorizontal from '../../slider/view/drivers/driverHorizontal';
-import View from '../../slider/view/view';
-import Thumbs from '../../slider/view/thumbs';
-import EventEmitter from '../../slider/eventEmitter';
+import View from '../../slider/view/View';
+import Thumbs from '../../slider/view/Thumbs';
+import EventEmitter from '../../slider/EventEmitter';
 import { IModelState } from '../../slider/interfaces/iModelState';
 
 const state: IModelState = {

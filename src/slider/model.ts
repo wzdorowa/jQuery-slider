@@ -1,5 +1,5 @@
 import { IModelState } from './interfaces/iModelState';
-import EventEmitter from './eventEmitter';
+import EventEmitter from './EventEmitter';
 
 class Model {
   public state: IModelState;

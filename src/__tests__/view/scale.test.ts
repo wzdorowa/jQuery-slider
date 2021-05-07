@@ -1,8 +1,8 @@
-import Scale from '../../slider/view/scale';
-import Thumbs from '../../slider/view/thumbs';
+import Scale from '../../slider/view/Scale';
+import Thumbs from '../../slider/view/Thumbs';
 import driverHorizontal from '../../slider/view/drivers/driverHorizontal';
 import driverVertical from '../../slider/view/drivers/driverVertical';
-import EventEmitter from '../../slider/eventEmitter';
+import EventEmitter from '../../slider/EventEmitter';
 import { IModelState } from '../../slider/interfaces/iModelState';
 
 const state: IModelState = {

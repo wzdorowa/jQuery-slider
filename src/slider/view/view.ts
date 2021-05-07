@@ -1,8 +1,8 @@
-import EventEmitter from '../eventEmitter';
+import EventEmitter from '../EventEmitter';
 import { IModelState } from '../interfaces/iModelState';
-import Scale from '../view/scale';
-import Thumbs from './thumbs';
-import Tooltips from '../view/tooltips';
+import Scale from './Scale';
+import Thumbs from './Thumbs';
+import Tooltips from './Tooltips';
 
 class View {
   private slider: HTMLElement;

@@ -1,4 +1,4 @@
-import EventEmitter from '../eventEmitter';
+import EventEmitter from '../EventEmitter';
 import { IModelState } from '../interfaces/iModelState';
 import { IDriver } from '../interfaces/iDriver';
 import driverHorizontal from './drivers/driverHorizontal';

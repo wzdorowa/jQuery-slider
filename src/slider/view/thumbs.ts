@@ -1,4 +1,4 @@
-import EventEmitter from '../eventEmitter';
+import EventEmitter from '../EventEmitter';
 import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IThumbsState } from '../interfaces/IThumbsState';

@@ -1,8 +1,8 @@
 import { IHTMLElement } from './interfaces/iHTMLElement';
 import { IModelState } from './interfaces/iModelState';
-import Model from './model';
-import View from './view/view';
-import EventEmitter from './eventEmitter';
+import Model from './Model';
+import View from './view/View';
+import EventEmitter from './EventEmitter';
 
 interface IData {
   value: number;
