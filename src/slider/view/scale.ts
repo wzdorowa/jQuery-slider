@@ -88,9 +88,11 @@ class Scale {
   }
 
   private listenScaleEvents(): void {
-    const handleScaleClick: (event: MouseEvent) => void = event =>
-      this.emitter.emit('view:click-on-scale', event);
-    this.scale.addEventListener('click', handleScaleClick);
+    this.scale.addEventListener('click', this.handleScaleClick.bind(this));
+  }
+
+  private handleScaleClick(event: MouseEvent) {
+    this.emitter.emit('view:click-on-scale', event);
   }
 }
 export default Scale;
