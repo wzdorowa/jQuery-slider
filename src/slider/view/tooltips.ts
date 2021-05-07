@@ -65,7 +65,7 @@ class Tooltips {
     }
     if (this.thumbsCount !== state.thumbsCount) {
       this.thumbsCount = state.thumbsCount;
-      this.changeAmountTooltips();
+      this.changeCountTooltips();
     }
     if (this.isTooltip !== state.isTooltip) {
       if (state.isTooltip) {
@@ -117,17 +117,17 @@ class Tooltips {
   }
 
   /* changes the number of rendered tooltips */
-  private changeAmountTooltips(): void {
+  private changeCountTooltips(): void {
     if (this.tooltipsElements.length < this.thumbsCount) {
       const thumbsCount: number =
         this.thumbsCount - this.tooltipsElements.length;
       this.createTooltips(thumbsCount);
     }
     if (this.tooltipsElements.length > this.thumbsCount) {
-      const excessAmount: number =
+      const excessCount: number =
         this.tooltipsElements.length - this.thumbsCount;
 
-      new Array(excessAmount).fill(1).forEach(() => {
+      new Array(excessCount).fill(1).forEach(() => {
         this.tooltipsElements.splice(-1, 1);
         this.textInTooltips.splice(-1, 1);
       });

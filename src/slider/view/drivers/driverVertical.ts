@@ -136,17 +136,19 @@ const driverVertical: IDriver = {
     range.style.width = '';
 
     if ($allThumbs.length === 1) {
-      const height = String(driverVertical.getElementOffset($allThumbs[0]));
+      const heightActiveRange = String(
+        driverVertical.getElementOffset($allThumbs[0]),
+      );
       range.style.marginTop = `0px`;
-      range.style.height = `${height}px`;
+      range.style.height = `${heightActiveRange}px`;
     } else if ($allThumbs.length > 1) {
       const marginTop = String(driverVertical.getElementOffset($allThumbs[0]));
-      const height = String(
+      const heightActiveRange = String(
         driverVertical.getElementOffset($allThumbs[$allThumbs.length - 1]) -
           driverVertical.getElementOffset($allThumbs[0]),
       );
       range.style.marginTop = `${marginTop}px`;
-      range.style.height = `${height}px`;
+      range.style.height = `${heightActiveRange}px`;
     }
   },
   calculateClickLocation(event: MouseEvent, target: HTMLElement): number {

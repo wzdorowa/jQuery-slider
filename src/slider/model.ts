@@ -40,7 +40,7 @@ class Model {
   }
 
   // set a new number of thumbs
-  public setNewValueAmount(thumbsCount: number): void {
+  public setNewValueCount(thumbsCount: number): void {
     if (this.state.thumbsCount === thumbsCount) {
       return;
     }
@@ -167,14 +167,10 @@ class Model {
         this.state.max -
         (this.state.max % this.state.step) -
         (this.state.thumbsValues.length - 1 - i) * this.state.step;
-      // const maxPossibleValue: number =
-      //   this.state.max -
-      //   (this.state.thumbsValues.length - 1 - i) * this.state.step;
       let minPossibleValue: number =
         this.state.min -
         (this.state.min % this.state.step) +
         i * this.state.step;
-      // const minPossibleValue: number = this.state.min + i * this.state.step;
 
       if (minPossibleValue < this.state.min) {
         minPossibleValue = this.state.min;
@@ -187,13 +183,6 @@ class Model {
       } else if (this.state.thumbsValues[i] !== newCurrentValue) {
         this.state.thumbsValues[i] = newCurrentValue;
       }
-
-      // if (newCurrentValue < state.min) {
-      //   this.state.thumbsValues[i] = minPossibleValue;
-      // }
-      // if (newCurrentValue > state.max) {
-      //   this.state.thumbsValues[i] = maxPossibleValue;
-      // }
 
       const isIntermediateThumb: boolean =
         i !== 0 && element <= this.state.thumbsValues[i - 1];

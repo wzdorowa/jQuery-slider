@@ -138,19 +138,21 @@ const driverHorizontal: IDriver = {
     range.style.height = '';
 
     if ($allThumbs.length === 1) {
-      const width = String(driverHorizontal.getElementOffset($allThumbs[0]));
+      const widthActiveRange = String(
+        driverHorizontal.getElementOffset($allThumbs[0]),
+      );
       range.style.marginLeft = `0px`;
-      range.style.width = `${width}px`;
+      range.style.width = `${widthActiveRange}px`;
     } else if ($allThumbs.length > 1) {
       const marginLeft = String(
         driverHorizontal.getElementOffset($allThumbs[0]),
       );
-      const width = String(
+      const widthActiveRange = String(
         driverHorizontal.getElementOffset($allThumbs[$allThumbs.length - 1]) -
           driverHorizontal.getElementOffset($allThumbs[0]),
       );
       range.style.marginLeft = `${marginLeft}px`;
-      range.style.width = `${width}px`;
+      range.style.width = `${widthActiveRange}px`;
     }
   },
   calculateClickLocation(

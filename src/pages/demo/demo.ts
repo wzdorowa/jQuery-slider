@@ -113,13 +113,13 @@ $(() => {
         state.thumbsValues[indexNewInput],
       );
     };
-    const changeAmountInputs = (state: IModelState) => {
+    const changeCountInputs = (state: IModelState) => {
       const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
         document.querySelectorAll(
           '.js-configuration__thumbs-current-value-list',
         ),
       );
-      const $amountInputs: HTMLElement[] = Array.from(
+      const $countInputs: HTMLElement[] = Array.from(
         $(thumbsCurrentValuesList[index]).find(
           '.js-configuration__thumbs-item',
         ),
@@ -131,15 +131,15 @@ $(() => {
         ),
       );
 
-      if ($amountInputs.length < state.thumbsCount) {
-        const missingAmount: number = state.thumbsCount - $amountInputs.length;
+      if ($countInputs.length < state.thumbsCount) {
+        const missingCount: number = state.thumbsCount - $countInputs.length;
 
         const fragmentCurrentValueList = document.createDocumentFragment();
         const fragmentIntervalValueList = document.createDocumentFragment();
-        new Array(missingAmount)
+        new Array(missingCount)
           .fill(1)
           .forEach((_element: number, i: number) => {
-            const $currentAmountInputs: HTMLElement[] = Array.from(
+            const $currentCountInputs: HTMLElement[] = Array.from(
               $(thumbsCurrentValuesList[index]).find(
                 '.js-configuration__thumbs-item',
               ),
@@ -174,8 +174,7 @@ $(() => {
             valueFrom.setAttribute(
               'value',
               String(
-                state.thumbsValues[$currentAmountInputs.length - 1] +
-                  state.step,
+                state.thumbsValues[$currentCountInputs.length - 1] + state.step,
               ),
             );
 
@@ -195,8 +194,8 @@ $(() => {
         thumbsCurrentValuesList[index].append(fragmentCurrentValueList);
         thumbsIntervalValuesList[index].append(fragmentIntervalValueList);
       }
-      if ($amountInputs.length > state.thumbsCount) {
-        const excessAmount: number = $amountInputs.length - state.thumbsCount;
+      if ($countInputs.length > state.thumbsCount) {
+        const excessCount: number = $countInputs.length - state.thumbsCount;
 
         const $allCurrentValuesInputs: HTMLElement[] = Array.from(
           $(thumbsCurrentValuesList[index]).find(
@@ -208,7 +207,7 @@ $(() => {
             '.js-configuration__thumbs-set',
           ),
         );
-        new Array(excessAmount).fill(1).forEach(() => {
+        new Array(excessCount).fill(1).forEach(() => {
           $allCurrentValuesInputs[$allCurrentValuesInputs.length - 1].remove();
           $allCurrentValuesInputs.splice(-1, 1);
 
@@ -317,22 +316,22 @@ $(() => {
     setValueToMinInputFromModelState(modelState);
     setValueMaxInputFromModelState(modelState);
 
-    const getAmountInputs = () => {
+    const getCountInputs = () => {
       const configurationPanel: HTMLDivElement[] = Array.from(
         document.querySelectorAll('.js-configuration'),
       );
 
-      const $amountInputs: HTMLElement[] = Array.from(
+      const $countInputs: HTMLElement[] = Array.from(
         $(configurationPanel[index]).find('.js-configuration__thumbs-value'),
       );
-      return $amountInputs;
+      return $countInputs;
     };
 
     element.subscribeToStateModel(
       createInput,
       isCreatedInput,
-      getAmountInputs,
-      changeAmountInputs,
+      getCountInputs,
+      changeCountInputs,
       setValueToInputFromModelState,
       setValueToStepFromModelState,
       setValueToMinInputFromModelState,
@@ -364,18 +363,15 @@ $(() => {
 
     // get from the input field and pass the new value of the number
     // of sliders entered by the user from the configuration panel
-    const $amountSliderThumbs: HTMLInputElement[] = Array.from(
-      $(configurationPanel[index]).find('.js-input-amount-thumb__value'),
+    const $countSliderThumbs: HTMLInputElement[] = Array.from(
+      $(configurationPanel[index]).find('.js-input-count-thumb__value'),
     ) as HTMLInputElement[];
 
-    const handleAmountSliderThumbsBlur = () => {
-      const amount = Number($amountSliderThumbs[0].value);
-      element.setNewValueAmount(amount);
+    const handleCountSliderThumbsBlur = () => {
+      const count = Number($countSliderThumbs[0].value);
+      element.setNewValueCount(count);
     };
-    $amountSliderThumbs[0].addEventListener(
-      'blur',
-      handleAmountSliderThumbsBlur,
-    );
+    $countSliderThumbs[0].addEventListener('blur', handleCountSliderThumbsBlur);
     // get from the input field and pass the new values of the current
     // states of the thumbs entered by the user from the configuration panel
     const toFindInputsSliderThumbs = (): HTMLInputElement[] => {
@@ -444,14 +440,14 @@ $(() => {
     ) as HTMLInputElement[];
 
     const handleCheckboxContainerClick = () => {
-      let checked = true;
+      let isChecked = true;
       if ($checkboxInput[0].checked) {
-        checked = true;
+        isChecked = true;
       }
       if (!$checkboxInput[0].checked) {
-        checked = false;
+        isChecked = false;
       }
-      element.setNewValueTooltip(checked);
+      element.setNewValueTooltip(isChecked);
     };
     $checkboxContainer[0].addEventListener(
       'click',
@@ -481,8 +477,8 @@ $(() => {
       const max = Number(maxValue.value);
       element.setNewValueMax(max);
 
-      const amount = Number($amountSliderThumbs[0].value);
-      element.setNewValueAmount(amount);
+      const count = Number($countSliderThumbs[0].value);
+      element.setNewValueCount(count);
 
       setValueOfInputsSliderThumbs();
 

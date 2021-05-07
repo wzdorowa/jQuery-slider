@@ -23,7 +23,7 @@ class Controller {
     this.attachPublicMethods(model, eventEmitter);
 
     eventEmitter.makeSubscribe(
-      'view:amountThumbs-changed',
+      'view:countThumbs-changed',
       (thumbsValues: number[]) => {
         model.overwriteCurrentThumbsValues(thumbsValues);
       },
@@ -45,8 +45,8 @@ class Controller {
     this.slider.setNewValueMax = (max: number): void => {
       model.setNewValueMax(max);
     };
-    this.slider.setNewValueAmount = (amount: number): void => {
-      model.setNewValueAmount(amount);
+    this.slider.setNewValueCount = (count: number): void => {
+      model.setNewValueCount(count);
     };
     this.slider.setNewValueThumbsValues = (
       touchValue: number,
@@ -66,8 +66,8 @@ class Controller {
     this.slider.subscribeToStateModel = (
       handler: (state: IModelState) => void,
       isCreatedInput: boolean,
-      amountInputs: () => Element[],
-      changeAmountInputs: (state: IModelState) => void,
+      countInputs: () => Element[],
+      changeCountInputs: (state: IModelState) => void,
       setValueToInputFromModelState: (state: IModelState) => void,
       setValueToStepFromModelState: (state: IModelState) => void,
       setValueToMinInputFromModelState: (state: IModelState) => void,
@@ -81,9 +81,9 @@ class Controller {
             handler(state);
             isCreatedElement = true;
           }
-          const arrayAmountInputs = amountInputs();
-          if (arrayAmountInputs.length !== state.thumbsValues.length) {
-            changeAmountInputs(state);
+          const arrayCountInputs = countInputs();
+          if (arrayCountInputs.length !== state.thumbsValues.length) {
+            changeCountInputs(state);
           }
           setValueToInputFromModelState(state);
           setValueToStepFromModelState(state);

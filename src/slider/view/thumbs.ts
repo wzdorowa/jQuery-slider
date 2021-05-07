@@ -93,7 +93,7 @@ class Thumbs {
     }
     if (this.state.thumbsCount !== state.thumbsCount) {
       this.state.thumbsCount = state.thumbsCount;
-      this.changeAmountThumbs();
+      this.changeCountThumbs();
     }
     if (this.state.orientation !== state.orientation) {
       if (state.orientation === 'horizontal') {
@@ -110,21 +110,21 @@ class Thumbs {
 
   /* the CreateSlider function adds sliders to the parent of the slider */
   private createThumbs(thumbsCount: number): void {
-    const fragment = document.createDocumentFragment();
+    const htmlFragment = document.createDocumentFragment();
     new Array(thumbsCount).fill(1).forEach(() => {
       const thumb: HTMLElement = createElement(
         'div',
         'slider__thumb js-slider__thumb',
       );
 
-      fragment.append(thumb);
+      htmlFragment.append(thumb);
       this.state.thumbs.push(thumb);
     });
-    this.slider.append(fragment);
+    this.slider.append(htmlFragment);
   }
 
   /* changes the number of sliders drawn on the scale */
-  private changeAmountThumbs(): void {
+  private changeCountThumbs(): void {
     if (this.state.thumbs.length < this.state.thumbsCount) {
       const thumbsCount: number =
         this.state.thumbsCount - this.state.thumbs.length;
@@ -135,13 +135,13 @@ class Thumbs {
       });
     }
     if (this.state.thumbs.length > this.state.thumbsCount) {
-      const excessAmount: number =
+      const excessCount: number =
         this.state.thumbs.length - this.state.thumbsCount;
       const $allThumbs: HTMLElement[] = Array.from(
         $(this.slider).find('.js-slider__thumb'),
       );
 
-      new Array(excessAmount).fill(1).forEach((_element: number, i: number) => {
+      new Array(excessCount).fill(1).forEach((_element: number, i: number) => {
         this.state.thumbsValues.splice(-1, 1);
         this.state.thumbs.splice(-1, 1);
         const newLength = $allThumbs.length - i;
@@ -222,8 +222,10 @@ class Thumbs {
       Math.ceil(currentValueAxis / this.state.coefficientPoint) +
       this.state.minValueSlider;
 
-    const multi: number = Math.floor(currentValue / this.state.stepSlider);
-    currentValue = this.state.stepSlider * multi;
+    const intermediateValue: number = Math.floor(
+      currentValue / this.state.stepSlider,
+    );
+    currentValue = this.state.stepSlider * intermediateValue;
 
     return currentValue;
   }
@@ -236,8 +238,8 @@ class Thumbs {
         this.state.minValueSlider,
       );
     }
-    const multi: number = value / this.state.stepSlider;
-    const currentValue: number = multi * this.state.stepSlider;
+    const intermediateValue: number = value / this.state.stepSlider;
+    const currentValue: number = intermediateValue * this.state.stepSlider;
     const currentValueAxis: number =
       Math.ceil(currentValue * this.state.coefficientPoint) +
       this.state.minValueSlider;
