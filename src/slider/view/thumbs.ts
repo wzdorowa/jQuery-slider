@@ -350,14 +350,15 @@ class Thumbs {
           }
         }
       });
-      if (
-        nearestThumbIndex != null &&
-        this.state.thumbsValues[nearestThumbIndex] !== this.state.currentValue
-      ) {
-        this.emitter.emit('view:thumbsValues-changed', {
-          value: currentValue,
-          index: nearestThumbIndex,
-        });
+      if (nearestThumbIndex != null) {
+        if (
+          this.state.thumbsValues[nearestThumbIndex] !== this.state.currentValue
+        ) {
+          this.emitter.emit('view:thumbsValues-changed', {
+            value: currentValue,
+            index: nearestThumbIndex,
+          });
+        }
       }
     }
   }
