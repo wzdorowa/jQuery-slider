@@ -111,11 +111,6 @@ class Model {
     this.normolizeState();
   }
 
-  public setCurrentThumbsValues(value: number, index: number): void {
-    this.state.thumbsValues[index] = value;
-    this.normolizeState();
-  }
-
   private normolizeState() {
     const minimumPossibleValue =
       Math.floor(this.state.min / this.state.step) * this.state.step;

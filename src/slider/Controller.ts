@@ -30,7 +30,7 @@ class Controller {
     );
 
     eventEmitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
-      model.setCurrentThumbsValues(data.value, data.index);
+      model.setNewValueThumbsValues(data.value, data.index);
     });
   }
 
