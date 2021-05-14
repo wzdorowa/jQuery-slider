@@ -53,14 +53,21 @@ const driverVertical: IDriver = {
     const scale = $elements[0];
     return scale.offsetHeight / (max - min);
   },
-  setInPlaceThumb(
-    elements: HTMLElement[],
-    currentThumbIndex: number | null,
-    coefficientPoint: number,
-    thumbsValues: number[],
-    shiftToMinValue: number,
-    slider: HTMLElement,
-  ): void {
+  setInPlaceThumb({
+    elements,
+    currentThumbIndex,
+    coefficientPoint,
+    thumbsValues,
+    shiftToMinValue,
+    slider,
+  }: {
+    elements: HTMLElement[];
+    currentThumbIndex: number | null;
+    coefficientPoint: number;
+    thumbsValues: number[];
+    shiftToMinValue: number;
+    slider: HTMLElement;
+  }): void {
     new Array(elements.length)
       .fill(1)
       .forEach((_element: number, i: number) => {
@@ -108,13 +115,19 @@ const driverVertical: IDriver = {
 
     this.updateActiveRange(slider);
   },
-  setIndentForTargetToProcessStop(
-    target: HTMLElement,
-    coefficientPoint: number,
-    currentValue: number,
-    shiftToMinValue: number,
-    slider: HTMLElement,
-  ): void {
+  setIndentForTargetToProcessStop({
+    target,
+    coefficientPoint,
+    currentValue,
+    shiftToMinValue,
+    slider,
+  }: {
+    target: HTMLElement;
+    coefficientPoint: number;
+    currentValue: number;
+    shiftToMinValue: number;
+    slider: HTMLElement;
+  }): void {
     const element = target;
     const indentTop = String(
       Math.ceil(coefficientPoint * currentValue) - shiftToMinValue,

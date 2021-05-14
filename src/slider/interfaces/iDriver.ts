@@ -13,14 +13,21 @@ export interface IDriver {
   ): number;
   searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>;
   searchElementActiveRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>;
-  setInPlaceThumb(
-    elements: HTMLElement[],
-    currentThumbIndex: number | null,
-    coefficientPoint: number,
-    thumbsValues: number[],
-    shiftToMinValue: number,
-    slider: HTMLElement,
-  ): void;
+  setInPlaceThumb({
+    elements,
+    currentThumbIndex,
+    coefficientPoint,
+    thumbsValues,
+    shiftToMinValue,
+    slider,
+  }: {
+    elements: HTMLElement[];
+    currentThumbIndex: number | null;
+    coefficientPoint: number;
+    thumbsValues: number[];
+    shiftToMinValue: number;
+    slider: HTMLElement;
+  }): void;
   getCurrentValueAxisToProcessStart(target: HTMLElement): number;
   getStartValueAxisToProcessStart(
     eventThumb: MouseEvent,
@@ -36,13 +43,19 @@ export interface IDriver {
     currentXorY: number,
     slider: HTMLElement,
   ): void;
-  setIndentForTargetToProcessStop(
-    target: HTMLElement,
-    coefficientPoint: number,
-    currentValue: number,
-    shiftToMinValue: number,
-    slider: HTMLElement,
-  ): void;
+  setIndentForTargetToProcessStop({
+    target,
+    coefficientPoint,
+    currentValue,
+    shiftToMinValue,
+    slider,
+  }: {
+    target: HTMLElement;
+    coefficientPoint: number;
+    currentValue: number;
+    shiftToMinValue: number;
+    slider: HTMLElement;
+  }): void;
   updateActiveRange(slider: HTMLElement): void;
   calculateClickLocation(
     event: MouseEvent,

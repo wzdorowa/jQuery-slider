@@ -5,6 +5,7 @@ import { IThumbsState } from '../interfaces/IThumbsState';
 import { IDriver } from '../interfaces/iDriver';
 import driverHorizontal from './drivers/driverHorizontal';
 import driverVertical from './drivers/driverVertical';
+import { event } from 'jquery';
 // import { event } from 'jquery';
 
 class Thumbs {
@@ -130,9 +131,7 @@ class Thumbs {
         this.state.thumbsCount - this.state.thumbs.length;
 
       this.createThumbs(thumbsCount);
-      this.listenNewThumbsEvents({
-        thumbsCount,
-      });
+      this.listenNewThumbsEvents(thumbsCount);
     }
     if (this.state.thumbs.length > this.state.thumbsCount) {
       const excessCount: number =
@@ -169,15 +168,11 @@ class Thumbs {
   }
 
   private handleThumbStart(index: number, event: MouseEvent): void {
-    this.processStart({ event, index });
+    this.processStart(event, index);
   }
 
   /* hangs the 'mousedown' event handler for each added thumb */
-  private listenNewThumbsEvents({
-    thumbsCount,
-  }: {
-    thumbsCount: number;
-  }): void {
+  private listenNewThumbsEvents(thumbsCount: number): void {
     new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
       const index = this.state.thumbs.length - (thumbsCount - i);
       this.state.thumbs[
@@ -198,14 +193,14 @@ class Thumbs {
   /* places thumbs on the slider based on default values */
   private setValuesThumbs(): void {
     if (this.driver !== null) {
-      this.driver.setInPlaceThumb(
-        this.state.thumbs,
-        this.state.currentThumbIndex,
-        this.state.coefficientPoint,
-        this.state.thumbsValues,
-        this.state.shiftToMinValue,
-        this.slider,
-      );
+      this.driver.setInPlaceThumb({
+        elements: this.state.thumbs,
+        currentThumbIndex: this.state.currentThumbIndex,
+        coefficientPoint: this.state.coefficientPoint,
+        thumbsValues: this.state.thumbsValues,
+        shiftToMinValue: this.state.shiftToMinValue,
+        slider: this.slider,
+      });
     }
   }
 
@@ -288,14 +283,14 @@ class Thumbs {
         this.state.coefficientPoint * this.state.minValueSlider,
       );
 
-      this.driver.setInPlaceThumb(
-        this.state.thumbs,
-        this.state.currentThumbIndex,
-        this.state.coefficientPoint,
-        this.state.thumbsValues,
-        this.state.shiftToMinValue,
-        this.slider,
-      );
+      this.driver.setInPlaceThumb({
+        elements: this.state.thumbs,
+        currentThumbIndex: this.state.currentThumbIndex,
+        coefficientPoint: this.state.coefficientPoint,
+        thumbsValues: this.state.thumbsValues,
+        shiftToMinValue: this.state.shiftToMinValue,
+        slider: this.slider,
+      });
     }
   }
 
@@ -308,7 +303,7 @@ class Thumbs {
     event.preventDefault();
     if (this.driver !== null) {
       const target: HTMLDivElement = event.target as HTMLDivElement;
-      const clickLocationAxis = this.driver.calculateClickLocation(
+      const clickLocationAxis: number = this.driver.calculateClickLocation(
         event,
         target,
         this.state.shiftToMinValue,
@@ -363,13 +358,7 @@ class Thumbs {
     }
   }
 
-  private processStart({
-    event,
-    index,
-  }: {
-    event: MouseEvent;
-    index: number;
-  }): void {
+  private processStart(event: MouseEvent, index: number): void {
     this.state.currentThumbIndex = index;
 
     event.preventDefault();
@@ -564,13 +553,13 @@ class Thumbs {
     if (this.driver !== null) {
       if (this.state.target !== null) {
         if (this.state.currentValue !== null) {
-          this.driver.setIndentForTargetToProcessStop(
-            this.state.target,
-            this.state.coefficientPoint,
-            this.state.currentValue,
-            this.state.shiftToMinValue,
-            this.slider,
-          );
+          this.driver.setIndentForTargetToProcessStop({
+            target: this.state.target,
+            coefficientPoint: this.state.coefficientPoint,
+            currentValue: this.state.currentValue,
+            shiftToMinValue: this.state.shiftToMinValue,
+            slider: this.slider,
+          });
         }
       }
     }
