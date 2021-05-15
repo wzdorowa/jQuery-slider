@@ -49,13 +49,11 @@ class Model {
       if (this.state.thumbsCount < thumbsCount) {
         const missingQuantityThumbs = thumbsCount - this.state.thumbsCount;
 
-        new Array(missingQuantityThumbs)
-          .fill(1)
-          .forEach((_element: number, i: number) => {
-            this.state.thumbsValues[this.state.thumbsValues.length - i] =
-              this.state.thumbsValues[this.state.thumbsValues.length - 1 - i] +
-              this.state.step;
-          });
+        new Array(missingQuantityThumbs).fill(1).forEach(() => {
+          this.state.thumbsValues[this.state.thumbsValues.length] =
+            this.state.thumbsValues[this.state.thumbsValues.length - 1] +
+            this.state.step;
+        });
 
         this.state.thumbsCount = thumbsCount;
       }
@@ -116,8 +114,24 @@ class Model {
       Math.floor(this.state.min / this.state.step) * this.state.step;
     const maximumPossibleValue =
       Math.floor(this.state.max / this.state.step) * this.state.step;
-    const maximumCountOfThumbs = this.state.max / (this.state.step * 2);
+    const maximumCountOfThumbs = Math.floor(
+      this.state.max / (this.state.step * 2),
+    );
 
+    if (this.state.thumbsCount <= 0) {
+      this.state.thumbsCount = 1;
+    }
+    if (maximumCountOfThumbs < this.state.thumbsCount) {
+      this.state.thumbsCount = maximumCountOfThumbs;
+
+      if (this.state.thumbsCount < this.state.thumbsValues.length) {
+        this.state.thumbsValues.splice(
+          this.state.thumbsCount,
+          this.state.thumbsValues.length - this.state.thumbsCount,
+        );
+        this.checkThumbsValues();
+      }
+    }
     if (this.state.min > this.state.thumbsValues[0]) {
       this.state.thumbsValues[0] = this.state.min;
     }
@@ -135,18 +149,8 @@ class Model {
     if (this.state.max !== maximumPossibleValue) {
       this.state.max = maximumPossibleValue;
     }
-    if (this.state.thumbsCount <= 0) {
-      this.state.thumbsCount = 1;
-    } else if (this.state.thumbsCount >= maximumCountOfThumbs) {
-      this.state.thumbsCount = maximumCountOfThumbs;
-    }
     if (this.state.step <= 0) {
       this.state.step = 1;
-    } else if (
-      this.state.step >=
-      this.state.max / this.state.thumbsValues.length - 1
-    ) {
-      this.state.step = this.state.max / this.state.thumbsValues.length - 1;
     }
     this.checkThumbsValues();
     this.notifyStateChanged();
@@ -162,41 +166,26 @@ class Model {
         this.state.max -
         (this.state.max % this.state.step) -
         (this.state.thumbsValues.length - 1 - i) * this.state.step;
-      let minPossibleValue: number =
+      const minPossibleValue: number =
         this.state.min -
         (this.state.min % this.state.step) +
         i * this.state.step;
 
-      if (minPossibleValue < this.state.min) {
-        minPossibleValue = this.state.min;
-      }
-
       if (newCurrentValue > maxPossibleValue) {
         this.state.thumbsValues[i] = maxPossibleValue;
-      } else if (newCurrentValue < minPossibleValue) {
+      }
+      if (newCurrentValue < minPossibleValue) {
         this.state.thumbsValues[i] = minPossibleValue;
-      } else if (this.state.thumbsValues[i] !== newCurrentValue) {
+      }
+      if (this.state.thumbsValues[i] !== newCurrentValue) {
         this.state.thumbsValues[i] = newCurrentValue;
       }
 
-      const isIntermediateThumb: boolean =
-        i !== 0 && element <= this.state.thumbsValues[i - 1];
-      const isLastThumb: boolean =
+      const isGreaterThanNextValue: boolean =
         i !== this.state.thumbsValues[this.state.thumbsValues.length - 1] &&
         element >= this.state.thumbsValues[i + 1];
 
-      if (isIntermediateThumb) {
-        this.state.thumbsValues[i - 1] =
-          this.state.thumbsValues[i] - this.state.step;
-        if (
-          this.state.thumbsValues[i - 1] <
-          minPossibleValue - this.state.step
-        ) {
-          this.state.thumbsValues[i - 1] = minPossibleValue - this.state.step;
-          this.state.thumbsValues[i] = minPossibleValue;
-        }
-      }
-      if (isLastThumb) {
+      if (isGreaterThanNextValue) {
         this.state.thumbsValues[i + 1] =
           this.state.thumbsValues[i] + this.state.step;
         if (

@@ -1,5 +1,6 @@
 import EventEmitter from '../../slider/EventEmitter';
 import { IModelState } from '../../slider/interfaces/iModelState';
+import Tooltips from '../../slider/view/Tooltips';
 import View from '../../slider/view/View';
 
 const state: IModelState = {
@@ -7,7 +8,7 @@ const state: IModelState = {
   max: 100,
   thumbsValues: [20, 30, 40, 50],
   orientation: 'horizontal',
-  amount: 4,
+  thumbsCount: 4,
   step: 2,
   isTooltip: true,
 };
@@ -19,6 +20,7 @@ describe('Unit tests', () => {
 
   const eventEmitter = new EventEmitter();
   new View(slider, eventEmitter);
+  const tooltips = new Tooltips(slider);
 
   test('Checking the correctness of tooltips creation', () => {
     eventEmitter.emit('model:state-changed', state);
@@ -33,11 +35,11 @@ describe('Unit tests', () => {
       '.js-slider__thumb',
     );
 
-    expect(tooltipsElements.length).toBe(state.amount);
+    expect(tooltipsElements.length).toBe(state.thumbsCount);
     tooltipsElements.forEach(element => {
       expect(element.className).toContain('js-slider__tooltip');
     });
-    expect(textInTooltipsElements.length).toBe(state.amount);
+    expect(textInTooltipsElements.length).toBe(state.thumbsCount);
     textInTooltipsElements.forEach(element => {
       expect(element.className).toContain('js-slider__tooltip-text');
     });
@@ -57,7 +59,7 @@ describe('Unit tests', () => {
     });
   });
   test('Checking the change in the number of rendered tooltips when changing the number of sliders', () => {
-    state.amount = 6;
+    state.thumbsCount = 6;
     eventEmitter.emit('model:state-changed', state);
 
     let tooltipsElements = window.document.querySelectorAll(
@@ -68,8 +70,8 @@ describe('Unit tests', () => {
     );
     let slidersElements = window.document.querySelectorAll('.js-slider__thumb');
 
-    expect(tooltipsElements.length).toBe(state.amount);
-    expect(textInTooltipsElements.length).toBe(state.amount);
+    expect(tooltipsElements.length).toBe(state.thumbsCount);
+    expect(textInTooltipsElements.length).toBe(state.thumbsCount);
     tooltipsElements.forEach((element, i: number) => {
       expect(element.childNodes).toContain(textInTooltipsElements[i]);
     });
@@ -79,7 +81,7 @@ describe('Unit tests', () => {
       );
     });
 
-    state.amount = 4;
+    state.thumbsCount = 4;
     eventEmitter.emit('model:state-changed', state);
 
     tooltipsElements = window.document.querySelectorAll('.js-slider__tooltip');
@@ -88,8 +90,8 @@ describe('Unit tests', () => {
     );
     slidersElements = window.document.querySelectorAll('.js-slider__thumb');
 
-    expect(tooltipsElements.length).toBe(state.amount);
-    expect(textInTooltipsElements.length).toBe(state.amount);
+    expect(tooltipsElements.length).toBe(state.thumbsCount);
+    expect(textInTooltipsElements.length).toBe(state.thumbsCount);
     tooltipsElements.forEach((element, i: number) => {
       expect(element.childNodes).toContain(textInTooltipsElements[i]);
     });
@@ -137,7 +139,6 @@ describe('Unit tests', () => {
 
     expect(tooltipsText[0].innerHTML).toContain('20');
     expect(tooltipsText[1].innerHTML).toContain('30');
-    expect(tooltipsText[2].innerHTML).toContain('40');
   });
   test('Checking if thumbs tooltips are hidden', () => {
     state.isTooltip = false;
@@ -160,5 +161,18 @@ describe('Unit tests', () => {
     tooltipsElements.forEach(element => {
       expect(element.className).not.toContain('slider__tooltip-hide');
     });
+  });
+  test('check setting vertical orientation', () => {
+    state.orientation = 'vertical';
+    tooltips.initializeTooltips(state);
+  });
+  test('check visible tooltips', () => {
+    state.isTooltip = false;
+    tooltips.initializeTooltips(state);
+  });
+  test('check setting values in tooltips', () => {
+    state.thumbsCount = 5;
+    state.thumbsValues = [20, 30, 40, 50, 60];
+    tooltips.setConfig(state);
   });
 });

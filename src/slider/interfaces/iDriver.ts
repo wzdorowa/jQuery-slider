@@ -1,7 +1,7 @@
-import { IModelState } from './iModelState';
-
 export interface IDriver {
   getElementOffset(element: HTMLElement): number;
+  getOffsetNextThumb(element: HTMLElement, stepWidth: number): number;
+  getOffsetPreviousThumb(element: HTMLElement, stepWidth: number): number;
   createElementTooltipText(): HTMLElement;
   createElementScale(): HTMLElement;
   createElementActiveRange(): HTMLElement;

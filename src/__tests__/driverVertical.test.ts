@@ -5,6 +5,27 @@ import { IModelState } from '../slider/interfaces/iModelState';
 
 const sinon = sinonLib;
 
+const createHTMLElement = (thumbsValues: number[]) => {
+  const htmlFragment = document.createDocumentFragment();
+
+  const elementScale = driverVertical.createElementScale();
+  const elementActiveRange = driverVertical.createElementActiveRange();
+  elementScale.append(elementActiveRange);
+  htmlFragment.append(elementScale);
+
+  thumbsValues.forEach(() => {
+    const thumb: HTMLElement = createElement(
+      'div',
+      'slider__thumb js-slider__thumb',
+    );
+    const elementTooltip = driverVertical.createElementTooltipText();
+    thumb.append(elementTooltip);
+    htmlFragment.append(thumb);
+  });
+
+  return htmlFragment;
+};
+
 test('Create element with class "js-slider__vertical-tooltip-text"', () => {
   const elementTooltip = driverVertical.createElementTooltipText();
   expect(elementTooltip.tagName).toBe('SPAN');
@@ -45,10 +66,16 @@ test('Find element with class "slider__tooltip-text"', () => {
   );
 });
 test('Calculate point coefficient', () => {
-  const elementScale = driverVertical.createElementScale();
-  elementScale.style.height = '200px';
+  const slider: HTMLElement = createElement('div', 'slider');
+  const htmlFragment = createHTMLElement([20, 30, 40, 50]);
+  slider.append(htmlFragment);
+
+  const $scaleElement: HTMLElement[] = Array.from(
+    $(slider).find('.js-slider__vertical-scale'),
+  );
+  $scaleElement[0].style.height = '200px';
   const calculateCoefficientPoint: number = driverVertical.calculateCoefficientPoint(
-    elementScale,
+    slider,
     100,
     0,
   );
@@ -73,24 +100,30 @@ test('Calculate value slider thumbs', () => {
   const modelState: IModelState = {
     min: 0,
     max: 100,
-    thumbsValues: [],
+    thumbsValues: [20, 30, 40, 50],
     orientation: 'horizontal',
-    amount: 4,
+    thumbsCount: 4,
     step: 2,
     isTooltip: true,
   };
 
-  const elements: HTMLElement[] = [];
-  const elementCount = 4;
-  let thumbsValue = 20;
-  for (let i = 0; i < elementCount; i += 1) {
-    const element: HTMLElement = createElement('div', 'slider-element');
-    elements.push(element);
-    modelState.thumbsValues.push(thumbsValue);
-    thumbsValue += 5;
-  }
-  const elementScale: HTMLElement = driverVertical.createElementScale();
-  const elementActiveRange: HTMLElement = driverVertical.createElementActiveRange();
+  const slider: HTMLElement = createElement('div', 'slider');
+  const htmlFragment = createHTMLElement([20, 30, 40, 50]);
+  slider.append(htmlFragment);
+
+  const elements: HTMLElement[] = Array.from(
+    $(slider).find('.js-slider__thumb'),
+  );
+
+  const currentThumbIndex = null;
+  const coefficientPoint = 2;
+  const { thumbsValues } = modelState;
+  const shiftToMinValue = 0;
+
+  const $activeRangeElement: HTMLElement[] = Array.from(
+    $(slider).find('.js-slider__vertical-active-range'),
+  );
+  const range = $activeRangeElement[0];
 
   sinon.stub(driverVertical, 'calculateCoefficientPoint').callsFake(() => 2);
   const calculateElementOffsetTop = sinon.stub(
@@ -100,68 +133,70 @@ test('Calculate value slider thumbs', () => {
   calculateElementOffsetTop.onCall(0).returns(40);
   calculateElementOffsetTop.onCall(1).returns(90);
   calculateElementOffsetTop.onCall(2).returns(40);
-  driverVertical.setInPlaceThumb(
+  driverVertical.setInPlaceThumb({
     elements,
-    modelState,
-    elementActiveRange,
-    elementScale,
-  );
+    currentThumbIndex,
+    coefficientPoint,
+    thumbsValues,
+    shiftToMinValue,
+    slider,
+  });
   expect(elements[0].style.top).toBe('40px');
-  expect(elements[1].style.top).toBe('50px');
-  expect(elements[2].style.top).toBe('60px');
-  expect(elements[3].style.top).toBe('70px');
-  expect(elementActiveRange.style.marginTop).toBe('40px');
-  expect(elementActiveRange.style.height).toBe('50px');
+  expect(elements[1].style.top).toBe('60px');
+  expect(elements[2].style.top).toBe('80px');
+  expect(elements[3].style.top).toBe('100px');
+  expect(range.style.marginTop).toBe('40px');
+  expect(range.style.height).toBe('50px');
   sinon.restore();
 });
-test('Calculate new value slider thumbs', () => {
+test('Calculate value slider thumbs', () => {
   const modelState: IModelState = {
     min: 0,
     max: 100,
-    thumbsValues: [],
+    thumbsValues: [20],
     orientation: 'horizontal',
-    amount: 4,
+    thumbsCount: 1,
     step: 2,
     isTooltip: true,
   };
 
-  const elements: HTMLElement[] = [];
-  const elementCount = 4;
-  let thumbsValue = 20;
-  for (let i = 0; i < elementCount; i += 1) {
-    const element: HTMLElement = createElement('div', 'slider-element');
-    elements.push(element);
-    modelState.thumbsValues.push(thumbsValue);
-    thumbsValue += 5;
-  }
-  const currentThumbIndex = 3;
+  const slider: HTMLElement = createElement('div', 'slider');
+  const htmlFragment = createHTMLElement([20]);
+  slider.append(htmlFragment);
+
+  const elements: HTMLElement[] = Array.from(
+    $(slider).find('.js-slider__thumb'),
+  );
+
+  const currentThumbIndex = null;
   const coefficientPoint = 2;
-  const shiftToMinValue = 10;
+  const { thumbsValues } = modelState;
+  const shiftToMinValue = 0;
 
-  const elementActiveRange: HTMLElement = driverVertical.createElementActiveRange();
+  const $activeRangeElement: HTMLElement[] = Array.from(
+    $(slider).find('.js-slider__vertical-active-range'),
+  );
+  const range = $activeRangeElement[0];
 
-  const calculateElementOffsetLeft = sinon.stub(
+  sinon.stub(driverVertical, 'calculateCoefficientPoint').callsFake(() => 2);
+  const calculateElementOffsetTop = sinon.stub(
     driverVertical,
     'getElementOffset',
   );
-  calculateElementOffsetLeft.onCall(0).returns(40);
-  calculateElementOffsetLeft.onCall(1).returns(90);
-  calculateElementOffsetLeft.onCall(2).returns(40);
-
-  driverVertical.setInPlaceThumb(
+  calculateElementOffsetTop.onCall(0).returns(40);
+  calculateElementOffsetTop.onCall(1).returns(90);
+  calculateElementOffsetTop.onCall(2).returns(40);
+  driverVertical.setInPlaceThumb({
     elements,
     currentThumbIndex,
     coefficientPoint,
-    modelState,
+    thumbsValues,
     shiftToMinValue,
-    elementActiveRange,
-  );
-  expect(elements[0].style.top).toBe('30px');
-  expect(elements[1].style.top).toBe('40px');
-  expect(elements[2].style.top).toBe('50px');
-  expect(elements[3].style.top).toBe('');
-  expect(elementActiveRange.style.marginTop).toBe('40px');
-  expect(elementActiveRange.style.height).toBe('50px');
+    slider,
+  });
+  expect(elements[0].style.top).toBe('40px');
+  expect(range.style.marginTop).toBe('0px');
+  expect(range.style.height).toBe('40px');
   sinon.restore();
 });
 test('set currentY to OnStart', () => {
@@ -218,9 +253,13 @@ test('set currentY to OnMove', () => {
 });
 test('set indent for target', () => {
   const target: HTMLElement = createElement('div', 'slider-element');
+  const slider: HTMLElement = createElement('div', 'slider');
+  const htmlFragment = createHTMLElement([20, 30, 40, 50]);
+  slider.append(htmlFragment);
+
   const currentXorY = 20;
 
-  driverVertical.setIndentForTarget(target, currentXorY);
+  driverVertical.setIndentForTarget(target, currentXorY, slider);
   expect(target.style.top).toBe('20px');
 });
 test('get element Offset', () => {
@@ -231,44 +270,41 @@ test('get element Offset', () => {
   expect(elementOffset).toBe(120);
   sinon.restore();
 });
-test('get target Offset', () => {
-  const target: HTMLElement = createElement('div', 'slider-element');
-
-  sinon.stub(driverVertical, 'getTargetWidth').callsFake(() => 60);
-  const targetOffset: number = driverVertical.getTargetWidth(target);
-  expect(targetOffset).toBe(60);
-  sinon.restore();
-});
 test('set indent for target to OnStop', () => {
   const target: HTMLElement = createElement('div', 'slider-element');
+  const slider: HTMLElement = createElement('div', 'slider');
+  const htmlFragment = createHTMLElement([20, 30, 40, 50]);
+  slider.append(htmlFragment);
   const coefficientPoint = 2;
   const currentValue = 25;
   const shiftToMinValue = 10;
 
-  driverVertical.setIndentForTargetToProcessStop(
+  driverVertical.setIndentForTargetToProcessStop({
     target,
     coefficientPoint,
     currentValue,
     shiftToMinValue,
-  );
+    slider,
+  });
   expect(target.style.top).toBe('40px');
 });
 test('update LineSpan', () => {
-  const elementSliderLineSpan: HTMLElement = driverVertical.createElementActiveRange();
-  const elements: HTMLElement[] = [];
-  const elementCount = 4;
-  for (let i = 0; i < elementCount; i += 1) {
-    const element: HTMLElement = createElement('div', 'slider-element');
-    elements.push(element);
-  }
+  const slider: HTMLElement = createElement('div', 'slider');
+  const htmlFragment = createHTMLElement([20, 30, 40, 50]);
+  slider.append(htmlFragment);
   const calculateElementOffsetTop = sinon.stub(
     driverVertical,
     'getElementOffset',
   );
+
+  const $activeRangeElement: HTMLElement[] = Array.from(
+    $(slider).find('.js-slider__vertical-active-range'),
+  );
+  const range = $activeRangeElement[0];
   calculateElementOffsetTop.onCall(0).returns(30);
   calculateElementOffsetTop.onCall(1).returns(95);
   calculateElementOffsetTop.onCall(2).returns(30);
-  driverVertical.updateActiveRange(elementSliderLineSpan, elements);
-  expect(elementSliderLineSpan.style.marginTop).toBe('30px');
-  expect(elementSliderLineSpan.style.height).toBe('65px');
+  driverVertical.updateActiveRange(slider);
+  expect(range.style.marginTop).toBe('30px');
+  expect(range.style.height).toBe('65px');
 });

@@ -5,7 +5,6 @@ import { IThumbsState } from '../interfaces/IThumbsState';
 import { IDriver } from '../interfaces/iDriver';
 import driverHorizontal from './drivers/driverHorizontal';
 import driverVertical from './drivers/driverVertical';
-import { event } from 'jquery';
 // import { event } from 'jquery';
 
 class Thumbs {
@@ -439,10 +438,12 @@ class Thumbs {
                 }
               }
               if (isMultipleThumbs) {
-                const offsetNextSlider: number =
-                  this.driver.getElementOffset(elements[index + 1]) - stepWidth;
-                if (this.state.currentValueAxis > offsetNextSlider) {
-                  this.setIndentForTarget(offsetNextSlider, index);
+                const offsetNextThumb: number = this.driver.getOffsetNextThumb(
+                  elements[index + 1],
+                  stepWidth,
+                );
+                if (this.state.currentValueAxis > offsetNextThumb) {
+                  this.setIndentForTarget(offsetNextThumb, index);
                 } else if (
                   this.state.currentValueAxis < this.state.startValueAxis
                 ) {
@@ -459,15 +460,18 @@ class Thumbs {
               }
             }
             if (isIntermediateThumb) {
-              const offsetNextThumb: number =
-                this.driver.getElementOffset(elements[index + 1]) - stepWidth;
-              const offsetPreviousThumb: number =
-                this.driver.getElementOffset(elements[index - 1]) + stepWidth;
-              const { currentValueAxis: valueAxis } = this.state;
+              const offsetNextThumb: number = this.driver.getOffsetNextThumb(
+                elements[index + 1],
+                stepWidth,
+              );
+              const offsetPreviousThumb: number = this.driver.getOffsetPreviousThumb(
+                elements[index - 1],
+                stepWidth,
+              );
 
-              if (valueAxis > offsetNextThumb) {
+              if (this.state.currentValueAxis > offsetNextThumb) {
                 this.setIndentForTarget(offsetNextThumb, index);
-              } else if (valueAxis < offsetPreviousThumb) {
+              } else if (this.state.currentValueAxis < offsetPreviousThumb) {
                 this.setIndentForTarget(offsetPreviousThumb, index);
               } else if (this.state.stepSlider === 1) {
                 this.setIndentForTarget(this.state.currentValueAxis, index);
@@ -480,12 +484,16 @@ class Thumbs {
               }
             }
             if (isLastThumb) {
-              const offsetPreviousThumb: number =
-                this.driver.getElementOffset(elements[index - 1]) + stepWidth;
-              const valueAxis = this.state.currentValueAxis;
-              if (valueAxis < offsetPreviousThumb) {
+              const offsetPreviousThumb: number = this.driver.getOffsetPreviousThumb(
+                elements[index - 1],
+                stepWidth,
+              );
+
+              if (this.state.currentValueAxis < offsetPreviousThumb) {
                 this.setIndentForTarget(offsetPreviousThumb, index);
-              } else if (valueAxis > this.state.stopValueAxis) {
+              } else if (
+                this.state.currentValueAxis > this.state.stopValueAxis
+              ) {
                 this.setIndentForTarget(this.state.stopValueAxis, index);
               } else if (this.state.stepSlider === 1) {
                 this.setIndentForTarget(this.state.currentValueAxis, index);

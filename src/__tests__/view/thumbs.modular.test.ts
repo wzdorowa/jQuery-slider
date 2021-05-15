@@ -1,5 +1,6 @@
 import sinonLib = require('sinon');
 import driverHorizontal from '../../slider/view/drivers/driverHorizontal';
+import driverVertical from '../../slider/view/drivers/driverVertical';
 import View from '../../slider/view/View';
 import Thumbs from '../../slider/view/Thumbs';
 import EventEmitter from '../../slider/EventEmitter';
@@ -10,20 +11,21 @@ const state: IModelState = {
   max: 100,
   thumbsValues: [20, 30, 40, 50],
   orientation: 'horizontal',
-  amount: 4,
+  thumbsCount: 4,
   step: 2,
   isTooltip: true,
 };
+
 describe('Unit tests', () => {
-  const element = window.document.createElement('div');
-  element.className = 'js-slider-test';
-  window.document.body.appendChild(element);
+  const slider = window.document.createElement('div');
+  slider.className = 'js-slider-test';
+  window.document.body.appendChild(slider);
 
   const eventEmitter = new EventEmitter();
   const emitter = eventEmitter;
 
-  new View(element, eventEmitter);
-  const thumbs = new Thumbs(element, eventEmitter);
+  new View(slider, eventEmitter);
+  const thumbs = new Thumbs(slider, eventEmitter);
 
   test('Checking the correct creation of elements', () => {
     emitter.emit('model:state-changed', state);
@@ -32,7 +34,7 @@ describe('Unit tests', () => {
       '.js-slider__thumb',
     );
 
-    expect(thumbsElements.length).toBe(state.amount);
+    expect(thumbsElements.length).toBe(state.thumbsCount);
   });
   test('Check if the created elements have parents', () => {
     const parentThumbsElements = window.document.querySelectorAll(
@@ -42,54 +44,33 @@ describe('Unit tests', () => {
     expect(parentThumbsElements.className).toContain('js-slider-test');
   });
   test('Check the change in the number of created elements when changing the number of thumbs up', () => {
-    state.amount = 5;
+    state.thumbsCount = 5;
     emitter.emit('model:state-changed', state);
 
     const thumbsElements = window.document.querySelectorAll(
       '.js-slider__thumb',
     );
 
-    expect(thumbsElements.length).toBe(state.amount);
-
-    // Check value of added thumb
-    expect(state.thumbsValues.length).toBe(5);
-    expect(state.thumbsValues[4]).toBe(52);
+    expect(thumbsElements.length).toBe(state.thumbsCount);
   });
   test('Check removal of thumbs', () => {
-    state.amount = 3;
+    state.thumbsCount = 3;
     emitter.emit('model:state-changed', state);
 
     const thumbsElements = window.document.querySelectorAll(
       '.js-slider__thumb',
     );
 
-    expect(thumbsElements.length).toBe(state.amount);
-    expect(state.thumbsValues.length).toBe(3);
-  });
-  test('Check the correctness of the calculation of the current value of the thumb', () => {
-    thumbs.state.coefficientPoint = 3.5;
-    const currentValue: number = thumbs.calculateValue(state, 345);
-    expect(currentValue).toBe(98);
-  });
-  test('Checking the calculation of the value of the thumb position on the scale', () => {
-    thumbs.state.coefficientPoint = 3.2;
-    thumbs.state.currentValueAxis = 273;
-    thumbs.state.shiftToMinValue = 0;
-    thumbs.calculateValueOfPlaceOnScale(state, 3);
-    expect(thumbs.state.currentValue).toBe(86);
+    expect(thumbsElements.length).toBe(state.thumbsCount);
   });
   test('Checking the installation of the nearest thumb to the clicked position on the slider scale', () => {
     const sinon: sinonLib.SinonStatic = sinonLib;
 
-    const driver = driverHorizontal;
-    const activeRange: HTMLElement = driver.createElementActiveRange();
-    const scale: HTMLElement = driver.createElementScale();
-
     const event = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
-      clientX: 100,
-      clientY: 100,
+      clientX: 150,
+      clientY: 67,
     });
 
     sinon
@@ -98,39 +79,23 @@ describe('Unit tests', () => {
     sinon.stub(driverHorizontal, 'getOffsetFromClick').callsFake(() => 100);
     sinon.stub(driverHorizontal, 'calculateClickLocation').callsFake(() => 130);
 
-    scale.dispatchEvent(event);
-    let currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [
-      event,
-      state,
-      driver,
-    ]);
-    expect(currentValues[0]).toBe(30);
-    expect(currentValues[1]).toBe(1);
+    const scale = Array.from($(slider).find('.js-slider__scale'));
+    const range = Array.from($(slider).find('.js-slider__active-range'));
 
-    activeRange.dispatchEvent(event);
-    currentValues = thumbs.setThumbToNewPosition.apply(thumbs, [
-      event,
-      state,
-      driver,
-    ]);
-    expect(currentValues[0]).toBe(30);
-    expect(currentValues[1]).toBe(1);
+    scale[0].dispatchEvent(event);
+    range[0].dispatchEvent(event);
 
     sinon.reset();
   });
   test('onStart call test', () => {
     const sinon: sinonLib.SinonStatic = sinonLib;
 
-    thumbs.driver = driverHorizontal;
-    const activeRange: HTMLElement = thumbs.driver.createElementActiveRange();
-    const scale: HTMLElement = thumbs.driver.createElementScale();
-    const i = 0;
-    const setCurrentTooltipValue = () => 0;
-    const event = new MouseEvent('click', {
+    const thumbs = Array.from($(slider).find('.js-slider__thumb'));
+    const event = new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
-      clientX: 100,
-      clientY: 100,
+      clientX: 450,
+      clientY: 65,
     });
 
     sinon
@@ -143,31 +108,23 @@ describe('Unit tests', () => {
       .stub(driverHorizontal, 'getMaxValueAxisToProcessStart')
       .callsFake(() => 300);
 
-    thumbs.processStart({
-      modelState: state,
-      event,
-      i,
-      scale,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValue).toBe(state.thumbsValues[i]);
+    thumbs[0].dispatchEvent(event);
 
     sinon.reset();
   });
-  test('Checking onMove for the first thumb', () => {
+  test('Checking onMove', () => {
     const sinon: sinonLib.SinonStatic = sinonLib;
 
-    thumbs.driver = driverHorizontal;
-    const activeRange: HTMLElement = thumbs.driver.createElementActiveRange();
-    const elements: HTMLElement[] = thumbs.state.thumbs;
+    const thumbs: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
 
-    const setCurrentTooltipValue = () => 0;
-    const event = new MouseEvent('click', {
+    const event = new MouseEvent('mousemove', {
       bubbles: true,
       cancelable: true,
-      clientX: 100,
+      clientX: 450,
       clientY: 100,
+      movementX: 500,
     });
 
     const getCurrentValueAxisToOnMove = sinon.stub(
@@ -180,9 +137,6 @@ describe('Unit tests', () => {
     const elementOffset = sinon
       .stub(driverHorizontal, 'getElementOffset')
       .callsFake(() => 290);
-    const targetOffset = sinon
-      .stub(driverHorizontal, 'getTargetWidth')
-      .callsFake(() => 24);
     const setIndentForTarget = sinon
       .stub(driverHorizontal, 'setIndentForTarget')
       .callsFake(() => 0);
@@ -190,90 +144,41 @@ describe('Unit tests', () => {
       .stub(driverHorizontal, 'updateActiveRange')
       .callsFake(() => 0);
 
-    const i = 0;
-    const target: HTMLElement = elements[i];
-
-    // If the thumb on the scale is one
-    thumbs.state.maxValueAxis = 280;
-    thumbs.state.thumbs.length = 1;
-
-    thumbs.processMove({
-      modelState: state,
-      event,
-      i,
-      target,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
-    thumbs.state.maxValueAxis = 350;
-
-    // Checking the first thumb if there are many thumbs on the scale
-    thumbs.state.thumbs.length = 4;
-
-    thumbs.processMove({
-      modelState: state,
-      event,
-      i,
-      target,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValueAxis).toBe(266);
-
-    // If the value of the first thumb becomes less than the minimum possible value
-    state.min = 20;
-
-    thumbs.processMove({
-      modelState: state,
-      event,
-      i,
-      target,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValueAxis).toBe(state.min);
+    thumbs[0].dispatchEvent(event);
+    thumbs[1].dispatchEvent(event);
+    thumbs[2].dispatchEvent(event);
 
     // reset stubs
     getCurrentValueAxisToOnMove.restore();
     elementOffset.restore();
-    targetOffset.restore();
     setIndentForTarget.restore();
     updateLineSpan.restore();
   });
-  test('Checking onMove for any thumb except first and last', () => {
+  test('checking onMove for first thumb, case 1', () => {
     const sinon: sinonLib.SinonStatic = sinonLib;
 
-    thumbs.driver = driverHorizontal;
-    const activeRange: HTMLElement = thumbs.driver.createElementActiveRange();
-    const elements: HTMLElement[] = thumbs.state.thumbs;
+    state.thumbsCount = 1;
+    emitter.emit('model:state-changed', state);
 
-    const setCurrentTooltipValue = () => 0;
-    const event = new MouseEvent('click', {
+    const thumbsElements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
+
+    const event = new MouseEvent('mousemove', {
       bubbles: true,
       cancelable: true,
-      clientX: 100,
-      clientY: 100,
+      clientX: 450,
+      clientY: 65,
     });
 
-    const setCurrentXorYtoOnMove = sinon.stub(
+    const getCurrentValueAxisToOnMove = sinon.stub(
       driverHorizontal,
       'getCurrentValueAxisToProcessMove',
     );
-    setCurrentXorYtoOnMove.onCall(0).returns(290);
-    setCurrentXorYtoOnMove.onCall(1).returns(250);
-
+    getCurrentValueAxisToOnMove.onCall(0).returns(700);
     const elementOffset = sinon
       .stub(driverHorizontal, 'getElementOffset')
-      .callsFake(() => 290);
-    elementOffset.onCall(0).returns(290);
-    elementOffset.onCall(1).returns(250);
-    elementOffset.onCall(2).returns(350);
-    elementOffset.onCall(3).returns(250);
-
-    const targetOffset = sinon
-      .stub(driverHorizontal, 'getTargetWidth')
-      .callsFake(() => 24);
+      .callsFake(() => 1000);
     const setIndentForTarget = sinon
       .stub(driverHorizontal, 'setIndentForTarget')
       .callsFake(() => 0);
@@ -281,70 +186,39 @@ describe('Unit tests', () => {
       .stub(driverHorizontal, 'updateActiveRange')
       .callsFake(() => 0);
 
-    const i = 1;
-    const target: HTMLElement = elements[i];
-
-    // If the value of any other than the first and last thumb exceeds the value of the next thumb
-    thumbs.processMove({
-      modelState: state,
-      event,
-      i,
-      target,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValueAxis).toBe(266);
-
-    // If the value of any other than the first and last thumb
-    // is less than the value of the previous thumb
-    thumbs.processMove({
-      modelState: state,
-      event,
-      i,
-      target,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValueAxis).toBe(274);
+    thumbsElements[0].dispatchEvent(event);
 
     // reset stubs
-    setCurrentXorYtoOnMove.restore();
+    getCurrentValueAxisToOnMove.restore();
     elementOffset.restore();
-    targetOffset.restore();
     setIndentForTarget.restore();
     updateLineSpan.restore();
   });
-  test('Checking onMove for the last thumb', () => {
+  test('checking onMove for first thumb, case 2', () => {
     const sinon: sinonLib.SinonStatic = sinonLib;
 
-    thumbs.driver = driverHorizontal;
-    const activeRange: HTMLElement = thumbs.driver.createElementActiveRange();
-    const elements: HTMLElement[] = thumbs.state.thumbs;
+    state.thumbsCount = 1;
+    emitter.emit('model:state-changed', state);
 
-    const setCurrentTooltipValue = () => 0;
-    const event = new MouseEvent('click', {
+    const thumbsElements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
+
+    const event = new MouseEvent('mousemove', {
       bubbles: true,
       cancelable: true,
-      clientX: 100,
-      clientY: 100,
+      clientX: 450,
+      clientY: 65,
     });
 
-    const i = 3;
-    const target: HTMLElement = elements[i];
-
-    const setCurrentXorYtoOnMove = sinon.stub(
+    const getCurrentValueAxisToOnMove = sinon.stub(
       driverHorizontal,
       'getCurrentValueAxisToProcessMove',
     );
-    setCurrentXorYtoOnMove.onCall(0).returns(290);
-    setCurrentXorYtoOnMove.onCall(1).returns(350);
-
+    getCurrentValueAxisToOnMove.onCall(0).returns(-100);
     const elementOffset = sinon
       .stub(driverHorizontal, 'getElementOffset')
-      .callsFake(() => 290);
-    const targetOffset = sinon
-      .stub(driverHorizontal, 'getTargetWidth')
-      .callsFake(() => 24);
+      .callsFake(() => -100);
     const setIndentForTarget = sinon
       .stub(driverHorizontal, 'setIndentForTarget')
       .callsFake(() => 0);
@@ -352,87 +226,242 @@ describe('Unit tests', () => {
       .stub(driverHorizontal, 'updateActiveRange')
       .callsFake(() => 0);
 
-    // If the value of the thumb is less than the value of the previous thumb
-    thumbs.processMove({
-      modelState: state,
-      event,
-      i,
-      target,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValueAxis).toBe(314);
-
-    thumbs.state.maxValueAxis = 280;
-    // If the thumb value is greater than the maximum allowable value of the previous thumb
-    thumbs.processMove({
-      modelState: state,
-      event,
-      i,
-      target,
-      activeRange,
-      setCurrentTooltipValue,
-    });
-    expect(thumbs.state.currentValueAxis).toBe(thumbs.state.maxValueAxis);
+    thumbsElements[0].dispatchEvent(event);
 
     // reset stubs
-    setCurrentXorYtoOnMove.restore();
+    getCurrentValueAxisToOnMove.restore();
     elementOffset.restore();
-    targetOffset.restore();
+    setIndentForTarget.restore();
+    updateLineSpan.restore();
+  });
+  test('checking onMove for first thumb, case 3', () => {
+    const sinon: sinonLib.SinonStatic = sinonLib;
+
+    state.thumbsCount = 1;
+    state.step = 1;
+    emitter.emit('model:state-changed', state);
+
+    const thumbsElements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
+
+    const event = new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 50,
+      clientY: 65,
+    });
+
+    const getCurrentValueAxisToOnMove = sinon.stub(
+      driverHorizontal,
+      'getCurrentValueAxisToProcessMove',
+    );
+    getCurrentValueAxisToOnMove.onCall(0).returns(200);
+    const elementOffset = sinon
+      .stub(driverHorizontal, 'getElementOffset')
+      .callsFake(() => 200);
+    const setIndentForTarget = sinon
+      .stub(driverHorizontal, 'setIndentForTarget')
+      .callsFake(() => 0);
+    const updateLineSpan = sinon
+      .stub(driverHorizontal, 'updateActiveRange')
+      .callsFake(() => 0);
+
+    thumbsElements[0].dispatchEvent(event);
+
+    // reset stubs
+    getCurrentValueAxisToOnMove.restore();
+    elementOffset.restore();
+    setIndentForTarget.restore();
+    updateLineSpan.restore();
+  });
+  test('checking onMove for first thumb, case 4', () => {
+    const sinon: sinonLib.SinonStatic = sinonLib;
+
+    state.thumbsCount = 4;
+    state.step = 1;
+    emitter.emit('model:state-changed', state);
+
+    const thumbsElements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
+
+    const event = new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 50,
+      clientY: 65,
+    });
+
+    const getCurrentValueAxisToOnMove = sinon.stub(
+      driverHorizontal,
+      'getCurrentValueAxisToProcessMove',
+    );
+    getCurrentValueAxisToOnMove.onCall(0).returns(200);
+    const elementOffset = sinon
+      .stub(driverHorizontal, 'getElementOffset')
+      .callsFake(() => 200);
+    const setIndentForTarget = sinon
+      .stub(driverHorizontal, 'setIndentForTarget')
+      .callsFake(() => 0);
+    const updateLineSpan = sinon
+      .stub(driverHorizontal, 'updateActiveRange')
+      .callsFake(() => 0);
+
+    thumbsElements[0].dispatchEvent(event);
+
+    // reset stubs
+    getCurrentValueAxisToOnMove.restore();
+    elementOffset.restore();
+    setIndentForTarget.restore();
+    updateLineSpan.restore();
+  });
+  test('checking onMove for first thumb, case 5', () => {
+    const sinon: sinonLib.SinonStatic = sinonLib;
+
+    state.step = 2;
+    emitter.emit('model:state-changed', state);
+
+    const thumbsElements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
+
+    const event = new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 40,
+      clientY: 65,
+    });
+
+    const getCurrentValueAxisToOnMove = sinon.stub(
+      driverHorizontal,
+      'getCurrentValueAxisToProcessMove',
+    );
+    getCurrentValueAxisToOnMove.onCall(0).returns(-100);
+    const elementOffset = sinon
+      .stub(driverHorizontal, 'getElementOffset')
+      .callsFake(() => -100);
+    const setIndentForTarget = sinon
+      .stub(driverHorizontal, 'setIndentForTarget')
+      .callsFake(() => 0);
+    const updateLineSpan = sinon
+      .stub(driverHorizontal, 'updateActiveRange')
+      .callsFake(() => 0);
+
+    thumbsElements[0].dispatchEvent(event);
+
+    // reset stubs
+    getCurrentValueAxisToOnMove.restore();
+    elementOffset.restore();
+    setIndentForTarget.restore();
+    updateLineSpan.restore();
+  });
+  test('checking onMove for last thumb, case 1', () => {
+    const sinon: sinonLib.SinonStatic = sinonLib;
+
+    state.step = 1;
+    emitter.emit('model:state-changed', state);
+
+    const thumbsElements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
+
+    const event = new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 600,
+      clientY: 65,
+      movementX: 1000,
+    });
+
+    const getCurrentValueAxisToOnMove = sinon
+      .stub(driverHorizontal, 'getCurrentValueAxisToProcessMove')
+      .callsFake(() => 650);
+    const elementOffset = sinon
+      .stub(driverHorizontal, 'getOffsetPreviousThumb')
+      .callsFake(() => 550);
+    const setIndentForTarget = sinon
+      .stub(driverHorizontal, 'setIndentForTarget')
+      .callsFake(() => 0);
+    const updateLineSpan = sinon
+      .stub(driverHorizontal, 'updateActiveRange')
+      .callsFake(() => 0);
+
+    thumbsElements[3].dispatchEvent(event);
+
+    // reset stubs
+    getCurrentValueAxisToOnMove.restore();
+    elementOffset.restore();
     setIndentForTarget.restore();
     updateLineSpan.restore();
   });
   test('Checking onStop', () => {
     const sinon: sinonLib.SinonStatic = sinonLib;
 
-    thumbs.driver = driverHorizontal;
-    const activeRange: HTMLElement = thumbs.driver.createElementActiveRange();
-    const elements: HTMLElement[] = thumbs.state.thumbs;
+    const thumbs: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__thumb'),
+    );
 
-    const setCurrentTooltipValue = () => 0;
-    const event = new MouseEvent('click', {
+    const event = new MouseEvent('mouseup', {
       bubbles: true,
       cancelable: true,
       clientX: 100,
       clientY: 100,
     });
-    const i = 1;
-    const target: HTMLElement = elements[i];
 
     sinon
       .stub(driverHorizontal, 'setIndentForTargetToProcessStop')
       .callsFake(() => 0);
 
-    const handleThumbMove = () =>
-      thumbs.processMove({
-        modelState: state,
-        event,
-        i,
-        target,
-        activeRange,
-        setCurrentTooltipValue,
-      });
-    const handleThumbStop = () =>
-      thumbs.processStop({
-        handleThumbMove,
-        handleThumbStop,
-        _event: event,
-        i,
-        target,
-        modelState: state,
-        setCurrentTooltipValue,
-      });
+    thumbs[0].dispatchEvent(event);
+    sinon.reset();
+  });
+  test('checking the method initializeThumbs', () => {
+    const sinon: sinonLib.SinonStatic = sinonLib;
 
-    thumbs.processStop({
-      handleThumbMove,
-      handleThumbStop,
-      _event: event,
-      i,
-      target,
-      modelState: state,
-      setCurrentTooltipValue,
+    state.min = 10;
+    thumbs.initializeThumbs(state);
+
+    state.max = 80;
+    thumbs.initializeThumbs(state);
+
+    const updateLineSpan = sinon
+      .stub(driverVertical, 'updateActiveRange')
+      .callsFake(() => 0);
+
+    state.orientation = 'vertical';
+    thumbs.initializeThumbs(state);
+
+    updateLineSpan.restore();
+  });
+  test('checking the method setConfig', () => {
+    const sinon: sinonLib.SinonStatic = sinonLib;
+
+    sinon.stub(driverVertical, 'calculateCoefficientPoint').callsFake(() => 2);
+    sinon.stub(driverVertical, 'updateActiveRange').callsFake(() => 0);
+
+    state.min = 0;
+    thumbs.setConfig(state);
+
+    state.max = 100;
+    thumbs.setConfig(state);
+
+    state.step = 5;
+    thumbs.setConfig(state);
+
+    sinon.reset();
+  });
+  test('checking resize window', () => {
+    const sinon: sinonLib.SinonStatic = sinonLib;
+
+    const event = new MouseEvent('resize', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 100,
+      clientY: 100,
     });
-    expect(thumbs.state.currentValue).toBe(null);
-    expect(thumbs.state.currentThumbIndex).toBe(null);
+
+    window.dispatchEvent(event);
+    sinon.reset();
   });
 });

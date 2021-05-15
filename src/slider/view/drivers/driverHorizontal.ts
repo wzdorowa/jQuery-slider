@@ -5,6 +5,12 @@ const driverHorizontal: IDriver = {
   getElementOffset(element: HTMLElement): number {
     return element.offsetLeft;
   },
+  getOffsetNextThumb(element: HTMLElement, stepWidth: number): number {
+    return this.getElementOffset(element) - stepWidth;
+  },
+  getOffsetPreviousThumb(element: HTMLElement, stepWidth: number): number {
+    return this.getElementOffset(element) + stepWidth;
+  },
   createElementTooltipText(): HTMLElement {
     const element: HTMLElement = createElement(
       'span',
