@@ -109,7 +109,7 @@ class Model {
     this.normolizeState();
   }
 
-  private normolizeState() {
+  private normolizeState(): void {
     const minimumPossibleValue =
       Math.floor(this.state.min / this.state.step) * this.state.step;
     const maximumPossibleValue =

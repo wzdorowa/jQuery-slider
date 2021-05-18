@@ -33,7 +33,7 @@ class View {
     });
   }
 
-  private initialize(state: IModelState) {
+  private initialize(state: IModelState): void {
     if (!this.isCreatedSlider) {
       this.scale.initializeScale.call(this.scale, state);
       this.thumbs.initializeThumbs.call(this.thumbs, state);
@@ -43,7 +43,7 @@ class View {
     }
   }
 
-  private rerender(state: IModelState) {
+  private rerender(state: IModelState): void {
     this.scale.setConfig.call(this.scale, state);
     this.thumbs.setConfig.call(this.thumbs, state);
     this.tooltips.setConfig.call(this.tooltips, state);

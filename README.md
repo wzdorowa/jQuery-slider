@@ -30,7 +30,7 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `element.setNewValueMax(value)` - передать данные для установки нового максимального значения слайдера;
 
-`element.setNewValueAmount(value)` - передать данные для установки нового количества бегунков;
+`element.setNewValueCount(value)` - передать данные для установки нового количества бегунков;
 
 `element.setNewValueThumbsValues(value, index)` - передать данные для установки нового значения бегунка. Аргумент index в данном случает означает порядковый номер бегунка. (Нумерация бегунков начинается с нуля, то есть если новое значение нужно установить для третьего бегунка, то его index будет равен двум).
 
@@ -45,7 +45,7 @@ https://wzdorowa.github.io/jQuery-slider/
             setValueMaxInputFromModelState)` - подписаться на изменения состояния слайдера, для получения актуальных значений (например, при движении бегунка);
 
 # Архитектура приложения
-![UML-diagram](architectureDiagram.svg)
+![UML-diagram](architecture-diagram.svg)
 
 ## Controller
 Реализует интерфейс IHTMLElement, чтобы на элементе слайдера можно было вызывать методы для взаимодействия с моделью + он же создает экземпляры view, model и eventEmitter.
@@ -55,7 +55,7 @@ https://wzdorowa.github.io/jQuery-slider/
 
 Предоставляет доступ к методам:
 
-`subscribe(eventName: string, fn: Function): Function` - этот метод принимает в качестве аргументов название события в строковом виде (например, 'event:name-changed') и функцию, которая будет вызываться, когда будет инициироваться транслируемое событие;
+`makeSubscribe(eventName: string, fn: CallbackFunctionVariadic): void` - этот метод принимает в качестве аргументов название события в строковом виде (например, 'event:name-changed') и функцию, которая будет вызываться, когда будет инициироваться транслируемое событие;
 
 `emit(eventName: string, data: object): void` - этот метод принимает имя события в строковом виде, которое мы хотим всем транслировать, и данные, которые будут отправляться в момент этого события. Если в экземпляре класса сохранены какие-то подписанные на него события, мы проходимся по каждому из них и вызываем каждое, передавая ему данные, которые хотим транслировать;
 
@@ -65,9 +65,9 @@ https://wzdorowa.github.io/jQuery-slider/
 * max - максимальное значение слайдера
 * thumbsValues - массив значений бегунков слайдера
 * orientation - ориентация слайдера
-* amount - количество бегунков слайдера
+* thumbsCount - количество бегунков слайдера
 * step - размер шага слайдера
-* tooltip - наличие тултипов слайдера
+* isTooltip - наличие тултипов слайдера
 
 Предоставляет доступ к методам:
 
@@ -75,7 +75,7 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `setNewValueMax(max: number): void` - принимает на вход число и устанавливает его в state.max модели;
 
-`setNewValueAmount(amount: number): void` - принимает на вход число и устанавливает его в state.amount модели;
+`setNewValueCount(thumbsCount: number): void` - принимает на вход число и устанавливает его в state.thumbsCount модели;
 
 `setNewValueThumbsValues(thumbValue: number, index: number): void` - принимает на вход численное значение для бегунка и его индекс и устанавливает его значение по индексу в state.thumbsValues модели;
 
@@ -85,95 +85,37 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `setNewValueOrientation(value: string): void` - принимает на вход строковое значение и устанавливает его в state.orientation модели;
 
+`overwriteCurrentThumbsValues(thumbsValues: number[])` - принимае на вход массив чисел и устанавливает его в state.thumbsValues модели;
+
 ## View
-Создает экземпляры Scale, Thumbs, Tooltips. Использует EventEmitter для корректного реагирования на изменения в модели. При измененияя состояния модели, регулирует работу созданных экземпляров scale, thumbs, tooltips. Использует интерфейс IModelState для передачи текущего состояния в методы созданных экзкмпляров scale, thumbs, tooltips по необходимости. Использует интерфейс IConfigurator для возможности использовать модули configuratorHorizontal и configuratorVertical. Использует модули configuratorHorizontal и configuratorVertical для корректного реагирования на свойство "orientation" текущего состояния модели и для передачи этих модулей в методы экземпляров scale, thumbs, tooltips.
+Создает экземпляры Scale, Thumbs, Tooltips. Использует EventEmitter для корректного реагирования на изменения в модели. При изменении состояния модели, регулирует работу созданных экземпляров scale, thumbs, tooltips. Использует интерфейс IModelState для передачи текущего состояния в методы созданных экзкмпляров scale, thumbs, tooltips по необходимости.
 
 ## Scale
-Отвечает за отрисовку основной шкалы слайдера и за отрисовку шкалы активного интервала значений. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
-
-Предоставляет доступ к публичным свойствам:
-
-`slider: HTMLElement` - хранит в себе элемент слайдера;
-
-`scale!: HTMLElement` - хранит в себе элемент шкалы;
-
-`activeRange!: HTMLElement` - хранит в себе элемент активной линии шкалы;
+Отвечает за отрисовку основной шкалы слайдера и за отрисовку шкалы активного интервала значений. Использует интерфейс IModelState. Использует интерфейс IConfigurator для возможности использовать модули configuratorHorizontal и configuratorVertical. Использует модули configuratorHorizontal и configuratorVertical для корректного реагирования на свойство "orientation" текущего состояния модели.
 
 Предоставляет доступ к публичным методам:
 
-`createScale(driver: IDriver): void` - добавляет элементы шкалы в основную html-структуру слайдера;
+`initializeScale(state: IModelState): void` - инициализирует шкалу;
 
-`changeOrientation(setThumbToNewPosition: (event: MouseEvent, modelState: IModelState, driver: IDriver) => void, modelState: IModelState, driver: IDriver): void` - перерисовывает элементы шкалы в случае смены ориентации слайдера;
-
-`listenScaleEvents(setThumbToNewPosition: (event: MouseEvent, modelState: IModelState, driver: IDriver) => void, modelState: IModelState, driver: IDriver): void` - навешивает обработчик события 'click' на элемент шкалы. Если событие происходит, запускает функцию `setThumbToNewPosition`, которая устанавливает ближайший бегунок на место клика;
+`setConfig(state: IModelState): void` - обновляет состояние шкалы в соответствии с полученными изменениями из модели;
 
 ## Tooltips
-Отвечает за отрисовку или скрытие тултипов. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
-
-Предоставляет доступ к публичным свойствам:
-
-`tooltipsElements: HTMLElement[]` - хранит в себе элементы тултипов;
-
-`textInTooltips!: HTMLElement[]` - хранит в себе элементы для текстового содержимого тултипов;
+Отвечает за отрисовку или скрытие тултипов. Использует интерфейс IModelState. Использует интерфейс IConfigurator для возможности использовать модули configuratorHorizontal и configuratorVertical. Использует модули configuratorHorizontal и configuratorVertical для корректного реагирования на свойство "orientation" текущего состояния модели.
 
 Предоставляет доступ к публичным методам:
 
-`createTooltips(amount: number, sliders: HTMLElement[], driver: IDriver): void` - добавляет элементы тултипов в основную html-структуру слайдера;
+`initializeTooltips(state: IModelState): void` - инициализирует тултипы;
 
-`setTooltipsValues(modelState: IModelState): void` - устанавливает значения бегунков по-умолчанию в соответствующие им тултипы;
-
-`changeAmountTooltips(sliders: HTMLElement[], driver: IDriver, modelState: IModelState): void` - изменяет количество отрисованных тултипов;
-
-`changeOrientation(driver: IDriver): void` - перерисовывает тултипы при смене ориентации;
-
-`setCurrentTooltipValue(modelState: IModelState, i: number): void` - метод устанавливает текущее значение в тултип ползунка при его движении;
-
-`hideTooltip(): void` - метод скрывает туллтипы ползунков;
-
-`showTooltip(): void` - метод показывает тултипы ползунков;
+`setConfig(state: IModelState): void` - обновляет состояние тултипов в соответствии с полученными изменениями из модели;
 
 ## Thumbs
-Реализует интерфейс IThumbsState. Отвечает за отрисовку бегунков слайдера их корректную расстановку на шкале и перемещение. Использует EventEmitter для оповещения об изменении текущего значения перемещаемого бегунка или о значении бегунка перемещенного в место клика по шкале. Использует интерфейсы IModelState и IConfigurator для типизации параметров методов использующих значения реализуемые данные интерфейсы.
-
-Предоставляет доступ к публичным свойствам:
-
-`state: IThumbsState` - хранит в себе полученное текущее состояние модели;
-
-`driver: IDriver | null` - хранит в себе корректный конфигуратор в зависомости от данных об ориентации из стейта модели;
+Реализует интерфейс IThumbsState. Отвечает за отрисовку бегунков слайдера их корректную расстановку на шкале и перемещение. Использует EventEmitter для оповещения об изменении текущего значения перемещаемого бегунка или о значении бегунка перемещенного в место клика по шкале. Использует интерфейс IModelState. Использует интерфейс IConfigurator для возможности использовать модули configuratorHorizontal и configuratorVertical. Использует модули configuratorHorizontal и configuratorVertical для корректного реагирования на свойство "orientation" текущего состояния модели.
 
 Предоставляет доступ к публичным методам:
 
-`createThumbs(amount: number): void` - добавляет бегунки в родительский элемент слайдера;
+`initializeThumbs(state: IModelState): void` - инициализирует бегунки;
 
-`changeAmountThumbs(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - изменяет количество отрисованных на шкале бегунков;
-
-`overrideThumbsEventHandlers(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - перенавешивает обработчик событий 'mousedown' на каждый бегунок при смене ориентации слайдера;
-
-`listenThumbsEvents(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - навешивает обработчик событий 'mousedown' на каждый созданный бегунок;
-
-`listenNewThumbsEvents(amount: number, modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - навешивает обработчик событий 'mousedown' на каждый добавленный бегунок;
-
-`listenSizeWindow(scale: HTMLElement, activeRange: HTMLElement, modelState: IModelState, driver: IDriver): void` - слушает событие 'resize' на странице со слайдером;
-
-`listenSizeWindowWhenChangingOrientation(modelState: IModelState, driver: IDriver, scale: HTMLElement, activeRange: HTMLElement): void` - перенавешивает обработчик события при смене ориентации;
-
-`setValueToNewThumb(amount: number, modelState: IModelState): void` - устанавливает значение для каждого добавленного бегунка;
-
-`setValuesThumbs(modelState: IModelState, activeRange: HTMLElement, scale: HTMLElement, driver: IDriver): void` - расставляет бегунки по слайдеру в зависимости от полученных по-умолчанию значений;
-
-`calculateValue(modelState: IModelState, currentValueAxis: number): number` - рассчитывает текущее значение бегунка;
-
-`calculateValueOfPlaceOnScale(modelState: IModelState, i: number): void` - рассчитывает значение места бегунка на шкале;
-
-`calculateValueOfPlaceClickOnScale(modelState: IModelState, currentValueAxis: number): number` - рассчитывает потенциальное значение бегунка на месте клика на шкале;
-
-`setThumbToNewPosition(event: MouseEvent, modelState: IModelState, driver: IDriver): [number, number | null]` - метод для установки ближайшего ползунка на место клика по шкале слайдера;
-
-`processStart(modelState: IModelState, event: MouseEvent, i: number, scale: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mousedown';
-
-`processMove(modelState: IModelState, event: MouseEvent, i: number, target: HTMLElement, activeRange: HTMLElement, setCurrentTooltipValue: (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mousemove';
-
-`processStop(handleThumbMove: (event: MouseEvent) => void, handleThumbStop: (event: MouseEvent) => void, _event: MouseEvent, i: number, target: HTMLElement, modelState: IModelState, setCurrentTooltipValue:  (modelState: IModelState, i: number) => void): void` - метод для обработки данных бегунка при срабатывании на нем события 'mouseup';
+`setConfig(state: IModelState): void` - обновляет состояние бегунков в соответствии с полученными изменениями из модели;
 
 ## driverHorizontal
 Реализует интерфейс IDriver. Используется для обработки операций связанных с работой горизонтального вида.
@@ -184,7 +126,11 @@ https://wzdorowa.github.io/jQuery-slider/
 ## IDriver 
 Описывает интерфейс для обработки операций связанных с работой горизонтального или вертикального видов. Описывает доступные для реализации методы:
 
-`getElementOffset(element: HTMLElement): number` - принимает на вход html-элемент и возвращает координату его начала на странице; 
+`getElementOffset(element: HTMLElement): number` - принимает на вход html-элемент и возвращает координату его расположения на странице; 
+
+`getOffsetNextThumb(element: HTMLElement, stepWidth: number): number` - принимает на вход html-элемент, ширину шага и возвращает отступ от следующего бегунка;
+
+`getOffsetPreviousThumb(element: HTMLElement, stepWidth: number): number;` - принимает на вход html-элемент, ширину шага и возвращает отступ от предыдущего бегунка;
 
 `createElementTooltipText(): HTMLElement` - создает и возвращает html-элемент `span` для корректной отрисовки тултипов;
 
@@ -194,33 +140,29 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `searchElementsTooltipText(slider: HTMLElement): HTMLElement[]` - принимает на вход элемент слайдера и ищет в нем, а затем возвращает массив найденных элементов для текстового содержимого тултипа;
 
-`calculateCoefficientPoint(elementSliderLine: HTMLElement, max: number, min: number): number` - прнимает на вход элемент шкалы, минимальное и максимальное значения слайдера и высчитывает, а затем возвращает коэффициент одного деления шкалы слайдера;
+`calculateCoefficientPoint(scale: HTMLElement, max: number, min: number): number` - прнимает на вход элемент шкалы, минимальное и максимальное значения слайдера и высчитывает, а затем возвращает коэффициент одного деления шкалы слайдера;
 
 `searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>` - принимает на вход элемент слайдера и ищет в нем, а затем возвращает найденный необходимый элемент для для удаления из разметки;
 
 `searchElementActivRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>` - принимает на вход элемент слайдера и ищет в нем, а затем возвращает найденный необходимый элемент для для удаления из разметки;
 
-`setInPlaceThumb(elements: HTMLElement[], modelState: IModelState, elementSliderLineSpan: HTMLElement, elementSliderLine: HTMLElement): void` - высчитывает место на шкале и устанавлевает на него бегунок в соответствии с его значением, а так же меняет ширину активной линии шкалы; 
-
-`setInPlaceNewThumb(elements: HTMLElement[], currentThumbIndex: number | null, coefficientPoint: number, modelState: IModelState, shiftToMinValue: number, elementSliderLineSpan: HTMLElement): void` - высчитывает место на шкале и устанавлевает на него добавленный бегунок в соответствии с его значением, а так же меняет ширину активной линии шкалы;
+`setInPlaceThumb({elements: HTMLElement[]; currentThumbIndex: number | null; coefficientPoint: number; thumbsValues: number[]; shiftToMinValue: number; slider: HTMLElement;}): void` - высчитывает место на шкале и устанавлевает на него бегунок в соответствии с его значением, а так же меняет ширину активной линии шкалы; 
 
 `getCurrentValueAxisToProcessStart(target: HTMLElement): number` - принимает на вход активный элемент бегунка и возвращает его необходимую координату;
 
 `getStartValueAxisToProcessStart(eventThumb: MouseEvent, currentXorY: number): number` - вычисляет и возвращает координату начала движения бегунка;
 
-`getMaxValueAxisToProcessStart(elementSliderLine: HTMLElement): number` - вычисляет и возвращает максимально возможную координату для движения бегунка;
+`getMaxValueAxisToProcessStart(scale: HTMLElement): number` - вычисляет и возвращает максимально возможную координату для движения бегунка;
 
 `getCurrentValueAxisToProcessMove(eventThumb: MouseEvent, startXorY: number): number` - вычисляет и возвращает текущее значение координаты для активного бегунка;
 
-`setIndentForTarget(target: HTMLElement, currentXorY: number): void` - устанавливает необходимый отступ для активного ползунка в стили элемента при его движении;
+`setIndentForTarget(target: HTMLElement, currentXorY: number, slider: HTMLElement): void` - устанавливает необходимый отступ для активного ползунка в стили элемента при его движении;
 
-`getTargetWidth(target: HTMLElement): number` - вычисляет и возвращает ширину полученного на вход элемена;
+`setIndentForTargetToProcessStop({target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number, slider: HTMLElement}): void` - устанавливает необходимый отступ для активного ползунка в стили элемента при его остановке;
 
-`setIndentForTargetToProcessStop(target: HTMLElement, coefficientPoint: number, currentValue: number, shiftToMinValue: number): void` - устанавливает необходимый отступ для активного ползунка в стили элемента при его остановке;
+`updateActiveRange(slider: HTMLElement): void` - обновляет ширину активной линии слайдера;
 
-`updateActiveRange(elementSliderLineSpan: HTMLElement, elements: HTMLElement[]): void` - обновляет ширину активной линии слайдера;
-
-`calculateClickLocation(event: MouseEvent, target: HTMLElement): number` - высчитывает и возвращает координату клика, если клик произошел на активной линии шкалы;
+`calculateClickLocation(event: MouseEvent, target: HTMLElement, shiftToMinValue: number,): number` - высчитывает и возвращает координату клика, если клик произошел на активной линии шкалы;
 
 `getOffsetFromClick(event: MouseEvent): number` - - высчитывает и возвращает координату клика, если клик произошел на основной линии шкалы;
 
@@ -228,7 +170,7 @@ https://wzdorowa.github.io/jQuery-slider/
 
 Обмен данными между слоями в большей степени осуществляется по средствам ивент эмиттера:
 
-1. Вид подписан на изменения в модели. Как только в модели произошли изменения, вид по подписке получает новый стей и определенным образом на него реагирует.
+1. Вид подписан на изменения в модели. Как только в модели произошли изменения, вид по подписке получает новый стейт и определенным образом на него реагирует.
 
 2. Контроллер подписывается, например, на изменение значения бегунка, которое регулирует вид. Вид оповещает об изменении значения бегунка. Контроллер получает данные об изменении значения бегунка, передает эти данные в модель, после чего модель определенным образом обрабатывает полученные данные и оповещает об изменении своего состояния. Затем повторяется шаг 1.
 

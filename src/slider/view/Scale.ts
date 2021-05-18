@@ -91,7 +91,7 @@ class Scale {
     this.scale.addEventListener('click', this.handleScaleClick.bind(this));
   }
 
-  private handleScaleClick(event: MouseEvent) {
+  private handleScaleClick(event: MouseEvent): void {
     this.emitter.emit('view:click-on-scale', event);
   }
 }
