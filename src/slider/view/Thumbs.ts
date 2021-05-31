@@ -192,6 +192,8 @@ class Thumbs {
   /* places thumbs on the slider based on default values */
   private setValuesThumbs(): void {
     if (this.driver !== null) {
+      this.calculateCoefficientPoint();
+      this.calculateShiftToMinValue();
       this.driver.setInPlaceThumb({
         elements: this.state.thumbs,
         currentThumbIndex: this.state.currentThumbIndex,
@@ -205,13 +207,7 @@ class Thumbs {
 
   /* the method calculates the current value of the thumb */
   private calculateValue(currentValueAxis: number): number {
-    if (this.driver !== null) {
-      this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
-        this.slider,
-        this.state.maxValueSlider,
-        this.state.minValueSlider,
-      );
-    }
+    this.calculateCoefficientPoint();
     let currentValue: number =
       Math.ceil(currentValueAxis / this.state.coefficientPoint) +
       this.state.minValueSlider;
@@ -225,18 +221,14 @@ class Thumbs {
   }
 
   private calculateValueAxis(value: number): number {
-    if (this.driver !== null) {
-      this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
-        this.slider,
-        this.state.maxValueSlider,
-        this.state.minValueSlider,
-      );
-    }
+    this.calculateShiftToMinValue();
+    this.calculateCoefficientPoint();
+
     const intermediateValue: number = value / this.state.stepSlider;
     const currentValue: number = intermediateValue * this.state.stepSlider;
     const currentValueAxis: number =
-      Math.ceil(currentValue * this.state.coefficientPoint) +
-      this.state.minValueSlider;
+      Math.ceil(currentValue * this.state.coefficientPoint) -
+      this.state.shiftToMinValue;
 
     return currentValueAxis;
   }
@@ -257,6 +249,7 @@ class Thumbs {
   private calculateValueOfPlaceClickOnScale(currentValueAxis: number): number {
     const currentValue: number | null = this.calculateValue(currentValueAxis);
     if (this.state.currentValue !== null) {
+      this.calculateShiftToMinValue();
       const halfStep =
         Math.floor(
           (this.state.currentValue + this.state.stepSlider / 2) *
@@ -270,18 +263,28 @@ class Thumbs {
     return currentValue;
   }
 
-  private updateThumbsPosition(): void {
+  private calculateShiftToMinValue(): void {
+    this.calculateCoefficientPoint();
+    this.state.shiftToMinValue = Math.ceil(
+      this.state.coefficientPoint * this.state.minValueSlider,
+    );
+  }
+
+  private calculateCoefficientPoint(): void {
     if (this.driver !== null) {
       this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
         this.slider,
         this.state.maxValueSlider,
         this.state.minValueSlider,
       );
+    }
+  }
 
-      this.state.shiftToMinValue = Math.ceil(
-        this.state.coefficientPoint * this.state.minValueSlider,
-      );
+  private updateThumbsPosition(): void {
+    this.calculateCoefficientPoint();
+    this.calculateShiftToMinValue();
 
+    if (this.driver !== null) {
       this.driver.setInPlaceThumb({
         elements: this.state.thumbs,
         currentThumbIndex: this.state.currentThumbIndex,
@@ -301,6 +304,7 @@ class Thumbs {
   private setThumbToNewPosition(event: MouseEvent): void {
     event.preventDefault();
     if (this.driver !== null) {
+      this.calculateShiftToMinValue();
       const target: HTMLDivElement = event.target as HTMLDivElement;
       const clickLocationAxis: number = this.driver.calculateClickLocation(
         event,
@@ -403,6 +407,7 @@ class Thumbs {
           const isMultipleThumbs: boolean = elements.length !== 1;
 
           if (this.driver !== null) {
+            this.calculateCoefficientPoint();
             const stepWidth: number = Math.ceil(
               this.state.stepSlider * this.state.coefficientPoint,
             );
@@ -561,6 +566,8 @@ class Thumbs {
     if (this.driver !== null) {
       if (this.state.target !== null) {
         if (this.state.currentValue !== null) {
+          this.calculateCoefficientPoint();
+          this.calculateShiftToMinValue();
           this.driver.setIndentForTargetToProcessStop({
             target: this.state.target,
             coefficientPoint: this.state.coefficientPoint,
