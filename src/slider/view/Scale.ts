@@ -17,12 +17,30 @@ class Scale {
 
   private thumbsValues: number[];
 
+  private shiftToMinValue: number;
+
+  private coefficientPoint: number;
+
+  private maxValueSlider: number;
+
+  private minValueSlider: number;
+
+  private serifsElements: HTMLElement[];
+
+  private valuesSerifs: number[];
+
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
     this.emitter = emitter;
     this.orientation = null;
     this.driver = null;
     this.thumbsValues = [];
+    this.shiftToMinValue = 0;
+    this.coefficientPoint = 0;
+    this.maxValueSlider = 0;
+    this.minValueSlider = 0;
+    this.serifsElements = [];
+    this.valuesSerifs = [];
   }
 
   public initializeScale(state: IModelState): void {
@@ -34,6 +52,12 @@ class Scale {
     }
     if (state.orientation === 'vertical') {
       this.driver = driverVertical;
+    }
+    if (state.max !== this.maxValueSlider) {
+      this.maxValueSlider = state.max;
+    }
+    if (state.min !== this.minValueSlider) {
+      this.minValueSlider = state.min;
     }
     if (this.thumbsValues !== state.thumbsValues) {
       this.thumbsValues = state.thumbsValues;
@@ -54,6 +78,14 @@ class Scale {
       this.orientation = state.orientation;
       this.changeOrientation();
     }
+    if (state.max !== this.maxValueSlider) {
+      this.maxValueSlider = state.max;
+      this.renderSerifs(this.scale);
+    }
+    if (state.min !== this.minValueSlider) {
+      this.minValueSlider = state.min;
+      this.renderSerifs(this.scale);
+    }
     this.driver?.updateActiveRange(this.slider);
     this.thumbsValues = state.thumbsValues;
   }
@@ -68,7 +100,136 @@ class Scale {
       scale.append(activeRange);
 
       this.scale = scale;
+      this.renderSerifs(scale);
     }
+    this.listenSizeWindow();
+  }
+
+  private renderSerifs(scale: HTMLElement) {
+    const max: number = this.maxValueSlider;
+    const min: number = this.minValueSlider;
+
+    if (max - min > 20) {
+      if (max - min <= 100) {
+        const htmlFragment = this.createElementsSefifs({
+          stepSerif: 10,
+          isValueWithNumber: false,
+        });
+        scale.append(htmlFragment);
+        this.setSefirsInPlaces();
+      }
+      if (max - min > 100) {
+        const htmlFragment = this.createElementsSefifs({
+          stepSerif: 20,
+          isValueWithNumber: false,
+        });
+        scale.append(htmlFragment);
+        this.setSefirsInPlaces();
+      }
+    }
+    if (max - min <= 20) {
+      if (max - min <= 10) {
+        const htmlFragment = this.createElementsSefifs({
+          stepSerif: 1,
+          isValueWithNumber: true,
+        });
+        scale.append(htmlFragment);
+        this.setSefirsInPlaces();
+      } else {
+        const htmlFragment = this.createElementsSefifs({
+          stepSerif: 5,
+          isValueWithNumber: true,
+        });
+        scale.append(htmlFragment);
+        this.setSefirsInPlaces();
+      }
+    }
+  }
+
+  private createElementsSefifs({
+    stepSerif,
+    isValueWithNumber,
+  }: {
+    stepSerif: number;
+    isValueWithNumber: boolean;
+  }): DocumentFragment {
+    const max: number = this.maxValueSlider;
+    const min: number = this.minValueSlider;
+
+    this.removeElementsSerifs();
+
+    const countSerifs: number = Math.floor((max - min) / stepSerif + 1);
+    let currentValueSerif: number = Math.ceil(min / stepSerif) * stepSerif;
+    new Array(countSerifs)
+      .fill(1)
+      .forEach((_element: number, index: number) => {
+        this.valuesSerifs[index] = currentValueSerif;
+        currentValueSerif += stepSerif;
+      });
+
+    const htmlFragment = document.createDocumentFragment();
+    if (isValueWithNumber) {
+      this.valuesSerifs.forEach(element => {
+        if (this.driver !== null) {
+          const scaleValue: HTMLElement = this.driver.createElementScaleValue();
+          const valueWithNumber: HTMLElement = this.driver.createElementScaleValueWithNumber();
+          valueWithNumber.innerHTML = String(element);
+          scaleValue.append(valueWithNumber);
+          htmlFragment.append(scaleValue);
+          this.serifsElements.push(scaleValue);
+        }
+      });
+    } else {
+      this.valuesSerifs.forEach(() => {
+        if (this.driver !== null) {
+          const scaleValue: HTMLElement = this.driver.createElementScaleValue();
+          htmlFragment.append(scaleValue);
+          this.serifsElements.push(scaleValue);
+        }
+      });
+    }
+    return htmlFragment;
+  }
+
+  private setSefirsInPlaces(): void {
+    if (this.driver !== null) {
+      this.calculateShiftToMinValue();
+      this.driver.setInPlaceElement({
+        elements: this.serifsElements,
+        currentThumbIndex: null,
+        coefficientPoint: this.coefficientPoint,
+        elementsValues: this.valuesSerifs,
+        shiftToMinValue: this.shiftToMinValue,
+      });
+    }
+  }
+
+  private removeElementsSerifs() {
+    this.valuesSerifs = [];
+    this.serifsElements = [];
+    if (this.driver !== null) {
+      const elements = this.driver.searchElementScaleValueToDelete(this.slider);
+      elements.forEach(element => {
+        element.remove();
+      });
+    }
+  }
+
+  private calculateCoefficientPoint(): void {
+    if (this.driver !== null) {
+      this.coefficientPoint = this.driver.calculateCoefficientPoint(
+        this.slider,
+        this.maxValueSlider,
+        this.minValueSlider,
+      );
+    }
+  }
+
+  private calculateShiftToMinValue(): void {
+    this.calculateCoefficientPoint();
+    this.shiftToMinValue = Math.ceil(
+      this.coefficientPoint * this.minValueSlider,
+    );
   }
 
   private changeOrientation(): void {
@@ -93,6 +254,14 @@ class Scale {
 
   private handleScaleClick(event: MouseEvent): void {
     this.emitter.emit('view:click-on-scale', event);
+  }
+
+  private listenSizeWindow(): void {
+    window.addEventListener('resize', this.handleWindowResize.bind(this));
+  }
+
+  private handleWindowResize(): void {
+    this.setSefirsInPlaces();
   }
 }
 export default Scale;

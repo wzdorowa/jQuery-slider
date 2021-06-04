@@ -25,6 +25,20 @@ const driverHorizontal: IDriver = {
     );
     return element;
   },
+  createElementScaleValue(): HTMLElement {
+    const element: HTMLElement = createElement(
+      'div',
+      'slider__scale-value js-slider__scale-value',
+    );
+    return element;
+  },
+  createElementScaleValueWithNumber(): HTMLElement {
+    const element: HTMLElement = createElement(
+      'span',
+      'slider__scale-value-with-number js-slider__scale-value-with-number',
+    );
+    return element;
+  },
   createElementActiveRange(): HTMLElement {
     const element: HTMLElement = createElement(
       'span',
@@ -61,6 +75,38 @@ const driverHorizontal: IDriver = {
     );
     return $element;
   },
+  searchElementScaleValueToDelete(slider: HTMLElement): HTMLElement[] {
+    const $elements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__scale-value'),
+    );
+    return $elements;
+  },
+  setInPlaceElement({
+    elements,
+    currentThumbIndex,
+    coefficientPoint,
+    elementsValues,
+    shiftToMinValue,
+  }: {
+    elements: HTMLElement[];
+    currentThumbIndex: number | null;
+    coefficientPoint: number;
+    elementsValues: number[];
+    shiftToMinValue: number;
+  }): void {
+    new Array(elements.length)
+      .fill(1)
+      .forEach((_element: number, i: number) => {
+        if (i !== currentThumbIndex) {
+          const element = elements[i];
+          const indentLeft = String(
+            Math.ceil(coefficientPoint * elementsValues[i]) - shiftToMinValue,
+          );
+          element.style.top = '0px';
+          element.style.marginLeft = `${indentLeft}px`;
+        }
+      });
+  },
   setInPlaceThumb({
     elements,
     currentThumbIndex,
@@ -80,12 +126,12 @@ const driverHorizontal: IDriver = {
       .fill(1)
       .forEach((_element: number, i: number) => {
         if (i !== currentThumbIndex) {
-          const thumb = elements[i];
+          const element = elements[i];
           const indentLeft = String(
             Math.ceil(coefficientPoint * thumbsValues[i]) - shiftToMinValue,
           );
-          thumb.style.top = '';
-          thumb.style.left = `${indentLeft}px`;
+          element.style.top = '';
+          element.style.left = `${indentLeft}px`;
         }
       });
     this.updateActiveRange(slider);

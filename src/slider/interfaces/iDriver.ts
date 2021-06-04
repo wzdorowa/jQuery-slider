@@ -4,6 +4,8 @@ export interface IDriver {
   getOffsetPreviousThumb(element: HTMLElement, stepWidth: number): number;
   createElementTooltipText(): HTMLElement;
   createElementScale(): HTMLElement;
+  createElementScaleValue(): HTMLElement;
+  createElementScaleValueWithNumber(): HTMLElement;
   createElementActiveRange(): HTMLElement;
   searchElementsTooltipText(slider: HTMLElement): HTMLElement[];
   calculateCoefficientPoint(
@@ -13,6 +15,20 @@ export interface IDriver {
   ): number;
   searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>;
   searchElementActiveRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>;
+  searchElementScaleValueToDelete(slider: HTMLElement): HTMLElement[];
+  setInPlaceElement({
+    elements,
+    currentThumbIndex,
+    coefficientPoint,
+    elementsValues,
+    shiftToMinValue,
+  }: {
+    elements: HTMLElement[];
+    currentThumbIndex: number | null;
+    coefficientPoint: number;
+    elementsValues: number[];
+    shiftToMinValue: number;
+  }): void;
   setInPlaceThumb({
     elements,
     currentThumbIndex,
