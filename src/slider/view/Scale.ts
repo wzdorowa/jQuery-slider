@@ -80,11 +80,11 @@ class Scale {
     }
     if (state.max !== this.maxValueSlider) {
       this.maxValueSlider = state.max;
-      this.renderSerifs(this.scale);
+      this.renderSerifs();
     }
     if (state.min !== this.minValueSlider) {
       this.minValueSlider = state.min;
-      this.renderSerifs(this.scale);
+      this.renderSerifs();
     }
     this.driver?.updateActiveRange(this.slider);
     this.thumbsValues = state.thumbsValues;
@@ -95,17 +95,20 @@ class Scale {
     if (this.driver !== null) {
       const scale: HTMLElement = this.driver.createElementScale();
       const activeRange: HTMLElement = this.driver.createElementActiveRange();
+      // const scaleValueContainer: HTMLElement = this.driver.createElementScaleValueContainer();
 
       this.slider.append(scale);
       scale.append(activeRange);
+      // this.slider.append(scaleValueContainer);
 
       this.scale = scale;
-      this.renderSerifs(scale);
+      // this.scaleValue = scaleValueContainer;
+      this.renderSerifs();
     }
     this.listenSizeWindow();
   }
 
-  private renderSerifs(scale: HTMLElement) {
+  private renderSerifs() {
     const max: number = this.maxValueSlider;
     const min: number = this.minValueSlider;
 
@@ -115,7 +118,7 @@ class Scale {
           stepSerif: 10,
           isValueWithNumber: false,
         });
-        scale.append(htmlFragment);
+        this.scale.append(htmlFragment);
         this.setSefirsInPlaces();
       }
       if (max - min > 100) {
@@ -123,7 +126,7 @@ class Scale {
           stepSerif: 20,
           isValueWithNumber: false,
         });
-        scale.append(htmlFragment);
+        this.scale.append(htmlFragment);
         this.setSefirsInPlaces();
       }
     }
@@ -133,14 +136,14 @@ class Scale {
           stepSerif: 1,
           isValueWithNumber: true,
         });
-        scale.append(htmlFragment);
+        this.scale.append(htmlFragment);
         this.setSefirsInPlaces();
       } else {
         const htmlFragment = this.createElementsSefifs({
           stepSerif: 5,
           isValueWithNumber: true,
         });
-        scale.append(htmlFragment);
+        this.scale.append(htmlFragment);
         this.setSefirsInPlaces();
       }
     }

@@ -5,8 +5,8 @@
     box-sizing: border-box;
     position: absolute;
     width: calc(100% - 24px);
-    left: 12px;
     top: 11px;
+    left: 12px;
     height: 4px;
     background: rgba(180,180,180);
     z-index: 0;
@@ -21,11 +21,10 @@
 
   &__scale-value {
     width: 1px;
-    height: 10px;
+    height: 7px;
     background: rgb(180,180,180);
     display: block;
     position: absolute;
-    z-index: -1;
     cursor: pointer;
   }
   &__scale-value-with-number {

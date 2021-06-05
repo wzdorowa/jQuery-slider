@@ -5,6 +5,7 @@ export interface IDriver {
   createElementTooltipText(): HTMLElement;
   createElementScale(): HTMLElement;
   createElementScaleValue(): HTMLElement;
+  createElementScaleValueContainer(): HTMLElement;
   createElementScaleValueWithNumber(): HTMLElement;
   createElementActiveRange(): HTMLElement;
   searchElementsTooltipText(slider: HTMLElement): HTMLElement[];

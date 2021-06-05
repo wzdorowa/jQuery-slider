@@ -32,6 +32,13 @@ const driverHorizontal: IDriver = {
     );
     return element;
   },
+  createElementScaleValueContainer(): HTMLElement {
+    const element: HTMLElement = createElement(
+      'div',
+      'slider__scale-value-container js-slider__scale-value-container',
+    );
+    return element;
+  },
   createElementScaleValueWithNumber(): HTMLElement {
     const element: HTMLElement = createElement(
       'span',
@@ -99,10 +106,19 @@ const driverHorizontal: IDriver = {
       .forEach((_element: number, i: number) => {
         if (i !== currentThumbIndex) {
           const element = elements[i];
-          const indentLeft = String(
-            Math.ceil(coefficientPoint * elementsValues[i]) - shiftToMinValue,
-          );
-          element.style.top = '0px';
+          let indentLeft = '';
+          if (i === elements.length - 1) {
+            indentLeft = String(
+              Math.ceil(coefficientPoint * elementsValues[i]) -
+                shiftToMinValue -
+                1,
+            );
+          } else {
+            indentLeft = String(
+              Math.ceil(coefficientPoint * elementsValues[i]) - shiftToMinValue,
+            );
+          }
+          element.style.marginTop = '0px';
           element.style.marginLeft = `${indentLeft}px`;
         }
       });
@@ -186,6 +202,7 @@ const driverHorizontal: IDriver = {
     const indentLeft = String(
       Math.ceil(coefficientPoint * currentValue) - shiftToMinValue,
     );
+
     element.style.left = `${indentLeft}px`;
 
     this.updateActiveRange(slider);
@@ -225,6 +242,11 @@ const driverHorizontal: IDriver = {
     target: HTMLElement,
     shiftToMinValue: number,
   ): number {
+    console.log('event.offsetX', event.offsetX);
+    console.log('target.offsetLeft', target.offsetLeft);
+    console.log('shiftToMinValue', shiftToMinValue);
+    console.log('итог', event.offsetX + target.offsetLeft + shiftToMinValue);
+
     return event.offsetX + target.offsetLeft + shiftToMinValue;
   },
   getOffsetFromClick(event: MouseEvent): number {

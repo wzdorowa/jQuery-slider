@@ -247,19 +247,12 @@ class Thumbs {
 
   /* calculates the potential value of the thumb at the point of click on the scale */
   private calculateValueOfPlaceClickOnScale(currentValueAxis: number): number {
-    const currentValue: number | null = this.calculateValue(currentValueAxis);
-    if (this.state.currentValue !== null) {
-      this.calculateShiftToMinValue();
-      const halfStep =
-        Math.floor(
-          (this.state.currentValue + this.state.stepSlider / 2) *
-            this.state.coefficientPoint,
-        ) - this.state.shiftToMinValue;
+    const currentValue: number = this.calculateValue(currentValueAxis);
+    this.calculateShiftToMinValue();
+    console.log('currentValue', currentValue);
+    console.log('this.state.stepSlider', this.state.stepSlider);
+    console.log('this.state.coefficientPoint', this.state.coefficientPoint);
 
-      if (this.state.currentValueAxis > halfStep) {
-        this.state.currentValue += this.state.stepSlider;
-      }
-    }
     return currentValue;
   }
 
@@ -312,49 +305,52 @@ class Thumbs {
         this.state.shiftToMinValue,
       );
 
-      const currentValue:
-        | number
-        | null
-        | undefined = this.calculateValueOfPlaceClickOnScale(clickLocationAxis);
+      const currentValue: number = this.calculateValueOfPlaceClickOnScale(
+        clickLocationAxis,
+      );
 
-      let nearestThumbIndex: number | null = null;
+      // let nearestThumbIndex: number | null = null;
+      const leftSpacing: number[] = [];
+      const rightSpacing: number[] = [];
 
       this.state.thumbsValues.forEach((thumbValue: number, i: number) => {
-        const isCurrentValue: boolean =
-          currentValue !== null && currentValue !== undefined;
-        const isFirstThumb: boolean = i === 0 && thumbValue >= currentValue;
-        const isLastThumb: boolean =
-          i === this.state.thumbsValues.length - 1 &&
-          thumbValue <= currentValue;
-        const isIntermediateThumb: boolean =
-          currentValue >= thumbValue &&
-          currentValue <= this.state.thumbsValues[i + 1];
+        const valueLeftSpacing = thumbValue - currentValue;
+        leftSpacing.push(Math.abs(valueLeftSpacing));
 
-        if (isCurrentValue) {
-          if (isFirstThumb) {
-            nearestThumbIndex = i;
-          } else if (isLastThumb) {
-            nearestThumbIndex = i;
-          } else if (isIntermediateThumb) {
-            const leftSpacing: number = currentValue - thumbValue;
-            const rightSpacing: number =
-              this.state.thumbsValues[i + 1] - currentValue;
-
-            if (leftSpacing > rightSpacing) {
-              nearestThumbIndex = i + 1;
-            } else {
-              nearestThumbIndex = i;
-            }
-          }
-        }
+        const valueRightSpacing = thumbValue + currentValue;
+        rightSpacing.push(Math.abs(valueRightSpacing));
       });
-      if (nearestThumbIndex != null) {
-        if (
-          this.state.thumbsValues[nearestThumbIndex] !== this.state.currentValue
-        ) {
+      console.log('leftSpacing', leftSpacing);
+      console.log('rightSpacing', rightSpacing);
+
+      let currentSpacingValue: number | null = null;
+      let currentThumbIndex: number | null = null;
+
+      const checkValueSpacing = (element: number, index: number) => {
+        if (currentSpacingValue === null) {
+          currentSpacingValue = element;
+        }
+        if (currentThumbIndex === null) {
+          currentThumbIndex = index;
+        }
+        if (element < currentSpacingValue) {
+          currentSpacingValue = element;
+          currentThumbIndex = index;
+        }
+      };
+      leftSpacing.forEach((element, index) => {
+        checkValueSpacing(element, index);
+      });
+      rightSpacing.forEach((element, index) => {
+        checkValueSpacing(element, index);
+      });
+      console.log('currentSpacing', currentSpacingValue, currentThumbIndex);
+
+      if (currentThumbIndex !== null) {
+        if (currentSpacingValue !== this.state.currentValue) {
           this.emitter.emit('view:thumbsValues-changed', {
             value: currentValue,
-            index: nearestThumbIndex,
+            index: currentThumbIndex,
           });
         }
       }
@@ -415,11 +411,9 @@ class Thumbs {
               event,
               this.state.valueAxisFromStartMove,
             );
-
             const nextStepValueAxis: number = this.calculateValueAxis(
               this.state.thumbsValues[index] + this.state.stepSlider,
             );
-
             const previousStepValueAxis: number = this.calculateValueAxis(
               this.state.thumbsValues[index] - this.state.stepSlider,
             );

@@ -134,6 +134,13 @@ class Model {
     }
     if (this.state.min > this.state.thumbsValues[0]) {
       this.state.thumbsValues[0] = this.state.min;
+      const thumbsValues = this.state.thumbsValues.reverse();
+      thumbsValues.forEach((element, index) => {
+        if (element >= thumbsValues[index + 1]) {
+          thumbsValues[index + 1] = element + this.state.step;
+        }
+      });
+      this.state.thumbsValues = thumbsValues.reverse();
     }
     if (this.state.min !== minimumPossibleValue) {
       this.state.min = minimumPossibleValue;
@@ -145,6 +152,13 @@ class Model {
       this.state.thumbsValues[
         this.state.thumbsValues.length - 1
       ] = this.state.max;
+      const thumbsValues = this.state.thumbsValues.reverse();
+      thumbsValues.forEach((element, index) => {
+        if (element <= thumbsValues[index + 1]) {
+          thumbsValues[index + 1] = element - this.state.step;
+        }
+      });
+      this.state.thumbsValues = thumbsValues.reverse();
     }
     if (this.state.max !== maximumPossibleValue) {
       this.state.max = maximumPossibleValue;
