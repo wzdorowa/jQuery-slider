@@ -105,7 +105,7 @@ class Scale {
     this.listenSizeWindow();
   }
 
-  private renderSerifs() {
+  private renderSerifs(): void {
     const max: number = this.maxValueSlider;
     const min: number = this.minValueSlider;
 
@@ -215,7 +215,7 @@ class Scale {
     }
   }
 
-  private removeElementsSerifs() {
+  private removeElementsSerifs(): void {
     this.valuesSerifs = [];
     this.serifsElements = [];
     if (this.driver !== null) {
