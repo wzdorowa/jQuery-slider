@@ -114,9 +114,7 @@ class Model {
       Math.floor(this.state.min / this.state.step) * this.state.step;
     const maximumPossibleValue =
       Math.floor(this.state.max / this.state.step) * this.state.step;
-    const maximumCountOfThumbs = Math.floor(
-      this.state.max / (this.state.step * 2),
-    );
+    const maximumCountOfThumbs = Math.floor(this.state.max / this.state.step);
 
     if (this.state.thumbsCount <= 0) {
       this.state.thumbsCount = 1;
@@ -129,21 +127,17 @@ class Model {
           this.state.thumbsCount,
           this.state.thumbsValues.length - this.state.thumbsCount,
         );
-        this.checkThumbsValues();
+        this.checkThumbsValues(this.state.thumbsValues);
       }
-    }
-    if (this.state.min > this.state.thumbsValues[0]) {
-      this.state.thumbsValues[0] = this.state.min;
-      const thumbsValues = this.state.thumbsValues.reverse();
-      thumbsValues.forEach((element, index) => {
-        if (element >= thumbsValues[index + 1]) {
-          thumbsValues[index + 1] = element + this.state.step;
-        }
-      });
-      this.state.thumbsValues = thumbsValues.reverse();
     }
     if (this.state.min !== minimumPossibleValue) {
       this.state.min = minimumPossibleValue;
+    }
+    if (this.state.min > this.state.thumbsValues[0]) {
+      this.state.thumbsValues[0] = this.state.min;
+    }
+    if (this.state.max !== maximumPossibleValue) {
+      this.state.max = maximumPossibleValue;
     }
     if (
       this.state.max <
@@ -152,30 +146,19 @@ class Model {
       this.state.thumbsValues[
         this.state.thumbsValues.length - 1
       ] = this.state.max;
-      const thumbsValues = this.state.thumbsValues.reverse();
-      thumbsValues.forEach((element, index) => {
-        if (element <= thumbsValues[index + 1]) {
-          thumbsValues[index + 1] = element - this.state.step;
-        }
-      });
-      this.state.thumbsValues = thumbsValues.reverse();
-    }
-    if (this.state.max !== maximumPossibleValue) {
-      this.state.max = maximumPossibleValue;
     }
     if (this.state.step <= 0) {
       this.state.step = 1;
     }
-    this.checkThumbsValues();
-    this.notifyStateChanged();
+    this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // Calculate thumbs values based on step size
-  private checkThumbsValues(): void {
-    this.state.thumbsValues.forEach((element: number, i: number) => {
-      const newValue: number = element;
-      const remainderOfTheDivision: number = newValue % this.state.step;
-      const newCurrentValue: number = newValue - remainderOfTheDivision;
+  private checkThumbsValues(thumbsValues: number[]): void {
+    thumbsValues.forEach((element: number, i: number) => {
+      const value: number = element;
+      const remainderOfTheDivision: number = value % this.state.step;
+      const newValue: number = value - remainderOfTheDivision;
       const maxPossibleValue: number =
         this.state.max -
         (this.state.max % this.state.step) -
@@ -185,14 +168,11 @@ class Model {
         (this.state.min % this.state.step) +
         i * this.state.step;
 
-      if (newCurrentValue > maxPossibleValue) {
+      if (newValue >= maxPossibleValue) {
         this.state.thumbsValues[i] = maxPossibleValue;
       }
-      if (newCurrentValue < minPossibleValue) {
+      if (newValue <= minPossibleValue) {
         this.state.thumbsValues[i] = minPossibleValue;
-      }
-      if (this.state.thumbsValues[i] !== newCurrentValue) {
-        this.state.thumbsValues[i] = newCurrentValue;
       }
 
       const isGreaterThanNextValue: boolean =
@@ -210,6 +190,7 @@ class Model {
           this.state.thumbsValues[i] = maxPossibleValue;
         }
       }
+      this.notifyStateChanged();
     });
   }
 

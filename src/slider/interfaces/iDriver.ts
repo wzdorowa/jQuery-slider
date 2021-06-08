@@ -17,6 +17,9 @@ export interface IDriver {
   searchElementScaleToDelete(slider: HTMLElement): JQuery<HTMLElement>;
   searchElementActiveRangeToDelete(slider: HTMLElement): JQuery<HTMLElement>;
   searchElementScaleValueToDelete(slider: HTMLElement): HTMLElement[];
+  searchElementScaleValueContainerToDelete(
+    slider: HTMLElement,
+  ): JQuery<HTMLElement>;
   setInPlaceElement({
     elements,
     currentThumbIndex,
@@ -78,6 +81,11 @@ export interface IDriver {
     event: MouseEvent,
     target: HTMLElement,
     shiftToMinValue: number,
+  ): number;
+  calculateClickLocationOnScaleValue(
+    event: MouseEvent,
+    shiftToMinValue: number,
+    slider: HTMLElement,
   ): number;
   getOffsetFromClick(event: MouseEvent): number;
 }

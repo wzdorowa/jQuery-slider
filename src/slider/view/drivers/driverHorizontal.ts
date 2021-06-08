@@ -88,6 +88,14 @@ const driverHorizontal: IDriver = {
     );
     return $elements;
   },
+  searchElementScaleValueContainerToDelete(
+    slider: HTMLElement,
+  ): JQuery<HTMLElement> {
+    const $element: JQuery<HTMLElement> = $(slider).find(
+      '.js-slider__vertical-scale-value-container',
+    );
+    return $element;
+  },
   setInPlaceElement({
     elements,
     currentThumbIndex,
@@ -172,6 +180,8 @@ const driverHorizontal: IDriver = {
     eventThumb: MouseEvent,
     startXorY: number,
   ): number {
+    console.log('eventThumb.pageX - startXorY', eventThumb.pageX - startXorY);
+
     return eventThumb.pageX - startXorY;
   },
   setIndentForTarget(
@@ -181,6 +191,8 @@ const driverHorizontal: IDriver = {
   ): void {
     const element = target;
     const indentLeft = String(currentXorY);
+    console.log('indentLeft', indentLeft);
+
     element.style.left = `${indentLeft}px`;
 
     this.updateActiveRange(slider);
@@ -242,12 +254,18 @@ const driverHorizontal: IDriver = {
     target: HTMLElement,
     shiftToMinValue: number,
   ): number {
-    console.log('event.offsetX', event.offsetX);
-    console.log('target.offsetLeft', target.offsetLeft);
-    console.log('shiftToMinValue', shiftToMinValue);
-    console.log('итог', event.offsetX + target.offsetLeft + shiftToMinValue);
-
     return event.offsetX + target.offsetLeft + shiftToMinValue;
+  },
+  calculateClickLocationOnScaleValue(
+    event: MouseEvent,
+    shiftToMinValue: number,
+    slider: HTMLElement,
+  ): number {
+    const scale = Array.from($(slider).find('.js-slider__scale'));
+    const startAxis = scale[0].getBoundingClientRect();
+
+    const offsetX = event.pageX - startAxis.x;
+    return offsetX + shiftToMinValue;
   },
   getOffsetFromClick(event: MouseEvent): number {
     return event.offsetX;

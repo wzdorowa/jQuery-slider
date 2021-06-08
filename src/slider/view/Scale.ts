@@ -95,14 +95,11 @@ class Scale {
     if (this.driver !== null) {
       const scale: HTMLElement = this.driver.createElementScale();
       const activeRange: HTMLElement = this.driver.createElementActiveRange();
-      // const scaleValueContainer: HTMLElement = this.driver.createElementScaleValueContainer();
 
       this.slider.append(scale);
       scale.append(activeRange);
-      // this.slider.append(scaleValueContainer);
 
       this.scale = scale;
-      // this.scaleValue = scaleValueContainer;
       this.renderSerifs();
     }
     this.listenSizeWindow();
@@ -112,39 +109,49 @@ class Scale {
     const max: number = this.maxValueSlider;
     const min: number = this.minValueSlider;
 
-    if (max - min > 20) {
-      if (max - min <= 100) {
-        const htmlFragment = this.createElementsSefifs({
-          stepSerif: 10,
-          isValueWithNumber: false,
-        });
-        this.scale.append(htmlFragment);
-        this.setSefirsInPlaces();
+    if (this.driver !== null) {
+      if (max - min > 20) {
+        if (max - min <= 100) {
+          const scaleValueContainer = this.driver.createElementScaleValueContainer();
+          const htmlFragment = this.createElementsSefifs({
+            stepSerif: 10,
+            isValueWithNumber: false,
+          });
+          scaleValueContainer.append(htmlFragment);
+          this.slider.append(scaleValueContainer);
+          this.setSefirsInPlaces();
+        }
+        if (max - min > 100) {
+          const scaleValueContainer = this.driver.createElementScaleValueContainer();
+          const htmlFragment = this.createElementsSefifs({
+            stepSerif: 20,
+            isValueWithNumber: false,
+          });
+          scaleValueContainer.append(htmlFragment);
+          this.slider.append(scaleValueContainer);
+          this.setSefirsInPlaces();
+        }
       }
-      if (max - min > 100) {
-        const htmlFragment = this.createElementsSefifs({
-          stepSerif: 20,
-          isValueWithNumber: false,
-        });
-        this.scale.append(htmlFragment);
-        this.setSefirsInPlaces();
-      }
-    }
-    if (max - min <= 20) {
-      if (max - min <= 10) {
-        const htmlFragment = this.createElementsSefifs({
-          stepSerif: 1,
-          isValueWithNumber: true,
-        });
-        this.scale.append(htmlFragment);
-        this.setSefirsInPlaces();
-      } else {
-        const htmlFragment = this.createElementsSefifs({
-          stepSerif: 5,
-          isValueWithNumber: true,
-        });
-        this.scale.append(htmlFragment);
-        this.setSefirsInPlaces();
+      if (max - min <= 20) {
+        if (max - min <= 10) {
+          const scaleValueContainer = this.driver.createElementScaleValueContainer();
+          const htmlFragment = this.createElementsSefifs({
+            stepSerif: 1,
+            isValueWithNumber: true,
+          });
+          scaleValueContainer.append(htmlFragment);
+          this.slider.append(scaleValueContainer);
+          this.setSefirsInPlaces();
+        } else {
+          const scaleValueContainer = this.driver.createElementScaleValueContainer();
+          const htmlFragment = this.createElementsSefifs({
+            stepSerif: 5,
+            isValueWithNumber: true,
+          });
+          scaleValueContainer.append(htmlFragment);
+          this.slider.append(scaleValueContainer);
+          this.setSefirsInPlaces();
+        }
       }
     }
   }
@@ -191,6 +198,7 @@ class Scale {
         }
       });
     }
+    this.listenScaleValueEvents();
     return htmlFragment;
   }
 
@@ -245,6 +253,10 @@ class Scale {
         this.slider,
       );
       scaleToDelete.remove();
+      const scaleValueContainerToRemove: JQuery<HTMLElement> = this.driver.searchElementScaleValueContainerToDelete(
+        this.slider,
+      );
+      scaleValueContainerToRemove.remove();
 
       this.createScale();
       this.listenScaleEvents();
@@ -253,6 +265,12 @@ class Scale {
 
   private listenScaleEvents(): void {
     this.scale.addEventListener('click', this.handleScaleClick.bind(this));
+  }
+
+  private listenScaleValueEvents(): void {
+    this.serifsElements.forEach(element => {
+      element.addEventListener('click', this.handleScaleClick.bind(this), true);
+    });
   }
 
   private handleScaleClick(event: MouseEvent): void {

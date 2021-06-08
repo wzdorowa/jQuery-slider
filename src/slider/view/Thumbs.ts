@@ -95,6 +95,9 @@ class Thumbs {
       this.state.thumbsCount = state.thumbsCount;
       this.changeCountThumbs();
     }
+    if (this.state.thumbsValues !== state.thumbsValues) {
+      this.state.thumbsValues = state.thumbsValues;
+    }
     if (this.state.orientation !== state.orientation) {
       if (state.orientation === 'horizontal') {
         this.driver = driverHorizontal;
@@ -249,9 +252,6 @@ class Thumbs {
   private calculateValueOfPlaceClickOnScale(currentValueAxis: number): number {
     const currentValue: number = this.calculateValue(currentValueAxis);
     this.calculateShiftToMinValue();
-    console.log('currentValue', currentValue);
-    console.log('this.state.stepSlider', this.state.stepSlider);
-    console.log('this.state.coefficientPoint', this.state.coefficientPoint);
 
     return currentValue;
   }
@@ -299,29 +299,64 @@ class Thumbs {
     if (this.driver !== null) {
       this.calculateShiftToMinValue();
       const target: HTMLDivElement = event.target as HTMLDivElement;
-      const clickLocationAxis: number = this.driver.calculateClickLocation(
-        event,
-        target,
-        this.state.shiftToMinValue,
-      );
+      const targetClassList = target.classList;
 
+      let clickLocationAxis = 0;
+      if (targetClassList.contains('js-slider__scale')) {
+        clickLocationAxis = this.driver.calculateClickLocation(
+          event,
+          target,
+          this.state.shiftToMinValue,
+        );
+      } else if (targetClassList.contains('js-slider__vertical-scale')) {
+        clickLocationAxis = this.driver.calculateClickLocation(
+          event,
+          target,
+          this.state.shiftToMinValue,
+        );
+      } else if (targetClassList.contains('js-slider__scale-value')) {
+        clickLocationAxis = this.driver.calculateClickLocationOnScaleValue(
+          event,
+          this.state.shiftToMinValue,
+          this.slider,
+        );
+      } else if (targetClassList.contains('js-slider__vertical-scale-value')) {
+        clickLocationAxis = this.driver.calculateClickLocationOnScaleValue(
+          event,
+          this.state.shiftToMinValue,
+          this.slider,
+        );
+      } else if (
+        targetClassList.contains('js-slider__scale-value-with-number')
+      ) {
+        clickLocationAxis = this.driver.calculateClickLocationOnScaleValue(
+          event,
+          this.state.shiftToMinValue,
+          this.slider,
+        );
+      } else if (
+        targetClassList.contains('js-slider__vertical-scale-value-with-number')
+      ) {
+        clickLocationAxis = this.driver.calculateClickLocationOnScaleValue(
+          event,
+          this.state.shiftToMinValue,
+          this.slider,
+        );
+      }
       const currentValue: number = this.calculateValueOfPlaceClickOnScale(
         clickLocationAxis,
       );
 
-      // let nearestThumbIndex: number | null = null;
       const leftSpacing: number[] = [];
       const rightSpacing: number[] = [];
 
-      this.state.thumbsValues.forEach((thumbValue: number, i: number) => {
+      this.state.thumbsValues.forEach((thumbValue: number) => {
         const valueLeftSpacing = thumbValue - currentValue;
         leftSpacing.push(Math.abs(valueLeftSpacing));
 
         const valueRightSpacing = thumbValue + currentValue;
         rightSpacing.push(Math.abs(valueRightSpacing));
       });
-      console.log('leftSpacing', leftSpacing);
-      console.log('rightSpacing', rightSpacing);
 
       let currentSpacingValue: number | null = null;
       let currentThumbIndex: number | null = null;
@@ -344,7 +379,6 @@ class Thumbs {
       rightSpacing.forEach((element, index) => {
         checkValueSpacing(element, index);
       });
-      console.log('currentSpacing', currentSpacingValue, currentThumbIndex);
 
       if (currentThumbIndex !== null) {
         if (currentSpacingValue !== this.state.currentValue) {
