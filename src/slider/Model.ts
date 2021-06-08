@@ -114,7 +114,9 @@ class Model {
       Math.floor(this.state.min / this.state.step) * this.state.step;
     const maximumPossibleValue =
       Math.floor(this.state.max / this.state.step) * this.state.step;
-    const maximumCountOfThumbs = Math.floor(this.state.max / this.state.step);
+    const maximumCountOfThumbs = Math.floor(
+      (this.state.max - this.state.min) / this.state.step,
+    );
 
     if (this.state.thumbsCount <= 0) {
       this.state.thumbsCount = 1;
@@ -168,6 +170,9 @@ class Model {
         (this.state.min % this.state.step) +
         i * this.state.step;
 
+      if (newValue !== this.state.thumbsValues[i]) {
+        this.state.thumbsValues[i] = newValue;
+      }
       if (newValue >= maxPossibleValue) {
         this.state.thumbsValues[i] = maxPossibleValue;
       }

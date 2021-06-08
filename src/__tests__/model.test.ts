@@ -106,7 +106,8 @@ describe('Model testing', () => {
   test('check maximum count of thumbs', () => {
     model.setNewValueStep(5);
     model.setNewValueCount(15);
-    expect(model.state.thumbsCount).toBe(8);
+
+    expect(model.state.thumbsCount).toBe(11);
   });
   test('check ThumbsValues', () => {
     model.overwriteCurrentThumbsValues([25, 15, 45, 67]);

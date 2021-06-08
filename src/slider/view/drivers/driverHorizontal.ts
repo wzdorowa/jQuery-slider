@@ -180,8 +180,6 @@ const driverHorizontal: IDriver = {
     eventThumb: MouseEvent,
     startXorY: number,
   ): number {
-    console.log('eventThumb.pageX - startXorY', eventThumb.pageX - startXorY);
-
     return eventThumb.pageX - startXorY;
   },
   setIndentForTarget(
@@ -191,8 +189,6 @@ const driverHorizontal: IDriver = {
   ): void {
     const element = target;
     const indentLeft = String(currentXorY);
-    console.log('indentLeft', indentLeft);
-
     element.style.left = `${indentLeft}px`;
 
     this.updateActiveRange(slider);

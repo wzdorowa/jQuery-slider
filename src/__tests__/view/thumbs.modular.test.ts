@@ -430,9 +430,13 @@ describe('Unit tests', () => {
       .callsFake(() => 0);
 
     state.orientation = 'vertical';
+    const coefficientPoint = sinon
+      .stub(driverVertical, 'calculateCoefficientPoint')
+      .callsFake(() => 3);
     thumbs.initializeThumbs(state);
 
     updateLineSpan.restore();
+    coefficientPoint.restore();
   });
   test('checking the method setConfig', () => {
     const sinon: sinonLib.SinonStatic = sinonLib;
