@@ -23,14 +23,8 @@ $(() => {
           '.js-configuration__thumbs-current-value-list',
         ),
       );
-      const thumbsIntervalValuesList: IHTMLElement[] = Array.from(
-        document.querySelectorAll(
-          '.js-configuration__thumbs-interval-value-list',
-        ),
-      );
 
       const fragmentCurrentValueList = document.createDocumentFragment();
-      const fragmentIntervalValueList = document.createDocumentFragment();
 
       new Array(state.thumbsCount)
         .fill(1)
@@ -51,47 +45,8 @@ $(() => {
 
           currentValueItem.append(currentValueInput);
           fragmentCurrentValueList.append(currentValueItem);
-
-          const intervalValuesSet: HTMLElement = createElement(
-            'li',
-            'configuration__thumbs-set js-configuration__thumbs-set',
-          );
-
-          const valueFrom: HTMLElement = createElement(
-            'input',
-            'configuration__thumbs-value-from js-configuration__thumbs-value-from',
-          );
-          valueFrom.setAttribute('type', 'text');
-          if (i === 0) {
-            valueFrom.setAttribute('value', String(state.min));
-          } else {
-            valueFrom.setAttribute(
-              'value',
-              String(state.thumbsValues[i - 1] + state.step),
-            );
-          }
-
-          const valueTo: HTMLElement = createElement(
-            'input',
-            'configuration__thumbs-value-to js-configuration__thumbs-value-to',
-          );
-          valueTo.setAttribute('type', 'text');
-          valueTo.setAttribute('value', String(state.max));
-          if (i === state.thumbsCount - 1) {
-            valueTo.setAttribute('value', String(state.max));
-          } else {
-            valueTo.setAttribute(
-              'value',
-              String(state.thumbsValues[i + 1] - state.step),
-            );
-          }
-
-          intervalValuesSet.append(valueFrom);
-          intervalValuesSet.append(valueTo);
-          fragmentIntervalValueList.append(intervalValuesSet);
         });
       thumbsCurrentValuesList[index].append(fragmentCurrentValueList);
-      thumbsIntervalValuesList[index].append(fragmentIntervalValueList);
       if (!isCreatedInput) {
         isCreatedInput = true;
       }
@@ -125,17 +80,10 @@ $(() => {
         ),
       );
 
-      const thumbsIntervalValuesList: IHTMLElement[] = Array.from(
-        document.querySelectorAll(
-          '.js-configuration__thumbs-interval-value-list',
-        ),
-      );
-
       if ($countInputs.length < state.thumbsCount) {
         const missingCount: number = state.thumbsCount - $countInputs.length;
 
         const fragmentCurrentValueList = document.createDocumentFragment();
-        const fragmentIntervalValueList = document.createDocumentFragment();
         new Array(missingCount)
           .fill(1)
           .forEach((_element: number, i: number) => {
@@ -161,38 +109,9 @@ $(() => {
             currentValueItem.append(currentValueInput);
             fragmentCurrentValueList.append(currentValueItem);
 
-            const intervalValuesSet: HTMLElement = createElement(
-              'li',
-              'configuration__thumbs-set js-configuration__thumbs-set',
-            );
-
-            const valueFrom: HTMLElement = createElement(
-              'input',
-              'configuration__thumbs-value-from js-configuration__thumbs-value-from',
-            );
-            valueFrom.setAttribute('type', 'text');
-            valueFrom.setAttribute(
-              'value',
-              String(
-                state.thumbsValues[$currentCountInputs.length - 1] + state.step,
-              ),
-            );
-
-            const valueTo: HTMLElement = createElement(
-              'input',
-              'configuration__thumbs-value-to js-configuration__thumbs-value-to',
-            );
-            valueTo.setAttribute('type', 'text');
-            valueTo.setAttribute('value', String(state.max));
-
-            intervalValuesSet.append(valueFrom);
-            intervalValuesSet.append(valueTo);
-            fragmentIntervalValueList.append(intervalValuesSet);
-
             setNewValueToNewInputs(state);
           });
         thumbsCurrentValuesList[index].append(fragmentCurrentValueList);
-        thumbsIntervalValuesList[index].append(fragmentIntervalValueList);
       }
       if ($countInputs.length > state.thumbsCount) {
         const excessCount: number = $countInputs.length - state.thumbsCount;
@@ -202,19 +121,9 @@ $(() => {
             '.js-configuration__thumbs-item',
           ),
         );
-        const $allIntervalValuesInputs: HTMLElement[] = Array.from(
-          $(thumbsIntervalValuesList[index]).find(
-            '.js-configuration__thumbs-set',
-          ),
-        );
         new Array(excessCount).fill(1).forEach(() => {
           $allCurrentValuesInputs[$allCurrentValuesInputs.length - 1].remove();
           $allCurrentValuesInputs.splice(-1, 1);
-
-          $allIntervalValuesInputs[
-            $allIntervalValuesInputs.length - 1
-          ].remove();
-          $allIntervalValuesInputs.splice(-1, 1);
         });
       }
     };
@@ -225,25 +134,9 @@ $(() => {
         ),
       );
 
-      const thumbsIntervalValuesList: IHTMLElement[] = Array.from(
-        document.querySelectorAll(
-          '.js-configuration__thumbs-interval-value-list',
-        ),
-      );
-
       const $allThumbs: HTMLInputElement[] = Array.from(
         $(thumbsCurrentValuesList[index]).find(
           '.js-configuration__thumbs-value',
-        ),
-      ) as HTMLInputElement[];
-      const $allValueFrom: HTMLInputElement[] = Array.from(
-        $(thumbsIntervalValuesList[index]).find(
-          '.js-configuration__thumbs-value-from',
-        ),
-      ) as HTMLInputElement[];
-      const $allValueTo: HTMLInputElement[] = Array.from(
-        $(thumbsIntervalValuesList[index]).find(
-          '.js-configuration__thumbs-value-to',
         ),
       ) as HTMLInputElement[];
 
@@ -251,29 +144,6 @@ $(() => {
         .fill(1)
         .forEach((_element: number, i: number) => {
           $allThumbs[i].value = String(state.thumbsValues[i]);
-          if (i === 0) {
-            if (state.thumbsValues.length === 1) {
-              $allValueFrom[i].value = String(state.min);
-              $allValueTo[i].value = String(state.max);
-            } else {
-              $allValueFrom[i].value = String(state.min);
-              $allValueTo[i].value = String(
-                state.thumbsValues[i + 1] - state.step,
-              );
-            }
-          } else if (i === state.thumbsCount - 1) {
-            $allValueFrom[i].value = String(
-              state.thumbsValues[i - 1] + state.step,
-            );
-            $allValueTo[i].value = String(state.max);
-          } else {
-            $allValueFrom[i].value = String(
-              state.thumbsValues[i - 1] + state.step,
-            );
-            $allValueTo[i].value = String(
-              state.thumbsValues[i + 1] - state.step,
-            );
-          }
         });
     };
     const setValueToStepFromModelState = (state: IModelState) => {
