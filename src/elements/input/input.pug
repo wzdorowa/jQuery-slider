@@ -1,7 +1,7 @@
-mixin input({text = 'текст', value = '0', parentName} = {text, value, parentName})
+mixin input({text = 'текст', value = '0', parentName, type} = {text, value, parentName, type})
     label(class=`input-${parentName}`)
       div(class=`input-${parentName}__wrapper`)
         span(class=`input-${parentName}__description`)=text
-        input(class=`input-${parentName}__value`, class=`js-input-${parentName}__value` type='text',
+        input(class=`input-${parentName}__value`, class=`js-input-${parentName}__value` type=type,
          name=`input-${parentName}`, value=value)
         

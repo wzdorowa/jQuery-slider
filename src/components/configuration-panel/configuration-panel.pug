@@ -23,17 +23,20 @@ mixin configuration-panel()
                   text: 'от:',
                   value: '0',
                   parentName: 'min-max',
+                  type: 'number',
                   })
                 +input({
                   text:'до:',
                   value: '100',
                   parentName: 'min-max',
+                  type: 'number',
                 })
         .configuration__field
             +input({
               text: 'Количество ползунков:',
               value: '4',
               parentName: 'count-thumb',
+              type: 'number',
               })
         .configuration__field
             +fieldset('Знечения ползунков:', 'thumbs-values')
@@ -43,6 +46,7 @@ mixin configuration-panel()
               text: 'Размер шага:',
               value: '2',
               parentName: 'step-size',
+              type: 'number',
               })
         .configuration__field
             +checkbox-button({
