@@ -48,5 +48,12 @@ mixin configuration-panel()
             +checkbox-button({
               text: 'Наличие тултипа',
               checked:'checked',
+              elementName: 'tooltip',
+              })
+        .configuration__field
+            +checkbox-button({
+              text: 'Наличие шкалы значений',
+              checked:'checked',
+              elementName: 'scale-of-values',
               })
         input.configuration__update(type='submit')

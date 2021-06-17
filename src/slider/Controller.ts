@@ -63,6 +63,9 @@ class Controller {
     this.slider.setNewValueTooltip = (value: boolean): void => {
       model.setNewValueTooltip(value);
     };
+    this.slider.setNewValueScaleOfValues = (value: boolean): void => {
+      model.setNewValueScaleOfValues(value);
+    };
     this.slider.subscribeToStateModel = (
       handler: (state: IModelState) => void,
       isCreatedInput: boolean,

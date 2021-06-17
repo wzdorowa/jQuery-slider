@@ -20,6 +20,9 @@ export interface IDriver {
   searchElementScaleValueContainerToDelete(
     slider: HTMLElement,
   ): JQuery<HTMLElement>;
+  searchElementScaleValueBaseContainerToDelete(
+    slider: HTMLElement,
+  ): HTMLElement;
   setInPlaceElement({
     elements,
     currentThumbIndex,

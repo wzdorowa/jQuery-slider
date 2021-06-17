@@ -96,6 +96,14 @@ const driverHorizontal: IDriver = {
     );
     return $element;
   },
+  searchElementScaleValueBaseContainerToDelete(
+    slider: HTMLElement,
+  ): HTMLElement {
+    const $elements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__scale-value-container'),
+    );
+    return $elements[0];
+  },
   setInPlaceElement({
     elements,
     currentThumbIndex,

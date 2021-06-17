@@ -15,6 +15,7 @@ class Model {
       thumbsCount: 4,
       step: 2,
       isTooltip: true,
+      isScaleOfValues: true,
     };
 
     this.emitter = eventEmitter;
@@ -90,6 +91,14 @@ class Model {
   public setNewValueTooltip(value: boolean): void {
     if (value !== this.state.isTooltip) {
       this.state.isTooltip = value;
+      this.notifyStateChanged();
+    }
+  }
+
+  // set a new value for the tooltip field
+  public setNewValueScaleOfValues(value: boolean): void {
+    if (value !== this.state.isScaleOfValues) {
+      this.state.isScaleOfValues = value;
       this.notifyStateChanged();
     }
   }

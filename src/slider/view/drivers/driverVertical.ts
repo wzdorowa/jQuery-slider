@@ -83,6 +83,14 @@ const driverVertical: IDriver = {
     );
     return $element;
   },
+  searchElementScaleValueBaseContainerToDelete(
+    slider: HTMLElement,
+  ): HTMLElement {
+    const $elements: HTMLElement[] = Array.from(
+      $(slider).find('.js-slider__vertical-scale-value-container'),
+    );
+    return $elements[0];
+  },
   calculateCoefficientPoint(
     slider: HTMLElement,
     max: number,

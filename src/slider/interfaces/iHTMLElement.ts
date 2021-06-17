@@ -9,6 +9,7 @@ export interface IHTMLElement extends HTMLElement {
   setNewValueStep(step: number): void;
   setNewValueOrientation(value: string): void;
   setNewValueTooltip(value: boolean): void;
+  setNewValueScaleOfValues(value: boolean): void;
   subscribeToStateModel(
     handler: (state: IModelState) => void,
     isCreatedInput: boolean,

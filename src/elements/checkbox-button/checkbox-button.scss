@@ -7,7 +7,15 @@
   line-height: 20px;
   color: $Valhalla50;
 
-  &__content {
+  &_hide {
+    display: none;
+  }
+
+  &__tooltip {
+    display: none;
+  }
+
+  &__scale-of-values {
     display: none;
   }
 

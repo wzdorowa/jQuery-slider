@@ -305,23 +305,37 @@ $(() => {
     const $checkboxContainer: HTMLInputElement[] = Array.from(
       $(configurationPanel[index]).find('.js-checkbox-button'),
     ) as HTMLInputElement[];
-    const $checkboxInput: HTMLInputElement[] = Array.from(
-      $(configurationPanel[index]).find('.js-checkbox-button__content'),
+    const $checkboxInputTooltip: HTMLInputElement[] = Array.from(
+      $(configurationPanel[index]).find('.js-checkbox-button__tooltip'),
+    ) as HTMLInputElement[];
+    const $checkboxInputScaleOfValues: HTMLInputElement[] = Array.from(
+      $(configurationPanel[index]).find('.js-checkbox-button__scale-of-values'),
     ) as HTMLInputElement[];
 
-    const handleCheckboxContainerClick = () => {
+    const handleCheckboxTooltipClick = () => {
       let isChecked = true;
-      if ($checkboxInput[0].checked) {
+      if ($checkboxInputTooltip[0].checked) {
         isChecked = true;
       }
-      if (!$checkboxInput[0].checked) {
+      if (!$checkboxInputTooltip[0].checked) {
         isChecked = false;
       }
       element.setNewValueTooltip(isChecked);
     };
-    $checkboxContainer[0].addEventListener(
+    const handleCheckboxScaleOfValuesClick = () => {
+      let isChecked = true;
+      if ($checkboxInputScaleOfValues[0].checked) {
+        isChecked = true;
+      }
+      if (!$checkboxInputScaleOfValues[0].checked) {
+        isChecked = false;
+      }
+      element.setNewValueScaleOfValues(isChecked);
+    };
+    $checkboxContainer[0].addEventListener('click', handleCheckboxTooltipClick);
+    $checkboxContainer[1].addEventListener(
       'click',
-      handleCheckboxContainerClick,
+      handleCheckboxScaleOfValuesClick,
     );
 
     const setValueOfInputsSliderThumbs = () => {
