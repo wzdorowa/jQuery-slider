@@ -119,6 +119,13 @@ class Model {
   }
 
   private normolizeState(): void {
+    if (
+      this.state.max - this.state.min <
+      this.state.step * this.state.thumbsCount
+    ) {
+      this.state.max =
+        this.state.min + this.state.step * this.state.thumbsCount;
+    }
     const minimumPossibleValue =
       Math.floor(this.state.min / this.state.step) * this.state.step;
     const maximumPossibleValue =
@@ -160,6 +167,9 @@ class Model {
     }
     if (this.state.step <= 0) {
       this.state.step = 1;
+    }
+    if (this.state.step > this.state.max / this.state.thumbsCount) {
+      this.state.step = this.state.max / this.state.thumbsCount;
     }
     this.checkThumbsValues(this.state.thumbsValues);
   }
