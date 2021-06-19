@@ -176,6 +176,8 @@ class Model {
 
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
+    console.log('thumbsValues', thumbsValues);
+
     thumbsValues.forEach((element: number, i: number) => {
       const value: number = element;
       const remainderOfTheDivision: number = value % this.state.step;
@@ -203,6 +205,9 @@ class Model {
         i !== this.state.thumbsValues[this.state.thumbsValues.length - 1] &&
         element >= this.state.thumbsValues[i + 1];
 
+      const isLessThanPreviousValue: boolean =
+        newValue <= this.state.thumbsValues[i - 1];
+
       if (isGreaterThanNextValue) {
         this.state.thumbsValues[i + 1] =
           this.state.thumbsValues[i] + this.state.step;
@@ -213,6 +218,10 @@ class Model {
           this.state.thumbsValues[i + 1] = maxPossibleValue + this.state.step;
           this.state.thumbsValues[i] = maxPossibleValue;
         }
+      }
+      if (isLessThanPreviousValue) {
+        this.state.thumbsValues[i] =
+          this.state.thumbsValues[i - 1] + this.state.step;
       }
       this.notifyStateChanged();
     });
