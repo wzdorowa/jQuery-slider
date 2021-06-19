@@ -10,6 +10,7 @@ const state: IModelState = {
   thumbsCount: 4,
   step: 2,
   isTooltip: true,
+  isScaleOfValues: true,
 };
 
 describe('Unit tests', () => {

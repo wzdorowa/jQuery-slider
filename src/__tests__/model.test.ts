@@ -10,6 +10,7 @@ const state: IModelState = {
   thumbsCount: 4,
   step: 2,
   isTooltip: true,
+  isScaleOfValues: true,
 };
 describe('Model testing', () => {
   const eventEmitter = new EventEmitter();
@@ -107,7 +108,7 @@ describe('Model testing', () => {
     model.setNewValueStep(5);
     model.setNewValueCount(15);
 
-    expect(model.state.thumbsCount).toBe(11);
+    expect(model.state.thumbsCount).toBe(15);
   });
   test('check ThumbsValues', () => {
     model.overwriteCurrentThumbsValues([25, 15, 45, 67]);

@@ -176,8 +176,6 @@ class Model {
 
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
-    console.log('thumbsValues', thumbsValues);
-
     thumbsValues.forEach((element: number, i: number) => {
       const value: number = element;
       const remainderOfTheDivision: number = value % this.state.step;

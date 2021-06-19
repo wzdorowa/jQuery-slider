@@ -105,6 +105,7 @@ test('Calculate value slider thumbs', () => {
     thumbsCount: 4,
     step: 2,
     isTooltip: true,
+    isScaleOfValues: true,
   };
 
   const slider: HTMLElement = createElement('div', 'slider');
@@ -158,6 +159,7 @@ test('Calculate value slider thumbs', () => {
     thumbsCount: 1,
     step: 2,
     isTooltip: true,
+    isScaleOfValues: true,
   };
 
   const slider: HTMLElement = createElement('div', 'slider');
