@@ -37,7 +37,7 @@ $(() => {
             'input',
             'configuration__thumbs-value js-configuration__thumbs-value',
           );
-          currentValueInput.setAttribute('type', 'text');
+          currentValueInput.setAttribute('type', 'number');
           currentValueInput.setAttribute(
             'value',
             String(state.thumbsValues[i]),
@@ -100,7 +100,7 @@ $(() => {
               'input',
               'configuration__thumbs-value js-configuration__thumbs-value',
             );
-            currentValueInput.setAttribute('type', 'text');
+            currentValueInput.setAttribute('type', 'number');
             currentValueInput.setAttribute(
               'value',
               String(state.thumbsValues[i]),
