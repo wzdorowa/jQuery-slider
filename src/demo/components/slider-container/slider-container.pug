@@ -1,0 +1,9 @@
+include ../configuration-panel/configuration-panel.pug
+
+mixin slider-container()
+  .slider-container__wrapper
+      .slider-container__configuration-panel
+        +configuration-panel()
+      .slider-container__content
+        .slider-container__slider-test
+          block 

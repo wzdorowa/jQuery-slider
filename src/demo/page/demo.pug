@@ -1,4 +1,4 @@
-include ../components/configuration-panel/configuration-panel.pug
+include ../components/slider-container/slider-container.pug
 
 doctype html
 html
@@ -14,27 +14,12 @@ html
         link(rel='mask-icon' href="images/favicon-safari.svg" color="blue")
     body
         block content
-            .slider-container
-                .slider-container__wrapper
-                    .slider-container__configuration-panel
-                      +configuration-panel()
-                    .slider-container__content
-                      .slider-container__slider-test
-                        .slider-test.js-slider-test
-            .slider-container
-                .slider-container__wrapper
-                    .slider-container__configuration-panel
-                      +configuration-panel()
-                    .slider-container__content
-                      .slider-container__slider-test
-                        .slider-test.js-slider-test
-            .slider-container
-                .slider-container__wrapper
-                    .slider-container__configuration-panel
-                      +configuration-panel()
-                    .slider-container__content
-                      .slider-container__slider-test
-                        .slider-test.js-slider-test
+            +slider-container()
+              .slider-test.js-slider-test
+            +slider-container()
+              .slider-test.js-slider-test
+            +slider-container()
+              .slider-test.js-slider-test
         block scripts
             script(src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous")
             script(src="../../slider/slider.ts")
