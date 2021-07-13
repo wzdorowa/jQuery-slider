@@ -1,4 +1,4 @@
-import EventEmitter from '../slider/EventEmitter';
+import EventEmitter from '../EventEmitter';
 
 interface StateValue {
   values: number[];

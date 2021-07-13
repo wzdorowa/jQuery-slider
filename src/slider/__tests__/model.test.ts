@@ -1,6 +1,6 @@
-import Model from '../slider/Model';
-import { IModelState } from '../slider/interfaces/iModelState';
-import EventEmitter from '../slider/EventEmitter';
+import Model from '../Model';
+import { IModelState } from '../interfaces/iModelState';
+import EventEmitter from '../EventEmitter';
 
 const state: IModelState = {
   min: 0,

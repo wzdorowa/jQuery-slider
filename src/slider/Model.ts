@@ -29,7 +29,6 @@ class Model {
       isTooltip: props.isTooltip,
       isScaleOfValues: props.isScaleOfValues,
     };
-    console.log('state', this.state);
 
     this.emitter = eventEmitter;
     this.normolizeState();
@@ -242,7 +241,6 @@ class Model {
         this.state.thumbsValues[i] =
           this.state.thumbsValues[i - 1] + this.state.step;
       }
-      console.log('state из normolize', this.state);
 
       this.notifyStateChanged();
     });

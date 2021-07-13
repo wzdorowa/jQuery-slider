@@ -1,4 +1,4 @@
-import createElement from '../../slider/functions/createElement';
+import createElement from '../../functions/createElement';
 
 test('Create element', () => {
   const element: HTMLElement = createElement('span', 'text');

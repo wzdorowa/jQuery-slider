@@ -1,10 +1,10 @@
-@import "../../fonts/fonts.scss";
+@import "../fonts/fonts.scss";
 @import "src/slider/styles/slider.scss";
-@import "src/elements/radio-button/radio-button.scss";
-@import "src/elements/checkbox-button/checkbox-button.scss";
-@import "src/elements/input/input.scss";
-@import "src/components/fieldset/fieldset.scss";
-@import "src/components/configuration-panel/configuration-panel.scss";
+@import "src/demo/elements/radio-button/radio-button.scss";
+@import "src/demo/elements/checkbox-button/checkbox-button.scss";
+@import "src/demo/elements/input/input.scss";
+@import "src/demo/components/fieldset/fieldset.scss";
+@import "src/demo/components/configuration-panel/configuration-panel.scss";
 
 html {
   background-color: white;
