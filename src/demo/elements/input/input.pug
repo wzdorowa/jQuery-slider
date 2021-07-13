@@ -1,4 +1,4 @@
-mixin input({text = 'текст', value = '0', parentName, type} = {text, value, parentName, type})
+mixin input({text = 'текст', value = '0', parentName = 'default-input', type = 'number'} = {text, value, parentName, type})
     label(class=`input-${parentName}`)
       div(class=`input-${parentName}__wrapper`)
         span(class=`input-${parentName}__description`)=text

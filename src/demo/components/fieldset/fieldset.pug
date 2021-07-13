@@ -1,4 +1,4 @@
-mixin fieldset(text, fieldName)
+mixin fieldset(text = 'text', fieldName = 'default-element')
     fieldset.field
         legend.field__legend= text
         div(class=`field__${fieldName}`)
