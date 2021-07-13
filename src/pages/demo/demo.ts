@@ -17,9 +17,9 @@ $(() => {
   elements.forEach((element: IHTMLElement, index: number) => {
     let isCreatedInput = false;
 
-    const createElement = (teg: string, className: string) => {
+    const createElement = (tag: string, className: string) => {
       const htmlElement: IHTMLElement = document.createElement(
-        teg,
+        tag,
       ) as IHTMLElement;
       htmlElement.className = className;
       return htmlElement;
