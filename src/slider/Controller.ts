@@ -12,13 +12,15 @@ interface IData {
 class Controller {
   public slider: IHTMLElement;
 
-  constructor(element: IHTMLElement) {
+  constructor(element: IHTMLElement, props: IModelState) {
+    console.log('props', props);
+
     this.slider = element;
     this.slider.classList.add('slider');
 
     const eventEmitter = new EventEmitter();
     new View(this.slider, eventEmitter);
-    const model: Model = new Model(eventEmitter);
+    const model: Model = new Model(eventEmitter, props);
 
     this.attachPublicMethods(model, eventEmitter);
 

@@ -47,6 +47,10 @@ class Tooltips {
     } else if (state.orientation === 'vertical') {
       this.driver = driverVertical;
     }
+
+    this.createTooltips(this.thumbsCount);
+    this.setTooltipsValues();
+
     if (state.isTooltip) {
       this.isTooltip = true;
       this.showTooltip();
@@ -54,9 +58,6 @@ class Tooltips {
       this.isTooltip = false;
       this.hideTooltip();
     }
-
-    this.createTooltips(this.thumbsCount);
-    this.setTooltipsValues();
   }
 
   public setConfig(state: IModelState): void {
@@ -162,6 +163,7 @@ class Tooltips {
     const $allTooltips: HTMLElement[] = Array.from(
       $(this.slider).find('.js-slider__tooltip'),
     );
+
     $allTooltips.forEach((element: HTMLElement): void => {
       element.classList.add('slider__tooltip-hide');
     });

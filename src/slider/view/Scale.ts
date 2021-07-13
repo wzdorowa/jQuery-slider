@@ -126,7 +126,9 @@ class Scale {
       this.slider.append(scale);
       scale.append(activeRange);
 
-      this.renderSerifs();
+      if (this.isScaleOfValues) {
+        this.renderSerifs();
+      }
     }
     this.listenSizeWindow();
   }

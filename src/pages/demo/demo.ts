@@ -2,7 +2,15 @@ import { IModelState } from '../../slider/interfaces/iModelState';
 import { IHTMLElement } from '../../slider/interfaces/iHTMLElement';
 
 $(() => {
-  $('.js-slider-test').slider();
+  $('.js-slider-test').slider({
+    min: 20,
+    max: 80,
+    step: 5,
+    thumbsValues: [25, 45, 60],
+    thumbsCount: 3,
+    isTooltip: true,
+    isScaleOfValues: false
+  });
 
   const elements: IHTMLElement[] = Array.from($('.js-slider-test'));
 

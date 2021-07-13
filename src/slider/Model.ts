@@ -6,8 +6,9 @@ class Model {
 
   private emitter: EventEmitter;
 
-  constructor(eventEmitter: EventEmitter) {
-    this.state = {
+  constructor(
+    eventEmitter: EventEmitter,
+    props = {
       min: 0,
       max: 100,
       thumbsValues: [20, 32, 44, 60],
@@ -16,10 +17,23 @@ class Model {
       step: 2,
       isTooltip: true,
       isScaleOfValues: true,
+    },
+  ) {
+    this.state = {
+      min: props.min,
+      max: props.max,
+      thumbsValues: props.thumbsValues,
+      orientation: props.orientation,
+      thumbsCount: props.thumbsCount,
+      step: props.step,
+      isTooltip: props.isTooltip,
+      isScaleOfValues: props.isScaleOfValues,
     };
+    console.log('state', this.state);
 
     this.emitter = eventEmitter;
-    this.notifyStateChanged();
+    this.normolizeState();
+    // this.notifyStateChanged();
   }
 
   // set new min value
@@ -137,6 +151,13 @@ class Model {
     if (this.state.thumbsCount <= 0) {
       this.state.thumbsCount = 1;
     }
+    if (this.state.thumbsCount < this.state.thumbsValues.length) {
+      this.state.thumbsValues.splice(
+        this.state.thumbsCount,
+        this.state.thumbsValues.length - this.state.thumbsCount,
+      );
+      // this.checkThumbsValues(this.state.thumbsValues);
+    }
     if (maximumCountOfThumbs < this.state.thumbsCount) {
       this.state.thumbsCount = maximumCountOfThumbs;
 
@@ -221,6 +242,8 @@ class Model {
         this.state.thumbsValues[i] =
           this.state.thumbsValues[i - 1] + this.state.step;
       }
+      console.log('state из normolize', this.state);
+
       this.notifyStateChanged();
     });
   }
