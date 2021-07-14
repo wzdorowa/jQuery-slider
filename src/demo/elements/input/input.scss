@@ -1,108 +1,30 @@
-.input-min-max {
-  &__wrapper {
-    display: flex;
-    width: 50%;
-    overflow: hidden;
-    height: 35px;
-  }
-
+.input {
   &__description {
     font-family: "Fire Sans", Arial, sans-serif;
     font-weight: 400;
-    font-size: 15px;
-    width: 30px;
+    font-size: 18px;
     padding-right: 5px;
     line-height: 35px;
     color: $Nobel;
     text-align: left;
   }
 
-  &__value {
-    width: 100%;
-    color: $Nero;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    padding-left: 10px;
-
-    &:focus{
-      border-color: $PaleCornflowerBlue;
-    }
-  }
-}
-
-.input-count-thumb {
   &__wrapper {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     width: 90%;
     overflow: hidden;
     height: 35px;
     background: #fff;
-  }
 
-  &__description {
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 35px;
-    color: $Nobel;
-    text-align: left;
-  }
-
-  &__value {
-    width: 15%;
-    color: $Nero;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    padding-left: 10px;
-
-    &:focus {
-      border-color: $PaleCornflowerBlue;
+    &_for-min-max {
+      
+      
+      width: 50%;
     }
   }
-}
-.input-step-size {
-  &__wrapper {
-    display: flex;
-    justify-content: flex-start;
-    width: 90%;
-    overflow: hidden;
-    height: 35px;
-    background: #fff;
-  }
-
-  &__description {
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 30px;
-    color: $Nobel;
-    text-align: left;
-    padding-right: 15px;
-  }
-
-  &__description {
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 30px;
-    color: $Nobel;
-    text-align: left;
-    padding-right: 15px;
-  }
 
   &__value {
-    width: 10%;
     color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
@@ -116,5 +38,25 @@
     &:focus {
       border-color: $PaleCornflowerBlue;
     }
+
+    &_for-min-max {
+      width: 100%;
+    }
+
+    &_for-count-thumb {
+      width: 15%;
+    }
+
+    &_for-step-size {
+      width: 10%;
+    }
+  }
+}
+.input-min-max {
+  &__wrapper {
+    display: flex;
+    width: 50%;
+    overflow: hidden;
+    height: 35px;
   }
 }
