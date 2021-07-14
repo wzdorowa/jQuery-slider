@@ -1,12 +1,82 @@
 import { IModelState } from '../../../slider/interfaces/iModelState';
 import { IHTMLElement } from '../../../slider/interfaces/iHTMLElement';
 
-const elements: IHTMLElement[] = Array.from($('.js-slider-test'));
+class ConfigurationPanel {
+  public isCreatedInput: boolean;
 
-elements.forEach((element: IHTMLElement, index: number) => {
-  let isCreatedInput = false;
+  public slider: IHTMLElement;
 
-  const createElement = (tag: string, className: string) => {
+  public sliderIndex: number;
+
+  public elements: {
+    panel: HTMLElement | null;
+    minValue: HTMLInputElement | null;
+    maxValue: HTMLInputElement | null;
+    countSliderThumbs: HTMLInputElement[] | null;
+    inputsSliderThumbs: HTMLInputElement[] | null;
+    stepSize: HTMLInputElement[] | null;
+    orientationSlider: HTMLElement[] | null;
+    checkboxContainer: HTMLInputElement[] | null;
+    checkboxInputTooltip: HTMLInputElement[] | null;
+    checkboxInputScaleOfValues: HTMLInputElement[] | null;
+    forms: HTMLElement[] | null;
+  };
+
+  public state: IModelState;
+
+  constructor(element: IHTMLElement, index: number) {
+    this.slider = element;
+    this.isCreatedInput = false;
+    this.sliderIndex = index;
+    this.elements = {
+      panel: null,
+      minValue: null,
+      maxValue: null,
+      countSliderThumbs: null,
+      inputsSliderThumbs: null,
+      stepSize: null,
+      orientationSlider: null,
+      checkboxContainer: null,
+      checkboxInputTooltip: null,
+      checkboxInputScaleOfValues: null,
+      forms: null,
+    };
+    this.state = {
+      min: 0,
+      max: 100,
+      thumbsValues: [20, 32, 44, 60],
+      orientation: 'horizontal',
+      thumbsCount: 4,
+      step: 2,
+      isTooltip: true,
+      isScaleOfValues: true,
+    };
+
+    this.slider.subscribeToStateModel(
+      this.createInput,
+      this.isCreatedInput,
+      this.getCountInputs,
+      this.changeCountInputs,
+      this.setValueToInputFromModelState,
+      this.setValueToStepFromModelState,
+      this.setValueToMinInputFromModelState,
+      this.setValueMaxInputFromModelState,
+    );
+  }
+
+  initialize() {
+    this.getState();
+    this.createInput(this.state);
+    this.setValueToStepFromModelState(this.state);
+    this.setValueToMinInputFromModelState(this.state);
+    this.setValueMaxInputFromModelState(this.state);
+  }
+
+  getState() {
+    this.state = this.slider.getState();
+  }
+
+  createElement = (tag: string, className: string) => {
     const htmlElement: IHTMLElement = document.createElement(
       tag,
     ) as IHTMLElement;
@@ -14,7 +84,7 @@ elements.forEach((element: IHTMLElement, index: number) => {
     return htmlElement;
   };
 
-  const createInput = (state: IModelState) => {
+  createInput = (state: IModelState) => {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
@@ -24,11 +94,11 @@ elements.forEach((element: IHTMLElement, index: number) => {
     new Array(state.thumbsCount)
       .fill(1)
       .forEach((_element: number, i: number) => {
-        const currentValueItem: HTMLElement = createElement(
+        const currentValueItem: HTMLElement = this.createElement(
           'li',
           'configuration__thumbs-item js-configuration__thumbs-item',
         );
-        const currentValueInput: HTMLElement = createElement(
+        const currentValueInput: HTMLElement = this.createElement(
           'input',
           'configuration__thumbs-value js-configuration__thumbs-value',
         );
@@ -38,28 +108,34 @@ elements.forEach((element: IHTMLElement, index: number) => {
         currentValueItem.append(currentValueInput);
         fragmentCurrentValueList.append(currentValueItem);
       });
-    thumbsCurrentValuesList[index].append(fragmentCurrentValueList);
-    if (!isCreatedInput) {
-      isCreatedInput = true;
+    thumbsCurrentValuesList[this.sliderIndex].append(fragmentCurrentValueList);
+    if (!this.isCreatedInput) {
+      this.isCreatedInput = true;
     }
   };
-  const setNewValueToNewInputs = (state: IModelState) => {
+
+  setNewValueToNewInputs = (state: IModelState) => {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
 
     const $allThumbs: HTMLInputElement[] = Array.from(
-      $(thumbsCurrentValuesList[index]).find('.js-configuration__thumbs-value'),
+      $(thumbsCurrentValuesList[this.sliderIndex]).find(
+        '.js-configuration__thumbs-value',
+      ),
     ) as HTMLInputElement[];
     const indexNewInput: number = $allThumbs.length - 1;
     $allThumbs[indexNewInput].value = String(state.thumbsValues[indexNewInput]);
   };
-  const changeCountInputs = (state: IModelState) => {
+
+  changeCountInputs = (state: IModelState) => {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
     const $countInputs: HTMLElement[] = Array.from(
-      $(thumbsCurrentValuesList[index]).find('.js-configuration__thumbs-item'),
+      $(thumbsCurrentValuesList[this.sliderIndex]).find(
+        '.js-configuration__thumbs-item',
+      ),
     );
 
     if ($countInputs.length < state.thumbsCount) {
@@ -67,16 +143,11 @@ elements.forEach((element: IHTMLElement, index: number) => {
 
       const fragmentCurrentValueList = document.createDocumentFragment();
       new Array(missingCount).fill(1).forEach((_element: number, i: number) => {
-        const $currentCountInputs: HTMLElement[] = Array.from(
-          $(thumbsCurrentValuesList[index]).find(
-            '.js-configuration__thumbs-item',
-          ),
-        );
-        const currentValueItem: HTMLElement = createElement(
+        const currentValueItem: HTMLElement = this.createElement(
           'li',
           'configuration__thumbs-item js-configuration__thumbs-item',
         );
-        const currentValueInput: HTMLElement = createElement(
+        const currentValueInput: HTMLElement = this.createElement(
           'input',
           'configuration__thumbs-value js-configuration__thumbs-value',
         );
@@ -86,15 +157,17 @@ elements.forEach((element: IHTMLElement, index: number) => {
         currentValueItem.append(currentValueInput);
         fragmentCurrentValueList.append(currentValueItem);
 
-        setNewValueToNewInputs(state);
+        this.setNewValueToNewInputs(state);
       });
-      thumbsCurrentValuesList[index].append(fragmentCurrentValueList);
+      thumbsCurrentValuesList[this.sliderIndex].append(
+        fragmentCurrentValueList,
+      );
     }
     if ($countInputs.length > state.thumbsCount) {
       const excessCount: number = $countInputs.length - state.thumbsCount;
 
       const $allCurrentValuesInputs: HTMLElement[] = Array.from(
-        $(thumbsCurrentValuesList[index]).find(
+        $(thumbsCurrentValuesList[this.sliderIndex]).find(
           '.js-configuration__thumbs-item',
         ),
       );
@@ -104,13 +177,16 @@ elements.forEach((element: IHTMLElement, index: number) => {
       });
     }
   };
-  const setValueToInputFromModelState = (state: IModelState) => {
+
+  setValueToInputFromModelState = (state: IModelState) => {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
 
     const $allThumbs: HTMLInputElement[] = Array.from(
-      $(thumbsCurrentValuesList[index]).find('.js-configuration__thumbs-value'),
+      $(thumbsCurrentValuesList[this.sliderIndex]).find(
+        '.js-configuration__thumbs-value',
+      ),
     ) as HTMLInputElement[];
 
     new Array(state.thumbsValues.length)
@@ -119,230 +195,301 @@ elements.forEach((element: IHTMLElement, index: number) => {
         $allThumbs[i].value = String(state.thumbsValues[i]);
       });
   };
-  const setValueToStepFromModelState = (state: IModelState) => {
+
+  setValueToStepFromModelState = (state: IModelState) => {
     const configurationPanel: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
     const $stepSizes: HTMLInputElement[] = Array.from(
-      $(configurationPanel[index]).find('.js-input-step-size__value'),
+      $(configurationPanel[this.sliderIndex]).find(
+        '.js-input-step-size__value',
+      ),
     ) as HTMLInputElement[];
     const stepSize = $stepSizes[0];
     stepSize.value = String(state.step);
   };
-  const setValueToMinInputFromModelState = (state: IModelState) => {
+
+  setValueToMinInputFromModelState = (state: IModelState) => {
     const configurationPanel: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
     const $minMaxInputs: HTMLInputElement[] = Array.from(
-      $(configurationPanel[index]).find('.js-input-min-max__value'),
+      $(configurationPanel[this.sliderIndex]).find('.js-input-min-max__value'),
     ) as HTMLInputElement[];
     const minInput: HTMLInputElement = $minMaxInputs[0];
     minInput.value = String(state.min);
   };
-  const setValueMaxInputFromModelState = (state: IModelState) => {
+
+  setValueMaxInputFromModelState = (state: IModelState) => {
     const configurationPanel: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
     const $minMaxInputs: HTMLInputElement[] = Array.from(
-      $(configurationPanel[index]).find('.js-input-min-max__value'),
+      $(configurationPanel[this.sliderIndex]).find('.js-input-min-max__value'),
     ) as HTMLInputElement[];
     const maxInput: HTMLInputElement = $minMaxInputs[1];
     maxInput.value = String(state.max);
   };
 
-  const modelState: IModelState = element.getState();
-  createInput(modelState);
-  setValueToStepFromModelState(modelState);
-  setValueToMinInputFromModelState(modelState);
-  setValueMaxInputFromModelState(modelState);
-
-  const getCountInputs = () => {
+  getCountInputs = () => {
     const configurationPanel: HTMLDivElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
     const $countInputs: HTMLElement[] = Array.from(
-      $(configurationPanel[index]).find('.js-configuration__thumbs-value'),
+      $(configurationPanel[this.sliderIndex]).find(
+        '.js-configuration__thumbs-value',
+      ),
     );
     return $countInputs;
   };
 
-  element.subscribeToStateModel(
-    createInput,
-    isCreatedInput,
-    getCountInputs,
-    changeCountInputs,
-    setValueToInputFromModelState,
-    setValueToStepFromModelState,
-    setValueToMinInputFromModelState,
-    setValueMaxInputFromModelState,
-  );
+  findElements() {
+    const configurationPanels = Array.from(
+      document.querySelectorAll('.js-configuration'),
+    );
+    this.elements.panel = configurationPanels[this.sliderIndex] as HTMLElement;
 
-  const configurationPanel: IHTMLElement[] = Array.from(
-    document.querySelectorAll('.js-configuration'),
-  );
-
-  // get from the input field and transfer the new user-entered min
-  // and max values of the slider from the configuration panel
-  const $minMaxValues: HTMLInputElement[] = Array.from(
-    $(configurationPanel[index]).find('.js-input-min-max__value'),
-  ) as HTMLInputElement[];
-  const minValue: HTMLInputElement = $minMaxValues[0];
-  const maxValue: HTMLInputElement = $minMaxValues[1];
-
-  const handleMinValueBlur = () => {
-    const min = Number(minValue.value);
-    element.setNewValueMin(min);
-  };
-  const handleMaxValueBlur = () => {
-    const max = Number(maxValue.value);
-    element.setNewValueMax(max);
-  };
-  minValue.addEventListener('blur', handleMinValueBlur);
-  maxValue.addEventListener('blur', handleMaxValueBlur);
-
-  // get from the input field and pass the new value of the number
-  // of sliders entered by the user from the configuration panel
-  const $countSliderThumbs: HTMLInputElement[] = Array.from(
-    $(configurationPanel[index]).find('.js-input-count-thumb__value'),
-  ) as HTMLInputElement[];
-
-  const handleCountSliderThumbsBlur = () => {
-    const count = Number($countSliderThumbs[0].value);
-    element.setNewValueCount(count);
-  };
-  $countSliderThumbs[0].addEventListener('blur', handleCountSliderThumbsBlur);
-  // get from the input field and pass the new values of the current
-  // states of the thumbs entered by the user from the configuration panel
-  const toFindInputsSliderThumbs = (): HTMLInputElement[] => {
-    const $element: HTMLInputElement[] = Array.from(
-      $(configurationPanel[index]).find('.js-configuration__thumbs-value'),
+    const $minMaxValues: HTMLInputElement[] = Array.from(
+      $(this.elements.panel).find('.js-input-min-max__value'),
     ) as HTMLInputElement[];
-    return $element;
-  };
-  const inputsSliderThumbs: HTMLInputElement[] = toFindInputsSliderThumbs();
 
-  new Array(inputsSliderThumbs.length)
-    .fill(1)
-    .forEach((_element: number, i: number) => {
-      const handleInputsSliderThumbsBlur = () => {
-        const thumbsValue = Number(inputsSliderThumbs[i].value);
-        element.setNewValueThumbsValues(thumbsValue, i);
-      };
-      inputsSliderThumbs[i].addEventListener(
+    [this.elements.minValue, this.elements.maxValue] = $minMaxValues;
+
+    this.elements.countSliderThumbs = Array.from(
+      $(this.elements.panel).find('.js-input-count-thumb__value'),
+    ) as HTMLInputElement[];
+
+    this.elements.inputsSliderThumbs = Array.from(
+      $(this.elements.panel).find('.js-configuration__thumbs-value'),
+    ) as HTMLInputElement[];
+
+    this.elements.stepSize = Array.from(
+      $(this.elements.panel).find('.js-input-step-size__value'),
+    ) as HTMLInputElement[];
+
+    this.elements.orientationSlider = Array.from(
+      $(this.elements.panel).find('.js-radio-button'),
+    );
+
+    this.elements.checkboxContainer = Array.from(
+      $(this.elements.panel).find('.js-checkbox-button'),
+    ) as HTMLInputElement[];
+    this.elements.checkboxInputTooltip = Array.from(
+      $(this.elements.panel).find('.js-checkbox-button__tooltip'),
+    ) as HTMLInputElement[];
+    this.elements.checkboxInputScaleOfValues = Array.from(
+      $(this.elements.panel).find('.js-checkbox-button__scale-of-values'),
+    ) as HTMLInputElement[];
+
+    this.elements.forms = Array.from(
+      document.querySelectorAll('.js-configuration'),
+    ) as HTMLElement[];
+  }
+
+  setValueOfInputsSliderThumbs = () => {
+    this.findElements();
+    if (this.elements.inputsSliderThumbs !== null) {
+      new Array(this.elements.inputsSliderThumbs.length)
+        .fill(1)
+        .forEach((_element: number, i: number) => {
+          if (this.elements.inputsSliderThumbs !== null) {
+            const thumbsValue = Number(
+              this.elements.inputsSliderThumbs[i].value,
+            );
+            this.slider.setNewValueThumbsValues(thumbsValue, i);
+          }
+        });
+    }
+  };
+
+  listenMinValue() {
+    if (this.elements.minValue !== null) {
+      this.elements.minValue.addEventListener('blur', this.handleMinValueBlur);
+    }
+  }
+
+  listenMaxValue() {
+    if (this.elements.maxValue !== null) {
+      this.elements.maxValue.addEventListener('blur', this.handleMaxValueBlur);
+    }
+  }
+
+  listenThumbsCount() {
+    if (this.elements.countSliderThumbs !== null) {
+      this.elements.countSliderThumbs[0].addEventListener(
         'blur',
-        handleInputsSliderThumbsBlur,
+        this.handleCountSliderThumbsBlur,
       );
-    });
+    }
+  }
 
-  // get from the input field and pass the new value of the step size
-  // entered by the user from the configuration panel
-  const $stepSize: HTMLInputElement[] = Array.from(
-    $(configurationPanel[index]).find('.js-input-step-size__value'),
-  ) as HTMLInputElement[];
+  listenStepSize() {
+    if (this.elements.stepSize !== null) {
+      this.elements.stepSize[0].addEventListener(
+        'blur',
+        this.handleStepSizeBlur,
+      );
+    }
+  }
 
-  const handleStepSizeBlur = () => {
-    const step = Number($stepSize[0].value);
-    element.setNewValueStep(step);
-  };
-  $stepSize[0].addEventListener('blur', handleStepSizeBlur);
+  listenInputsSliderThumbs() {
+    if (this.elements.inputsSliderThumbs !== null) {
+      new Array(this.elements.inputsSliderThumbs.length)
+        .fill(1)
+        .forEach((_element: number, i: number) => {
+          if (this.elements.inputsSliderThumbs !== null) {
+            const handleInputsSliderThumbsBlur = () => {
+              if (this.elements.inputsSliderThumbs !== null) {
+                const thumbsValue = Number(
+                  this.elements.inputsSliderThumbs[i].value,
+                );
+                this.slider.setNewValueThumbsValues(thumbsValue, i);
+              }
+            };
 
-  // get from input field and pass new slider orientation value
-  const $orientationSlider: HTMLElement[] = Array.from(
-    $(configurationPanel[index]).find('.js-radio-button'),
-  );
+            this.elements.inputsSliderThumbs[i].addEventListener(
+              'blur',
+              handleInputsSliderThumbsBlur,
+            );
+          }
+        });
+    }
+  }
 
-  new Array($orientationSlider.length)
-    .fill(1)
-    .forEach((_element: number, i: number) => {
-      const handleOrientationSliderClick = () => {
-        let orientation = '';
-        if (i === 0) {
-          orientation = 'horizontal';
-        }
-        if (i === 1) {
-          orientation = 'vertical';
-        }
-        element.setNewValueOrientation(orientation);
-      };
-      $orientationSlider[i].addEventListener(
+  listenOrientationSlider() {
+    if (this.elements.orientationSlider !== null) {
+      new Array(this.elements.orientationSlider.length)
+        .fill(1)
+        .forEach((_element: number, i: number) => {
+          const handleOrientationSliderClick = () => {
+            let orientation = '';
+            if (i === 0) {
+              orientation = 'horizontal';
+            }
+            if (i === 1) {
+              orientation = 'vertical';
+            }
+            this.slider.setNewValueOrientation(orientation);
+          };
+          if (this.elements.orientationSlider !== null) {
+            this.elements.orientationSlider[i].addEventListener(
+              'click',
+              handleOrientationSliderClick,
+            );
+          }
+        });
+    }
+  }
+
+  listenCheckboxContainer() {
+    if (this.elements.checkboxContainer !== null) {
+      this.elements.checkboxContainer[0].addEventListener(
         'click',
-        handleOrientationSliderClick,
+        this.handleCheckboxTooltipClick,
       );
-    });
+      this.elements.checkboxContainer[1].addEventListener(
+        'click',
+        this.handleCheckboxScaleOfValuesClick,
+      );
+    }
+  }
 
-  // get from the input field and pass the new value of the tooltip presence
-  const $checkboxContainer: HTMLInputElement[] = Array.from(
-    $(configurationPanel[index]).find('.js-checkbox-button'),
-  ) as HTMLInputElement[];
-  const $checkboxInputTooltip: HTMLInputElement[] = Array.from(
-    $(configurationPanel[index]).find('.js-checkbox-button__tooltip'),
-  ) as HTMLInputElement[];
-  const $checkboxInputScaleOfValues: HTMLInputElement[] = Array.from(
-    $(configurationPanel[index]).find('.js-checkbox-button__scale-of-values'),
-  ) as HTMLInputElement[];
-
-  const handleCheckboxTooltipClick = () => {
-    let isChecked = true;
-    if ($checkboxInputTooltip[0].checked) {
-      isChecked = true;
-    }
-    if (!$checkboxInputTooltip[0].checked) {
-      isChecked = false;
-    }
-    element.setNewValueTooltip(isChecked);
-  };
-  const handleCheckboxScaleOfValuesClick = () => {
-    let isChecked = true;
-    if ($checkboxInputScaleOfValues[0].checked) {
-      isChecked = true;
-    }
-    if (!$checkboxInputScaleOfValues[0].checked) {
-      isChecked = false;
-    }
-    element.setNewValueScaleOfValues(isChecked);
-  };
-  $checkboxContainer[0].addEventListener('click', handleCheckboxTooltipClick);
-  $checkboxContainer[1].addEventListener(
-    'click',
-    handleCheckboxScaleOfValuesClick,
-  );
-
-  const setValueOfInputsSliderThumbs = () => {
-    const currentInputsSliderThumbs: HTMLInputElement[] = toFindInputsSliderThumbs();
-    new Array(currentInputsSliderThumbs.length)
-      .fill(1)
-      .forEach((_element: number, i: number) => {
-        const thumbsValue = Number(currentInputsSliderThumbs[i].value);
-        element.setNewValueThumbsValues(thumbsValue, i);
+  listenForm() {
+    if (this.elements.forms !== null) {
+      this.elements.forms.forEach((elementForm: HTMLElement) => {
+        elementForm.addEventListener('submit', this.handleElementFormSubmit);
       });
+    }
+  }
+
+  handleMinValueBlur = () => {
+    if (this.elements.minValue !== null) {
+      const min = Number(this.elements.minValue.value);
+      this.slider.setNewValueMin(min);
+    }
   };
 
-  const form: IHTMLElement[] = Array.from(
-    document.querySelectorAll('.js-configuration'),
-  );
-  const handleElementFormSubmit: (event: Event) => void = (event): void => {
+  handleMaxValueBlur = () => {
+    if (this.elements.maxValue !== null) {
+      const max = Number(this.elements.maxValue.value);
+      this.slider.setNewValueMax(max);
+    }
+  };
+
+  handleCountSliderThumbsBlur = () => {
+    if (this.elements.countSliderThumbs !== null) {
+      const count = Number(this.elements.countSliderThumbs[0].value);
+      this.slider.setNewValueCount(count);
+    }
+  };
+
+  handleStepSizeBlur = () => {
+    if (this.elements.stepSize !== null) {
+      const step = Number(this.elements.stepSize[0].value);
+      this.slider.setNewValueStep(step);
+    }
+  };
+
+  handleCheckboxTooltipClick = () => {
+    if (this.elements.checkboxInputTooltip !== null) {
+      let isChecked = true;
+      if (this.elements.checkboxInputTooltip[0].checked) {
+        isChecked = true;
+      }
+      if (!this.elements.checkboxInputTooltip[0].checked) {
+        isChecked = false;
+      }
+      this.slider.setNewValueTooltip(isChecked);
+    }
+  };
+
+  handleCheckboxScaleOfValuesClick = () => {
+    if (this.elements.checkboxInputScaleOfValues !== null) {
+      let isChecked = true;
+      if (this.elements.checkboxInputScaleOfValues[0].checked) {
+        isChecked = true;
+      }
+      if (!this.elements.checkboxInputScaleOfValues[0].checked) {
+        isChecked = false;
+      }
+      this.slider.setNewValueScaleOfValues(isChecked);
+    }
+  };
+
+  handleElementFormSubmit: (event: Event) => void = (event): void => {
     const currentEvent: Event = event;
     currentEvent.preventDefault();
 
-    const min = Number(minValue.value);
-    element.setNewValueMin(min);
+    if (this.elements.minValue !== null) {
+      const min = Number(this.elements.minValue.value);
+      this.slider.setNewValueMin(min);
+    }
 
-    const max = Number(maxValue.value);
-    element.setNewValueMax(max);
+    if (this.elements.maxValue !== null) {
+      const max = Number(this.elements.maxValue.value);
+      this.slider.setNewValueMax(max);
+    }
 
-    const count = Number($countSliderThumbs[0].value);
-    element.setNewValueCount(count);
+    if (this.elements.countSliderThumbs !== null) {
+      const count = Number(this.elements.countSliderThumbs[0].value);
+      this.slider.setNewValueCount(count);
+    }
 
-    setValueOfInputsSliderThumbs();
+    this.setValueOfInputsSliderThumbs();
 
-    const step = Number($stepSize[0].value);
-    element.setNewValueStep(step);
+    if (this.elements.stepSize !== null) {
+      const step = Number(this.elements.stepSize[0].value);
+      this.slider.setNewValueStep(step);
+    }
   };
-  form.forEach((elementForm: HTMLElement) => {
-    elementForm.addEventListener('submit', handleElementFormSubmit);
-  });
+}
+
+const elements: IHTMLElement[] = Array.from($('.js-slider-test'));
+elements.forEach((element: IHTMLElement, index: number) => {
+  new ConfigurationPanel(element, index);
 });
+console.log('elements', elements);

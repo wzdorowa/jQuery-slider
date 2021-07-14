@@ -13,8 +13,6 @@ class Controller {
   public slider: IHTMLElement;
 
   constructor(element: IHTMLElement, props: IModelState) {
-    console.log('props', props);
-
     this.slider = element;
     this.slider.classList.add('slider');
 

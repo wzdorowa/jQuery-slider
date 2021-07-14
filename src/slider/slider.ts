@@ -6,8 +6,6 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
   $jquery.fn.slider = function renderSliders(options: object): IHTMLElement {
     const elements: IHTMLElement[] = Array.from(this) as IHTMLElement[];
     elements.forEach((element: IHTMLElement) => {
-      console.log('options', options);
-
       const slider = new Controller(
         element,
         $.extend(

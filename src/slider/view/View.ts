@@ -25,7 +25,6 @@ class View {
     this.thumbs = new Thumbs(this.slider, this.emitter);
     this.tooltips = new Tooltips(this.slider);
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
-      console.log('state из view', state);
       this.initialize(state);
       this.rerender(state);
     });
@@ -36,7 +35,6 @@ class View {
 
   private initialize(state: IModelState): void {
     if (!this.isCreatedSlider) {
-      console.log('не создан');
       this.scale.initializeScale.call(this.scale, state);
       this.thumbs.initializeThumbs.call(this.thumbs, state);
       this.tooltips.initializeTooltips.call(this.tooltips, state);
