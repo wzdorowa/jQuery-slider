@@ -190,7 +190,7 @@ class ConfigurationPanel {
     );
 
     const $buttonsOrientation: HTMLInputElement[] = Array.from(
-      $(configurationPanel[this.sliderIndex]).find('.radio-button__content'),
+      $(configurationPanel[this.sliderIndex]).find('.js-radio-button__content'),
     ) as HTMLInputElement[];
 
     if (state.orientation === 'horizontal') {
