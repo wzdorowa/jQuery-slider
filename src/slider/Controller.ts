@@ -12,27 +12,34 @@ interface IData {
 class Controller {
   public slider: IHTMLElement;
 
+  public model: Model;
+
   constructor(element: IHTMLElement, props: IModelState) {
     this.slider = element;
     this.slider.classList.add('slider');
 
     const eventEmitter = new EventEmitter();
     new View(this.slider, eventEmitter);
-    const model: Model = new Model(eventEmitter, props);
+    this.model = new Model(eventEmitter, props);
 
-    this.attachPublicMethods(model, eventEmitter);
+    this.attachPublicMethods(this.model, eventEmitter);
 
     eventEmitter.makeSubscribe(
       'view:countThumbs-changed',
       (thumbsValues: number[]) => {
-        model.overwriteCurrentThumbsValues(thumbsValues);
+        this.model.overwriteCurrentThumbsValues(thumbsValues);
       },
     );
 
     eventEmitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
-      model.setNewValueThumbsValues(data.value, data.index);
+      this.model.setNewValueThumbsValues(data.value, data.index);
     });
   }
+
+  // public getState(): IModelState {
+  //   const modelState: IModelState = { ...this.model.state };
+  //   return modelState;
+  // }
 
   private attachPublicMethods(model: Model, eventEmitter: EventEmitter) {
     this.slider.getState = (): IModelState => {
@@ -47,6 +54,7 @@ class Controller {
     };
     this.slider.setNewValueCount = (count: number): void => {
       model.setNewValueCount(count);
+      console.log('после смены значения', model.state);
     };
     this.slider.setNewValueThumbsValues = (
       touchValue: number,
@@ -79,12 +87,18 @@ class Controller {
       eventEmitter.makeSubscribe(
         'model:state-changed',
         (state: IModelState): void => {
+          console.log('model.state', state);
+
           let isCreatedElement = isCreatedInput;
+          console.log('isCreatedElement', isCreatedElement);
+
           if (!isCreatedElement) {
             handler(state);
             isCreatedElement = true;
           }
           const arrayCountInputs = countInputs();
+          console.log('arrayCountInputs', arrayCountInputs);
+
           if (arrayCountInputs.length !== state.thumbsValues.length) {
             changeCountInputs(state);
           }

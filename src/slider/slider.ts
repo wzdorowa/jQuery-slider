@@ -3,12 +3,15 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
 
 (function callSlider($) {
   const $jquery = $;
-  $jquery.fn.slider = function renderSliders(options: object): IHTMLElement {
-    const elements: IHTMLElement[] = Array.from(this) as IHTMLElement[];
-    elements.forEach((element: IHTMLElement) => {
-      const slider = new Controller(
-        element,
-        $.extend(
+  ($jquery.fn as any).slider = function renderSliders(
+    method?: {} | string,
+    ...arg: any
+  ) {
+    const methods = {
+      setOption($slider: JQuery<HTMLElement>, options: {} | undefined) {
+        const element = ($slider[0] as unknown) as IHTMLElement;
+
+        const settings = $.extend(
           true,
           {
             min: 0,
@@ -21,9 +24,27 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
             isScaleOfValues: true,
           },
           options,
-        ),
-      );
-      return slider;
-    });
+        );
+
+        $slider.data('controller', new Controller(element, settings));
+
+        return $slider;
+      },
+      // getState($slider: JQuery<HTMLElement>) {
+      //   const data = $slider.data('controller').getState();
+      //   console.log('data', data);
+
+      //   return $slider;
+      // },
+    };
+
+    const isMethod = typeof method === 'object' || !method;
+
+    if (typeof method === 'string') {
+      return (methods as any)[method].call(this, this, ...arg);
+    }
+    if (isMethod) {
+      return methods.setOption(this, method);
+    }
   };
 })(jQuery);

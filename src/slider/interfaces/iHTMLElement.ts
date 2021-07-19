@@ -2,6 +2,7 @@ import { IModelState } from './iModelState';
 
 export interface IHTMLElement extends HTMLElement {
   getState(): IModelState;
+  show(value: number): number;
   setNewValueMin(min: number): void;
   setNewValueMax(max: number): void;
   setNewValueCount(count: number): void;

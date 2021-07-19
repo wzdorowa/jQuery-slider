@@ -24,8 +24,8 @@ class ConfigurationPanel {
 
   public state: IModelState;
 
-  constructor(element: IHTMLElement, index: number) {
-    this.slider = element;
+  constructor(element: JQuery<HTMLElement>, index: number) {
+    this.slider = (element[0] as unknown) as IHTMLElement;
     this.isCreatedInput = false;
     this.sliderIndex = index;
     this.elements = {
@@ -41,50 +41,56 @@ class ConfigurationPanel {
       checkboxInputScaleOfValues: null,
       forms: null,
     };
-    this.state = {
-      min: 0,
-      max: 100,
-      thumbsValues: [20, 32, 44, 60],
-      orientation: 'horizontal',
-      thumbsCount: 4,
-      step: 2,
-      isTooltip: true,
-      isScaleOfValues: true,
-    };
+    this.state = this.slider.getState();
+
+    this.initialize();
+
+    this.listenMinValue();
+    this.listenMaxValue();
+    this.listenThumbsCount();
+    this.listenStepSize();
+    this.listenInputsSliderThumbs();
+    this.listenOrientationSlider();
+    this.listenCheckboxContainer();
+    this.listenForm();
 
     this.slider.subscribeToStateModel(
       this.createInput,
       this.isCreatedInput,
-      this.getCountInputs,
-      this.changeCountInputs,
-      this.setValueToInputFromModelState,
-      this.setValueToStepFromModelState,
-      this.setValueToMinInputFromModelState,
-      this.setValueMaxInputFromModelState,
+      this.getCountInputs.bind(this),
+      this.changeCountInputs.bind(this),
+      this.setValueToInputFromModelState.bind(this),
+      this.setValueToStepFromModelState.bind(this),
+      this.setValueToMinInputFromModelState.bind(this),
+      this.setValueMaxInputFromModelState.bind(this),
     );
   }
 
-  initialize() {
+  initialize(): void {
     this.getState();
     this.createInput(this.state);
+    this.setValueToOrientationFromModelState(this.state);
     this.setValueToStepFromModelState(this.state);
     this.setValueToMinInputFromModelState(this.state);
     this.setValueMaxInputFromModelState(this.state);
+    this.setValueToCheckboxTooltipFromModelState(this.state);
+    this.setValueToCheckboxScaleOfValuesFromModelState(this.state);
+    this.findElements();
   }
 
-  getState() {
+  getState(): void {
     this.state = this.slider.getState();
   }
 
-  createElement = (tag: string, className: string) => {
+  createElement(tag: string, className: string): IHTMLElement {
     const htmlElement: IHTMLElement = document.createElement(
       tag,
     ) as IHTMLElement;
     htmlElement.className = className;
     return htmlElement;
-  };
+  }
 
-  createInput = (state: IModelState) => {
+  createInput(state: IModelState): void {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
@@ -112,9 +118,9 @@ class ConfigurationPanel {
     if (!this.isCreatedInput) {
       this.isCreatedInput = true;
     }
-  };
+  }
 
-  setNewValueToNewInputs = (state: IModelState) => {
+  setNewValueToNewInputs(state: IModelState): void {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
@@ -126,9 +132,9 @@ class ConfigurationPanel {
     ) as HTMLInputElement[];
     const indexNewInput: number = $allThumbs.length - 1;
     $allThumbs[indexNewInput].value = String(state.thumbsValues[indexNewInput]);
-  };
+  }
 
-  changeCountInputs = (state: IModelState) => {
+  changeCountInputs(state: IModelState): void {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
@@ -176,9 +182,54 @@ class ConfigurationPanel {
         $allCurrentValuesInputs.splice(-1, 1);
       });
     }
-  };
+  }
 
-  setValueToInputFromModelState = (state: IModelState) => {
+  setValueToOrientationFromModelState(state: IModelState): void {
+    const configurationPanel: IHTMLElement[] = Array.from(
+      document.querySelectorAll('.js-configuration'),
+    );
+
+    const $buttonsOrientation: HTMLInputElement[] = Array.from(
+      $(configurationPanel[this.sliderIndex]).find('.radio-button__content'),
+    ) as HTMLInputElement[];
+
+    if (state.orientation === 'horizontal') {
+      $buttonsOrientation[0].checked = true;
+    }
+    if (state.orientation === 'vertical') {
+      $buttonsOrientation[1].checked = true;
+    }
+  }
+
+  setValueToMinInputFromModelState(state: IModelState): void {
+    const configurationPanel: IHTMLElement[] = Array.from(
+      document.querySelectorAll('.js-configuration'),
+    );
+
+    const $minMaxInputs: HTMLInputElement[] = Array.from(
+      $(configurationPanel[this.sliderIndex]).find(
+        '.js-input__value_for-min-max',
+      ),
+    ) as HTMLInputElement[];
+    const minInput: HTMLInputElement = $minMaxInputs[0];
+    minInput.value = String(state.min);
+  }
+
+  setValueMaxInputFromModelState(state: IModelState): void {
+    const configurationPanel: IHTMLElement[] = Array.from(
+      document.querySelectorAll('.js-configuration'),
+    );
+
+    const $minMaxInputs: HTMLInputElement[] = Array.from(
+      $(configurationPanel[this.sliderIndex]).find(
+        '.js-input__value_for-min-max',
+      ),
+    ) as HTMLInputElement[];
+    const maxInput: HTMLInputElement = $minMaxInputs[1];
+    maxInput.value = String(state.max);
+  }
+
+  setValueToInputFromModelState(state: IModelState): void {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
@@ -194,47 +245,62 @@ class ConfigurationPanel {
       .forEach((_element: number, i: number) => {
         $allThumbs[i].value = String(state.thumbsValues[i]);
       });
-  };
+  }
 
-  setValueToStepFromModelState = (state: IModelState) => {
+  setValueToStepFromModelState(state: IModelState): void {
     const configurationPanel: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
     const $stepSizes: HTMLInputElement[] = Array.from(
       $(configurationPanel[this.sliderIndex]).find(
-        '.js-input-step-size__value',
+        '.js-input__value_for-step-size',
       ),
     ) as HTMLInputElement[];
+
     const stepSize = $stepSizes[0];
     stepSize.value = String(state.step);
-  };
+  }
 
-  setValueToMinInputFromModelState = (state: IModelState) => {
+  setValueToCheckboxTooltipFromModelState(state: IModelState): void {
     const configurationPanel: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
-    const $minMaxInputs: HTMLInputElement[] = Array.from(
-      $(configurationPanel[this.sliderIndex]).find('.js-input-min-max__value'),
+    const $checkboxTooltip: HTMLInputElement[] = Array.from(
+      $(configurationPanel[this.sliderIndex]).find(
+        '.js-checkbox-button__tooltip',
+      ),
     ) as HTMLInputElement[];
-    const minInput: HTMLInputElement = $minMaxInputs[0];
-    minInput.value = String(state.min);
-  };
 
-  setValueMaxInputFromModelState = (state: IModelState) => {
+    if (!state.isTooltip) {
+      $checkboxTooltip[0].checked = false;
+    }
+    if (state.isTooltip) {
+      $checkboxTooltip[0].checked = true;
+    }
+  }
+
+  setValueToCheckboxScaleOfValuesFromModelState(state: IModelState): void {
     const configurationPanel: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
-    const $minMaxInputs: HTMLInputElement[] = Array.from(
-      $(configurationPanel[this.sliderIndex]).find('.js-input-min-max__value'),
+    const $checkboxScaleOfValues: HTMLInputElement[] = Array.from(
+      $(configurationPanel[this.sliderIndex]).find(
+        '.js-checkbox-button__scale-of-values',
+      ),
     ) as HTMLInputElement[];
-    const maxInput: HTMLInputElement = $minMaxInputs[1];
-    maxInput.value = String(state.max);
-  };
 
-  getCountInputs = () => {
+    if (!state.isScaleOfValues) {
+      $checkboxScaleOfValues[0].checked = false;
+    }
+    if (state.isScaleOfValues) {
+      $checkboxScaleOfValues[0].checked = true;
+    }
+  }
+
+  getCountInputs(): HTMLElement[] {
     const configurationPanel: HTMLDivElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
@@ -245,22 +311,23 @@ class ConfigurationPanel {
       ),
     );
     return $countInputs;
-  };
+  }
 
-  findElements() {
+  findElements(): void {
     const configurationPanels = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
+
     this.elements.panel = configurationPanels[this.sliderIndex] as HTMLElement;
 
     const $minMaxValues: HTMLInputElement[] = Array.from(
-      $(this.elements.panel).find('.js-input-min-max__value'),
+      $(this.elements.panel).find('.js-input__value_for-min-max'),
     ) as HTMLInputElement[];
 
     [this.elements.minValue, this.elements.maxValue] = $minMaxValues;
 
     this.elements.countSliderThumbs = Array.from(
-      $(this.elements.panel).find('.js-input-count-thumb__value'),
+      $(this.elements.panel).find('.js-input__value_for-count-thumb'),
     ) as HTMLInputElement[];
 
     this.elements.inputsSliderThumbs = Array.from(
@@ -268,7 +335,7 @@ class ConfigurationPanel {
     ) as HTMLInputElement[];
 
     this.elements.stepSize = Array.from(
-      $(this.elements.panel).find('.js-input-step-size__value'),
+      $(this.elements.panel).find('.js-input__value_for-step-size'),
     ) as HTMLInputElement[];
 
     this.elements.orientationSlider = Array.from(
@@ -290,7 +357,7 @@ class ConfigurationPanel {
     ) as HTMLElement[];
   }
 
-  setValueOfInputsSliderThumbs = () => {
+  setValueOfInputsSliderThumbs(): void {
     this.findElements();
     if (this.elements.inputsSliderThumbs !== null) {
       new Array(this.elements.inputsSliderThumbs.length)
@@ -304,39 +371,45 @@ class ConfigurationPanel {
           }
         });
     }
-  };
+  }
 
-  listenMinValue() {
+  listenMinValue(): void {
     if (this.elements.minValue !== null) {
-      this.elements.minValue.addEventListener('blur', this.handleMinValueBlur);
+      this.elements.minValue.addEventListener(
+        'blur',
+        this.handleMinValueBlur.bind(this),
+      );
     }
   }
 
-  listenMaxValue() {
+  listenMaxValue(): void {
     if (this.elements.maxValue !== null) {
-      this.elements.maxValue.addEventListener('blur', this.handleMaxValueBlur);
+      this.elements.maxValue.addEventListener(
+        'blur',
+        this.handleMaxValueBlur.bind(this),
+      );
     }
   }
 
-  listenThumbsCount() {
+  listenThumbsCount(): void {
     if (this.elements.countSliderThumbs !== null) {
       this.elements.countSliderThumbs[0].addEventListener(
         'blur',
-        this.handleCountSliderThumbsBlur,
+        this.handleCountSliderThumbsBlur.bind(this),
       );
     }
   }
 
-  listenStepSize() {
+  listenStepSize(): void {
     if (this.elements.stepSize !== null) {
       this.elements.stepSize[0].addEventListener(
         'blur',
-        this.handleStepSizeBlur,
+        this.handleStepSizeBlur.bind(this),
       );
     }
   }
 
-  listenInputsSliderThumbs() {
+  listenInputsSliderThumbs(): void {
     if (this.elements.inputsSliderThumbs !== null) {
       new Array(this.elements.inputsSliderThumbs.length)
         .fill(1)
@@ -353,14 +426,14 @@ class ConfigurationPanel {
 
             this.elements.inputsSliderThumbs[i].addEventListener(
               'blur',
-              handleInputsSliderThumbsBlur,
+              handleInputsSliderThumbsBlur.bind(this),
             );
           }
         });
     }
   }
 
-  listenOrientationSlider() {
+  listenOrientationSlider(): void {
     if (this.elements.orientationSlider !== null) {
       new Array(this.elements.orientationSlider.length)
         .fill(1)
@@ -378,63 +451,66 @@ class ConfigurationPanel {
           if (this.elements.orientationSlider !== null) {
             this.elements.orientationSlider[i].addEventListener(
               'click',
-              handleOrientationSliderClick,
+              handleOrientationSliderClick.bind(this),
             );
           }
         });
     }
   }
 
-  listenCheckboxContainer() {
+  listenCheckboxContainer(): void {
     if (this.elements.checkboxContainer !== null) {
       this.elements.checkboxContainer[0].addEventListener(
         'click',
-        this.handleCheckboxTooltipClick,
+        this.handleCheckboxTooltipClick.bind(this),
       );
       this.elements.checkboxContainer[1].addEventListener(
         'click',
-        this.handleCheckboxScaleOfValuesClick,
+        this.handleCheckboxScaleOfValuesClick.bind(this),
       );
     }
   }
 
-  listenForm() {
+  listenForm(): void {
     if (this.elements.forms !== null) {
       this.elements.forms.forEach((elementForm: HTMLElement) => {
-        elementForm.addEventListener('submit', this.handleElementFormSubmit);
+        elementForm.addEventListener(
+          'submit',
+          this.handleElementFormSubmit.bind(this),
+        );
       });
     }
   }
 
-  handleMinValueBlur = () => {
+  handleMinValueBlur(): void {
     if (this.elements.minValue !== null) {
       const min = Number(this.elements.minValue.value);
       this.slider.setNewValueMin(min);
     }
-  };
+  }
 
-  handleMaxValueBlur = () => {
+  handleMaxValueBlur(): void {
     if (this.elements.maxValue !== null) {
       const max = Number(this.elements.maxValue.value);
       this.slider.setNewValueMax(max);
     }
-  };
+  }
 
-  handleCountSliderThumbsBlur = () => {
+  handleCountSliderThumbsBlur(): void {
     if (this.elements.countSliderThumbs !== null) {
       const count = Number(this.elements.countSliderThumbs[0].value);
       this.slider.setNewValueCount(count);
     }
-  };
+  }
 
-  handleStepSizeBlur = () => {
+  handleStepSizeBlur(): void {
     if (this.elements.stepSize !== null) {
       const step = Number(this.elements.stepSize[0].value);
       this.slider.setNewValueStep(step);
     }
-  };
+  }
 
-  handleCheckboxTooltipClick = () => {
+  handleCheckboxTooltipClick(): void {
     if (this.elements.checkboxInputTooltip !== null) {
       let isChecked = true;
       if (this.elements.checkboxInputTooltip[0].checked) {
@@ -445,9 +521,9 @@ class ConfigurationPanel {
       }
       this.slider.setNewValueTooltip(isChecked);
     }
-  };
+  }
 
-  handleCheckboxScaleOfValuesClick = () => {
+  handleCheckboxScaleOfValuesClick(): void {
     if (this.elements.checkboxInputScaleOfValues !== null) {
       let isChecked = true;
       if (this.elements.checkboxInputScaleOfValues[0].checked) {
@@ -458,7 +534,7 @@ class ConfigurationPanel {
       }
       this.slider.setNewValueScaleOfValues(isChecked);
     }
-  };
+  }
 
   handleElementFormSubmit: (event: Event) => void = (event): void => {
     const currentEvent: Event = event;
@@ -487,9 +563,4 @@ class ConfigurationPanel {
     }
   };
 }
-
-const elements: IHTMLElement[] = Array.from($('.js-slider-test'));
-elements.forEach((element: IHTMLElement, index: number) => {
-  new ConfigurationPanel(element, index);
-});
-console.log('elements', elements);
+export default ConfigurationPanel;
