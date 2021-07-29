@@ -22,30 +22,32 @@ mixin configuration-panel()
                 +input({
                   text: 'от:',
                   value: '0',
-                  parentName: 'min-max',
+                  width: '50',
                   type: 'number',
                   })
                 +input({
                   text:'до:',
                   value: '100',
-                  parentName: 'min-max',
+                  width: '50',
                   type: 'number',
                 })
         .configuration__field
+          .configuration__field-count-thumb.js-configuration__field-count-thumb
             +input({
               text: 'Количество ползунков:',
               value: '4',
-              parentName: 'count-thumb',
+              width: '15',
               type: 'number',
               })
         .configuration__field
             +fieldset('Знечения ползунков:', 'thumbs-values')
                 ol.configuration__thumbs-current-value-list.js-configuration__thumbs-current-value-list
         .configuration__field
+          .configuration__field-step-size.js-configuration__field-step-size
             +input({
               text: 'Размер шага:',
               value: '2',
-              parentName: 'step-size',
+              width: '10',
               type: 'number',
               })
         .configuration__field

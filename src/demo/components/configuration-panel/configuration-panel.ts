@@ -203,13 +203,11 @@ class ConfigurationPanel {
 
   setValueToMinInputFromModelState(state: IModelState): void {
     const configurationPanel: IHTMLElement[] = Array.from(
-      document.querySelectorAll('.js-configuration'),
+      document.querySelectorAll('.js-field__min-max'),
     );
 
     const $minMaxInputs: HTMLInputElement[] = Array.from(
-      $(configurationPanel[this.sliderIndex]).find(
-        '.js-input__value_for-min-max',
-      ),
+      $(configurationPanel[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
     const minInput: HTMLInputElement = $minMaxInputs[0];
     minInput.value = String(state.min);
@@ -217,13 +215,11 @@ class ConfigurationPanel {
 
   setValueMaxInputFromModelState(state: IModelState): void {
     const configurationPanel: IHTMLElement[] = Array.from(
-      document.querySelectorAll('.js-configuration'),
+      document.querySelectorAll('.js-field__min-max'),
     );
 
     const $minMaxInputs: HTMLInputElement[] = Array.from(
-      $(configurationPanel[this.sliderIndex]).find(
-        '.js-input__value_for-min-max',
-      ),
+      $(configurationPanel[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
     const maxInput: HTMLInputElement = $minMaxInputs[1];
     maxInput.value = String(state.max);
@@ -249,13 +245,11 @@ class ConfigurationPanel {
 
   setValueToStepFromModelState(state: IModelState): void {
     const configurationPanel: IHTMLElement[] = Array.from(
-      document.querySelectorAll('.js-configuration'),
+      document.querySelectorAll('.js-configuration__field-step-size'),
     );
 
     const $stepSizes: HTMLInputElement[] = Array.from(
-      $(configurationPanel[this.sliderIndex]).find(
-        '.js-input__value_for-step-size',
-      ),
+      $(configurationPanel[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
     const stepSize = $stepSizes[0];
@@ -320,22 +314,26 @@ class ConfigurationPanel {
 
     this.elements.panel = configurationPanels[this.sliderIndex] as HTMLElement;
 
+    const $minMaxContainer = $('.js-field__min-max');
     const $minMaxValues: HTMLInputElement[] = Array.from(
-      $(this.elements.panel).find('.js-input__value_for-min-max'),
+      $($minMaxContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
     [this.elements.minValue, this.elements.maxValue] = $minMaxValues;
 
+    const $countThumbsContainer = $('.js-configuration__field-count-thumb');
     this.elements.countSliderThumbs = Array.from(
-      $(this.elements.panel).find('.js-input__value_for-count-thumb'),
+      $($countThumbsContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
+    const $thumbsValuesContainer = $('.js-field__thumbs-value')
     this.elements.inputsSliderThumbs = Array.from(
-      $(this.elements.panel).find('.js-configuration__thumbs-value'),
+      $($thumbsValuesContainer[this.sliderIndex]).find('.js-configuration__thumbs-value'),
     ) as HTMLInputElement[];
 
+    const $stepSizeContainer = $('.js-configuration__field-step-size');
     this.elements.stepSize = Array.from(
-      $(this.elements.panel).find('.js-input__value_for-step-size'),
+      $($stepSizeContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
     this.elements.orientationSlider = Array.from(

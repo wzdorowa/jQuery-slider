@@ -11,15 +11,12 @@
 
   &__wrapper {
     display: flex;
-    // justify-content: space-between;
     width: 90%;
     overflow: hidden;
     height: 35px;
     background: #fff;
 
-    &_for-min-max {
-      
-      
+    &_width50 {
       width: 50%;
     }
   }
@@ -39,15 +36,15 @@
       border-color: $PaleCornflowerBlue;
     }
 
-    &_for-min-max {
+    &_width50 {
       width: 100%;
     }
 
-    &_for-count-thumb {
+    &_width15 {
       width: 15%;
     }
 
-    &_for-step-size {
+    &_width10 {
       width: 10%;
     }
   }

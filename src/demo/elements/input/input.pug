@@ -1,7 +1,7 @@
-mixin input({text = 'текст', value = '0', parentName = 'default-input', type = 'number'} = {text, value, parentName, type})
+mixin input({text = 'текст', value = '0', width = '90', type = 'number'} = {text, value, parentName, type})
     label.input
-      div.input__wrapper(class=`input__wrapper_for-${parentName}`)
+      div.input__wrapper(class=`input__wrapper_width${width}`)
         span.input__description=text
-        input.input__value(class=`input__value_for-${parentName}`, class=`js-input__value_for-${parentName}` type=type,
+        input.input__value(class=`input__value_width${width}`, class=`js-input__value` type=type,
          name=`input-${parentName}`, value=value)
         
