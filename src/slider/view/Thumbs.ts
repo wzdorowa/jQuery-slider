@@ -143,7 +143,7 @@ class Thumbs {
       );
 
       new Array(excessCount).fill(1).forEach((_element: number, i: number) => {
-        // this.state.thumbsValues.splice(-1, 1);
+        this.state.thumbsValues.splice(-1, 1);
         this.state.thumbs.splice(-1, 1);
         const newLength = $allThumbs.length - i;
         $allThumbs[newLength - 1].remove();

@@ -46,5 +46,7 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
     if (isMethod) {
       return methods.setOption(this, method);
     }
+
+    return this;
   };
 })(jQuery);

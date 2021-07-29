@@ -58,8 +58,6 @@ class Model {
     if (this.state.thumbsCount === thumbsCount) {
       return;
     }
-    console.log('this.state.thumbsCount', this.state.thumbsCount);
-    console.log('thumbsCount', thumbsCount);
 
     // установить значения для новых ползунков
     if (this.state.thumbsCount !== thumbsCount) {

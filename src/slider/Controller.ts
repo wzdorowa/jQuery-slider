@@ -54,7 +54,6 @@ class Controller {
     };
     this.slider.setNewValueCount = (count: number): void => {
       model.setNewValueCount(count);
-      console.log('после смены значения', model.state);
     };
     this.slider.setNewValueThumbsValues = (
       touchValue: number,
@@ -87,17 +86,13 @@ class Controller {
       eventEmitter.makeSubscribe(
         'model:state-changed',
         (state: IModelState): void => {
-          console.log('model.state', state);
-
           let isCreatedElement = isCreatedInput;
-          console.log('isCreatedElement', isCreatedElement);
 
           if (!isCreatedElement) {
             handler(state);
             isCreatedElement = true;
           }
           const arrayCountInputs = countInputs();
-          console.log('arrayCountInputs', arrayCountInputs);
 
           if (arrayCountInputs.length !== state.thumbsValues.length) {
             changeCountInputs(state);
