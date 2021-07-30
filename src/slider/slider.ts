@@ -8,8 +8,9 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
     ...arg: any
   ) {
     const methods = {
-      setOption($slider: JQuery<HTMLElement>, options: {} | undefined) {
+      setOption($slider: JQuery<HTMLElement>) {
         const element = ($slider[0] as unknown) as IHTMLElement;
+        const data = $slider.data();
 
         const settings = $.extend(
           true,
@@ -23,7 +24,7 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
             isTooltip: true,
             isScaleOfValues: true,
           },
-          options,
+          data,
         );
 
         $slider.data('controller', new Controller(element, settings));
