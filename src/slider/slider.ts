@@ -45,9 +45,7 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
       return (methods as any)[method].call(this, this, ...arg);
     }
     if (isMethod) {
-      return methods.setOption(this, method);
+      return methods.setOption(this);
     }
-
-    return this;
   };
 })(jQuery);
