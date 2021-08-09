@@ -3,6 +3,7 @@ import { IModelState } from '../interfaces/iModelState';
 import { IDriver } from '../interfaces/iDriver';
 import driverHorizontal from './drivers/driverHorizontal';
 import driverVertical from './drivers/driverVertical';
+import utilities from './utilities/utilities';
 
 class Scale {
   private slider: HTMLElement;
@@ -217,7 +218,15 @@ class Scale {
 
   private setSefirsInPlaces(): void {
     if (this.driver !== null) {
-      this.calculateShiftToMinValue();
+      this.coefficientPoint = this.driver.calculateCoefficientPoint(
+        this.slider,
+        this.maxValueSlider,
+        this.minValueSlider,
+      );
+      this.shiftToMinValue = utilities.calculateShiftToMinValue(
+        this.coefficientPoint,
+        this.minValueSlider,
+      );
       this.driver.setInPlaceElement({
         elements: this.serifsElements,
         currentThumbIndex: null,
@@ -246,23 +255,6 @@ class Scale {
       );
       element.remove();
     }
-  }
-
-  private calculateCoefficientPoint(): void {
-    if (this.driver !== null) {
-      this.coefficientPoint = this.driver.calculateCoefficientPoint(
-        this.slider,
-        this.maxValueSlider,
-        this.minValueSlider,
-      );
-    }
-  }
-
-  private calculateShiftToMinValue(): void {
-    this.calculateCoefficientPoint();
-    this.shiftToMinValue = Math.ceil(
-      this.coefficientPoint * this.minValueSlider,
-    );
   }
 
   private changeOrientation(): void {
