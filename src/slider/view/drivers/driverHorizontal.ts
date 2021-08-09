@@ -268,7 +268,8 @@ const driverHorizontal: IDriver = {
     const scale = Array.from($(slider).find('.js-slider__scale'));
     const startAxis = scale[0].getBoundingClientRect();
 
-    const offsetX = event.pageX - startAxis.x;
+    const offsetX = event.clientX - startAxis.x;
+
     return offsetX + shiftToMinValue;
   },
   getOffsetFromClick(event: MouseEvent): number {

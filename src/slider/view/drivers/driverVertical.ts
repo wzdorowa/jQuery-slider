@@ -259,7 +259,7 @@ const driverVertical: IDriver = {
     const scale = Array.from($(slider).find('.js-slider__vertical-scale'));
     const startAxis = scale[0].getBoundingClientRect();
 
-    const offsetY = event.pageY - startAxis.y;
+    const offsetY = event.clientY - startAxis.y;
     return offsetY + shiftToMinValue;
   },
   getOffsetFromClick(event: MouseEvent): number {
