@@ -25,7 +25,7 @@ class Scale {
 
   private stepSlider: number;
 
-  private serifsElements: HTMLElement[];
+  public serifsElements: HTMLElement[];
 
   private valuesSerifs: number[];
 

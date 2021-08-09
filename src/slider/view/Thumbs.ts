@@ -302,19 +302,8 @@ class Thumbs {
       const targetClassList = target.classList;
 
       let clickLocationAxis = 0;
-      if (targetClassList.contains('js-slider__scale')) {
-        clickLocationAxis = this.driver.calculateClickLocation(
-          event,
-          target,
-          this.state.shiftToMinValue,
-        );
-      } else if (targetClassList.contains('js-slider__vertical-scale')) {
-        clickLocationAxis = this.driver.calculateClickLocation(
-          event,
-          target,
-          this.state.shiftToMinValue,
-        );
-      } else if (targetClassList.contains('js-slider__scale-value')) {
+
+      if (targetClassList.contains('js-slider__scale-value')) {
         clickLocationAxis = this.driver.calculateClickLocationOnScaleValue(
           event,
           this.state.shiftToMinValue,
@@ -404,6 +393,7 @@ class Thumbs {
         this.state.target,
       );
       this.state.startValueAxis = this.state.minValueSlider;
+
       this.state.valueAxisFromStartMove = this.driver.getStartValueAxisToProcessStart(
         event,
         this.state.currentValueAxis,
@@ -411,6 +401,7 @@ class Thumbs {
       this.state.stopValueAxis = this.driver.getMaxValueAxisToProcessStart(
         this.slider,
       );
+
       this.state.thumbValueAxis = this.calculateValueAxis(
         this.state.thumbsValues[index],
       );
@@ -445,12 +436,16 @@ class Thumbs {
               event,
               this.state.valueAxisFromStartMove,
             );
+
             const nextStepValueAxis: number = this.calculateValueAxis(
               this.state.thumbsValues[index] + this.state.stepSlider,
             );
+            console.log('nextStepValueAxis', nextStepValueAxis);
+
             const previousStepValueAxis: number = this.calculateValueAxis(
               this.state.thumbsValues[index] - this.state.stepSlider,
             );
+            console.log('previousStepValueAxis', previousStepValueAxis);
 
             if (isFirstThumb) {
               if (isOneThumb) {
