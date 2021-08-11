@@ -9,8 +9,11 @@ const utilities = {
     currentValueAxis: number,
     coefficientPoint: number,
     stepSlider: number,
+    shiftToMinValue: number,
   ): number {
-    let currentValue: number = Math.ceil(currentValueAxis / coefficientPoint);
+    let currentValue: number = Math.ceil(
+      (currentValueAxis + shiftToMinValue) / coefficientPoint,
+    );
 
     const intermediateValue: number = Math.floor(currentValue / stepSlider);
     currentValue = stepSlider * intermediateValue;
@@ -26,6 +29,7 @@ const utilities = {
   ): number {
     const intermediateValue: number = value / stepSlider;
     const currentValue: number = intermediateValue * stepSlider;
+
     const currentValueAxis: number =
       Math.ceil(currentValue * coefficientPoint) - shiftToMinValue;
 

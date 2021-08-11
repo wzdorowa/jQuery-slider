@@ -269,8 +269,8 @@ class Thumbs {
     this.state.currentValue = utilities.calculateValue(
       this.state.currentValueAxis,
       this.state.coefficientPoint,
-      // this.state.minValueSlider,
       this.state.stepSlider,
+      this.state.shiftToMinValue,
     );
 
     if (this.state.thumbsValues[index] !== this.state.currentValue) {
@@ -307,6 +307,7 @@ class Thumbs {
       clickLocationAxis,
       this.state.coefficientPoint,
       this.state.stepSlider,
+      this.state.shiftToMinValue,
     );
 
     const leftSpacing: number[] = [];
@@ -364,7 +365,7 @@ class Thumbs {
       this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessStart(
         this.state.target,
       );
-      this.state.startValueAxis = this.state.minValueSlider;
+      this.state.startValueAxis = 0;
 
       this.state.valueAxisFromStartMove = this.driver.getStartValueAxisToProcessStart(
         event,
@@ -567,7 +568,6 @@ class Thumbs {
     if (this.driver !== null) {
       if (this.state.target !== null) {
         if (this.state.currentValue !== null) {
-          // this.calculateShiftToMinValue();
           this.driver.setIndentForTargetToProcessStop({
             target: this.state.target,
             coefficientPoint: this.state.coefficientPoint,
