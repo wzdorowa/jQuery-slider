@@ -3,7 +3,7 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
 
 (function callSlider($) {
   const $jquery = $;
-  $jquery.fn.slider = function (): JQuery<HTMLElement> {
+  $jquery.fn.slider = function renderSlider(): globalThis.JQuery<HTMLElement> {
     const element = (this[0] as unknown) as IHTMLElement;
     const data = this.data();
     const settings = $.extend(
@@ -23,4 +23,5 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
     this.data('controller', new Controller(element, settings));
     return this;
   };
+  $jquery.fn.extend($jquery.fn.slider);
 })(jQuery);
