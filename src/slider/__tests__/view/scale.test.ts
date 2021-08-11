@@ -25,4 +25,20 @@ describe('Unit tests', () => {
     state.orientation = 'vertical';
     scale.initializeScale(state);
   });
+  test('initialize scale and configuration change', () => {
+    state.min = 20;
+    scale.initializeScale(state);
+
+    state.min = 15;
+    scale.setConfig(state);
+
+    state.max = 80;
+    scale.setConfig(state);
+
+    state.isScaleOfValues = false;
+    scale.initializeScale(state);
+
+    state.isScaleOfValues = true;
+    scale.setConfig(state);
+  });
 });
