@@ -44,6 +44,7 @@ class ConfigurationPanel {
     this.state = this.slider.getState();
 
     this.initialize();
+    this.findElements();
 
     this.listenMinValue();
     this.listenMaxValue();
@@ -75,7 +76,6 @@ class ConfigurationPanel {
     this.setValueMaxInputFromModelState(this.state);
     this.setValueToCheckboxTooltipFromModelState(this.state);
     this.setValueToCheckboxScaleOfValuesFromModelState(this.state);
-    this.findElements();
   }
 
   getState(): void {
@@ -326,9 +326,11 @@ class ConfigurationPanel {
       $($countThumbsContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
-    const $thumbsValuesContainer = $('.js-field__thumbs-value')
+    const $thumbsValuesContainer = $('.js-field__thumbs-value');
     this.elements.inputsSliderThumbs = Array.from(
-      $($thumbsValuesContainer[this.sliderIndex]).find('.js-configuration__thumbs-value'),
+      $($thumbsValuesContainer[this.sliderIndex]).find(
+        '.js-configuration__thumbs-value',
+      ),
     ) as HTMLInputElement[];
 
     const $stepSizeContainer = $('.js-configuration__field-step-size');
@@ -356,7 +358,15 @@ class ConfigurationPanel {
   }
 
   setValueOfInputsSliderThumbs(): void {
-    this.findElements();
+    const $thumbsValuesContainer = document.querySelectorAll(
+      '.js-field__thumbs-values',
+    );
+    this.elements.inputsSliderThumbs = Array.from(
+      $($thumbsValuesContainer[this.sliderIndex]).find(
+        '.js-configuration__thumbs-value',
+      ),
+    ) as HTMLInputElement[];
+
     if (this.elements.inputsSliderThumbs !== null) {
       new Array(this.elements.inputsSliderThumbs.length)
         .fill(1)
