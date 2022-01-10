@@ -168,6 +168,7 @@ class Scale {
             }
           }
         }
+
         const scaleValueContainer = this.driver.createElementScaleValueContainer();
         const htmlFragment = this.createElementsSefifs(stepForScaleValue);
         scaleValueContainer.append(htmlFragment);
@@ -183,23 +184,59 @@ class Scale {
   private createElementsSefifs(stepSerif: number): DocumentFragment {
     const max: number = this.maxValueSlider;
     const min: number = this.minValueSlider;
+    const remainsMin = min % stepSerif;
+    const remainsMax = max % stepSerif;
 
     this.removeElementsSerifs();
 
-    const countSerifs: number = Math.floor((max - min) / stepSerif + 1);
+    let minCurrentSerif: number;
+    if (remainsMin !== 0) {
+      minCurrentSerif = min - remainsMin + stepSerif;
+    } else {
+      minCurrentSerif = min;
+    }
+
+    let maxCurrentSerif: number;
+    if (remainsMax !== 0) {
+      maxCurrentSerif = max - remainsMax;
+    } else {
+      maxCurrentSerif = max;
+    }
+    let countSerifs: number = Math.floor(
+      (maxCurrentSerif - minCurrentSerif) / stepSerif + 1,
+    );
 
     let currentValueSerif: number = Math.ceil(min / stepSerif) * stepSerif;
+
+    if (remainsMin !== 0) {
+      countSerifs += 1;
+    }
+    if (remainsMax !== 0) {
+      countSerifs += 1;
+    }
+
     new Array(countSerifs)
       .fill(1)
       .forEach((_element: number, index: number) => {
-        this.valuesSerifs[index] = currentValueSerif;
-        currentValueSerif += stepSerif;
+        if (index === 0) {
+          if (remainsMin !== 0) {
+            this.valuesSerifs[index] = min;
+          } else {
+            this.valuesSerifs[index] = currentValueSerif;
+            currentValueSerif += stepSerif;
+          }
+        } else if (index === countSerifs - 1) {
+          if (remainsMax !== 0) {
+            this.valuesSerifs[index] = max;
+          } else {
+            this.valuesSerifs[index] = currentValueSerif;
+            currentValueSerif += stepSerif;
+          }
+        } else {
+          this.valuesSerifs[index] = currentValueSerif;
+          currentValueSerif += stepSerif;
+        }
       });
-    if (
-      this.valuesSerifs[this.valuesSerifs.length - 1] !== this.maxValueSlider
-    ) {
-      this.valuesSerifs[this.valuesSerifs.length - 1] = this.maxValueSlider;
-    }
 
     const htmlFragment = document.createDocumentFragment();
     this.valuesSerifs.forEach(element => {

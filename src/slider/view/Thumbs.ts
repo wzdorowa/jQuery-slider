@@ -91,7 +91,6 @@ class Thumbs {
   }
 
   public setConfig(state: IModelState): void {
-    console.log('state', state);
     if (this.state.minValueSlider !== state.min) {
       this.state.minValueSlider = state.min;
       this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
