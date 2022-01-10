@@ -91,6 +91,7 @@ class Thumbs {
   }
 
   public setConfig(state: IModelState): void {
+    console.log('state', state);
     if (this.state.minValueSlider !== state.min) {
       this.state.minValueSlider = state.min;
       this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
@@ -180,7 +181,7 @@ class Thumbs {
       );
 
       new Array(excessCount).fill(1).forEach((_element: number, i: number) => {
-        this.state.thumbsValues.splice(-1, 1);
+        // this.state.thumbsValues.splice(-1, 1);
         this.state.thumbs.splice(-1, 1);
         const newLength = $allThumbs.length - i;
         $allThumbs[newLength - 1].remove();
