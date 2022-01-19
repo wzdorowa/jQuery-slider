@@ -304,7 +304,7 @@ class Thumbs {
       this.slider,
     );
 
-    const currentValue: number = utilities.calculateValue(
+    const currentValue: number = utilities.calculateValueForClickOnScale(
       clickLocationAxis,
       this.state.coefficientPoint,
       this.state.stepSlider,
@@ -538,9 +538,11 @@ class Thumbs {
     nextValueAxis: number,
     index: number,
   ): void {
+    const halfStep = this.state.coefficientPoint * (this.state.stepSlider / 2);
+
     if (this.driver !== null) {
       if (this.state.target !== null) {
-        if (this.state.currentValueAxis > nextValueAxis) {
+        if (this.state.currentValueAxis > nextValueAxis - halfStep) {
           this.driver.setIndentForTarget(
             this.state.target,
             nextValueAxis,
@@ -550,7 +552,7 @@ class Thumbs {
           this.state.currentValueAxis = nextValueAxis;
           this.updateThumbPositionOnScale(index);
         }
-        if (this.state.currentValueAxis < previousValueAxis) {
+        if (this.state.currentValueAxis < previousValueAxis + halfStep) {
           this.driver.setIndentForTarget(
             this.state.target,
             previousValueAxis,

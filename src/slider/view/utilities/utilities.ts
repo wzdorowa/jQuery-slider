@@ -9,6 +9,22 @@ const utilities = {
     currentValueAxis: number,
     coefficientPoint: number,
     stepSlider: number,
+    shiftToMinValue: number,
+  ): number {
+    let currentValue: number = Math.ceil(
+      (currentValueAxis + shiftToMinValue) / coefficientPoint,
+    );
+
+    const intermediateValue: number = Math.floor(currentValue / stepSlider);
+    currentValue = stepSlider * intermediateValue;
+
+    return currentValue;
+  },
+
+  calculateValueForClickOnScale(
+    currentValueAxis: number,
+    coefficientPoint: number,
+    stepSlider: number,
   ): number {
     let currentValue: number = Math.ceil(currentValueAxis / coefficientPoint);
 
