@@ -326,7 +326,8 @@ class ConfigurationPanel {
       $($countThumbsContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
-    const $thumbsValuesContainer = $('.js-field__thumbs-value');
+    const $thumbsValuesContainer = $('.js-field__thumbs-values');
+
     this.elements.inputsSliderThumbs = Array.from(
       $($thumbsValuesContainer[this.sliderIndex]).find(
         '.js-configuration__thumbs-value',
@@ -423,21 +424,19 @@ class ConfigurationPanel {
         .fill(1)
         .forEach((_element: number, i: number) => {
           if (this.elements.inputsSliderThumbs !== null) {
-            const handleInputsSliderThumbsBlur = () => {
-              if (this.elements.inputsSliderThumbs !== null) {
-                const thumbsValue = Number(
-                  this.elements.inputsSliderThumbs[i].value,
-                );
-                this.slider.setNewValueThumbsValues(thumbsValue, i);
-              }
-            };
-
             this.elements.inputsSliderThumbs[i].addEventListener(
               'blur',
-              handleInputsSliderThumbsBlur.bind(this),
+              this.handleInputsSliderThumbsBlur.bind(this, i),
             );
           }
         });
+    }
+  }
+
+  handleInputsSliderThumbsBlur(index: number): void {
+    if (this.elements.inputsSliderThumbs !== null) {
+      const thumbsValue = Number(this.elements.inputsSliderThumbs[index].value);
+      this.slider.setNewValueThumbsValues(thumbsValue, index);
     }
   }
 
