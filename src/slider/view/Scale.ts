@@ -8,6 +8,8 @@ import utilities from './utilities/utilities';
 class Scale {
   private slider: HTMLElement;
 
+  private scale: HTMLElement | null;
+
   private emitter: EventEmitter;
 
   private orientation: string | null;
@@ -36,6 +38,7 @@ class Scale {
 
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
+    this.scale = null;
     this.emitter = emitter;
     this.orientation = null;
     this.driver = null;
@@ -125,13 +128,25 @@ class Scale {
       const activeRange: HTMLElement = this.driver.createElementActiveRange();
 
       this.slider.append(scale);
+      this.scale = scale;
       scale.append(activeRange);
 
       if (this.isScaleOfValues) {
         this.renderSerifs();
       }
     }
+    this.listenScaleClick();
     this.listenSizeWindow();
+  }
+
+  private listenScaleClick(): void {
+    if (this.scale !== null) {
+      this.scale.addEventListener(
+        'click',
+        this.handleScaleClick.bind(this),
+        true,
+      );
+    }
   }
 
   private renderSerifs(): void {

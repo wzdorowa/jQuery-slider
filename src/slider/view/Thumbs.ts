@@ -290,6 +290,7 @@ class Thumbs {
       this.state.maxValueSlider,
       this.state.minValueSlider,
     );
+
     this.state.shiftToMinValue = utilities.calculateShiftToMinValue(
       this.state.coefficientPoint,
       this.state.minValueSlider,
@@ -307,7 +308,6 @@ class Thumbs {
       clickLocationAxis,
       this.state.coefficientPoint,
       this.state.stepSlider,
-      this.state.shiftToMinValue,
     );
 
     const leftSpacing: number[] = [];
