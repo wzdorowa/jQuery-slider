@@ -64,9 +64,10 @@ class Tooltips {
     if (this.tooltipsValues !== state.thumbsValues) {
       this.tooltipsValues = state.thumbsValues;
     }
+
     if (this.thumbsCount !== state.thumbsCount) {
       this.thumbsCount = state.thumbsCount;
-      this.changeCountTooltips();
+      this.changeCountTooltips(state.isTooltip);
     }
     if (this.isTooltip !== state.isTooltip) {
       if (state.isTooltip) {
@@ -118,11 +119,14 @@ class Tooltips {
   }
 
   /* changes the number of rendered tooltips */
-  private changeCountTooltips(): void {
+  private changeCountTooltips(isTooltip: boolean): void {
     if (this.tooltipsElements.length < this.thumbsCount) {
       const thumbsCount: number =
         this.thumbsCount - this.tooltipsElements.length;
       this.createTooltips(thumbsCount);
+      if (!isTooltip) {
+        this.hideTooltip();
+      }
     }
     if (this.tooltipsElements.length > this.thumbsCount) {
       const excessCount: number =
