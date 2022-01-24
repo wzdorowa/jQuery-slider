@@ -31,6 +31,16 @@ class View {
     this.emitter.makeSubscribe('view:click-on-scale', (event: MouseEvent) => {
       this.emitter.emit('view:update-thumbs-position', event);
     });
+    this.emitter.makeSubscribe(
+      'view:click-on-serif-scale',
+      (index: number, valuesSerifs: number[]) => {
+        this.emitter.emit(
+          'view:update-thumbs-position-on-serif-scale',
+          index,
+          valuesSerifs,
+        );
+      },
+    );
   }
 
   private initialize(state: IModelState): void {

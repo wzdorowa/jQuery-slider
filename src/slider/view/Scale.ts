@@ -330,13 +330,21 @@ class Scale {
   }
 
   private listenScaleValueEvents(): void {
-    this.serifsElements.forEach(element => {
-      element.addEventListener('click', this.handleScaleClick.bind(this), true);
+    this.serifsElements.forEach((element, index) => {
+      element.addEventListener(
+        'click',
+        this.handleSerifScaleClick.bind(this, index, this.valuesSerifs),
+        true,
+      );
     });
   }
 
   private handleScaleClick(event: MouseEvent): void {
     this.emitter.emit('view:click-on-scale', event);
+  }
+
+  private handleSerifScaleClick(index: number, valuesSerifs: number[]): void {
+    this.emitter.emit('view:click-on-serif-scale', index, valuesSerifs);
   }
 
   private listenSizeWindow(): void {

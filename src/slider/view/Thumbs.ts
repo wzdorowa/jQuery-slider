@@ -47,6 +47,12 @@ class Thumbs {
         this.setThumbToNewPosition(event);
       },
     );
+    this.emitter.makeSubscribe(
+      'view:update-thumbs-position-on-serif-scale',
+      (index: number, valuesSerifs: []) => {
+        this.setThumbToPositionOnSerifScale(index, valuesSerifs);
+      },
+    );
   }
 
   public initializeThumbs(state: IModelState): void {
@@ -281,6 +287,13 @@ class Thumbs {
     }
   }
 
+  private setThumbToPositionOnSerifScale(
+    index: number,
+    valuesSerifs: number[],
+  ): void {
+    this.findAndSetTheNearestThumb(valuesSerifs[index]);
+  }
+
   /* method for setting the closest slider to the clicked position on the slider scale */
   private setThumbToNewPosition(event: MouseEvent): void {
     event.preventDefault();
@@ -310,6 +323,10 @@ class Thumbs {
       this.state.stepSlider,
     );
 
+    this.findAndSetTheNearestThumb(currentValue);
+  }
+
+  private findAndSetTheNearestThumb(currentValue: number) {
     const leftSpacing: number[] = [];
     const rightSpacing: number[] = [];
 
