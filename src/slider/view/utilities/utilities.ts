@@ -28,8 +28,15 @@ const utilities = {
   ): number {
     let currentValue: number = Math.ceil(currentValueAxis / coefficientPoint);
 
-    const intermediateValue: number = Math.floor(currentValue / stepSlider);
-    currentValue = stepSlider * intermediateValue;
+    const minValue: number = Math.floor(currentValue / stepSlider) * stepSlider;
+
+    const halfStep = minValue + stepSlider / 2;
+
+    if (currentValue > halfStep) {
+      currentValue = minValue + stepSlider;
+    } else {
+      currentValue = minValue;
+    }
 
     return currentValue;
   },
