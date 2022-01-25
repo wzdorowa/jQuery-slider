@@ -72,11 +72,17 @@ class Model {
 
         this.state.thumbsCount = thumbsCount;
       }
+
       if (this.state.thumbsCount > thumbsCount) {
-        const excessThumbs = this.state.thumbsCount - thumbsCount;
-        new Array(excessThumbs).fill(1).forEach(() => {
-          this.state.thumbsValues.splice(-1, 1);
-        });
+        if (thumbsCount > 0) {
+          const excessThumbs = this.state.thumbsCount - thumbsCount;
+          new Array(excessThumbs).fill(1).forEach(() => {
+            this.state.thumbsValues.splice(-1, 1);
+          });
+        }
+        if (thumbsCount <= 0) {
+          this.state.thumbsValues.splice(1, this.state.thumbsValues.length - 1);
+        }
         this.state.thumbsCount = thumbsCount;
       }
     }
@@ -151,13 +157,14 @@ class Model {
     if (this.state.thumbsCount <= 0) {
       this.state.thumbsCount = 1;
     }
+
     if (this.state.thumbsCount < this.state.thumbsValues.length) {
       this.state.thumbsValues.splice(
         this.state.thumbsCount,
         this.state.thumbsValues.length - this.state.thumbsCount,
       );
-      // this.checkThumbsValues(this.state.thumbsValues);
     }
+
     if (maximumCountOfThumbs < this.state.thumbsCount) {
       this.state.thumbsCount = maximumCountOfThumbs;
 

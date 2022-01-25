@@ -64,6 +64,7 @@ class ConfigurationPanel {
       this.setValueToStepFromModelState.bind(this),
       this.setValueToMinInputFromModelState.bind(this),
       this.setValueMaxInputFromModelState.bind(this),
+      this.setValueCountThumbsFromModelState.bind(this),
     );
   }
 
@@ -74,6 +75,7 @@ class ConfigurationPanel {
     this.setValueToStepFromModelState(this.state);
     this.setValueToMinInputFromModelState(this.state);
     this.setValueMaxInputFromModelState(this.state);
+    this.setValueCountThumbsFromModelState(this.state);
     this.setValueToCheckboxTooltipFromModelState(this.state);
     this.setValueToCheckboxScaleOfValuesFromModelState(this.state);
   }
@@ -223,6 +225,16 @@ class ConfigurationPanel {
     ) as HTMLInputElement[];
     const maxInput: HTMLInputElement = $minMaxInputs[1];
     maxInput.value = String(state.max);
+  }
+
+  setValueCountThumbsFromModelState(state: IModelState): void {
+    const fieldCountThumbs: IHTMLElement[] = Array.from(
+      document.querySelectorAll('.js-configuration__field-count-thumb'),
+    );
+    const countThumbsInput: HTMLInputElement = fieldCountThumbs[
+      this.sliderIndex
+    ].querySelector('.js-input__value') as HTMLInputElement;
+    countThumbsInput.value = String(state.thumbsCount);
   }
 
   setValueToInputFromModelState(state: IModelState): void {

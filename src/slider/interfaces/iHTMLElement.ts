@@ -20,5 +20,6 @@ export interface IHTMLElement extends HTMLElement {
     setValueToStepFromModelState: (state: IModelState) => void,
     setValueToMinInputFromModelState: (state: IModelState) => void,
     setValueMaxInputFromModelState: (state: IModelState) => void,
+    setValueCountThumbsFromModelState: (state: IModelState) => void,
   ): void;
 }

@@ -82,6 +82,7 @@ class Controller {
       setValueToStepFromModelState: (state: IModelState) => void,
       setValueToMinInputFromModelState: (state: IModelState) => void,
       setValueMaxInputFromModelState: (state: IModelState) => void,
+      setValueCountThumbsFromModelState: (state: IModelState) => void,
     ): void => {
       eventEmitter.makeSubscribe(
         'model:state-changed',
@@ -101,6 +102,7 @@ class Controller {
           setValueToStepFromModelState(state);
           setValueToMinInputFromModelState(state);
           setValueMaxInputFromModelState(state);
+          setValueCountThumbsFromModelState(state);
         },
       );
     };
