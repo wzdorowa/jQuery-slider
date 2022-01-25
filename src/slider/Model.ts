@@ -197,7 +197,13 @@ class Model {
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
     thumbsValues.forEach((element: number, index: number) => {
-      const value: number = element;
+      let value: number = element;
+      const remainderOfDivision = (value - this.state.min) % this.state.step;
+
+      if (remainderOfDivision > 0) {
+        value -= remainderOfDivision;
+      }
+
       const maximumPossibleValue =
         Math.floor(this.state.max / this.state.step) * this.state.step -
         this.state.step * (index + 1);
