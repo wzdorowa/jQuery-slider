@@ -96,6 +96,7 @@ class Model {
     }
 
     this.state.thumbsValues[index] = thumbValue;
+
     this.normolizeState();
   }
 
@@ -147,10 +148,6 @@ class Model {
       this.state.max =
         this.state.min + this.state.step * this.state.thumbsCount;
     }
-    // const minimumPossibleValue =
-    //   Math.floor(this.state.min / this.state.step) * this.state.step;
-    // const maximumPossibleValue =
-    //   Math.floor(this.state.max / this.state.step) * this.state.step;
     const maximumCountOfThumbs = Math.floor(
       (this.state.max - this.state.min) / this.state.step,
     );
@@ -177,15 +174,9 @@ class Model {
         this.checkThumbsValues(this.state.thumbsValues);
       }
     }
-    // if (this.state.min !== minimumPossibleValue) {
-    //   this.state.min = minimumPossibleValue;
-    // }
     if (this.state.min > this.state.thumbsValues[0]) {
       this.state.thumbsValues[0] = this.state.min;
     }
-    // if (this.state.max !== maximumPossibleValue) {
-    //   this.state.max = maximumPossibleValue;
-    // }
     if (
       this.state.max <
       this.state.thumbsValues[this.state.thumbsValues.length - 1]
@@ -207,17 +198,22 @@ class Model {
   private checkThumbsValues(thumbsValues: number[]): void {
     thumbsValues.forEach((element: number, index: number) => {
       const value: number = element;
+      const maximumPossibleValue =
+        Math.floor(this.state.max / this.state.step) * this.state.step -
+        this.state.step * (index + 1);
 
       if (value !== this.state.thumbsValues[index]) {
         this.state.thumbsValues[index] = value;
       }
 
-      if (thumbsValues[0] < this.state.min) {
-        this.state.thumbsValues[0] = this.state.min;
+      if (value > this.state.max) {
+        this.state.thumbsValues[index] =
+          maximumPossibleValue - this.state.step * index;
       }
 
-      if (thumbsValues[thumbsValues.length - 1] < this.state.min) {
-        this.state.thumbsValues[thumbsValues.length - 1] = this.state.min;
+      if (value < this.state.min) {
+        this.state.thumbsValues[index] =
+          this.state.min + this.state.step * index;
       }
 
       const isGreaterThanNextValue: boolean =

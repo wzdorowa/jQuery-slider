@@ -272,12 +272,21 @@ class Thumbs {
   }
 
   private updateThumbPositionOnScale(index: number, step: number): void {
-    this.state.currentValue = utilities.calculateValue(
-      this.state.currentValueAxis,
-      this.state.coefficientPoint,
-      step,
-      this.state.shiftToMinValue,
-    );
+    if (step !== 0) {
+      this.state.currentValue = utilities.calculateValue(
+        this.state.currentValueAxis,
+        this.state.coefficientPoint,
+        step,
+        this.state.shiftToMinValue,
+      );
+    } else {
+      this.state.currentValue = utilities.calculateValue(
+        this.state.currentValueAxis,
+        this.state.coefficientPoint,
+        this.state.stepSlider,
+        this.state.shiftToMinValue,
+      );
+    }
 
     if (this.state.thumbsValues[index] !== this.state.currentValue) {
       this.emitter.emit('view:thumbsValues-changed', {
@@ -606,6 +615,7 @@ class Thumbs {
         );
       }
     }
+
     this.state.currentValueAxis = valueAxis;
     this.state.thumbValueAxis = valueAxis;
     this.updateThumbPositionOnScale(index, step);
