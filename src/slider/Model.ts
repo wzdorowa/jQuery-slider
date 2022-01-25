@@ -177,14 +177,6 @@ class Model {
     if (this.state.min > this.state.thumbsValues[0]) {
       this.state.thumbsValues[0] = this.state.min;
     }
-    if (
-      this.state.max <
-      this.state.thumbsValues[this.state.thumbsValues.length - 1]
-    ) {
-      this.state.thumbsValues[
-        this.state.thumbsValues.length - 1
-      ] = this.state.max;
-    }
     if (this.state.step <= 0) {
       this.state.step = 1;
     }
@@ -206,15 +198,14 @@ class Model {
 
       const maximumPossibleValue =
         Math.floor(this.state.max / this.state.step) * this.state.step -
-        this.state.step * (index + 1);
+        this.state.step * (this.state.thumbsValues.length - index);
 
       if (value !== this.state.thumbsValues[index]) {
         this.state.thumbsValues[index] = value;
       }
 
       if (value > this.state.max) {
-        this.state.thumbsValues[index] =
-          maximumPossibleValue - this.state.step * index;
+        this.state.thumbsValues[index] = maximumPossibleValue;
       }
 
       if (value < this.state.min) {
