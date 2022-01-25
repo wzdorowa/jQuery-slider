@@ -94,6 +94,7 @@ class Model {
     if (this.state.thumbsValues[index] === thumbValue) {
       return;
     }
+
     this.state.thumbsValues[index] = thumbValue;
     this.normolizeState();
   }
@@ -146,10 +147,10 @@ class Model {
       this.state.max =
         this.state.min + this.state.step * this.state.thumbsCount;
     }
-    const minimumPossibleValue =
-      Math.floor(this.state.min / this.state.step) * this.state.step;
-    const maximumPossibleValue =
-      Math.floor(this.state.max / this.state.step) * this.state.step;
+    // const minimumPossibleValue =
+    //   Math.floor(this.state.min / this.state.step) * this.state.step;
+    // const maximumPossibleValue =
+    //   Math.floor(this.state.max / this.state.step) * this.state.step;
     const maximumCountOfThumbs = Math.floor(
       (this.state.max - this.state.min) / this.state.step,
     );
@@ -176,15 +177,15 @@ class Model {
         this.checkThumbsValues(this.state.thumbsValues);
       }
     }
-    if (this.state.min !== minimumPossibleValue) {
-      this.state.min = minimumPossibleValue;
-    }
+    // if (this.state.min !== minimumPossibleValue) {
+    //   this.state.min = minimumPossibleValue;
+    // }
     if (this.state.min > this.state.thumbsValues[0]) {
       this.state.thumbsValues[0] = this.state.min;
     }
-    if (this.state.max !== maximumPossibleValue) {
-      this.state.max = maximumPossibleValue;
-    }
+    // if (this.state.max !== maximumPossibleValue) {
+    //   this.state.max = maximumPossibleValue;
+    // }
     if (
       this.state.max <
       this.state.thumbsValues[this.state.thumbsValues.length - 1]
@@ -204,50 +205,35 @@ class Model {
 
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
-    thumbsValues.forEach((element: number, i: number) => {
+    thumbsValues.forEach((element: number, index: number) => {
       const value: number = element;
-      const remainderOfTheDivision: number = value % this.state.step;
-      const newValue: number = value - remainderOfTheDivision;
-      const maxPossibleValue: number =
-        this.state.max -
-        (this.state.max % this.state.step) -
-        (this.state.thumbsValues.length - 1 - i) * this.state.step;
-      const minPossibleValue: number =
-        this.state.min -
-        (this.state.min % this.state.step) +
-        i * this.state.step;
 
-      if (newValue !== this.state.thumbsValues[i]) {
-        this.state.thumbsValues[i] = newValue;
+      if (value !== this.state.thumbsValues[index]) {
+        this.state.thumbsValues[index] = value;
       }
-      if (newValue >= maxPossibleValue) {
-        this.state.thumbsValues[i] = maxPossibleValue;
+
+      if (thumbsValues[0] < this.state.min) {
+        this.state.thumbsValues[0] = this.state.min;
       }
-      if (newValue <= minPossibleValue) {
-        this.state.thumbsValues[i] = minPossibleValue;
+
+      if (thumbsValues[thumbsValues.length - 1] < this.state.min) {
+        this.state.thumbsValues[thumbsValues.length - 1] = this.state.min;
       }
 
       const isGreaterThanNextValue: boolean =
-        i !== this.state.thumbsValues[this.state.thumbsValues.length - 1] &&
-        element >= this.state.thumbsValues[i + 1];
+        index !== this.state.thumbsValues[this.state.thumbsValues.length - 1] &&
+        element >= this.state.thumbsValues[index + 1];
 
       const isLessThanPreviousValue: boolean =
-        newValue <= this.state.thumbsValues[i - 1];
+        value <= this.state.thumbsValues[index - 1];
 
       if (isGreaterThanNextValue) {
-        this.state.thumbsValues[i + 1] =
-          this.state.thumbsValues[i] + this.state.step;
-        if (
-          this.state.thumbsValues[i + 1] >
-          maxPossibleValue + this.state.step
-        ) {
-          this.state.thumbsValues[i + 1] = maxPossibleValue + this.state.step;
-          this.state.thumbsValues[i] = maxPossibleValue;
-        }
+        this.state.thumbsValues[index + 1] =
+          this.state.thumbsValues[index] + this.state.step;
       }
       if (isLessThanPreviousValue) {
-        this.state.thumbsValues[i] =
-          this.state.thumbsValues[i - 1] + this.state.step;
+        this.state.thumbsValues[index] =
+          this.state.thumbsValues[index - 1] + this.state.step;
       }
 
       this.notifyStateChanged();

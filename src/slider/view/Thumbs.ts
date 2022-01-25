@@ -271,11 +271,11 @@ class Thumbs {
     });
   }
 
-  private updateThumbPositionOnScale(index: number): void {
+  private updateThumbPositionOnScale(index: number, step: number): void {
     this.state.currentValue = utilities.calculateValue(
       this.state.currentValueAxis,
       this.state.coefficientPoint,
-      this.state.stepSlider,
+      step,
       this.state.shiftToMinValue,
     );
 
@@ -446,18 +446,31 @@ class Thumbs {
             if (isFirstThumb) {
               if (isOneThumb) {
                 if (this.state.currentValueAxis > this.state.stopValueAxis) {
-                  this.setIndentForTarget(this.state.stopValueAxis, index);
+                  this.setIndentForTarget(
+                    this.state.stopValueAxis,
+                    index,
+                    this.state.stepSlider,
+                  );
                 } else if (
                   this.state.currentValueAxis < this.state.startValueAxis
                 ) {
-                  this.setIndentForTarget(this.state.startValueAxis, index);
+                  this.setIndentForTarget(
+                    this.state.startValueAxis,
+                    index,
+                    this.state.stepSlider,
+                  );
                 } else if (this.state.stepSlider === 1) {
-                  this.setIndentForTarget(this.state.currentValueAxis, index);
+                  this.setIndentForTarget(
+                    this.state.currentValueAxis,
+                    index,
+                    this.state.stepSlider,
+                  );
                 } else {
                   this.checkPreviousOrNextValueThumb(
                     previousStepValueAxis,
                     nextStepValueAxis,
                     index,
+                    this.state.stepSlider,
                   );
                 }
               }
@@ -467,18 +480,31 @@ class Thumbs {
                   stepWidth,
                 );
                 if (this.state.currentValueAxis > offsetNextThumb) {
-                  this.setIndentForTarget(offsetNextThumb, index);
+                  this.setIndentForTarget(
+                    offsetNextThumb,
+                    index,
+                    this.state.stepSlider,
+                  );
                 } else if (
                   this.state.currentValueAxis < this.state.startValueAxis
                 ) {
-                  this.setIndentForTarget(this.state.startValueAxis, index);
+                  this.setIndentForTarget(
+                    this.state.startValueAxis,
+                    index,
+                    this.state.stepSlider,
+                  );
                 } else if (this.state.stepSlider === 1) {
-                  this.setIndentForTarget(this.state.currentValueAxis, index);
+                  this.setIndentForTarget(
+                    this.state.currentValueAxis,
+                    index,
+                    this.state.stepSlider,
+                  );
                 } else {
                   this.checkPreviousOrNextValueThumb(
                     previousStepValueAxis,
                     nextStepValueAxis,
                     index,
+                    this.state.stepSlider,
                   );
                 }
               }
@@ -494,16 +520,29 @@ class Thumbs {
               );
 
               if (this.state.currentValueAxis > offsetNextThumb) {
-                this.setIndentForTarget(offsetNextThumb, index);
+                this.setIndentForTarget(
+                  offsetNextThumb,
+                  index,
+                  this.state.stepSlider,
+                );
               } else if (this.state.currentValueAxis < offsetPreviousThumb) {
-                this.setIndentForTarget(offsetPreviousThumb, index);
+                this.setIndentForTarget(
+                  offsetPreviousThumb,
+                  index,
+                  this.state.stepSlider,
+                );
               } else if (this.state.stepSlider === 1) {
-                this.setIndentForTarget(this.state.currentValueAxis, index);
+                this.setIndentForTarget(
+                  this.state.currentValueAxis,
+                  index,
+                  this.state.stepSlider,
+                );
               } else {
                 this.checkPreviousOrNextValueThumb(
                   previousStepValueAxis,
                   nextStepValueAxis,
                   index,
+                  this.state.stepSlider,
                 );
               }
             }
@@ -513,19 +552,37 @@ class Thumbs {
                 stepWidth,
               );
 
+              const lastStep =
+                this.state.maxValueSlider -
+                Math.floor(this.state.maxValueSlider / this.state.stepSlider) *
+                  this.state.stepSlider;
+
               if (this.state.currentValueAxis < offsetPreviousThumb) {
-                this.setIndentForTarget(offsetPreviousThumb, index);
+                this.setIndentForTarget(
+                  offsetPreviousThumb,
+                  index,
+                  this.state.stepSlider,
+                );
               } else if (
                 this.state.currentValueAxis > this.state.stopValueAxis
               ) {
-                this.setIndentForTarget(this.state.stopValueAxis, index);
+                this.setIndentForTarget(
+                  this.state.stopValueAxis,
+                  index,
+                  lastStep,
+                );
               } else if (this.state.stepSlider === 1) {
-                this.setIndentForTarget(this.state.currentValueAxis, index);
+                this.setIndentForTarget(
+                  this.state.currentValueAxis,
+                  index,
+                  this.state.stepSlider,
+                );
               } else {
                 this.checkPreviousOrNextValueThumb(
                   previousStepValueAxis,
                   nextStepValueAxis,
                   index,
+                  this.state.stepSlider,
                 );
               }
             }
@@ -535,7 +592,11 @@ class Thumbs {
     }
   }
 
-  private setIndentForTarget(valueAxis: number, index: number): void {
+  private setIndentForTarget(
+    valueAxis: number,
+    index: number,
+    step: number,
+  ): void {
     if (this.driver !== null) {
       if (this.state.target !== null) {
         this.driver.setIndentForTarget(
@@ -547,13 +608,14 @@ class Thumbs {
     }
     this.state.currentValueAxis = valueAxis;
     this.state.thumbValueAxis = valueAxis;
-    this.updateThumbPositionOnScale(index);
+    this.updateThumbPositionOnScale(index, step);
   }
 
   private checkPreviousOrNextValueThumb(
     previousValueAxis: number,
     nextValueAxis: number,
     index: number,
+    step: number,
   ): void {
     const halfStep = this.state.coefficientPoint * (this.state.stepSlider / 2);
 
@@ -567,7 +629,7 @@ class Thumbs {
           );
           this.state.thumbValueAxis = nextValueAxis;
           this.state.currentValueAxis = nextValueAxis;
-          this.updateThumbPositionOnScale(index);
+          this.updateThumbPositionOnScale(index, step);
         }
         if (this.state.currentValueAxis < previousValueAxis + halfStep) {
           this.driver.setIndentForTarget(
@@ -577,7 +639,7 @@ class Thumbs {
           );
           this.state.currentValueAxis = previousValueAxis;
           this.state.thumbValueAxis = previousValueAxis;
-          this.updateThumbPositionOnScale(index);
+          this.updateThumbPositionOnScale(index, step);
         }
       }
     }
