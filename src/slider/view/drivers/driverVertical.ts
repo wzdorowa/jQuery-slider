@@ -100,6 +100,7 @@ const driverVertical: IDriver = {
       $(slider).find('.js-slider__vertical-scale'),
     );
     const scale = $elements[0];
+
     return scale.offsetHeight / (max - min);
   },
   setInPlaceElement({

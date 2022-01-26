@@ -177,6 +177,16 @@ class Model {
     if (this.state.min > this.state.thumbsValues[0]) {
       this.state.thumbsValues[0] = this.state.min;
     }
+
+    if (
+      this.state.max <
+      this.state.thumbsValues[this.state.thumbsValues.length - 1]
+    ) {
+      this.state.thumbsValues[
+        this.state.thumbsValues.length - 1
+      ] = this.state.max;
+    }
+
     if (this.state.step <= 0) {
       this.state.step = 1;
     }
@@ -190,15 +200,47 @@ class Model {
   private checkThumbsValues(thumbsValues: number[]): void {
     thumbsValues.forEach((element: number, index: number) => {
       let value: number = element;
+
       const remainderOfDivision = (value - this.state.min) % this.state.step;
 
-      if (remainderOfDivision > 0) {
-        value -= remainderOfDivision;
+      const isValid =
+        (remainderOfDivision > 0 && index === thumbsValues.length - 1) ||
+        thumbsValues.length === 1;
+
+      let maximumPossibleValue;
+
+      if (isValid) {
+        maximumPossibleValue = this.state.max;
+      } else {
+        maximumPossibleValue =
+          Math.floor(this.state.max / this.state.step) * this.state.step -
+          this.state.step * (this.state.thumbsValues.length - (index + 1));
       }
 
-      const maximumPossibleValue =
-        Math.floor(this.state.max / this.state.step) * this.state.step -
-        this.state.step * (this.state.thumbsValues.length - index);
+      // if (remainderOfDivision > 0 && value < maximumPossibleValue) {
+      if (remainderOfDivision > 0) {
+        if (index === thumbsValues.length - 1) {
+          const activeRangeValues = this.state.max - this.state.min;
+
+          const lastStep =
+            activeRangeValues -
+            Math.floor(activeRangeValues / this.state.step) * this.state.step;
+
+          if (lastStep > 0) {
+            const penultimateValue: number = this.state.max - lastStep;
+
+            if (value > penultimateValue) {
+              value = this.state.max;
+            } else {
+              value -= remainderOfDivision;
+            }
+          } else {
+            value -= remainderOfDivision;
+          }
+        } else {
+          value -= remainderOfDivision;
+        }
+      }
 
       if (value !== this.state.thumbsValues[index]) {
         this.state.thumbsValues[index] = value;

@@ -8,15 +8,11 @@ const utilities = {
   calculateValue(
     currentValueAxis: number,
     coefficientPoint: number,
-    stepSlider: number,
     shiftToMinValue: number,
   ): number {
-    let currentValue: number = Math.ceil(
+    const currentValue: number = Math.floor(
       (currentValueAxis + shiftToMinValue) / coefficientPoint,
     );
-
-    const intermediateValue: number = Math.floor(currentValue / stepSlider);
-    currentValue = stepSlider * intermediateValue;
 
     return currentValue;
   },

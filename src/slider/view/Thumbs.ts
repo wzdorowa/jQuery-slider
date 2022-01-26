@@ -186,7 +186,6 @@ class Thumbs {
       );
 
       new Array(excessCount).fill(1).forEach((_element: number, i: number) => {
-        // this.state.thumbsValues.splice(-1, 1);
         this.state.thumbs.splice(-1, 1);
         const newLength = $allThumbs.length - i;
         $allThumbs[newLength - 1].remove();
@@ -272,18 +271,16 @@ class Thumbs {
   }
 
   private updateThumbPositionOnScale(index: number, step: number): void {
-    if (step !== 0) {
+    if (step !== this.state.stepSlider && step !== 0) {
       this.state.currentValue = utilities.calculateValue(
         this.state.currentValueAxis,
         this.state.coefficientPoint,
-        step,
         this.state.shiftToMinValue,
       );
     } else {
       this.state.currentValue = utilities.calculateValue(
         this.state.currentValueAxis,
         this.state.coefficientPoint,
-        this.state.stepSlider,
         this.state.shiftToMinValue,
       );
     }
@@ -454,11 +451,18 @@ class Thumbs {
 
             if (isFirstThumb) {
               if (isOneThumb) {
+                const lastStep =
+                  this.state.maxValueSlider -
+                  Math.floor(
+                    this.state.maxValueSlider / this.state.stepSlider,
+                  ) *
+                    this.state.stepSlider;
+
                 if (this.state.currentValueAxis > this.state.stopValueAxis) {
                   this.setIndentForTarget(
                     this.state.stopValueAxis,
                     index,
-                    this.state.stepSlider,
+                    lastStep,
                   );
                 } else if (
                   this.state.currentValueAxis < this.state.startValueAxis
@@ -556,15 +560,30 @@ class Thumbs {
               }
             }
             if (isLastThumb) {
+              const lastStep =
+                this.state.maxValueSlider -
+                Math.floor(this.state.maxValueSlider / this.state.stepSlider) *
+                  this.state.stepSlider;
+
               const offsetPreviousThumb: number = this.driver.getOffsetPreviousThumb(
                 elements[index - 1],
                 stepWidth,
               );
 
-              const lastStep =
-                this.state.maxValueSlider -
-                Math.floor(this.state.maxValueSlider / this.state.stepSlider) *
-                  this.state.stepSlider;
+              // if (
+              //   this.state.thumbsValues[index] === this.state.maxValueSlider
+              // ) {
+              //   if (lastStep > 0) {
+              //     const lastStepWidth = Math.ceil(
+              //       lastStep * this.state.coefficientPoint,
+              //     );
+
+              //     offsetPreviousThumb = this.driver.getOffsetPreviousThumb(
+              //       elements[index - 1],
+              //       lastStepWidth,
+              //     );
+              //   }
+              // }
 
               if (this.state.currentValueAxis < offsetPreviousThumb) {
                 this.setIndentForTarget(

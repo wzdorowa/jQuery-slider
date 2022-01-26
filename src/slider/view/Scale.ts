@@ -161,31 +161,22 @@ class Scale {
       if (this.driver !== null) {
         let stepForScaleValue = this.stepSlider;
 
-        if (max - min <= 20) {
-          if (max - min > 10) {
-            if (this.stepSlider === 1) {
-              stepForScaleValue = this.stepSlider * 2;
-            }
-          }
-        } else if (max - min > 20) {
-          if (this.stepSlider === 1) {
-            stepForScaleValue = this.stepSlider * 5;
-          } else if (this.stepSlider === 2) {
-            stepForScaleValue = this.stepSlider * 2;
-          }
-          if (max - min > 50) {
-            if (this.stepSlider < 3) {
-              stepForScaleValue = this.stepSlider * 5;
-            } else if (this.stepSlider === 3) {
-              stepForScaleValue = this.stepSlider * 3;
-            } else if (this.stepSlider > 3) {
-              stepForScaleValue = this.stepSlider * 2;
-            }
-          }
+        const countSteps = (max - min) / this.stepSlider;
+        if (countSteps >= 10) {
+          stepForScaleValue = this.stepSlider * 2;
+        }
+        if (countSteps >= 20) {
+          stepForScaleValue = this.stepSlider * 3;
+        }
+        if (countSteps >= 30) {
+          stepForScaleValue = this.stepSlider * 5;
+        }
+        if (countSteps >= 50) {
+          stepForScaleValue = this.stepSlider * 10;
         }
 
         const scaleValueContainer = this.driver.createElementScaleValueContainer();
-        const htmlFragment = this.createElementsSefifs(stepForScaleValue);
+        const htmlFragment = this.createElementsSerifs(stepForScaleValue);
         scaleValueContainer.append(htmlFragment);
         this.slider.append(scaleValueContainer);
         this.isCreatedScaleOfValue = true;
@@ -196,37 +187,20 @@ class Scale {
     }
   }
 
-  private createElementsSefifs(stepSerif: number): DocumentFragment {
+  private createElementsSerifs(stepSerif: number): DocumentFragment {
     const max: number = this.maxValueSlider;
     const min: number = this.minValueSlider;
-    const remainsMin = min % stepSerif;
-    const remainsMax = max % stepSerif;
+
+    const lastStep =
+      max - min - ((max - min) / this.stepSlider) * this.stepSlider;
 
     this.removeElementsSerifs();
 
-    let minCurrentSerif: number;
-    if (remainsMin !== 0) {
-      minCurrentSerif = min - remainsMin + stepSerif;
-    } else {
-      minCurrentSerif = min;
-    }
+    let countSerifs: number = Math.ceil((max - min) / stepSerif) + 1;
 
-    let maxCurrentSerif: number;
-    if (remainsMax !== 0) {
-      maxCurrentSerif = max - remainsMax;
-    } else {
-      maxCurrentSerif = max;
-    }
-    let countSerifs: number = Math.floor(
-      (maxCurrentSerif - minCurrentSerif) / stepSerif + 1,
-    );
+    let currentValueSerif: number = min;
 
-    let currentValueSerif: number = Math.ceil(min / stepSerif) * stepSerif;
-
-    if (remainsMin !== 0) {
-      countSerifs += 1;
-    }
-    if (remainsMax !== 0) {
+    if (lastStep > 0) {
       countSerifs += 1;
     }
 
@@ -234,19 +208,10 @@ class Scale {
       .fill(1)
       .forEach((_element: number, index: number) => {
         if (index === 0) {
-          if (remainsMin !== 0) {
-            this.valuesSerifs[index] = min;
-          } else {
-            this.valuesSerifs[index] = currentValueSerif;
-            currentValueSerif += stepSerif;
-          }
+          this.valuesSerifs[index] = min;
+          currentValueSerif += stepSerif;
         } else if (index === countSerifs - 1) {
-          if (remainsMax !== 0) {
-            this.valuesSerifs[index] = max;
-          } else {
-            this.valuesSerifs[index] = currentValueSerif;
-            currentValueSerif += stepSerif;
-          }
+          this.valuesSerifs[index] = max;
         } else {
           this.valuesSerifs[index] = currentValueSerif;
           currentValueSerif += stepSerif;
@@ -275,10 +240,12 @@ class Scale {
         this.maxValueSlider,
         this.minValueSlider,
       );
+
       this.shiftToMinValue = utilities.calculateShiftToMinValue(
         this.coefficientPoint,
         this.minValueSlider,
       );
+
       this.driver.setInPlaceElement({
         elements: this.serifsElements,
         currentThumbIndex: null,
