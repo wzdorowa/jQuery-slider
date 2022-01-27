@@ -1,5 +1,6 @@
 import { IModelState } from '../../../slider/interfaces/iModelState';
 import { IHTMLElement } from '../../../slider/interfaces/iHTMLElement';
+import utilities from './utilities';
 
 class ConfigurationPanel {
   public isCreatedInput: boolean;
@@ -84,14 +85,6 @@ class ConfigurationPanel {
     this.state = this.slider.getState();
   }
 
-  createElement(tag: string, className: string): IHTMLElement {
-    const htmlElement: IHTMLElement = document.createElement(
-      tag,
-    ) as IHTMLElement;
-    htmlElement.className = className;
-    return htmlElement;
-  }
-
   createInput(state: IModelState): void {
     const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
@@ -102,11 +95,11 @@ class ConfigurationPanel {
     new Array(state.thumbsCount)
       .fill(1)
       .forEach((_element: number, i: number) => {
-        const currentValueItem: HTMLElement = this.createElement(
+        const currentValueItem: HTMLElement = utilities.createElement(
           'li',
           'configuration__thumbs-item js-configuration__thumbs-item',
         );
-        const currentValueInput: HTMLElement = this.createElement(
+        const currentValueInput: HTMLElement = utilities.createElement(
           'input',
           'configuration__thumbs-value js-configuration__thumbs-value',
         );
@@ -151,11 +144,11 @@ class ConfigurationPanel {
 
       const fragmentCurrentValueList = document.createDocumentFragment();
       new Array(missingCount).fill(1).forEach((_element: number, i: number) => {
-        const currentValueItem: HTMLElement = this.createElement(
+        const currentValueItem: HTMLElement = utilities.createElement(
           'li',
           'configuration__thumbs-item js-configuration__thumbs-item',
         );
-        const currentValueInput: HTMLElement = this.createElement(
+        const currentValueInput: HTMLElement = utilities.createElement(
           'input',
           'configuration__thumbs-value js-configuration__thumbs-value',
         );
