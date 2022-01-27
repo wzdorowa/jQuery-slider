@@ -217,7 +217,6 @@ class Model {
           this.state.step * (this.state.thumbsValues.length - (index + 1));
       }
 
-      // if (remainderOfDivision > 0 && value < maximumPossibleValue) {
       if (remainderOfDivision > 0) {
         if (index === thumbsValues.length - 1) {
           const activeRangeValues = this.state.max - this.state.min;
@@ -242,12 +241,12 @@ class Model {
         }
       }
 
-      if (value !== this.state.thumbsValues[index]) {
-        this.state.thumbsValues[index] = value;
+      if (value > maximumPossibleValue) {
+        value = maximumPossibleValue;
       }
 
-      if (value > this.state.max) {
-        this.state.thumbsValues[index] = maximumPossibleValue;
+      if (value !== this.state.thumbsValues[index]) {
+        this.state.thumbsValues[index] = value;
       }
 
       if (value < this.state.min) {
