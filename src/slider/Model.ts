@@ -203,28 +203,34 @@ class Model {
 
       const remainderOfDivision = (value - this.state.min) % this.state.step;
 
+      const activeRangeValues = this.state.max - this.state.min;
+
+      const lastStep =
+        activeRangeValues -
+        Math.floor(activeRangeValues / this.state.step) * this.state.step;
+
       const isValid =
-        (remainderOfDivision > 0 && index === thumbsValues.length - 1) ||
-        thumbsValues.length === 1;
+        index === thumbsValues.length - 1 || thumbsValues.length === 1;
 
       let maximumPossibleValue;
 
       if (isValid) {
         maximumPossibleValue = this.state.max;
+      } else if (lastStep > 0) {
+        maximumPossibleValue =
+          activeRangeValues +
+          this.state.min -
+          this.state.step * (this.state.thumbsValues.length - (index + 1)) -
+          lastStep;
       } else {
         maximumPossibleValue =
-          Math.floor(this.state.max / this.state.step) * this.state.step -
+          activeRangeValues +
+          this.state.min -
           this.state.step * (this.state.thumbsValues.length - (index + 1));
       }
 
       if (remainderOfDivision > 0) {
         if (index === thumbsValues.length - 1) {
-          const activeRangeValues = this.state.max - this.state.min;
-
-          const lastStep =
-            activeRangeValues -
-            Math.floor(activeRangeValues / this.state.step) * this.state.step;
-
           if (lastStep > 0) {
             const penultimateValue: number = this.state.max - lastStep;
 

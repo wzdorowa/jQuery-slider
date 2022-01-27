@@ -13,7 +13,6 @@ const utilities = {
     const currentValue: number = Math.floor(
       (currentValueAxis + shiftToMinValue) / coefficientPoint,
     );
-
     return currentValue;
   },
 

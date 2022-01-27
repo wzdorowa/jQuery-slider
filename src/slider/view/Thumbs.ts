@@ -490,7 +490,7 @@ class Thumbs {
               if (isMultipleThumbs) {
                 const offsetNextThumb: number = this.driver.getOffsetNextThumb(
                   elements[index + 1],
-                  stepWidth,
+                  stepWidth - 2,
                 );
                 if (this.state.currentValueAxis > offsetNextThumb) {
                   this.setIndentForTarget(
@@ -525,7 +525,7 @@ class Thumbs {
             if (isIntermediateThumb) {
               const offsetNextThumb: number = this.driver.getOffsetNextThumb(
                 elements[index + 1],
-                stepWidth,
+                stepWidth - 2,
               );
               const offsetPreviousThumb: number = this.driver.getOffsetPreviousThumb(
                 elements[index - 1],
@@ -569,21 +569,6 @@ class Thumbs {
                 elements[index - 1],
                 stepWidth,
               );
-
-              // if (
-              //   this.state.thumbsValues[index] === this.state.maxValueSlider
-              // ) {
-              //   if (lastStep > 0) {
-              //     const lastStepWidth = Math.ceil(
-              //       lastStep * this.state.coefficientPoint,
-              //     );
-
-              //     offsetPreviousThumb = this.driver.getOffsetPreviousThumb(
-              //       elements[index - 1],
-              //       lastStepWidth,
-              //     );
-              //   }
-              // }
 
               if (this.state.currentValueAxis < offsetPreviousThumb) {
                 this.setIndentForTarget(
