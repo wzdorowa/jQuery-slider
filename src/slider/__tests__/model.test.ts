@@ -110,11 +110,12 @@ describe('Model testing', () => {
 
     expect(model.state.thumbsCount).toBe(15);
   });
+
   test('check ThumbsValues', () => {
     model.overwriteCurrentThumbsValues([25, 15, 45, 67]);
-    expect(model.state.thumbsValues[0]).toBe(25);
-    expect(model.state.thumbsValues[1]).toBe(30);
-    expect(model.state.thumbsValues[2]).toBe(45);
-    expect(model.state.thumbsValues[3]).toBe(65);
+    expect(model.state.thumbsValues[0]).toBe(26);
+    expect(model.state.thumbsValues[1]).toBe(31);
+    expect(model.state.thumbsValues[2]).toBe(41);
+    expect(model.state.thumbsValues[3]).toBe(66);
   });
 });

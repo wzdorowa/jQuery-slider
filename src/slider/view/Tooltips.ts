@@ -61,13 +61,12 @@ class Tooltips {
   }
 
   public setConfig(state: IModelState): void {
-    if (this.tooltipsValues !== state.thumbsValues) {
-      this.tooltipsValues = state.thumbsValues;
-    }
-
     if (this.thumbsCount !== state.thumbsCount) {
       this.thumbsCount = state.thumbsCount;
       this.changeCountTooltips(state.isTooltip);
+    }
+    if (this.tooltipsValues !== state.thumbsValues) {
+      this.tooltipsValues = state.thumbsValues;
     }
     if (this.isTooltip !== state.isTooltip) {
       if (state.isTooltip) {
@@ -135,6 +134,13 @@ class Tooltips {
       new Array(excessCount).fill(1).forEach(() => {
         this.tooltipsElements.splice(-1, 1);
         this.textInTooltips.splice(-1, 1);
+      });
+    }
+    if (this.tooltipsValues.length > this.thumbsCount) {
+      const excessCount: number = this.tooltipsValues.length - this.thumbsCount;
+
+      new Array(excessCount).fill(1).forEach(() => {
+        this.tooltipsValues.splice(-1, 1);
       });
     }
   }
