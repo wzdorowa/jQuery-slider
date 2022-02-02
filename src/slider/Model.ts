@@ -55,14 +55,21 @@ class Model {
 
   // set a new number of thumbs
   public setNewValueCount(thumbsCount: number): void {
-    if (this.state.thumbsCount === thumbsCount) {
+    let correctThumbsCount = thumbsCount;
+    const isInteger = thumbsCount - Math.floor(thumbsCount) === 0;
+    if (!isInteger) {
+      correctThumbsCount -= thumbsCount - Math.floor(thumbsCount);
+    }
+
+    if (this.state.thumbsCount === correctThumbsCount) {
       return;
     }
 
     // установить значения для новых ползунков
-    if (this.state.thumbsCount !== thumbsCount) {
-      if (this.state.thumbsCount < thumbsCount) {
-        const missingQuantityThumbs = thumbsCount - this.state.thumbsCount;
+    if (this.state.thumbsCount !== correctThumbsCount) {
+      if (this.state.thumbsCount < correctThumbsCount) {
+        const missingQuantityThumbs =
+          correctThumbsCount - this.state.thumbsCount;
 
         new Array(missingQuantityThumbs).fill(1).forEach(() => {
           this.state.thumbsValues[this.state.thumbsValues.length] =
@@ -70,20 +77,20 @@ class Model {
             this.state.step;
         });
 
-        this.state.thumbsCount = thumbsCount;
+        this.state.thumbsCount = correctThumbsCount;
       }
 
-      if (this.state.thumbsCount > thumbsCount) {
-        if (thumbsCount > 0) {
-          const excessThumbs = this.state.thumbsCount - thumbsCount;
+      if (this.state.thumbsCount > correctThumbsCount) {
+        if (correctThumbsCount > 0) {
+          const excessThumbs = this.state.thumbsCount - correctThumbsCount;
           new Array(excessThumbs).fill(1).forEach(() => {
             this.state.thumbsValues.splice(-1, 1);
           });
         }
-        if (thumbsCount <= 0) {
+        if (correctThumbsCount <= 0) {
           this.state.thumbsValues.splice(1, this.state.thumbsValues.length - 1);
         }
-        this.state.thumbsCount = thumbsCount;
+        this.state.thumbsCount = correctThumbsCount;
       }
     }
     this.normolizeState();
