@@ -237,7 +237,6 @@ class Thumbs {
   /* places thumbs on the slider based on default values */
   private setValuesThumbs(): void {
     if (this.driver !== null) {
-      // this.calculateShiftToMinValue();
       this.driver.setInPlaceThumb({
         elements: this.state.thumbs,
         currentThumbIndex: this.state.currentThumbIndex,

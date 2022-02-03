@@ -111,11 +111,7 @@ class Model {
 
   // set a new value for the step of moving the thumbs
   public setNewValueStep(step: number): void {
-    // console.log('step', step);
-
     this.state.step = step;
-
-    // console.log('this.state.step', this.state.step);
 
     this.normolizeState();
   }
