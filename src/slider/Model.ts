@@ -32,24 +32,32 @@ class Model {
 
     this.emitter = eventEmitter;
     this.normolizeState();
-    // this.notifyStateChanged();
   }
 
   // set new min value
   public setNewValueMin(min: number): void {
+    let correctMinValue = min;
+    const isInteger = min - Math.floor(min) === 0;
+    if (!isInteger) {
+      correctMinValue -= min - Math.floor(min);
+    }
+
     if (this.state.min === min) {
       return;
     }
-    this.state.min = min;
+    this.state.min = correctMinValue;
     this.normolizeState();
   }
 
   // set new value max
   public setNewValueMax(max: number): void {
-    if (this.state.max === max) {
-      return;
+    let correctMaxValue = max;
+    const isInteger = max - Math.floor(max) === 0;
+    if (!isInteger) {
+      correctMaxValue -= max - Math.floor(max);
     }
-    this.state.max = max;
+
+    this.state.max = correctMaxValue;
     this.normolizeState();
   }
 
@@ -59,10 +67,6 @@ class Model {
     const isInteger = thumbsCount - Math.floor(thumbsCount) === 0;
     if (!isInteger) {
       correctThumbsCount -= thumbsCount - Math.floor(thumbsCount);
-    }
-
-    if (this.state.thumbsCount === correctThumbsCount) {
-      return;
     }
 
     // установить значения для новых ползунков
@@ -76,8 +80,6 @@ class Model {
             this.state.thumbsValues[this.state.thumbsValues.length - 1] +
             this.state.step;
         });
-
-        this.state.thumbsCount = correctThumbsCount;
       }
 
       if (this.state.thumbsCount > correctThumbsCount) {
@@ -90,9 +92,9 @@ class Model {
         if (correctThumbsCount <= 0) {
           this.state.thumbsValues.splice(1, this.state.thumbsValues.length - 1);
         }
-        this.state.thumbsCount = correctThumbsCount;
       }
     }
+    this.state.thumbsCount = correctThumbsCount;
     this.normolizeState();
   }
 
@@ -109,10 +111,12 @@ class Model {
 
   // set a new value for the step of moving the thumbs
   public setNewValueStep(step: number): void {
-    if (this.state.step === step) {
-      return;
-    }
+    // console.log('step', step);
+
     this.state.step = step;
+
+    // console.log('this.state.step', this.state.step);
+
     this.normolizeState();
   }
 

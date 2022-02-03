@@ -104,6 +104,7 @@ class ConfigurationPanel {
           'configuration__thumbs-value js-configuration__thumbs-value',
         );
         currentValueInput.setAttribute('type', 'number');
+        currentValueInput.setAttribute('step', 'any');
         currentValueInput.setAttribute('value', String(state.thumbsValues[i]));
 
         currentValueItem.append(currentValueInput);
@@ -194,6 +195,7 @@ class ConfigurationPanel {
     if (state.orientation === 'vertical') {
       $buttonsOrientation[1].checked = true;
     }
+    this.state.orientation = state.orientation;
   }
 
   setValueToMinInputFromModelState(state: IModelState): void {
@@ -206,6 +208,7 @@ class ConfigurationPanel {
     ) as HTMLInputElement[];
     const minInput: HTMLInputElement = $minMaxInputs[0];
     minInput.value = String(state.min);
+    this.state.min = state.min;
   }
 
   setValueMaxInputFromModelState(state: IModelState): void {
@@ -218,6 +221,7 @@ class ConfigurationPanel {
     ) as HTMLInputElement[];
     const maxInput: HTMLInputElement = $minMaxInputs[1];
     maxInput.value = String(state.max);
+    this.state.max = state.max;
   }
 
   setValueCountThumbsFromModelState(state: IModelState): void {
@@ -228,6 +232,7 @@ class ConfigurationPanel {
       this.sliderIndex
     ].querySelector('.js-input__value') as HTMLInputElement;
     countThumbsInput.value = String(state.thumbsCount);
+    this.state.thumbsCount = state.thumbsCount;
   }
 
   setValueToInputFromModelState(state: IModelState): void {
@@ -246,6 +251,7 @@ class ConfigurationPanel {
       .forEach((_element: number, i: number) => {
         $allThumbs[i].value = String(state.thumbsValues[i]);
       });
+    this.state.thumbsValues = state.thumbsValues;
   }
 
   setValueToStepFromModelState(state: IModelState): void {
@@ -259,6 +265,7 @@ class ConfigurationPanel {
 
     const stepSize = $stepSizes[0];
     stepSize.value = String(state.step);
+    this.state.step = state.step;
   }
 
   setValueToCheckboxTooltipFromModelState(state: IModelState): void {
@@ -278,6 +285,7 @@ class ConfigurationPanel {
     if (state.isTooltip) {
       $checkboxTooltip[0].checked = true;
     }
+    this.state.isTooltip = state.isTooltip;
   }
 
   setValueToCheckboxScaleOfValuesFromModelState(state: IModelState): void {
@@ -297,6 +305,7 @@ class ConfigurationPanel {
     if (state.isScaleOfValues) {
       $checkboxScaleOfValues[0].checked = true;
     }
+    this.state.isScaleOfValues = state.isScaleOfValues;
   }
 
   getCountInputs(): HTMLElement[] {
@@ -552,27 +561,35 @@ class ConfigurationPanel {
     const currentEvent: Event = event;
     currentEvent.preventDefault();
 
+    if (this.elements.stepSize !== null) {
+      const step = Number(this.elements.stepSize[0].value);
+      if (step !== this.state.step) {
+        this.slider.setNewValueStep(step);
+      }
+    }
+
     if (this.elements.minValue !== null) {
       const min = Number(this.elements.minValue.value);
-      this.slider.setNewValueMin(min);
+      if (min !== this.state.min) {
+        this.slider.setNewValueMin(min);
+      }
     }
 
     if (this.elements.maxValue !== null) {
       const max = Number(this.elements.maxValue.value);
-      this.slider.setNewValueMax(max);
+      if (max !== this.state.max) {
+        this.slider.setNewValueMax(max);
+      }
     }
 
     if (this.elements.countSliderThumbs !== null) {
       const count = Number(this.elements.countSliderThumbs[0].value);
-      this.slider.setNewValueCount(count);
+      if (count !== this.state.thumbsCount) {
+        this.slider.setNewValueCount(count);
+      }
     }
 
     this.setValueOfInputsSliderThumbs();
-
-    if (this.elements.stepSize !== null) {
-      const step = Number(this.elements.stepSize[0].value);
-      this.slider.setNewValueStep(step);
-    }
   };
 }
 export default ConfigurationPanel;

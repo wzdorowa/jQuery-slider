@@ -1,6 +1,7 @@
 const utilities = {
   calculateShiftToMinValue(coefficientPoint: number, min: number): number {
-    const shiftToMinValue = Math.ceil(coefficientPoint * min);
+    // const shiftToMinValue = Math.ceil(coefficientPoint * min);
+    const shiftToMinValue = coefficientPoint * min;
     return shiftToMinValue;
   },
 
@@ -10,9 +11,9 @@ const utilities = {
     coefficientPoint: number,
     shiftToMinValue: number,
   ): number {
-    const currentValue: number = Math.floor(
-      (currentValueAxis + shiftToMinValue) / coefficientPoint,
-    );
+    const currentValue: number =
+      (currentValueAxis + shiftToMinValue) / coefficientPoint;
+
     return currentValue;
   },
 
@@ -21,9 +22,11 @@ const utilities = {
     coefficientPoint: number,
     stepSlider: number,
   ): number {
-    let currentValue: number = Math.ceil(currentValueAxis / coefficientPoint);
+    // let currentValue: number = Math.ceil(currentValueAxis / coefficientPoint);
+    let currentValue: number = currentValueAxis / coefficientPoint;
 
-    const minValue: number = Math.floor(currentValue / stepSlider) * stepSlider;
+    // const minValue: number = Math.floor(currentValue / stepSlider) * stepSlider;
+    const minValue: number = (currentValue / stepSlider) * stepSlider;
 
     const halfStep = minValue + stepSlider / 2;
 
@@ -42,12 +45,7 @@ const utilities = {
     coefficientPoint: number,
     shiftToMinValue: number,
   ): number {
-    const intermediateValue: number = value / stepSlider;
-    const currentValue: number = intermediateValue * stepSlider;
-
-    const currentValueAxis: number =
-      Math.ceil(currentValue * coefficientPoint) - shiftToMinValue;
-
+    const currentValueAxis: number = value * coefficientPoint - shiftToMinValue;
     return currentValueAxis;
   },
 };

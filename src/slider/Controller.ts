@@ -36,11 +36,6 @@ class Controller {
     });
   }
 
-  // public getState(): IModelState {
-  //   const modelState: IModelState = { ...this.model.state };
-  //   return modelState;
-  // }
-
   private attachPublicMethods(model: Model, eventEmitter: EventEmitter) {
     this.slider.getState = (): IModelState => {
       const modelState: IModelState = { ...model.state };

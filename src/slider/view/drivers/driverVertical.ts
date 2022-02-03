@@ -124,13 +124,11 @@ const driverVertical: IDriver = {
           let indentTop = '';
           if (i === elements.length - 1) {
             indentTop = String(
-              Math.ceil(coefficientPoint * elementsValues[i]) -
-                shiftToMinValue -
-                1,
+              coefficientPoint * elementsValues[i] - shiftToMinValue - 1,
             );
           } else {
             indentTop = String(
-              Math.ceil(coefficientPoint * elementsValues[i]) - shiftToMinValue,
+              coefficientPoint * elementsValues[i] - shiftToMinValue,
             );
           }
           element.style.marginLeft = '0px';
@@ -159,7 +157,7 @@ const driverVertical: IDriver = {
         if (i !== currentThumbIndex) {
           const thumb = elements[i];
           const indentTop = String(
-            Math.ceil(coefficientPoint * thumbsValues[i]) - shiftToMinValue,
+            coefficientPoint * thumbsValues[i] - shiftToMinValue,
           );
           thumb.style.left = '';
           thumb.style.top = `${indentTop}px`;
@@ -214,9 +212,7 @@ const driverVertical: IDriver = {
     slider: HTMLElement;
   }): void {
     const element = target;
-    const indentTop = String(
-      Math.ceil(coefficientPoint * currentValue) - shiftToMinValue,
-    );
+    const indentTop = String(coefficientPoint * currentValue - shiftToMinValue);
     element.style.top = `${indentTop}px`;
 
     this.updateActiveRange(slider);

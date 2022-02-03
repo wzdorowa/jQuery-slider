@@ -125,13 +125,11 @@ const driverHorizontal: IDriver = {
           let indentLeft = '';
           if (i === elements.length - 1) {
             indentLeft = String(
-              Math.ceil(coefficientPoint * elementsValues[i]) -
-                shiftToMinValue -
-                1,
+              coefficientPoint * elementsValues[i] - shiftToMinValue - 1,
             );
           } else {
             indentLeft = String(
-              Math.ceil(coefficientPoint * elementsValues[i]) - shiftToMinValue,
+              coefficientPoint * elementsValues[i] - shiftToMinValue,
             );
           }
           element.style.marginTop = '0px';
@@ -160,7 +158,7 @@ const driverHorizontal: IDriver = {
         if (i !== currentThumbIndex) {
           const element = elements[i];
           const indentLeft = String(
-            Math.ceil(coefficientPoint * thumbsValues[i]) - shiftToMinValue,
+            coefficientPoint * thumbsValues[i] - shiftToMinValue,
           );
           element.style.top = '';
           element.style.left = `${indentLeft}px`;
@@ -216,7 +214,7 @@ const driverHorizontal: IDriver = {
   }): void {
     const element = target;
     const indentLeft = String(
-      Math.ceil(coefficientPoint * currentValue) - shiftToMinValue,
+      coefficientPoint * currentValue - shiftToMinValue,
     );
 
     element.style.left = `${indentLeft}px`;
