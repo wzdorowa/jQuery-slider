@@ -400,7 +400,6 @@ class Thumbs {
 
       this.state.thumbValueAxis = utilities.calculateValueAxis(
         this.state.thumbsValues[index],
-        this.state.stepSlider,
         this.state.coefficientPoint,
         this.state.shiftToMinValue,
       );
@@ -438,14 +437,12 @@ class Thumbs {
 
       const nextStepValueAxis: number = utilities.calculateValueAxis(
         this.state.thumbsValues[index] + this.state.stepSlider,
-        this.state.stepSlider,
         this.state.coefficientPoint,
         this.state.shiftToMinValue,
       );
 
       const previousStepValueAxis: number = utilities.calculateValueAxis(
         this.state.thumbsValues[index] - this.state.stepSlider,
-        this.state.stepSlider,
         this.state.coefficientPoint,
         this.state.shiftToMinValue,
       );
@@ -466,11 +463,6 @@ class Thumbs {
           stepWidth,
         );
       }
-
-      // const lastStep =
-      //   this.state.maxValueSlider -
-      //   Math.floor(this.state.maxValueSlider / this.state.stepSlider) *
-      //     this.state.stepSlider;
 
       if (isFirstThumb) {
         if (this.state.currentValueAxis < this.state.startValueAxis) {
