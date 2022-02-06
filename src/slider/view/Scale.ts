@@ -174,6 +174,15 @@ class Scale {
         if (countSteps >= 50) {
           stepForScaleValue = this.stepSlider * 10;
         }
+        stepForScaleValue = Math.floor(stepForScaleValue * 100) / 10;
+
+        const fractionalPart = Math.ceil(stepForScaleValue) - stepForScaleValue;
+
+        if (fractionalPart >= 0.5) {
+          stepForScaleValue = Math.floor(stepForScaleValue) / 10;
+        } else {
+          stepForScaleValue = Math.ceil(stepForScaleValue) / 10;
+        }
 
         const scaleValueContainer = this.driver.createElementScaleValueContainer();
         const htmlFragment = this.createElementsSerifs(stepForScaleValue);
@@ -204,17 +213,35 @@ class Scale {
       countSerifs += 1;
     }
 
+    const fractionalPartStep = stepSerif - Math.floor(stepSerif);
+
     new Array(countSerifs)
       .fill(1)
       .forEach((_element: number, index: number) => {
         if (index === 0) {
           this.valuesSerifs[index] = min;
           currentValueSerif += stepSerif;
+          currentValueSerif = Math.ceil(currentValueSerif * 10) / 10;
         } else if (index === countSerifs - 1) {
           this.valuesSerifs[index] = max;
         } else {
           this.valuesSerifs[index] = currentValueSerif;
           currentValueSerif += stepSerif;
+
+          if (fractionalPartStep === 0) {
+            currentValueSerif = Math.ceil(currentValueSerif * 10) / 10;
+          } else {
+            let newValue = Math.floor(currentValueSerif * 100) / 10;
+
+            const fractionalValuePart = Math.ceil(newValue) - newValue;
+
+            if (fractionalValuePart >= 0.5) {
+              newValue = Math.floor(newValue) / 10;
+            } else {
+              newValue = Math.ceil(newValue) / 10;
+            }
+            currentValueSerif = newValue;
+          }
         }
       });
 
@@ -223,7 +250,7 @@ class Scale {
       if (this.driver !== null) {
         const scaleValue: HTMLElement = this.driver.createElementScaleValue();
         const valueWithNumber: HTMLElement = this.driver.createElementScaleValueWithNumber();
-        valueWithNumber.innerHTML = String(element);
+        valueWithNumber.innerHTML = String(Math.floor(element * 10) / 10);
         scaleValue.append(valueWithNumber);
         htmlFragment.append(scaleValue);
         this.serifsElements.push(scaleValue);
