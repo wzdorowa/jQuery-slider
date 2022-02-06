@@ -206,11 +206,24 @@ class Model {
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
     thumbsValues.forEach((element: number, index: number) => {
-      let value: number = element;
+      let value: number = Math.floor(element * 10) / 10;
 
-      const remainderOfDivision = (value - this.state.min) % this.state.step;
+      const minPossibleValue = this.state.min + index * this.state.step;
+
+      if (value < minPossibleValue) {
+        value = minPossibleValue;
+        this.state.thumbsValues[index] = value;
+      } else {
+        this.state.thumbsValues[index] = value;
+      }
+
+      const valuesInterval = Math.round((value - this.state.min) * 10) / 10;
+
+      const remainderOfDivision = valuesInterval % this.state.step;
 
       const activeRangeValues = this.state.max - this.state.min;
+
+      const fractionalPartStep = this.state.step - Math.round(this.state.step);
 
       const lastStep =
         activeRangeValues -
@@ -243,14 +256,20 @@ class Model {
 
             if (value > penultimateValue) {
               value = this.state.max;
-            } else {
+            } else if (fractionalPartStep === 0) {
               value -= remainderOfDivision;
+            } else {
+              value = Math.round((value - remainderOfDivision) * 10) / 10;
             }
-          } else {
+          } else if (fractionalPartStep === 0) {
             value -= remainderOfDivision;
+          } else {
+            value = Math.round((value - remainderOfDivision) * 10) / 10;
           }
-        } else {
+        } else if (fractionalPartStep === 0) {
           value -= remainderOfDivision;
+        } else {
+          value = Math.round((value - remainderOfDivision) * 10) / 10;
         }
       }
 
