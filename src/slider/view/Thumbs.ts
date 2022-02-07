@@ -276,13 +276,7 @@ class Thumbs {
       this.state.shiftToMinValue,
     );
 
-    const fractionalPart =
-      this.state.currentValue - Math.floor(this.state.currentValue);
-    if (fractionalPart > 0.5) {
-      this.state.currentValue = Math.ceil(this.state.currentValue);
-    } else {
-      this.state.currentValue = Math.floor(this.state.currentValue);
-    }
+    this.state.currentValue = Math.round(this.state.currentValue * 10) / 10;
 
     if (this.state.thumbsValues[index] !== this.state.currentValue) {
       this.emitter.emit('view:thumbsValues-changed', {
@@ -548,7 +542,10 @@ class Thumbs {
     nextValueAxis: number,
     index: number,
   ): void {
-    const halfStep = this.state.coefficientPoint * (this.state.stepSlider / 2);
+    const halfStep =
+      Math.round(
+        this.state.coefficientPoint * (this.state.stepSlider / 2) * 10,
+      ) / 10;
 
     if (this.driver !== null) {
       if (this.state.target !== null) {

@@ -105,7 +105,6 @@ class Model {
     }
 
     this.state.thumbsValues[index] = thumbValue;
-
     this.normolizeState();
   }
 
@@ -205,6 +204,7 @@ class Model {
 
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
+    console.log('thumbsValues 1', thumbsValues);
     thumbsValues.forEach((element: number, index: number) => {
       let value: number = Math.floor(element * 10) / 10;
 
@@ -218,16 +218,34 @@ class Model {
       }
 
       const valuesInterval = Math.round((value - this.state.min) * 10) / 10;
+      const integer = Math.floor(valuesInterval / this.state.step);
 
-      const remainderOfDivision = valuesInterval % this.state.step;
+      const getRemainderOfDivision = (interval: number, step: number) => {
+        return Math.abs(
+          Math.round((interval - integer * step) * 10000) / 10000,
+        );
+      };
+
+      const remainderOfDivision = getRemainderOfDivision(
+        valuesInterval,
+        this.state.step,
+      );
+      console.log('remainderOfDivision', remainderOfDivision);
+
+      const currentValue = integer * this.state.step + this.state.min;
+
+      const stepOrZero =
+        Math.round(remainderOfDivision / this.state.step) * this.state.step;
+
+      value = Math.round((stepOrZero + currentValue) * 10) / 10;
+      console.log('value', value);
 
       const activeRangeValues = this.state.max - this.state.min;
-
-      const fractionalPartStep = this.state.step - Math.round(this.state.step);
 
       const lastStep =
         activeRangeValues -
         Math.floor(activeRangeValues / this.state.step) * this.state.step;
+      console.log('lastStep', lastStep);
 
       const isValid =
         index === thumbsValues.length - 1 || thumbsValues.length === 1;
@@ -248,28 +266,16 @@ class Model {
           this.state.min -
           this.state.step * (this.state.thumbsValues.length - (index + 1));
       }
+      console.log('maximumPossibleValue', maximumPossibleValue);
 
-      if (remainderOfDivision > 0) {
-        if (index === thumbsValues.length - 1) {
-          if (lastStep > 0) {
-            const penultimateValue: number = this.state.max - lastStep;
+      if (index === thumbsValues.length - 1) {
+        if (lastStep > 0) {
+          const penultimateValue: number = this.state.max - lastStep;
+          console.log('penultimateValue', penultimateValue);
 
-            if (value > penultimateValue) {
-              value = this.state.max;
-            } else if (fractionalPartStep === 0) {
-              value -= remainderOfDivision;
-            } else {
-              value = Math.round((value - remainderOfDivision) * 10) / 10;
-            }
-          } else if (fractionalPartStep === 0) {
-            value -= remainderOfDivision;
-          } else {
-            value = Math.round((value - remainderOfDivision) * 10) / 10;
+          if (value > penultimateValue) {
+            value = this.state.max;
           }
-        } else if (fractionalPartStep === 0) {
-          value -= remainderOfDivision;
-        } else {
-          value = Math.round((value - remainderOfDivision) * 10) / 10;
         }
       }
 
@@ -304,6 +310,7 @@ class Model {
 
       this.notifyStateChanged();
     });
+    console.log('thumbsValues 2', thumbsValues);
   }
 
   private notifyStateChanged(): void {
