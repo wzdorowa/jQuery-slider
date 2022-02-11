@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
-    "dev": "parcel ./src/*.pug",
+    "dev": "parcel ./src/*.pug --open",
     "build": "parcel build ./src/*.pug --out-dir build --public-url /jQuery-slider",
     "deploy": "gh-pages -d build",
     "eslint": "eslint --cache --ext .js,.ts, src",
