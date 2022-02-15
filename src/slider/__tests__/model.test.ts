@@ -48,11 +48,11 @@ describe('Model testing', () => {
   });
   test('Set new value ThumbsValues', () => {
     state.thumbsValues[1] = 36;
-    model.setNewValueThumbsValues(state.thumbsValues[1], 1);
+    model.setNewThumbValue(state.thumbsValues[1], 1);
     expect(model.state.thumbsValues[1]).toBe(state.thumbsValues[1]);
 
     state.thumbsValues[3] = 80;
-    model.setNewValueThumbsValues(state.thumbsValues[3], 3);
+    model.setNewThumbValue(state.thumbsValues[3], 3);
     expect(model.state.thumbsValues[3]).toBe(state.thumbsValues[3]);
   });
   test('Set new value Step', () => {
@@ -84,16 +84,9 @@ describe('Model testing', () => {
     expect(model.state.orientation).toBe('horizontal');
   });
   test('set a new value for the thumb state', () => {
-    model.setNewValueThumbsValues(50, 3);
+    model.setNewThumbValue(50, 3);
     expect(model.state.thumbsValues[3]).toBe(50);
-    model.setNewValueThumbsValues(50, 3);
-  });
-  test('overwrite current thumbs values', () => {
-    model.overwriteCurrentThumbsValues([24, 36, 50, 64]);
-    expect(model.state.thumbsValues[0]).toBe(24);
-    expect(model.state.thumbsValues[1]).toBe(36);
-    expect(model.state.thumbsValues[2]).toBe(50);
-    expect(model.state.thumbsValues[3]).toBe(64);
+    model.setNewThumbValue(50, 3);
   });
   test('check normolize state', () => {
     model.setNewValueMin(26);
@@ -101,7 +94,7 @@ describe('Model testing', () => {
     expect(model.state.thumbsValues[0]).toBe(26);
 
     model.setNewValueMax(80);
-    model.setNewValueThumbsValues(86, 3);
+    model.setNewThumbValue(86, 3);
     expect(model.state.thumbsValues[3]).toBe(80);
   });
   test('check maximum count of thumbs', () => {
@@ -109,13 +102,5 @@ describe('Model testing', () => {
     model.setNewValueCount(15);
 
     expect(model.state.thumbsCount).toBe(15);
-  });
-
-  test('check ThumbsValues', () => {
-    model.overwriteCurrentThumbsValues([25, 15, 45, 67]);
-    expect(model.state.thumbsValues[0]).toBe(26);
-    expect(model.state.thumbsValues[1]).toBe(31);
-    expect(model.state.thumbsValues[2]).toBe(41);
-    expect(model.state.thumbsValues[3]).toBe(66);
   });
 });

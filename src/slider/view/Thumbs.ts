@@ -39,6 +39,7 @@ class Thumbs {
       thumbsValues: [],
       orientation: null,
       target: null,
+      lastStep: 0,
     };
 
     this.emitter.makeSubscribe(
@@ -276,10 +277,14 @@ class Thumbs {
       this.state.shiftToMinValue,
     );
 
-    this.state.currentValue = Math.round(this.state.currentValue * 10) / 10;
+    if (this.state.stepSlider < 1) {
+      this.state.currentValue = Math.round(this.state.currentValue * 10) / 10;
+    } else {
+      this.state.currentValue = Math.round(this.state.currentValue);
+    }
 
     if (this.state.thumbsValues[index] !== this.state.currentValue) {
-      this.emitter.emit('view:thumbsValues-changed', {
+      this.emitter.emit('view:thumbValue-changed', {
         value: this.state.currentValue,
         index,
       });
@@ -361,7 +366,7 @@ class Thumbs {
 
     if (currentThumbIndex !== null) {
       if (currentSpacingValue !== this.state.currentValue) {
-        this.emitter.emit('view:thumbsValues-changed', {
+        this.emitter.emit('view:thumbValue-changed', {
           value: currentValue,
           index: currentThumbIndex,
         });
@@ -381,7 +386,18 @@ class Thumbs {
       this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessStart(
         this.state.target,
       );
-      this.state.startValueAxis = 0;
+
+      const stepWidth: number =
+        this.state.stepSlider * this.state.coefficientPoint;
+
+      this.state.lastStep =
+        Math.round(
+          ((this.state.maxValueSlider - this.state.minValueSlider) %
+            this.state.stepSlider) *
+            10,
+        ) / 10;
+
+      this.state.startValueAxis = index * stepWidth;
 
       this.state.valueAxisFromStartMove = this.driver.getStartValueAxisToProcessStart(
         event,
@@ -390,6 +406,17 @@ class Thumbs {
       this.state.maxValueAxis = this.driver.getMaxValueAxisToProcessStart(
         this.slider,
       );
+
+      if (this.state.lastStep > 0) {
+        if (index < elements.length - 1) {
+          this.state.maxValueAxis =
+            this.state.maxValueAxis -
+            (elements.length - 1 - index) * stepWidth +
+            this.state.lastStep * this.state.coefficientPoint;
+        }
+      } else {
+        this.state.maxValueAxis -= (elements.length - 1 - index) * stepWidth;
+      }
 
       this.state.thumbValueAxis = utilities.calculateValueAxis(
         this.state.thumbsValues[index],
@@ -404,7 +431,6 @@ class Thumbs {
   }
 
   private processMove(event: MouseEvent): void {
-    const elements: HTMLElement[] = this.state.thumbs;
     const index = this.state.currentThumbIndex;
 
     const isValid =
@@ -414,162 +440,71 @@ class Thumbs {
       this.driver !== null;
 
     if (isValid) {
-      const isFirstThumb: boolean = index === 0;
-
-      const isLastThumb: boolean = index === elements.length - 1 && index !== 0;
-
-      const isOneThumb: boolean = elements.length === 1;
-
-      const stepWidth: number =
-        this.state.stepSlider * this.state.coefficientPoint;
-
-      this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessMove(
-        event,
-        this.state.valueAxisFromStartMove,
-      );
-
-      const nextStepValueAxis: number = utilities.calculateValueAxis(
-        this.state.thumbsValues[index] + this.state.stepSlider,
-        this.state.coefficientPoint,
-        this.state.shiftToMinValue,
-      );
-
-      const previousStepValueAxis: number = utilities.calculateValueAxis(
-        this.state.thumbsValues[index] - this.state.stepSlider,
-        this.state.coefficientPoint,
-        this.state.shiftToMinValue,
-      );
-
-      const nextThumb = elements[index + 1];
-      let offsetNextThumb = null;
-
-      if (nextThumb !== undefined) {
-        offsetNextThumb = this.driver.getOffsetNextThumb(nextThumb, stepWidth);
-      }
-
-      const previousThumb = elements[index - 1];
-      let offsetPreviousThumb = null;
-
-      if (previousThumb !== undefined) {
-        offsetPreviousThumb = this.driver.getOffsetPreviousThumb(
-          previousThumb,
-          stepWidth,
+      if (this.state.target !== null) {
+        this.state.currentValueAxis = this.driver.getCurrentValueAxisToProcessMove(
+          event,
+          this.state.valueAxisFromStartMove,
         );
-      }
 
-      if (isFirstThumb) {
-        if (this.state.currentValueAxis < this.state.startValueAxis) {
-          this.setIndentForTarget(this.state.startValueAxis, index);
-        } else {
-          this.checkCommonConditions(
-            offsetNextThumb,
-            offsetPreviousThumb,
-            previousStepValueAxis,
-            nextStepValueAxis,
-            index,
-          );
-        }
-      } else if (isOneThumb || isLastThumb) {
         if (this.state.currentValueAxis > this.state.maxValueAxis) {
-          this.setIndentForTarget(this.state.maxValueAxis, index);
+          this.state.currentValueAxis = this.state.maxValueAxis;
+        }
+
+        if (this.state.currentValueAxis < this.state.startValueAxis) {
+          this.state.currentValueAxis = this.state.startValueAxis;
+        }
+
+        if (this.state.stepSlider <= 1) {
+          this.driver.setIndentForTarget(
+            this.state.target,
+            this.state.currentValueAxis,
+            this.slider,
+          );
+          this.state.thumbValueAxis = this.state.currentValueAxis;
+          this.updateThumbPositionOnScale(index);
         } else {
-          this.checkCommonConditions(
-            offsetNextThumb,
-            offsetPreviousThumb,
-            previousStepValueAxis,
-            nextStepValueAxis,
-            index,
-          );
-        }
-      } else {
-        this.checkCommonConditions(
-          offsetNextThumb,
-          offsetPreviousThumb,
-          previousStepValueAxis,
-          nextStepValueAxis,
-          index,
-        );
-      }
-    }
-  }
+          const stepWidth: number =
+            this.state.stepSlider * this.state.coefficientPoint;
 
-  private checkCommonConditions(
-    offsetNextThumb: number | null,
-    offsetPreviousThumb: number | null,
-    previousStepValueAxis: number,
-    nextStepValueAxis: number,
-    index: number,
-  ) {
-    if (
-      offsetNextThumb !== null &&
-      this.state.currentValueAxis > offsetNextThumb
-    ) {
-      this.setIndentForTarget(offsetNextThumb, index);
-    } else if (
-      offsetPreviousThumb !== null &&
-      this.state.currentValueAxis < offsetPreviousThumb
-    ) {
-      this.setIndentForTarget(offsetPreviousThumb, index);
-    } else if (this.state.stepSlider === 1) {
-      this.setIndentForTarget(this.state.currentValueAxis, index);
-    } else {
-      this.checkPreviousOrNextValueThumb(
-        previousStepValueAxis,
-        nextStepValueAxis,
-        index,
-      );
-    }
-  }
+          if (this.state.thumbValueAxis !== null) {
+            const previousHalfStep = this.state.thumbValueAxis - stepWidth / 2;
+            const nextHalfStep = this.state.thumbValueAxis + stepWidth / 2;
+            const lastHalfStep =
+              this.state.maxValueAxis - this.state.lastStep / 2;
 
-  private setIndentForTarget(valueAxis: number, index: number): void {
-    if (this.driver !== null) {
-      if (this.state.target !== null) {
-        this.driver.setIndentForTarget(
-          this.state.target,
-          valueAxis,
-          this.slider,
-        );
-      }
-    }
+            const previousThumbAxisValue =
+              this.state.thumbValueAxis - stepWidth;
+            const nextThumbAxisValue = this.state.thumbValueAxis + stepWidth;
 
-    this.state.currentValueAxis = valueAxis;
-    this.state.thumbValueAxis = valueAxis;
-    this.updateThumbPositionOnScale(index);
-  }
-
-  private checkPreviousOrNextValueThumb(
-    previousValueAxis: number,
-    nextValueAxis: number,
-    index: number,
-  ): void {
-    const halfStep =
-      Math.round(
-        this.state.coefficientPoint * (this.state.stepSlider / 2) * 10,
-      ) / 10;
-
-    if (this.driver !== null) {
-      if (this.state.target !== null) {
-        if (this.state.currentValueAxis > nextValueAxis - halfStep) {
-          this.state.currentValueAxis = nextValueAxis;
-          this.state.thumbValueAxis = nextValueAxis;
-          this.driver.setIndentForTarget(
-            this.state.target,
-            nextValueAxis,
-            this.slider,
-          );
-          this.state.thumbValueAxis = nextValueAxis;
-          this.state.currentValueAxis = nextValueAxis;
-          this.updateThumbPositionOnScale(index);
-        }
-        if (this.state.currentValueAxis < previousValueAxis + halfStep) {
-          this.driver.setIndentForTarget(
-            this.state.target,
-            previousValueAxis,
-            this.slider,
-          );
-          this.state.currentValueAxis = previousValueAxis;
-          this.state.thumbValueAxis = previousValueAxis;
-          this.updateThumbPositionOnScale(index);
+            if (this.state.currentValueAxis < previousHalfStep) {
+              this.driver.setIndentForTarget(
+                this.state.target,
+                previousThumbAxisValue,
+                this.slider,
+              );
+              this.state.currentValueAxis = previousThumbAxisValue;
+              this.state.thumbValueAxis = previousThumbAxisValue;
+              this.updateThumbPositionOnScale(index);
+            } else if (this.state.currentValueAxis > nextHalfStep) {
+              this.driver.setIndentForTarget(
+                this.state.target,
+                nextThumbAxisValue,
+                this.slider,
+              );
+              this.state.currentValueAxis = nextThumbAxisValue;
+              this.state.thumbValueAxis = nextThumbAxisValue;
+              this.updateThumbPositionOnScale(index);
+            } else if (this.state.currentValueAxis > lastHalfStep) {
+              this.driver.setIndentForTarget(
+                this.state.target,
+                this.state.maxValueAxis,
+                this.slider,
+              );
+              this.state.currentValueAxis = this.state.maxValueAxis;
+              this.state.thumbValueAxis = this.state.maxValueAxis;
+              this.updateThumbPositionOnScale(index);
+            }
+          }
         }
       }
     }

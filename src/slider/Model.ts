@@ -31,7 +31,11 @@ class Model {
     };
 
     this.emitter = eventEmitter;
-    this.normolizeState();
+    this.setNewValueMin(this.state.min);
+    // this.setNewValueMax(this.state.max);
+    this.setNewValueCount(this.state.thumbsCount);
+    this.setNewValueStep(this.state.step);
+    this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // set new min value
@@ -42,11 +46,17 @@ class Model {
       correctMinValue -= min - Math.floor(min);
     }
 
+    if (correctMinValue > this.state.thumbsValues[0]) {
+      this.state.thumbsValues[0] = this.state.min;
+      this.checkThumbsValues(this.state.thumbsValues);
+    }
+
     if (this.state.min === min) {
       return;
     }
+
     this.state.min = correctMinValue;
-    this.normolizeState();
+    this.notifyStateChanged();
   }
 
   // set new value max
@@ -57,8 +67,17 @@ class Model {
       correctMaxValue -= max - Math.floor(max);
     }
 
+    if (
+      this.state.max <
+      this.state.thumbsValues[this.state.thumbsValues.length - 1]
+    ) {
+      this.state.thumbsValues[
+        this.state.thumbsValues.length - 1
+      ] = this.state.max;
+      this.checkThumbsValues(this.state.thumbsValues);
+    }
     this.state.max = correctMaxValue;
-    this.normolizeState();
+    this.notifyStateChanged();
   }
 
   // set a new number of thumbs
@@ -69,50 +88,88 @@ class Model {
       correctThumbsCount -= thumbsCount - Math.floor(thumbsCount);
     }
 
-    // установить значения для новых ползунков
-    if (this.state.thumbsCount !== correctThumbsCount) {
-      if (this.state.thumbsCount < correctThumbsCount) {
-        const missingQuantityThumbs =
-          correctThumbsCount - this.state.thumbsCount;
+    if (correctThumbsCount <= 0) {
+      correctThumbsCount = 1;
+    }
 
-        new Array(missingQuantityThumbs).fill(1).forEach(() => {
-          this.state.thumbsValues[this.state.thumbsValues.length] =
-            this.state.thumbsValues[this.state.thumbsValues.length - 1] +
-            this.state.step;
+    const maximumCountOfThumbs = Math.floor(
+      (this.state.max - this.state.min) / this.state.step,
+    );
+
+    if (maximumCountOfThumbs < correctThumbsCount) {
+      correctThumbsCount = maximumCountOfThumbs;
+
+      if (correctThumbsCount < this.state.thumbsValues.length) {
+        this.state.thumbsValues.splice(
+          this.state.thumbsCount,
+          this.state.thumbsValues.length - this.state.thumbsCount,
+        );
+      }
+    }
+
+    // установить значения для новых ползунков
+    if (this.state.thumbsValues.length < correctThumbsCount) {
+      const missingQuantityThumbs =
+        correctThumbsCount - this.state.thumbsValues.length;
+
+      new Array(missingQuantityThumbs).fill(1).forEach(() => {
+        this.state.thumbsValues[this.state.thumbsValues.length] =
+          this.state.thumbsValues[this.state.thumbsValues.length - 1] +
+          this.state.step;
+      });
+    }
+
+    if (this.state.thumbsValues.length > correctThumbsCount) {
+      if (correctThumbsCount > 0) {
+        const excessThumbs =
+          this.state.thumbsValues.length - correctThumbsCount;
+        new Array(excessThumbs).fill(1).forEach(() => {
+          this.state.thumbsValues.splice(-1, 1);
         });
       }
-
-      if (this.state.thumbsCount > correctThumbsCount) {
-        if (correctThumbsCount > 0) {
-          const excessThumbs = this.state.thumbsCount - correctThumbsCount;
-          new Array(excessThumbs).fill(1).forEach(() => {
-            this.state.thumbsValues.splice(-1, 1);
-          });
-        }
-        if (correctThumbsCount <= 0) {
-          this.state.thumbsValues.splice(1, this.state.thumbsValues.length - 1);
-        }
+      if (correctThumbsCount <= 0) {
+        this.state.thumbsValues.splice(1, this.state.thumbsValues.length - 1);
       }
     }
     this.state.thumbsCount = correctThumbsCount;
-    this.normolizeState();
   }
 
   // set a new value for the thumb state
-  public setNewValueThumbsValues(thumbValue: number, index: number): void {
+  public setNewThumbValue(thumbValue: number, index: number): void {
     if (this.state.thumbsValues[index] === thumbValue) {
       return;
     }
 
     this.state.thumbsValues[index] = thumbValue;
-    this.normolizeState();
+
+    for (let i = index; i < this.state.thumbsValues.length; i += 1) {
+      if (this.state.thumbsValues[i] >= this.state.thumbsValues[i + 1]) {
+        this.state.thumbsValues[i + 1] =
+          this.state.thumbsValues[i] + this.state.step;
+      }
+    }
+
+    for (let i = index; i > 0; i -= 1) {
+      if (this.state.thumbsValues[i] <= this.state.thumbsValues[i - 1]) {
+        this.state.thumbsValues[i - 1] =
+          this.state.thumbsValues[i] - this.state.step;
+      }
+    }
+    // this.notifyStateChanged();
+    this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // set a new value for the step of moving the thumbs
   public setNewValueStep(step: number): void {
     this.state.step = step;
 
-    this.normolizeState();
+    if (this.state.step <= 0) {
+      this.state.step = 1;
+    }
+    if (this.state.step > this.state.max / this.state.thumbsCount) {
+      this.state.step = this.state.max / this.state.thumbsCount;
+    }
+    this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // set a new value for the tooltip field
@@ -141,80 +198,30 @@ class Model {
     this.notifyStateChanged();
   }
 
-  public overwriteCurrentThumbsValues(thumbsValues: number[]): void {
-    this.state.thumbsValues = thumbsValues;
-    this.normolizeState();
-  }
-
-  private normolizeState(): void {
-    if (
-      this.state.max - this.state.min <
-      this.state.step * this.state.thumbsCount
-    ) {
-      this.state.max =
-        this.state.min + this.state.step * this.state.thumbsCount;
-    }
-    const maximumCountOfThumbs = Math.floor(
-      (this.state.max - this.state.min) / this.state.step,
-    );
-
-    if (this.state.thumbsCount <= 0) {
-      this.state.thumbsCount = 1;
-    }
-
-    if (this.state.thumbsCount < this.state.thumbsValues.length) {
-      this.state.thumbsValues.splice(
-        this.state.thumbsCount,
-        this.state.thumbsValues.length - this.state.thumbsCount,
-      );
-    }
-
-    if (maximumCountOfThumbs < this.state.thumbsCount) {
-      this.state.thumbsCount = maximumCountOfThumbs;
-
-      if (this.state.thumbsCount < this.state.thumbsValues.length) {
-        this.state.thumbsValues.splice(
-          this.state.thumbsCount,
-          this.state.thumbsValues.length - this.state.thumbsCount,
-        );
-        this.checkThumbsValues(this.state.thumbsValues);
-      }
-    }
-    if (this.state.min > this.state.thumbsValues[0]) {
-      this.state.thumbsValues[0] = this.state.min;
-    }
-
-    if (
-      this.state.max <
-      this.state.thumbsValues[this.state.thumbsValues.length - 1]
-    ) {
-      this.state.thumbsValues[
-        this.state.thumbsValues.length - 1
-      ] = this.state.max;
-    }
-
-    if (this.state.step <= 0) {
-      this.state.step = 1;
-    }
-    if (this.state.step > this.state.max / this.state.thumbsCount) {
-      this.state.step = this.state.max / this.state.thumbsCount;
-    }
-    this.checkThumbsValues(this.state.thumbsValues);
-  }
-
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
-    console.log('thumbsValues 1', thumbsValues);
     thumbsValues.forEach((element: number, index: number) => {
       let value: number = Math.floor(element * 10) / 10;
 
       const minPossibleValue = this.state.min + index * this.state.step;
 
-      if (value < minPossibleValue) {
-        value = minPossibleValue;
-        this.state.thumbsValues[index] = value;
+      const lastStep =
+        Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
+        10;
+
+      let maxPossibleValue;
+      if (lastStep > 0) {
+        if (index === thumbsValues.length - 1) {
+          maxPossibleValue = this.state.max;
+        } else {
+          maxPossibleValue =
+            this.state.max -
+            (thumbsValues.length - index - 1) * this.state.step +
+            lastStep;
+        }
       } else {
-        this.state.thumbsValues[index] = value;
+        maxPossibleValue =
+          this.state.max - (thumbsValues.length - index - 1) * this.state.step;
       }
 
       const valuesInterval = Math.round((value - this.state.min) * 10) / 10;
@@ -230,7 +237,6 @@ class Model {
         valuesInterval,
         this.state.step,
       );
-      console.log('remainderOfDivision', remainderOfDivision);
 
       const currentValue = integer * this.state.step + this.state.min;
 
@@ -238,79 +244,24 @@ class Model {
         Math.round(remainderOfDivision / this.state.step) * this.state.step;
 
       value = Math.round((stepOrZero + currentValue) * 10) / 10;
-      console.log('value', value);
 
-      const activeRangeValues = this.state.max - this.state.min;
-
-      const lastStep =
-        activeRangeValues -
-        Math.floor(activeRangeValues / this.state.step) * this.state.step;
-      console.log('lastStep', lastStep);
-
-      const isValid =
-        index === thumbsValues.length - 1 || thumbsValues.length === 1;
-
-      let maximumPossibleValue;
-
-      if (isValid) {
-        maximumPossibleValue = this.state.max;
-      } else if (lastStep > 0) {
-        maximumPossibleValue =
-          activeRangeValues +
-          this.state.min -
-          this.state.step * (this.state.thumbsValues.length - (index + 1)) -
-          lastStep;
+      if (value < minPossibleValue) {
+        value = minPossibleValue;
+        this.state.thumbsValues[index] = value;
       } else {
-        maximumPossibleValue =
-          activeRangeValues +
-          this.state.min -
-          this.state.step * (this.state.thumbsValues.length - (index + 1));
-      }
-      console.log('maximumPossibleValue', maximumPossibleValue);
-
-      if (index === thumbsValues.length - 1) {
-        if (lastStep > 0) {
-          const penultimateValue: number = this.state.max - lastStep;
-          console.log('penultimateValue', penultimateValue);
-
-          if (value > penultimateValue) {
-            value = this.state.max;
-          }
-        }
+        this.state.thumbsValues[index] = value;
       }
 
-      if (value > maximumPossibleValue) {
-        value = maximumPossibleValue;
+      if (value >= maxPossibleValue) {
+        value = maxPossibleValue;
       }
 
       if (value !== this.state.thumbsValues[index]) {
         this.state.thumbsValues[index] = value;
       }
 
-      if (value < this.state.min) {
-        this.state.thumbsValues[index] =
-          this.state.min + this.state.step * index;
-      }
-
-      const isGreaterThanNextValue: boolean =
-        index !== this.state.thumbsValues[this.state.thumbsValues.length - 1] &&
-        element >= this.state.thumbsValues[index + 1];
-
-      const isLessThanPreviousValue: boolean =
-        value <= this.state.thumbsValues[index - 1];
-
-      if (isGreaterThanNextValue) {
-        this.state.thumbsValues[index + 1] =
-          this.state.thumbsValues[index] + this.state.step;
-      }
-      if (isLessThanPreviousValue) {
-        this.state.thumbsValues[index] =
-          this.state.thumbsValues[index - 1] + this.state.step;
-      }
-
       this.notifyStateChanged();
     });
-    console.log('thumbsValues 2', thumbsValues);
   }
 
   private notifyStateChanged(): void {

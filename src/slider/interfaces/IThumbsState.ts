@@ -16,4 +16,5 @@ export interface IThumbsState {
   orientation: string | null;
   thumbValueAxis: number | null;
   target: HTMLElement | null;
+  lastStep: number;
 }

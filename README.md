@@ -32,7 +32,7 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `element.setNewValueCount(value)` - передать данные для установки нового количества бегунков;
 
-`element.setNewValueThumbsValues(value, index)` - передать данные для установки нового значения бегунка. Аргумент index в данном случает означает порядковый номер бегунка. (Нумерация бегунков начинается с нуля, то есть если новое значение нужно установить для третьего бегунка, то его index будет равен двум).
+`element.setNewThumbValue(value, index)` - передать данные для установки нового значения бегунка. Аргумент index в данном случает означает порядковый номер бегунка. (Нумерация бегунков начинается с нуля, то есть если новое значение нужно установить для третьего бегунка, то его index будет равен двум).
 
 `element.setNewValueStep(value)` - передать данные для установки нового значения размера шага;
 
@@ -77,15 +77,13 @@ https://wzdorowa.github.io/jQuery-slider/
 
 `setNewValueCount(thumbsCount: number): void` - принимает на вход число и устанавливает его в state.thumbsCount модели;
 
-`setNewValueThumbsValues(thumbValue: number, index: number): void` - принимает на вход численное значение для бегунка и его индекс и устанавливает его значение по индексу в state.thumbsValues модели;
+`setNewThumbValue(thumbValue: number, index: number): void` - принимает на вход численное значение для бегунка и его индекс и устанавливает его значение по индексу в state.thumbsValues модели;
 
 `setNewValueStep(step: number): void` - принимает на вход число и устанавливает его в state.step модели;
 
 `setNewValueTooltip(value: boolean): void` - принимает на вход boolean-значение и устанавливает его в state.tooltip модели;
 
 `setNewValueOrientation(value: string): void` - принимает на вход строковое значение и устанавливает его в state.orientation модели;
-
-`overwriteCurrentThumbsValues(thumbsValues: number[])` - принимае на вход массив чисел и устанавливает его в state.thumbsValues модели;
 
 ## View
 Создает экземпляры Scale, Thumbs, Tooltips. Использует EventEmitter для корректного реагирования на изменения в модели. При изменении состояния модели, регулирует работу созданных экземпляров scale, thumbs, tooltips. Использует интерфейс IModelState для передачи текущего состояния в методы созданных экзкмпляров scale, thumbs, tooltips по необходимости.

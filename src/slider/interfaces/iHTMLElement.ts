@@ -6,7 +6,7 @@ export interface IHTMLElement extends HTMLElement {
   setNewValueMin(min: number): void;
   setNewValueMax(max: number): void;
   setNewValueCount(count: number): void;
-  setNewValueThumbsValues(thumbValue: number, index: number): void;
+  setNewThumbValue(thumbValue: number, index: number): void;
   setNewValueStep(step: number): void;
   setNewValueOrientation(value: string): void;
   setNewValueTooltip(value: boolean): void;

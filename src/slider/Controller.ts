@@ -24,15 +24,8 @@ class Controller {
 
     this.attachPublicMethods(this.model, eventEmitter);
 
-    eventEmitter.makeSubscribe(
-      'view:countThumbs-changed',
-      (thumbsValues: number[]) => {
-        this.model.overwriteCurrentThumbsValues(thumbsValues);
-      },
-    );
-
-    eventEmitter.makeSubscribe('view:thumbsValues-changed', (data: IData) => {
-      this.model.setNewValueThumbsValues(data.value, data.index);
+    eventEmitter.makeSubscribe('view:thumbValue-changed', (data: IData) => {
+      this.model.setNewThumbValue(data.value, data.index);
     });
   }
 
@@ -50,11 +43,11 @@ class Controller {
     this.slider.setNewValueCount = (count: number): void => {
       model.setNewValueCount(count);
     };
-    this.slider.setNewValueThumbsValues = (
+    this.slider.setNewThumbValue = (
       touchValue: number,
       index: number,
     ): void => {
-      model.setNewValueThumbsValues(touchValue, index);
+      model.setNewThumbValue(touchValue, index);
     };
     this.slider.setNewValueStep = (step: number): void => {
       model.setNewValueStep(step);

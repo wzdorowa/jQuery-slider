@@ -390,7 +390,7 @@ class ConfigurationPanel {
             const thumbsValue = Number(
               this.elements.inputsSliderThumbs[i].value,
             );
-            this.slider.setNewValueThumbsValues(thumbsValue, i);
+            this.slider.setNewThumbValue(thumbsValue, i);
           }
         });
     }
@@ -450,7 +450,7 @@ class ConfigurationPanel {
   handleInputsSliderThumbsBlur(index: number): void {
     if (this.elements.inputsSliderThumbs !== null) {
       const thumbsValue = Number(this.elements.inputsSliderThumbs[index].value);
-      this.slider.setNewValueThumbsValues(thumbsValue, index);
+      this.slider.setNewThumbValue(thumbsValue, index);
     }
   }
 
