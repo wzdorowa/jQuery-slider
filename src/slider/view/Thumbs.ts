@@ -470,13 +470,33 @@ class Thumbs {
             const previousHalfStep = this.state.thumbValueAxis - stepWidth / 2;
             const nextHalfStep = this.state.thumbValueAxis + stepWidth / 2;
             const lastHalfStep =
-              this.state.maxValueAxis - this.state.lastStep / 2;
+              this.state.maxValueAxis -
+              (this.state.lastStep * this.state.coefficientPoint) / 2;
 
             const previousThumbAxisValue =
               this.state.thumbValueAxis - stepWidth;
             const nextThumbAxisValue = this.state.thumbValueAxis + stepWidth;
 
-            if (this.state.currentValueAxis < previousHalfStep) {
+            if (
+              this.state.currentValue === this.state.maxValueSlider &&
+              this.state.lastStep > 0
+            ) {
+              if (this.state.currentValueAxis < lastHalfStep) {
+                const penultimateValue =
+                  this.state.maxValueAxis -
+                  this.state.lastStep * this.state.coefficientPoint;
+
+                this.driver.setIndentForTarget(
+                  this.state.target,
+                  penultimateValue,
+                  this.slider,
+                );
+
+                this.state.currentValueAxis = penultimateValue;
+                this.state.thumbValueAxis = penultimateValue;
+                this.updateThumbPositionOnScale(index);
+              }
+            } else if (this.state.currentValueAxis < previousHalfStep) {
               this.driver.setIndentForTarget(
                 this.state.target,
                 previousThumbAxisValue,

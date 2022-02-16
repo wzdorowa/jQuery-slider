@@ -132,6 +132,7 @@ class Model {
       }
     }
     this.state.thumbsCount = correctThumbsCount;
+    this.notifyStateChanged();
   }
 
   // set a new value for the thumb state
@@ -155,7 +156,6 @@ class Model {
           this.state.thumbsValues[i] - this.state.step;
       }
     }
-    // this.notifyStateChanged();
     this.checkThumbsValues(this.state.thumbsValues);
   }
 
@@ -224,36 +224,31 @@ class Model {
           this.state.max - (thumbsValues.length - index - 1) * this.state.step;
       }
 
-      const valuesInterval = Math.round((value - this.state.min) * 10) / 10;
-      const integer = Math.floor(valuesInterval / this.state.step);
-
-      const getRemainderOfDivision = (interval: number, step: number) => {
-        return Math.abs(
-          Math.round((interval - integer * step) * 10000) / 10000,
-        );
-      };
-
-      const remainderOfDivision = getRemainderOfDivision(
-        valuesInterval,
-        this.state.step,
-      );
-
-      const currentValue = integer * this.state.step + this.state.min;
-
-      const stepOrZero =
-        Math.round(remainderOfDivision / this.state.step) * this.state.step;
-
-      value = Math.round((stepOrZero + currentValue) * 10) / 10;
-
       if (value < minPossibleValue) {
         value = minPossibleValue;
-        this.state.thumbsValues[index] = value;
-      } else {
-        this.state.thumbsValues[index] = value;
-      }
-
-      if (value >= maxPossibleValue) {
+      } else if (value >= maxPossibleValue) {
         value = maxPossibleValue;
+      } else {
+        const valuesInterval = Math.round((value - this.state.min) * 10) / 10;
+        const integer = Math.floor(valuesInterval / this.state.step);
+
+        const getRemainderOfDivision = (interval: number, step: number) => {
+          return Math.abs(
+            Math.round((interval - integer * step) * 10000) / 10000,
+          );
+        };
+
+        const remainderOfDivision = getRemainderOfDivision(
+          valuesInterval,
+          this.state.step,
+        );
+
+        const currentValue = integer * this.state.step + this.state.min;
+
+        const stepOrZero =
+          Math.round(remainderOfDivision / this.state.step) * this.state.step;
+
+        value = Math.round((stepOrZero + currentValue) * 10) / 10;
       }
 
       if (value !== this.state.thumbsValues[index]) {
