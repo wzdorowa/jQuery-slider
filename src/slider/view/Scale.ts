@@ -174,6 +174,16 @@ class Scale {
         if (countSteps >= 50) {
           stepForScaleValue = this.stepSlider * 10;
         }
+        if (countSteps >= 100) {
+          stepForScaleValue = this.stepSlider * 20;
+        }
+        if (countSteps >= 200) {
+          stepForScaleValue = this.stepSlider * 30;
+        }
+        if (countSteps >= 300) {
+          stepForScaleValue = this.stepSlider * 40;
+        }
+
         stepForScaleValue = Math.floor(stepForScaleValue * 100) / 10;
 
         const fractionalPart = Math.ceil(stepForScaleValue) - stepForScaleValue;
@@ -212,6 +222,7 @@ class Scale {
     if (lastStep > 0) {
       countSerifs += 1;
     }
+    console.log('countSerifs', countSerifs);
 
     const fractionalPartStep = stepSerif - Math.floor(stepSerif);
 

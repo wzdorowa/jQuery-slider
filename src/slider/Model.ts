@@ -132,7 +132,8 @@ class Model {
       }
     }
     this.state.thumbsCount = correctThumbsCount;
-    this.notifyStateChanged();
+
+    this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // set a new value for the thumb state
