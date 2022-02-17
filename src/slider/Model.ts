@@ -167,6 +167,8 @@ class Model {
     }
     if (this.state.step > this.state.max / this.state.thumbsCount) {
       this.state.step = this.state.max / this.state.thumbsCount;
+    } else if (this.state.step > this.state.max - this.state.min) {
+      this.state.step = this.state.max - this.state.min;
     }
     this.checkThumbsValues(this.state.thumbsValues);
   }
