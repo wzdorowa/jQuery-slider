@@ -411,7 +411,7 @@ class Thumbs {
         if (index < elements.length - 1) {
           this.state.maxValueAxis =
             this.state.maxValueAxis -
-            (elements.length - 1 - index) * stepWidth +
+            (elements.length - 2 - index) * stepWidth -
             this.state.lastStep * this.state.coefficientPoint;
         }
       } else {

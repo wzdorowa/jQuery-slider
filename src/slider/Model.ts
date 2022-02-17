@@ -215,7 +215,7 @@ class Model {
         } else {
           maxPossibleValue =
             this.state.max -
-            (thumbsValues.length - index - 1) * this.state.step +
+            (thumbsValues.length - index - 2) * this.state.step -
             lastStep;
         }
       } else {
