@@ -48,7 +48,6 @@ class Model {
 
     if (correctMinValue > this.state.thumbsValues[0]) {
       this.state.thumbsValues[0] = this.state.min;
-      this.checkThumbsValues(this.state.thumbsValues);
     }
 
     if (this.state.min === min) {
@@ -56,7 +55,7 @@ class Model {
     }
 
     this.state.min = correctMinValue;
-    this.notifyStateChanged();
+    this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // set new value max
@@ -74,10 +73,9 @@ class Model {
       this.state.thumbsValues[
         this.state.thumbsValues.length - 1
       ] = this.state.max;
-      this.checkThumbsValues(this.state.thumbsValues);
     }
     this.state.max = correctMaxValue;
-    this.notifyStateChanged();
+    this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // set a new number of thumbs

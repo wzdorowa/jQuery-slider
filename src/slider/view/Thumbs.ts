@@ -461,7 +461,9 @@ class Thumbs {
             this.slider,
           );
           this.state.thumbValueAxis = this.state.currentValueAxis;
-          this.updateThumbPositionOnScale(index);
+          if (index !== null) {
+            this.updateThumbPositionOnScale(index);
+          }
         } else {
           const stepWidth: number =
             this.state.stepSlider * this.state.coefficientPoint;
@@ -494,7 +496,9 @@ class Thumbs {
 
                 this.state.currentValueAxis = penultimateValue;
                 this.state.thumbValueAxis = penultimateValue;
-                this.updateThumbPositionOnScale(index);
+                if (index !== null) {
+                  this.updateThumbPositionOnScale(index);
+                }
               }
             } else if (this.state.currentValueAxis < previousHalfStep) {
               this.driver.setIndentForTarget(
@@ -504,7 +508,9 @@ class Thumbs {
               );
               this.state.currentValueAxis = previousThumbAxisValue;
               this.state.thumbValueAxis = previousThumbAxisValue;
-              this.updateThumbPositionOnScale(index);
+              if (index !== null) {
+                this.updateThumbPositionOnScale(index);
+              }
             } else if (this.state.currentValueAxis > nextHalfStep) {
               this.driver.setIndentForTarget(
                 this.state.target,
@@ -513,7 +519,9 @@ class Thumbs {
               );
               this.state.currentValueAxis = nextThumbAxisValue;
               this.state.thumbValueAxis = nextThumbAxisValue;
-              this.updateThumbPositionOnScale(index);
+              if (index !== null) {
+                this.updateThumbPositionOnScale(index);
+              }
             } else if (this.state.currentValueAxis > lastHalfStep) {
               this.driver.setIndentForTarget(
                 this.state.target,
@@ -522,7 +530,9 @@ class Thumbs {
               );
               this.state.currentValueAxis = this.state.maxValueAxis;
               this.state.thumbValueAxis = this.state.maxValueAxis;
-              this.updateThumbPositionOnScale(index);
+              if (index !== null) {
+                this.updateThumbPositionOnScale(index);
+              }
             }
           }
         }

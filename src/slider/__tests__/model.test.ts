@@ -90,6 +90,7 @@ describe('Model testing', () => {
   });
   test('check normolize state', () => {
     model.setNewValueMin(26);
+
     expect(model.state.min).toBe(26);
     expect(model.state.thumbsValues[0]).toBe(26);
 
@@ -101,6 +102,6 @@ describe('Model testing', () => {
     model.setNewValueStep(5);
     model.setNewValueCount(15);
 
-    expect(model.state.thumbsCount).toBe(15);
+    expect(model.state.thumbsCount).toBe(10);
   });
 });
