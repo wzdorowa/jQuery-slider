@@ -243,7 +243,27 @@ class Model {
           this.state.step,
         );
 
-        const currentValue = integer * this.state.step + this.state.min;
+        let currentValue;
+
+        if (remainderOfDivision > 0) {
+          currentValue = integer * this.state.step + this.state.min;
+          const lastStep =
+            Math.round(
+              ((this.state.max - this.state.min) % this.state.step) * 10,
+            ) / 10;
+          const beginningLastStep = this.state.max - lastStep;
+
+          if (value > beginningLastStep && value < this.state.max) {
+            const halfStep = lastStep / 2;
+            if (value > beginningLastStep + halfStep) {
+              currentValue = this.state.max;
+            } else {
+              currentValue = beginningLastStep;
+            }
+          }
+        } else {
+          currentValue = integer * this.state.step + this.state.min;
+        }
 
         const stepOrZero =
           Math.round(remainderOfDivision / this.state.step) * this.state.step;
