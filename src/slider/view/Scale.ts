@@ -222,7 +222,6 @@ class Scale {
     if (lastStep > 0) {
       countSerifs += 1;
     }
-    console.log('countSerifs', countSerifs);
 
     const fractionalPartStep = stepSerif - Math.floor(stepSerif);
 
