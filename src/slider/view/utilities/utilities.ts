@@ -1,9 +1,4 @@
 const utilities = {
-  calculateShiftToMinValue(coefficientPoint: number, min: number): number {
-    const shiftToMinValue = coefficientPoint * min;
-    return shiftToMinValue;
-  },
-
   /* the method calculates the current value of the thumb */
   calculateValue(
     currentValueAxis: number,

@@ -1,10 +1,7 @@
 import EventEmitter from '../EventEmitter';
 import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
-import { IThumbsState } from '../interfaces/IThumbsState';
-import { IDriver } from '../interfaces/iDriver';
-import driverHorizontal from './drivers/driverHorizontal';
-import driverVertical from './drivers/driverVertical';
+import { IAdapter } from '../interfaces/IAdapter';
 import utilities from './utilities/utilities';
 
 class Thumbs {
@@ -12,26 +9,57 @@ class Thumbs {
 
   private emitter: EventEmitter;
 
-  private state: IThumbsState;
+  private adapter: IAdapter | null;
 
-  private driver: IDriver;
+  private thumbs: HTMLElement[];
+
+  private coefficientPoint: number;
+
+  private shiftToMinValue: number;
+
+  private valueAxisFromStartMove: number;
+
+  private thumbValueAxis: number | null;
+
+  private startValueAxis: number;
+
+  private maxValueAxis: number;
+
+  private target: HTMLElement | null;
+
+  private lastStep: number;
+
+  private step: number;
+
+  private thumbsValues: number[];
+
+  private indexActiveThumb: number | null;
+
+  private currentValue: number;
+
+  private max: number;
+
+  private min: number;
 
   constructor(element: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = element;
     this.emitter = eventEmitter;
-    this.driver = driverHorizontal;
-
-    this.state = {
-      thumbs: [],
-      coefficientPoint: 0,
-      shiftToMinValue: 0,
-      valueAxisFromStartMove: 0,
-      thumbValueAxis: null,
-      startValueAxis: 0,
-      maxValueAxis: 0,
-      target: null,
-      lastStep: 0,
-    };
+    this.adapter = null;
+    this.thumbs = [];
+    this.coefficientPoint = 0;
+    this.shiftToMinValue = 0;
+    this.valueAxisFromStartMove = 0;
+    this.thumbValueAxis = null;
+    this.startValueAxis = 0;
+    this.maxValueAxis = 0;
+    this.target = null;
+    this.lastStep = 0;
+    this.step = 0;
+    this.thumbsValues = [];
+    this.indexActiveThumb = null;
+    this.currentValue = 0;
+    this.min = 0;
+    this.max = 100;
 
     this.emitter.makeSubscribe(
       'view:update-thumbs-position',
@@ -47,32 +75,37 @@ class Thumbs {
     );
   }
 
-  public initializeThumbs(state: IModelState): void {
-    if (state.orientation === 'horizontal') {
-      this.driver = driverHorizontal;
-    }
-    if (state.orientation === 'vertical') {
-      this.driver = driverVertical;
+  public initializeThumbs(state: IModelState, adapter: IAdapter): void {
+    this.adapter = adapter;
+
+    this.step = state.step;
+    this.thumbsValues = state.thumbsValues;
+    this.min = state.min;
+    this.max = state.max;
+
+    const scale: HTMLElement | null = this.slider.querySelector(
+      '.js-slider__scale',
+    );
+    if (scale !== null) {
+      this.coefficientPoint = scale.offsetWidth / (state.max - state.min);
     }
 
-    this.state.coefficientPoint = this.driver.calculateCoefficientPoint(
-      this.slider,
-      state.max,
-      state.min,
-    );
-    this.state.shiftToMinValue = utilities.calculateShiftToMinValue(
-      this.state.coefficientPoint,
-      state.min,
-    );
+    this.shiftToMinValue = this.coefficientPoint * state.min;
 
     this.createThumbs(state.thumbsCount);
     this.listenThumbsEvents();
-    this.setValuesThumbs(null);
-    this.listenSizeWindow();
+    this.setValuesThumbs(state.thumbsValues, null);
+    // this.listenSizeWindow();
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
   private createThumbs(thumbsCount: number): void {
+    const thumbs = this.slider.querySelectorAll('js-slider__thumb');
+    if (thumbs !== null) {
+      thumbs.forEach(thumb => {
+        thumb.remove();
+      });
+    }
     const htmlFragment = document.createDocumentFragment();
     new Array(thumbsCount).fill(1).forEach(() => {
       const thumb: HTMLElement = createElement(
@@ -80,59 +113,37 @@ class Thumbs {
         'slider__thumb js-slider__thumb',
       );
 
-      this.state.thumbs.push(thumb);
+      this.thumbs.push(thumb);
       htmlFragment.append(thumb);
     });
     this.slider.append(htmlFragment);
   }
 
-  private handleThumbMove(event: MouseEvent, index: number): void {
-    this.processMove(event, index);
-  }
-
-  private handleThumbStop(currentValue: number): void {
-    this.processStop.call(this, currentValue);
-  }
-
   /* hangs the 'mousedown' event handler for each created thumb */
-  private listenThumbsEvents(state: IModelState): void {
-    this.state.thumbs.forEach((element: HTMLElement, i: number) => {
+  private listenThumbsEvents(): void {
+    this.thumbs.forEach((element: HTMLElement, i: number) => {
       element.addEventListener(
         'mousedown',
-        this.handleThumbStart.bind(this, i, state),
+        this.handleThumbStart.bind(this, i),
       );
     });
   }
 
-  private handleThumbStart(
-    index: number,
-    event: MouseEvent,
-    state: IModelState,
-  ): void {
-    this.processStart(event, index, state);
-  }
-
-  /* listens to the 'resize' event on the slider page */
-  private listenSizeWindow(): void {
-    window.addEventListener('resize', this.handleWindowResize.bind(this));
-  }
-
-  private handleWindowResize(): void {
-    this.setValuesThumbs.call(this, null);
-  }
-
   /* places thumbs on the slider based on default values */
-  private setValuesThumbs(index: number | null): void {
-    if (this.driver !== null) {
-      this.driver.setInPlaceThumb({
-        elements: this.state.thumbs,
-        currentThumbIndex: index,
-        coefficientPoint: this.state.coefficientPoint,
-        thumbsValues: this.state.thumbsValues,
-        shiftToMinValue: this.state.shiftToMinValue,
-        slider: this.slider,
-      });
-    }
+  public setValuesThumbs(thumbsValues: number[], index: number | null): void {
+    this.thumbs.forEach((_element, i) => {
+      if (this.adapter?.direction !== undefined) {
+        if (i !== index) {
+          const element = this.thumbs[i];
+          const indentLeft = String(
+            this.coefficientPoint * thumbsValues[i] - this.shiftToMinValue,
+          );
+          element.style[this.adapter?.direction] = `${indentLeft}px`;
+        }
+      }
+    });
+    // добавить эмит об обновлении позиций бегунков для обновления activeRange
+    // this.updateActiveRange(slider);
   }
 
   private updateThumbPositionOnScale(
@@ -143,8 +154,8 @@ class Thumbs {
   ): void {
     let currentValue = utilities.calculateValue(
       currentValueAxis,
-      this.state.coefficientPoint,
-      this.state.shiftToMinValue,
+      this.coefficientPoint,
+      this.shiftToMinValue,
     );
 
     if (step < 1) {
@@ -167,17 +178,24 @@ class Thumbs {
 
     let clickLocationAxis = 0;
 
-    clickLocationAxis = this.driver.calculateClickLocationOnScaleValue(
-      event,
-      this.state.shiftToMinValue,
-      this.slider,
+    const scale: HTMLElement | null = this.slider.querySelector(
+      '.js-slider__scale',
     );
+    if (scale !== null) {
+      const startAxis = scale.getBoundingClientRect();
+
+      const offsetX = event.clientX - startAxis.x;
+
+      clickLocationAxis = offsetX + this.shiftToMinValue;
+    }
 
     const currentValue: number = utilities.calculateValueForClickOnScale(
       clickLocationAxis,
-      this.state.coefficientPoint,
-      this.state.stepSlider,
+      this.coefficientPoint,
+      this.step,
     );
+
+    this.currentValue = currentValue;
 
     this.findAndSetTheNearestThumb(currentValue);
   }
@@ -186,7 +204,7 @@ class Thumbs {
     const leftSpacing: number[] = [];
     const rightSpacing: number[] = [];
 
-    this.state.thumbsValues.forEach((thumbValue: number) => {
+    this.thumbsValues.forEach((thumbValue: number) => {
       const valueLeftSpacing = thumbValue - currentValue;
       leftSpacing.push(Math.abs(valueLeftSpacing));
 
@@ -226,194 +244,166 @@ class Thumbs {
     }
   }
 
-  private processStart(
-    event: MouseEvent,
-    index: number,
-    state: IModelState,
-  ): void {
+  private processStart(event: MouseEvent, index: number): void {
     event.preventDefault();
+    this.indexActiveThumb = index;
 
-    const elements: HTMLElement[] = this.state.thumbs;
-    this.state.target = elements[index];
+    const elements: HTMLElement[] = this.thumbs;
+    this.target = elements[index];
 
     let currentValueAxis;
 
-    if (this.driver !== null) {
-      currentValueAxis = this.driver.getCurrentValueAxisToProcessStart(
-        this.state.target,
+    if (this.adapter !== null) {
+      currentValueAxis = this.target[this.adapter?.offsetDirection];
+
+      const stepWidth: number = this.step * this.coefficientPoint;
+
+      this.lastStep = Math.round(((this.max - this.min) % this.step) * 10) / 10;
+
+      this.startValueAxis = index * stepWidth;
+
+      this.valueAxisFromStartMove = event.pageX - currentValueAxis;
+
+      const scale: HTMLElement | null = this.slider.querySelector(
+        '.js-slider__scale',
       );
 
-      const stepWidth: number = state.step * this.state.coefficientPoint;
-
-      this.state.lastStep =
-        Math.round(((state.max - state.min) % state.step) * 10) / 10;
-
-      this.state.startValueAxis = index * stepWidth;
-
-      this.state.valueAxisFromStartMove = this.driver.getStartValueAxisToProcessStart(
-        event,
-        currentValueAxis,
-      );
-      this.state.maxValueAxis = this.driver.getMaxValueAxisToProcessStart(
-        this.slider,
-      );
-
-      if (this.state.lastStep > 0) {
-        if (index < elements.length - 1) {
-          this.state.maxValueAxis =
-            this.state.maxValueAxis -
-            (elements.length - 2 - index) * stepWidth -
-            this.state.lastStep * this.state.coefficientPoint;
-        }
-      } else {
-        this.state.maxValueAxis -= (elements.length - 1 - index) * stepWidth;
+      if (scale !== null) {
+        this.maxValueAxis = scale.offsetWidth;
       }
 
-      this.state.thumbValueAxis = utilities.calculateValueAxis(
-        state.thumbsValues[index],
-        this.state.coefficientPoint,
-        this.state.shiftToMinValue,
+      if (this.lastStep > 0) {
+        if (index < elements.length - 1) {
+          this.maxValueAxis =
+            this.maxValueAxis -
+            (elements.length - 2 - index) * stepWidth -
+            this.lastStep * this.coefficientPoint;
+        }
+      } else {
+        this.maxValueAxis -= (elements.length - 1 - index) * stepWidth;
+      }
+
+      this.thumbValueAxis = utilities.calculateValueAxis(
+        this.thumbsValues[index],
+        this.coefficientPoint,
+        this.shiftToMinValue,
       );
     }
 
-    document.addEventListener(
-      'mousemove',
-      this.handleThumbMove.bind(this, index, state),
-    );
-    document.addEventListener(
-      'mouseup',
-      this.handleThumbStop.bind(this, currentValue),
-    );
+    document.addEventListener('mousemove', this.handleThumbMove.bind(this));
+    document.addEventListener('mouseup', this.handleThumbStop.bind(this));
   }
 
-  private processMove(
-    event: MouseEvent,
-    index: number,
-    state: IModelState,
-  ): void {
+  private processMove(event: MouseEvent): void {
     const isValid =
-      index !== null &&
-      this.state.thumbValueAxis !== null &&
-      this.state.target !== null &&
-      this.driver !== null;
+      this.indexActiveThumb !== null &&
+      this.thumbValueAxis !== null &&
+      this.target !== null;
 
     let currentValueAxis;
 
-    if (isValid) {
-      const currentValue = state.thumbsValues[index];
+    if (isValid && this.indexActiveThumb !== null) {
+      const currentValue = this.thumbsValues[this.indexActiveThumb];
 
-      if (this.state.target !== null) {
-        currentValueAxis = this.driver.getCurrentValueAxisToProcessMove(
-          event,
-          this.state.valueAxisFromStartMove,
-        );
+      if (this.target !== null && this.adapter !== null) {
+        currentValueAxis =
+          event[this.adapter?.pageAxis] - this.valueAxisFromStartMove;
 
-        if (currentValueAxis > this.state.maxValueAxis) {
-          currentValueAxis = this.state.maxValueAxis;
+        if (currentValueAxis > this.maxValueAxis) {
+          currentValueAxis = this.maxValueAxis;
         }
 
-        if (currentValueAxis < this.state.startValueAxis) {
-          currentValueAxis = this.state.startValueAxis;
+        if (currentValueAxis < this.startValueAxis) {
+          currentValueAxis = this.startValueAxis;
         }
 
-        if (state.step <= 1) {
-          this.driver.setIndentForTarget(
-            this.state.target,
-            currentValueAxis,
-            this.slider,
-          );
-          this.state.thumbValueAxis = currentValueAxis;
-          if (index !== null) {
+        if (this.step <= 1) {
+          this.target.style[this.adapter.direction] = `${currentValueAxis}px`;
+
+          this.thumbValueAxis = currentValueAxis;
+          if (this.indexActiveThumb !== null) {
             this.updateThumbPositionOnScale(
-              index,
+              this.indexActiveThumb,
               currentValueAxis,
-              state.step,
-              state.thumbsValues,
+              this.step,
+              this.thumbsValues,
             );
           }
         } else {
-          const stepWidth: number = state.step * this.state.coefficientPoint;
+          const stepWidth: number = this.step * this.coefficientPoint;
 
-          if (this.state.thumbValueAxis !== null) {
-            const previousHalfStep = this.state.thumbValueAxis - stepWidth / 2;
-            const nextHalfStep = this.state.thumbValueAxis + stepWidth / 2;
+          if (this.thumbValueAxis !== null) {
+            const previousHalfStep = this.thumbValueAxis - stepWidth / 2;
+            const nextHalfStep = this.thumbValueAxis + stepWidth / 2;
             const lastHalfStep =
-              this.state.maxValueAxis -
-              (this.state.lastStep * this.state.coefficientPoint) / 2;
+              this.maxValueAxis - (this.lastStep * this.coefficientPoint) / 2;
 
-            const previousThumbAxisValue =
-              this.state.thumbValueAxis - stepWidth;
-            const nextThumbAxisValue = this.state.thumbValueAxis + stepWidth;
+            const previousThumbAxisValue = this.thumbValueAxis - stepWidth;
+            const nextThumbAxisValue = this.thumbValueAxis + stepWidth;
 
-            if (currentValue === state.max && this.state.lastStep > 0) {
+            if (currentValue === this.max && this.lastStep > 0) {
               if (currentValueAxis < lastHalfStep) {
                 const penultimateValue =
-                  this.state.maxValueAxis -
-                  this.state.lastStep * this.state.coefficientPoint;
+                  this.maxValueAxis - this.lastStep * this.coefficientPoint;
 
-                this.driver.setIndentForTarget(
-                  this.state.target,
-                  penultimateValue,
-                  this.slider,
-                );
+                this.target.style[
+                  this.adapter.direction
+                ] = `${penultimateValue}px`;
 
                 currentValueAxis = penultimateValue;
-                this.state.thumbValueAxis = penultimateValue;
-                if (index !== null) {
+                this.thumbValueAxis = penultimateValue;
+                if (this.indexActiveThumb !== null) {
                   this.updateThumbPositionOnScale(
-                    index,
+                    this.indexActiveThumb,
                     currentValueAxis,
-                    state.step,
-                    state.thumbsValues,
+                    this.step,
+                    this.thumbsValues,
                   );
                 }
               }
             } else if (currentValueAxis < previousHalfStep) {
-              this.driver.setIndentForTarget(
-                this.state.target,
-                previousThumbAxisValue,
-                this.slider,
-              );
+              this.target.style[
+                this.adapter.direction
+              ] = `${previousThumbAxisValue}px`;
+
               currentValueAxis = previousThumbAxisValue;
-              this.state.thumbValueAxis = previousThumbAxisValue;
-              if (index !== null) {
+              this.thumbValueAxis = previousThumbAxisValue;
+              if (this.indexActiveThumb !== null) {
                 this.updateThumbPositionOnScale(
-                  index,
+                  this.indexActiveThumb,
                   currentValueAxis,
-                  state.step,
-                  state.thumbsValues,
+                  this.step,
+                  this.thumbsValues,
                 );
               }
             } else if (currentValueAxis > nextHalfStep) {
-              this.driver.setIndentForTarget(
-                this.state.target,
-                nextThumbAxisValue,
-                this.slider,
-              );
+              this.target.style[
+                this.adapter.direction
+              ] = `${nextThumbAxisValue}px`;
+
               currentValueAxis = nextThumbAxisValue;
-              this.state.thumbValueAxis = nextThumbAxisValue;
-              if (index !== null) {
+              this.thumbValueAxis = nextThumbAxisValue;
+              if (this.indexActiveThumb !== null) {
                 this.updateThumbPositionOnScale(
-                  index,
+                  this.indexActiveThumb,
                   currentValueAxis,
-                  state.step,
-                  state.thumbsValues,
+                  this.step,
+                  this.thumbsValues,
                 );
               }
             } else if (currentValueAxis > lastHalfStep) {
-              this.driver.setIndentForTarget(
-                this.state.target,
-                this.state.maxValueAxis,
-                this.slider,
-              );
-              currentValueAxis = this.state.maxValueAxis;
-              this.state.thumbValueAxis = this.state.maxValueAxis;
-              if (index !== null) {
+              this.target.style[
+                this.adapter.direction
+              ] = `${this.maxValueAxis}px`;
+
+              currentValueAxis = this.maxValueAxis;
+              this.thumbValueAxis = this.maxValueAxis;
+              if (this.indexActiveThumb !== null) {
                 this.updateThumbPositionOnScale(
-                  index,
+                  this.indexActiveThumb,
                   currentValueAxis,
-                  state.step,
-                  state.thumbsValues,
+                  this.step,
+                  this.thumbsValues,
                 );
               }
             }
@@ -423,23 +413,33 @@ class Thumbs {
     }
   }
 
-  private processStop(currentValue: number): void {
-    if (this.driver !== null) {
-      if (this.state.target !== null) {
-        if (currentValue !== null) {
-          this.driver.setIndentForTargetToProcessStop({
-            target: this.state.target,
-            coefficientPoint: this.state.coefficientPoint,
-            currentValue,
-            shiftToMinValue: this.state.shiftToMinValue,
-            slider: this.slider,
-          });
-        }
+  private processStop(): void {
+    if (this.adapter !== null) {
+      if (this.target !== null) {
+        const indentLeft =
+          this.coefficientPoint * this.currentValue - this.shiftToMinValue;
+
+        this.target.style[this.adapter?.direction] = `${indentLeft}px`;
+
+        // добавить эмит об обновлении позиций бегунков для обновления activeRange
+        // this.updateActiveRange(slider);
       }
     }
 
     document.removeEventListener('mousemove', this.handleThumbMove.bind(this));
     document.removeEventListener('mouseup', this.handleThumbStop.bind(this));
+  }
+
+  private handleThumbStart(index: number, event: MouseEvent): void {
+    this.processStart(event, index);
+  }
+
+  private handleThumbMove(event: MouseEvent): void {
+    this.processMove(event);
+  }
+
+  private handleThumbStop(): void {
+    this.processStop.call(this);
   }
 }
 export default Thumbs;

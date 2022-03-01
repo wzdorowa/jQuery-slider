@@ -1,9 +1,7 @@
 import EventEmitter from '../EventEmitter';
+import { IAdapter } from '../interfaces/IAdapter';
 import { IModelState } from '../interfaces/iModelState';
-import { IDriver } from '../interfaces/iDriver';
-import driverHorizontal from './drivers/driverHorizontal';
-import driverVertical from './drivers/driverVertical';
-import utilities from './utilities/utilities';
+import createElement from '../functions/createElement';
 
 class Scale {
   private slider: HTMLElement;
@@ -13,8 +11,6 @@ class Scale {
   private emitter: EventEmitter;
 
   private orientation: string | null;
-
-  private driver: IDriver | null;
 
   private thumbsValues: number[];
 
@@ -36,12 +32,13 @@ class Scale {
 
   private isCreatedScaleOfValue: boolean;
 
+  private adapter!: IAdapter;
+
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
     this.scale = null;
     this.emitter = emitter;
     this.orientation = null;
-    this.driver = null;
     this.thumbsValues = [];
     this.shiftToMinValue = 0;
     this.coefficientPoint = 0;
@@ -54,28 +51,9 @@ class Scale {
     this.isCreatedScaleOfValue = false;
   }
 
-  public initializeScale(state: IModelState): void {
-    if (this.orientation !== state.orientation) {
-      this.orientation = state.orientation;
-    }
-    if (state.orientation === 'horizontal') {
-      this.driver = driverHorizontal;
-    }
-    if (state.orientation === 'vertical') {
-      this.driver = driverVertical;
-    }
-    if (state.max !== this.maxValueSlider) {
-      this.maxValueSlider = state.max;
-    }
-    if (state.min !== this.minValueSlider) {
-      this.minValueSlider = state.min;
-    }
-    if (this.thumbsValues !== state.thumbsValues) {
-      this.thumbsValues = state.thumbsValues;
-    }
-    if (this.stepSlider !== state.step) {
-      this.stepSlider = state.step;
-    }
+  public initializeScale(state: IModelState, adapter: IAdapter): void {
+    this.adapter = adapter;
+
     if (state.isScaleOfValues) {
       this.isScaleOfValues = true;
     } else if (!state.isScaleOfValues) {
@@ -85,58 +63,31 @@ class Scale {
     this.createScale();
   }
 
-  public setConfig(state: IModelState): void {
-    if (this.orientation !== state.orientation) {
-      if (state.orientation === 'horizontal') {
-        this.driver = driverHorizontal;
-      }
-      if (state.orientation === 'vertical') {
-        this.driver = driverVertical;
-      }
-      this.orientation = state.orientation;
-      this.changeOrientation();
-    }
-    if (this.isScaleOfValues !== state.isScaleOfValues) {
-      if (state.isScaleOfValues) {
-        this.isScaleOfValues = true;
-        this.renderSerifs();
-      } else if (!state.isScaleOfValues) {
-        this.isScaleOfValues = false;
-        this.renderSerifs();
-      }
-    }
-    if (state.max !== this.maxValueSlider) {
-      this.maxValueSlider = state.max;
-      this.renderSerifs();
-    }
-    if (state.min !== this.minValueSlider) {
-      this.minValueSlider = state.min;
-      this.renderSerifs();
-    }
-    if (this.stepSlider !== state.step) {
-      this.stepSlider = state.step;
-      this.renderSerifs();
-    }
-    this.driver?.updateActiveRange(this.slider);
-    this.thumbsValues = state.thumbsValues;
-  }
-
   /* function createScale adds scale elements to the main html slider structure */
   private createScale(): void {
-    if (this.driver !== null) {
-      const scale: HTMLElement = this.driver.createElementScale();
-      const activeRange: HTMLElement = this.driver.createElementActiveRange();
+    const scale: HTMLElement = createElement(
+      'div',
+      'slider__scale js-slider__scale',
+    );
 
-      this.slider.append(scale);
-      this.scale = scale;
-      scale.append(activeRange);
+    const activeRange: HTMLElement = createElement(
+      'span',
+      'slider__active-range js-slider__active-range',
+    );
 
-      if (this.isScaleOfValues) {
-        this.renderSerifs();
-      }
+    if (this.orientation === 'vertical') {
+      scale.classList.add('slider__scale_vertical');
+    }
+
+    this.slider.append(scale);
+    this.scale = scale;
+    scale.append(activeRange);
+
+    if (this.isScaleOfValues) {
+      this.renderSerifs();
     }
     this.listenScaleClick();
-    this.listenSizeWindow();
+    // this.listenSizeWindow();
   }
 
   private listenScaleClick(): void {
@@ -158,48 +109,55 @@ class Scale {
         this.removeElementsScaleValueContainer();
       }
 
-      if (this.driver !== null) {
-        let stepForScaleValue = this.stepSlider;
+      let stepForScaleValue = this.stepSlider;
 
-        const countSteps = (max - min) / this.stepSlider;
-        if (countSteps >= 10) {
-          stepForScaleValue = this.stepSlider * 2;
-        }
-        if (countSteps >= 20) {
-          stepForScaleValue = this.stepSlider * 3;
-        }
-        if (countSteps >= 30) {
-          stepForScaleValue = this.stepSlider * 5;
-        }
-        if (countSteps >= 50) {
-          stepForScaleValue = this.stepSlider * 10;
-        }
-        if (countSteps >= 100) {
-          stepForScaleValue = this.stepSlider * 20;
-        }
-        if (countSteps >= 200) {
-          stepForScaleValue = this.stepSlider * 30;
-        }
-        if (countSteps >= 300) {
-          stepForScaleValue = this.stepSlider * 40;
-        }
-
-        stepForScaleValue = Math.floor(stepForScaleValue * 100) / 10;
-
-        const fractionalPart = Math.ceil(stepForScaleValue) - stepForScaleValue;
-
-        if (fractionalPart >= 0.5) {
-          stepForScaleValue = Math.floor(stepForScaleValue) / 10;
-        } else {
-          stepForScaleValue = Math.ceil(stepForScaleValue) / 10;
-        }
-
-        const scaleValueContainer = this.driver.createElementScaleValueContainer();
-        const htmlFragment = this.createElementsSerifs(stepForScaleValue);
-        scaleValueContainer.append(htmlFragment);
-        this.slider.append(scaleValueContainer);
-        this.isCreatedScaleOfValue = true;
+      const countSteps = (max - min) / this.stepSlider;
+      if (countSteps >= 10) {
+        stepForScaleValue = this.stepSlider * 2;
       }
+      if (countSteps >= 20) {
+        stepForScaleValue = this.stepSlider * 3;
+      }
+      if (countSteps >= 30) {
+        stepForScaleValue = this.stepSlider * 5;
+      }
+      if (countSteps >= 50) {
+        stepForScaleValue = this.stepSlider * 10;
+      }
+      if (countSteps >= 100) {
+        stepForScaleValue = this.stepSlider * 20;
+      }
+      if (countSteps >= 200) {
+        stepForScaleValue = this.stepSlider * 30;
+      }
+      if (countSteps >= 300) {
+        stepForScaleValue = this.stepSlider * 40;
+      }
+
+      stepForScaleValue = Math.floor(stepForScaleValue * 100) / 10;
+
+      const fractionalPart = Math.ceil(stepForScaleValue) - stepForScaleValue;
+
+      if (fractionalPart >= 0.5) {
+        stepForScaleValue = Math.floor(stepForScaleValue) / 10;
+      } else {
+        stepForScaleValue = Math.ceil(stepForScaleValue) / 10;
+      }
+
+      const scaleValueContainer: HTMLElement = createElement(
+        'div',
+        'slider__scale-value-container js-slider__scale-value-container',
+      );
+      if (this.orientation === 'vertical') {
+        scaleValueContainer.classList.add(
+          'slider__scale-value-container_vertical',
+        );
+      }
+      const htmlFragment = this.createElementsSerifs(stepForScaleValue);
+      scaleValueContainer.append(htmlFragment);
+      this.slider.append(scaleValueContainer);
+      this.isCreatedScaleOfValue = true;
+
       this.setSefirsInPlaces();
     } else if (!this.isScaleOfValues) {
       this.hideScaleOfValues();
@@ -257,79 +215,79 @@ class Scale {
 
     const htmlFragment = document.createDocumentFragment();
     this.valuesSerifs.forEach(element => {
-      if (this.driver !== null) {
-        const scaleValue: HTMLElement = this.driver.createElementScaleValue();
-        const valueWithNumber: HTMLElement = this.driver.createElementScaleValueWithNumber();
-        valueWithNumber.innerHTML = String(Math.floor(element * 10) / 10);
-        scaleValue.append(valueWithNumber);
-        htmlFragment.append(scaleValue);
-        this.serifsElements.push(scaleValue);
+      const scaleValue: HTMLElement = createElement(
+        'div',
+        'slider__scale-value js-slider__scale-value',
+      );
+
+      const valueWithNumber: HTMLElement = createElement(
+        'span',
+        'slider__scale-value-with-number js-slider__scale-value-with-number',
+      );
+
+      if (this.orientation === 'vertical') {
+        scaleValue.classList.add('slider__scale-value_vertical');
+        valueWithNumber.classList.add(
+          'slider__scale-value-with-number_vertical',
+        );
       }
+      valueWithNumber.innerHTML = String(Math.floor(element * 10) / 10);
+      scaleValue.append(valueWithNumber);
+      htmlFragment.append(scaleValue);
+      this.serifsElements.push(scaleValue);
     });
     this.listenScaleValueEvents();
     return htmlFragment;
   }
 
   private setSefirsInPlaces(): void {
-    if (this.driver !== null) {
-      this.coefficientPoint = this.driver.calculateCoefficientPoint(
-        this.slider,
-        this.maxValueSlider,
-        this.minValueSlider,
-      );
-
-      this.shiftToMinValue = utilities.calculateShiftToMinValue(
-        this.coefficientPoint,
-        this.minValueSlider,
-      );
-
-      this.driver.setInPlaceElement({
-        elements: this.serifsElements,
-        currentThumbIndex: null,
-        coefficientPoint: this.coefficientPoint,
-        elementsValues: this.valuesSerifs,
-        shiftToMinValue: this.shiftToMinValue,
-      });
+    if (this.scale !== null) {
+      this.coefficientPoint =
+        this.scale[this.adapter.offsetLength] /
+        (this.maxValueSlider - this.minValueSlider);
     }
+
+    this.shiftToMinValue = this.coefficientPoint * this.minValueSlider;
+
+    const currentThumbIndex = null;
+
+    this.serifsElements.forEach((_element, i) => {
+      if (i !== currentThumbIndex) {
+        const element = this.serifsElements[i];
+        let indentLeft = '';
+        if (i === this.serifsElements.length - 1) {
+          indentLeft = String(
+            this.coefficientPoint * this.valuesSerifs[i] -
+              this.shiftToMinValue -
+              1,
+          );
+        } else {
+          indentLeft = String(
+            this.coefficientPoint * this.valuesSerifs[i] - this.shiftToMinValue,
+          );
+        }
+        element.style[this.adapter.margin] = `${indentLeft}px`;
+      }
+    });
   }
 
   private removeElementsSerifs(): void {
     this.valuesSerifs = [];
     this.serifsElements = [];
-    if (this.driver !== null) {
-      const elements = this.driver.searchElementScaleValueToDelete(this.slider);
-      elements.forEach(element => {
-        element.remove();
-      });
-    }
+    const elements: HTMLElement[] = Array.from(
+      $(this.slider).find('.js-slider__scale-value'),
+    );
+    elements.forEach(element => {
+      element.remove();
+    });
   }
 
   private removeElementsScaleValueContainer(): void {
-    if (this.driver !== null) {
-      const element = this.driver.searchElementScaleValueBaseContainerToDelete(
-        this.slider,
-      );
+    const element: HTMLElement | null = this.slider.querySelector(
+      '.js-slider__scale-value-container',
+    );
+    if (element !== null) {
       element.remove();
-    }
-  }
-
-  private changeOrientation(): void {
-    if (this.driver !== null) {
-      const activeRangeToRemove: JQuery<HTMLElement> = this.driver.searchElementActiveRangeToDelete(
-        this.slider,
-      );
-      activeRangeToRemove.remove();
-      const scaleToDelete: JQuery<HTMLElement> = this.driver.searchElementScaleToDelete(
-        this.slider,
-      );
-      scaleToDelete.remove();
-      const scaleValueContainerToRemove: JQuery<HTMLElement> = this.driver.searchElementScaleValueContainerToDelete(
-        this.slider,
-      );
-      scaleValueContainerToRemove.remove();
-
-      this.isCreatedScaleOfValue = false;
-      this.createScale();
     }
   }
 
@@ -351,21 +309,21 @@ class Scale {
     this.emitter.emit('view:click-on-serif-scale', index, valuesSerifs);
   }
 
-  private listenSizeWindow(): void {
-    window.addEventListener('resize', this.handleWindowResize.bind(this));
-  }
+  // private listenSizeWindow(): void {
+  //   window.addEventListener('resize', this.handleWindowResize.bind(this));
+  // }
 
-  private handleWindowResize(): void {
-    this.setSefirsInPlaces();
-  }
+  // private handleWindowResize(): void {
+  //   this.setSefirsInPlaces();
+  // }
 
   /* hideTooltip method hides sliders tooltips */
   private hideScaleOfValues(): void {
-    if (this.driver !== null) {
-      const $allScaleOfValues: HTMLElement = this.driver.searchElementScaleValueBaseContainerToDelete(
-        this.slider,
-      );
-      $allScaleOfValues.classList.add('slider__scale-value-container_hide');
+    const element: HTMLElement | null = this.slider.querySelector(
+      '.js-slider__scale-value-container',
+    );
+    if (element !== null) {
+      element.classList.add('slider__scale-value-container_hide');
     }
   }
 }

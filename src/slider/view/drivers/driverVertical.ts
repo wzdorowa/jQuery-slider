@@ -14,42 +14,42 @@ const driverVertical: IDriver = {
   createElementTooltipText(): HTMLElement {
     const element: HTMLElement = createElement(
       'span',
-      'slider__vertical-tooltip-text js-slider__vertical-tooltip-text',
+      'slider__tooltip-text js-slider__tooltip-text slider__tooltip-text_vertical',
     );
     return element;
   },
   createElementScale(): HTMLElement {
     const element: HTMLElement = createElement(
       'div',
-      'slider__vertical-scale js-slider__vertical-scale',
+      'slider__scale js-slider__scale slider__scale_vertical',
     );
     return element;
   },
   createElementScaleValue(): HTMLElement {
     const element: HTMLElement = createElement(
       'div',
-      'slider__vertical-scale-value js-slider__vertical-scale-value',
+      'slider__scale-value js-slider__scale-value slider__scale-value_vertical',
     );
     return element;
   },
   createElementScaleValueContainer(): HTMLElement {
     const element: HTMLElement = createElement(
       'div',
-      'slider__vertical-scale-value-container js-slider__vertical-scale-value-container',
+      'slider__scale-value-container js-slider__scale-value-container slider__scale-value-container_vertical',
     );
     return element;
   },
   createElementScaleValueWithNumber(): HTMLElement {
     const element: HTMLElement = createElement(
       'span',
-      'slider__vertical-scale-value-with-number js-slider__vertical-scale-value-with-number',
+      'slider__scale-value-with-number js-slider__scale-value-with-number slider__scale-value-with-number_vertical',
     );
     return element;
   },
   createElementActiveRange(): HTMLElement {
     const element: HTMLElement = createElement(
       'span',
-      'slider__vertical-active-range js-slider__vertical-active-range',
+      'slider__active-range js-slider__active-range',
     );
     return element;
   },
@@ -71,7 +71,7 @@ const driverVertical: IDriver = {
   },
   searchElementScaleValueToDelete(slider: HTMLElement): HTMLElement[] {
     const $elements: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__vertical-scale-value'),
+      $(slider).find('.js-slider__scale-value'),
     );
     return $elements;
   },
@@ -87,7 +87,7 @@ const driverVertical: IDriver = {
     slider: HTMLElement,
   ): HTMLElement {
     const $elements: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__vertical-scale-value-container'),
+      $(slider).find('.js-slider__scale-value-container'),
     );
     return $elements[0];
   },
@@ -97,7 +97,7 @@ const driverVertical: IDriver = {
     min: number,
   ): number {
     const $elements: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__vertical-scale'),
+      $(slider).find('.js-slider__scale'),
     );
     const scale = $elements[0];
 
@@ -176,7 +176,7 @@ const driverVertical: IDriver = {
   },
   getMaxValueAxisToProcessStart(slider: HTMLElement): number {
     const $elements: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__vertical-scale'),
+      $(slider).find('.js-slider__scale'),
     );
     const scale = $elements[0];
     return scale.offsetHeight;
@@ -219,7 +219,7 @@ const driverVertical: IDriver = {
   },
   updateActiveRange(slider: HTMLElement): void {
     const $activeRangeElement: HTMLElement[] = Array.from(
-      $(slider).find('.js-slider__vertical-active-range'),
+      $(slider).find('.js-slider__active-range'),
     );
     const range = $activeRangeElement[0];
     const $allThumbs: HTMLElement[] = Array.from(
@@ -253,7 +253,7 @@ const driverVertical: IDriver = {
     shiftToMinValue: number,
     slider: HTMLElement,
   ): number {
-    const scale = Array.from($(slider).find('.js-slider__vertical-scale'));
+    const scale = Array.from($(slider).find('.js-slider__scale'));
     const startAxis = scale[0].getBoundingClientRect();
 
     const offsetY = event.clientY - startAxis.y;
