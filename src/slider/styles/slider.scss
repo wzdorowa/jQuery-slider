@@ -43,9 +43,7 @@
       z-index: 0;
     }
   }
-  &__scale-value-container_hide {
-    display: none;
-  }
+
   &__scale-value {
     width: 1px;
     height: 10px;
@@ -60,6 +58,7 @@
       height: 1px;
     }
   }
+
   &__scale-value-with-number {
     position: absolute;
     margin-top: 9px;
@@ -133,9 +132,5 @@
         border-color: transparent $PaleCornflowerBlue transparent transparent;
       }
     }
-  }
-
-  &__tooltip-hide {
-    display: none;
   }
 }

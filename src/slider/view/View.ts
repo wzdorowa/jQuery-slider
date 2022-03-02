@@ -8,8 +8,6 @@ import Tooltips from './Tooltips';
 class View {
   private slider: HTMLElement;
 
-  private isCreatedSlider: boolean;
-
   private emitter: EventEmitter;
 
   private scale!: Scale;
@@ -22,14 +20,12 @@ class View {
 
   constructor(slider: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = slider;
-    this.isCreatedSlider = false;
     this.emitter = eventEmitter;
     this.scale = new Scale(this.slider, this.emitter);
     this.thumbs = new Thumbs(this.slider, this.emitter);
     this.tooltips = new Tooltips(this.slider);
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
       this.setAdapter(state);
-      this.initialize(state);
       this.rerender(state);
     });
     this.emitter.makeSubscribe(
@@ -53,20 +49,10 @@ class View {
     );
   }
 
-  private initialize(state: IModelState): void {
-    if (!this.isCreatedSlider) {
-      this.scale.initializeScale.call(this.scale, state);
-      this.thumbs.initializeThumbs.call(this.thumbs, state, this.adapter);
-      this.tooltips.initializeTooltips.call(this.tooltips, state);
-
-      this.isCreatedSlider = true;
-    }
-  }
-
   private rerender(state: IModelState): void {
-    this.scale.setConfig.call(this.scale, state);
-    this.thumbs.initializeThumbs.call(this.thumbs, state);
-    this.tooltips.setConfig.call(this.tooltips, state);
+    this.scale.renderScale.call(this.scale, state, this.adapter);
+    this.thumbs.initializeThumbs.call(this.thumbs, state, this.adapter);
+    this.tooltips.renderTooltips.call(this.tooltips, state);
   }
 
   private update(thumbsValues: number[]): void {
@@ -78,6 +64,7 @@ class View {
       this.adapter = {
         offsetDirection: 'offsetLeft',
         offsetAxis: 'offsetX',
+        offsetLength: 'offsetWidth',
         pageAxis: 'pageX',
         currentAxis: 'currentX',
         direction: 'left',
@@ -88,6 +75,7 @@ class View {
       this.adapter = {
         offsetDirection: 'offsetTop',
         offsetAxis: 'offsetY',
+        offsetLength: 'offsetHeight',
         pageAxis: 'pageY',
         currentAxis: 'currentY',
         direction: 'top',

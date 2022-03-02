@@ -87,7 +87,8 @@ class Thumbs {
       '.js-slider__scale',
     );
     if (scale !== null) {
-      this.coefficientPoint = scale.offsetWidth / (state.max - state.min);
+      this.coefficientPoint =
+        scale[this.adapter.offsetLength] / (state.max - state.min);
     }
 
     this.shiftToMinValue = this.coefficientPoint * state.min;
@@ -95,12 +96,12 @@ class Thumbs {
     this.createThumbs(state.thumbsCount);
     this.listenThumbsEvents();
     this.setValuesThumbs(state.thumbsValues, null);
-    // this.listenSizeWindow();
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
   private createThumbs(thumbsCount: number): void {
-    const thumbs = this.slider.querySelectorAll('js-slider__thumb');
+    this.thumbs = [];
+    const thumbs = this.slider.querySelectorAll('.js-slider__thumb');
     if (thumbs !== null) {
       thumbs.forEach(thumb => {
         thumb.remove();
@@ -135,10 +136,11 @@ class Thumbs {
       if (this.adapter?.direction !== undefined) {
         if (i !== index) {
           const element = this.thumbs[i];
-          const indentLeft = String(
+          const indent = String(
             this.coefficientPoint * thumbsValues[i] - this.shiftToMinValue,
           );
-          element.style[this.adapter?.direction] = `${indentLeft}px`;
+
+          element.style[this.adapter?.direction] = `${indent}px`;
         }
       }
     });

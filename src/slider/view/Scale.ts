@@ -6,29 +6,15 @@ import createElement from '../functions/createElement';
 class Scale {
   private slider: HTMLElement;
 
-  private scale: HTMLElement | null;
+  private scale!: HTMLElement | null;
+
+  private activeRange!: HTMLElement;
 
   private emitter: EventEmitter;
-
-  private orientation: string | null;
-
-  private thumbsValues: number[];
-
-  private shiftToMinValue: number;
-
-  private coefficientPoint: number;
-
-  private maxValueSlider: number;
-
-  private minValueSlider: number;
-
-  private stepSlider: number;
 
   public serifsElements: HTMLElement[];
 
   private valuesSerifs: number[];
-
-  private isScaleOfValues: boolean;
 
   private isCreatedScaleOfValue: boolean;
 
@@ -36,35 +22,34 @@ class Scale {
 
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
-    this.scale = null;
     this.emitter = emitter;
-    this.orientation = null;
-    this.thumbsValues = [];
-    this.shiftToMinValue = 0;
-    this.coefficientPoint = 0;
-    this.maxValueSlider = 0;
-    this.minValueSlider = 0;
-    this.stepSlider = 0;
     this.serifsElements = [];
     this.valuesSerifs = [];
-    this.isScaleOfValues = true;
     this.isCreatedScaleOfValue = false;
   }
 
-  public initializeScale(state: IModelState, adapter: IAdapter): void {
+  public renderScale(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
 
-    if (state.isScaleOfValues) {
-      this.isScaleOfValues = true;
-    } else if (!state.isScaleOfValues) {
-      this.isScaleOfValues = false;
-    }
+    this.createScale(state.orientation);
+    this.updateActiveRange();
 
-    this.createScale();
+    if (state.isScaleOfValues) {
+      this.renderSerifs(state);
+    } else {
+      this.removeElementsScaleValueContainer();
+    }
   }
 
   /* function createScale adds scale elements to the main html slider structure */
-  private createScale(): void {
+  private createScale(orientation: string): void {
+    const scaleToDelete = this.slider.querySelector('.js-slider__scale');
+
+    if (scaleToDelete !== null) {
+      scaleToDelete.remove();
+    }
+    this.scale = null;
+
     const scale: HTMLElement = createElement(
       'div',
       'slider__scale js-slider__scale',
@@ -75,19 +60,16 @@ class Scale {
       'slider__active-range js-slider__active-range',
     );
 
-    if (this.orientation === 'vertical') {
+    if (orientation === 'vertical') {
       scale.classList.add('slider__scale_vertical');
     }
 
-    this.slider.append(scale);
     this.scale = scale;
+    this.activeRange = activeRange;
     scale.append(activeRange);
+    this.slider.append(scale);
 
-    if (this.isScaleOfValues) {
-      this.renderSerifs();
-    }
     this.listenScaleClick();
-    // this.listenSizeWindow();
   }
 
   private listenScaleClick(): void {
@@ -100,39 +82,47 @@ class Scale {
     }
   }
 
-  private renderSerifs(): void {
-    if (this.isScaleOfValues) {
-      const max: number = this.maxValueSlider;
-      const min: number = this.minValueSlider;
+  updateActiveRange(): void {
+    const $allThumbs: HTMLElement[] = Array.from(
+      $(this.slider).find('.js-slider__thumb'),
+    );
+    const firstThumb = $allThumbs[0];
+    const lastThumb = $allThumbs[$allThumbs.length - 1];
 
-      if (this.isCreatedScaleOfValue) {
-        this.removeElementsScaleValueContainer();
+    if ($allThumbs.length === 1) {
+      const lengthActiveRange = String(
+        firstThumb[this.adapter.offsetDirection],
+      );
+      this.activeRange.style[this.adapter.margin] = `0px`;
+      this.activeRange.style[this.adapter.length] = `${lengthActiveRange}px`;
+    } else if ($allThumbs.length > 1) {
+      const margin = String(firstThumb[this.adapter.offsetDirection]);
+
+      const lengthActiveRange = String(
+        lastThumb[this.adapter.offsetDirection] -
+          firstThumb[this.adapter.offsetDirection],
+      );
+
+      this.activeRange.style[this.adapter.margin] = `${margin}px`;
+      this.activeRange.style[this.adapter.length] = `${lengthActiveRange}px`;
+    }
+  }
+
+  private renderSerifs(state: IModelState): void {
+    const { max, min, step, orientation } = state;
+
+    this.removeElementsScaleValueContainer();
+    if (!this.isCreatedScaleOfValue) {
+      let stepForScaleValue;
+      const maximumNumberOfDivisions = 10;
+
+      let countSteps = (max - min) / step;
+
+      if (countSteps > maximumNumberOfDivisions) {
+        countSteps = maximumNumberOfDivisions;
       }
 
-      let stepForScaleValue = this.stepSlider;
-
-      const countSteps = (max - min) / this.stepSlider;
-      if (countSteps >= 10) {
-        stepForScaleValue = this.stepSlider * 2;
-      }
-      if (countSteps >= 20) {
-        stepForScaleValue = this.stepSlider * 3;
-      }
-      if (countSteps >= 30) {
-        stepForScaleValue = this.stepSlider * 5;
-      }
-      if (countSteps >= 50) {
-        stepForScaleValue = this.stepSlider * 10;
-      }
-      if (countSteps >= 100) {
-        stepForScaleValue = this.stepSlider * 20;
-      }
-      if (countSteps >= 200) {
-        stepForScaleValue = this.stepSlider * 30;
-      }
-      if (countSteps >= 300) {
-        stepForScaleValue = this.stepSlider * 40;
-      }
+      stepForScaleValue = step * Math.ceil(countSteps / step);
 
       stepForScaleValue = Math.floor(stepForScaleValue * 100) / 10;
 
@@ -148,53 +138,50 @@ class Scale {
         'div',
         'slider__scale-value-container js-slider__scale-value-container',
       );
-      if (this.orientation === 'vertical') {
+      if (orientation === 'vertical') {
         scaleValueContainer.classList.add(
           'slider__scale-value-container_vertical',
         );
       }
-      const htmlFragment = this.createElementsSerifs(stepForScaleValue);
+      const htmlFragment = this.createElementsSerifs(stepForScaleValue, state);
       scaleValueContainer.append(htmlFragment);
       this.slider.append(scaleValueContainer);
       this.isCreatedScaleOfValue = true;
 
-      this.setSefirsInPlaces();
-    } else if (!this.isScaleOfValues) {
-      this.hideScaleOfValues();
+      this.setSerifsInPlaces(min, max);
     }
   }
 
-  private createElementsSerifs(stepSerif: number): DocumentFragment {
-    const max: number = this.maxValueSlider;
-    const min: number = this.minValueSlider;
+  private createElementsSerifs(
+    stepForScaleValue: number,
+    state: IModelState,
+  ): DocumentFragment {
+    const { max, min, step, orientation } = state;
+    const lastStep = max - min - ((max - min) / step) * step;
 
-    const lastStep =
-      max - min - ((max - min) / this.stepSlider) * this.stepSlider;
+    let numberOfSerifs: number = Math.ceil((max - min) / stepForScaleValue) + 1;
 
-    this.removeElementsSerifs();
-
-    let countSerifs: number = Math.ceil((max - min) / stepSerif) + 1;
+    if (lastStep > 0) {
+      numberOfSerifs += 1;
+    }
 
     let currentValueSerif: number = min;
 
-    if (lastStep > 0) {
-      countSerifs += 1;
-    }
+    const fractionalPartStep =
+      stepForScaleValue - Math.floor(stepForScaleValue);
 
-    const fractionalPartStep = stepSerif - Math.floor(stepSerif);
-
-    new Array(countSerifs)
+    new Array(numberOfSerifs)
       .fill(1)
       .forEach((_element: number, index: number) => {
         if (index === 0) {
           this.valuesSerifs[index] = min;
-          currentValueSerif += stepSerif;
+          currentValueSerif += stepForScaleValue;
           currentValueSerif = Math.ceil(currentValueSerif * 10) / 10;
-        } else if (index === countSerifs - 1) {
+        } else if (index === numberOfSerifs - 1) {
           this.valuesSerifs[index] = max;
         } else {
           this.valuesSerifs[index] = currentValueSerif;
-          currentValueSerif += stepSerif;
+          currentValueSerif += stepForScaleValue;
 
           if (fractionalPartStep === 0) {
             currentValueSerif = Math.ceil(currentValueSerif * 10) / 10;
@@ -225,7 +212,7 @@ class Scale {
         'slider__scale-value-with-number js-slider__scale-value-with-number',
       );
 
-      if (this.orientation === 'vertical') {
+      if (orientation === 'vertical') {
         scaleValue.classList.add('slider__scale-value_vertical');
         valueWithNumber.classList.add(
           'slider__scale-value-with-number_vertical',
@@ -240,46 +227,28 @@ class Scale {
     return htmlFragment;
   }
 
-  private setSefirsInPlaces(): void {
+  private setSerifsInPlaces(min: number, max: number): void {
     if (this.scale !== null) {
-      this.coefficientPoint =
-        this.scale[this.adapter.offsetLength] /
-        (this.maxValueSlider - this.minValueSlider);
-    }
+      const coefficientPoint =
+        this.scale[this.adapter.offsetLength] / (max - min);
 
-    this.shiftToMinValue = this.coefficientPoint * this.minValueSlider;
+      const shiftToMinValue = coefficientPoint * min;
 
-    const currentThumbIndex = null;
-
-    this.serifsElements.forEach((_element, i) => {
-      if (i !== currentThumbIndex) {
-        const element = this.serifsElements[i];
+      this.serifsElements.forEach((element, i) => {
+        const serif = element;
         let indentLeft = '';
         if (i === this.serifsElements.length - 1) {
           indentLeft = String(
-            this.coefficientPoint * this.valuesSerifs[i] -
-              this.shiftToMinValue -
-              1,
+            coefficientPoint * this.valuesSerifs[i] - shiftToMinValue - 1,
           );
         } else {
           indentLeft = String(
-            this.coefficientPoint * this.valuesSerifs[i] - this.shiftToMinValue,
+            coefficientPoint * this.valuesSerifs[i] - shiftToMinValue,
           );
         }
-        element.style[this.adapter.margin] = `${indentLeft}px`;
-      }
-    });
-  }
-
-  private removeElementsSerifs(): void {
-    this.valuesSerifs = [];
-    this.serifsElements = [];
-    const elements: HTMLElement[] = Array.from(
-      $(this.slider).find('.js-slider__scale-value'),
-    );
-    elements.forEach(element => {
-      element.remove();
-    });
+        serif.style[this.adapter.margin] = `${indentLeft}px`;
+      });
+    }
   }
 
   private removeElementsScaleValueContainer(): void {
@@ -289,6 +258,8 @@ class Scale {
     if (element !== null) {
       element.remove();
     }
+    this.serifsElements = [];
+    this.isCreatedScaleOfValue = false;
   }
 
   private listenScaleValueEvents(): void {
@@ -307,24 +278,6 @@ class Scale {
 
   private handleSerifScaleClick(index: number, valuesSerifs: number[]): void {
     this.emitter.emit('view:click-on-serif-scale', index, valuesSerifs);
-  }
-
-  // private listenSizeWindow(): void {
-  //   window.addEventListener('resize', this.handleWindowResize.bind(this));
-  // }
-
-  // private handleWindowResize(): void {
-  //   this.setSefirsInPlaces();
-  // }
-
-  /* hideTooltip method hides sliders tooltips */
-  private hideScaleOfValues(): void {
-    const element: HTMLElement | null = this.slider.querySelector(
-      '.js-slider__scale-value-container',
-    );
-    if (element !== null) {
-      element.classList.add('slider__scale-value-container_hide');
-    }
   }
 }
 export default Scale;
