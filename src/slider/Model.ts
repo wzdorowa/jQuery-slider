@@ -280,47 +280,6 @@ class Model {
     });
   }
 
-  public findAndSetTheNearestThumb(currentValue: number): void {
-    const leftSpacing: number[] = [];
-    const rightSpacing: number[] = [];
-
-    this.state.thumbsValues.forEach((thumbValue: number) => {
-      const valueLeftSpacing = thumbValue - currentValue;
-      leftSpacing.push(Math.abs(valueLeftSpacing));
-
-      const valueRightSpacing = thumbValue + currentValue;
-      rightSpacing.push(Math.abs(valueRightSpacing));
-    });
-
-    let currentSpacingValue: number | null = null;
-    let currentThumbIndex: number | null = null;
-
-    const checkValueSpacing = (element: number, index: number) => {
-      if (currentSpacingValue === null) {
-        currentSpacingValue = element;
-      }
-      if (currentThumbIndex === null) {
-        currentThumbIndex = index;
-      }
-      if (element < currentSpacingValue) {
-        currentSpacingValue = element;
-        currentThumbIndex = index;
-      }
-    };
-    leftSpacing.forEach((element, index) => {
-      checkValueSpacing(element, index);
-    });
-    rightSpacing.forEach((element, index) => {
-      checkValueSpacing(element, index);
-    });
-
-    if (currentThumbIndex !== null) {
-      if (currentSpacingValue !== currentValue) {
-        this.setNewThumbValue(currentValue, currentThumbIndex);
-      }
-    }
-  }
-
   private notifyStateChanged(): void {
     this.emitter.emit('model:state-changed', this.state);
   }

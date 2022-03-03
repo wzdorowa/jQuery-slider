@@ -27,20 +27,6 @@ class Controller {
     eventEmitter.makeSubscribe('view:thumbValue-changed', (data: IData) => {
       this.model.setNewThumbValue(data.value, data.index);
     });
-
-    eventEmitter.makeSubscribe(
-      'view:update-thumbs-position',
-      (currentValue: number) => {
-        this.model.findAndSetTheNearestThumb(currentValue);
-      },
-    );
-
-    eventEmitter.makeSubscribe(
-      'view:update-thumbs-position-on-serif-scale',
-      (index: number, valuesSerifs: []) => {
-        this.model.findAndSetTheNearestThumb(valuesSerifs[index]);
-      },
-    );
   }
 
   private attachPublicMethods(model: Model, eventEmitter: EventEmitter) {

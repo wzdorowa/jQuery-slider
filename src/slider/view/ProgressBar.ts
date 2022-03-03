@@ -25,6 +25,8 @@ class ProgressBar {
 
   private step!: number;
 
+  private thumbsValues!: number[];
+
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
     this.emitter = emitter;
@@ -34,8 +36,8 @@ class ProgressBar {
 
   public renderProgressBar(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
-
     this.step = state.step;
+    this.thumbsValues = state.thumbsValues;
 
     this.createProgressBar(state.orientation);
 
@@ -250,6 +252,50 @@ class ProgressBar {
     });
   }
 
+  public findAndSetTheNearestThumb(currentValue: number): void {
+    const leftSpacing: number[] = [];
+    const rightSpacing: number[] = [];
+
+    this.thumbsValues.forEach((thumbValue: number) => {
+      const valueLeftSpacing = thumbValue - currentValue;
+      leftSpacing.push(Math.abs(valueLeftSpacing));
+
+      const valueRightSpacing = thumbValue + currentValue;
+      rightSpacing.push(Math.abs(valueRightSpacing));
+    });
+
+    let currentSpacingValue: number | null = null;
+    let currentThumbIndex: number | null = null;
+
+    const checkValueSpacing = (element: number, index: number) => {
+      if (currentSpacingValue === null) {
+        currentSpacingValue = element;
+      }
+      if (currentThumbIndex === null) {
+        currentThumbIndex = index;
+      }
+      if (element < currentSpacingValue) {
+        currentSpacingValue = element;
+        currentThumbIndex = index;
+      }
+    };
+    leftSpacing.forEach((element, index) => {
+      checkValueSpacing(element, index);
+    });
+    rightSpacing.forEach((element, index) => {
+      checkValueSpacing(element, index);
+    });
+
+    if (currentThumbIndex !== null) {
+      if (currentSpacingValue !== currentValue) {
+        this.emitter.emit('view:thumbValue-changed', {
+          value: currentValue,
+          index: currentThumbIndex,
+        });
+      }
+    }
+  }
+
   private handleProgressBarClick(event: MouseEvent): void {
     let clickLocationAxis = 0;
 
@@ -264,11 +310,14 @@ class ProgressBar {
       this.step,
     );
 
-    this.emitter.emit('view:click-on-progress-bar', currentValue);
+    this.findAndSetTheNearestThumb(currentValue);
   }
 
   private handleSerifScaleClick(index: number, valuesSerifs: number[]): void {
-    this.emitter.emit('view:click-on-serif-scale', index, valuesSerifs);
+    this.emitter.emit('view:thumbValue-changed', {
+      value: valuesSerifs[index],
+      index,
+    });
   }
 }
 export default ProgressBar;

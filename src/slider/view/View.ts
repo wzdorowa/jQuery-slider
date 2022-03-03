@@ -26,22 +26,6 @@ class View {
       this.initialize(state);
       this.render(state);
     });
-    this.emitter.makeSubscribe(
-      'view:click-on-progress-bar',
-      (currentValue: number) => {
-        this.emitter.emit('view:update-thumbs-position', currentValue);
-      },
-    );
-    this.emitter.makeSubscribe(
-      'view:click-on-serif-scale',
-      (index: number, valuesSerifs: number[]) => {
-        this.emitter.emit(
-          'view:update-thumbs-position-on-serif-scale',
-          index,
-          valuesSerifs,
-        );
-      },
-    );
   }
 
   private initialize(state: IModelState) {
