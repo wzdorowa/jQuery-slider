@@ -2,21 +2,21 @@ const utilities = {
   /* the method calculates the current value of the thumb */
   calculateValue(
     currentValueAxis: number,
-    coefficientPoint: number,
+    pointSize: number,
     shiftToMinValue: number,
   ): number {
     const currentValue: number =
-      (currentValueAxis + shiftToMinValue) / coefficientPoint;
+      (currentValueAxis + shiftToMinValue) / pointSize;
 
     return currentValue;
   },
 
   calculateValueForClickOnScale(
     currentValueAxis: number,
-    coefficientPoint: number,
+    pointSize: number,
     stepSlider: number,
   ): number {
-    let currentValue: number = currentValueAxis / coefficientPoint;
+    let currentValue: number = currentValueAxis / pointSize;
     const minValue: number = (currentValue / stepSlider) * stepSlider;
     const halfStep = minValue + stepSlider / 2;
 
@@ -31,10 +31,10 @@ const utilities = {
 
   calculateValueAxis(
     value: number,
-    coefficientPoint: number,
+    pointSize: number,
     shiftToMinValue: number,
   ): number {
-    const currentValueAxis: number = value * coefficientPoint - shiftToMinValue;
+    const currentValueAxis: number = value * pointSize - shiftToMinValue;
     return currentValueAxis;
   },
 };

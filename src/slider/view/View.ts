@@ -1,7 +1,7 @@
 import EventEmitter from '../EventEmitter';
 import { IAdapter } from '../interfaces/IAdapter';
 import { IModelState } from '../interfaces/iModelState';
-import Scale from './Scale';
+import ProgressBar from './ProgressBar';
 import Thumbs from './Thumbs';
 import Tooltips from './Tooltips';
 
@@ -10,7 +10,7 @@ class View {
 
   private emitter: EventEmitter;
 
-  private scale!: Scale;
+  private progressBar!: ProgressBar;
 
   private thumbs!: Thumbs;
 
@@ -21,21 +21,13 @@ class View {
   constructor(slider: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = slider;
     this.emitter = eventEmitter;
-    this.scale = new Scale(this.slider, this.emitter);
-    this.thumbs = new Thumbs(this.slider, this.emitter);
-    this.tooltips = new Tooltips(this.slider);
+
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
-      this.setAdapter(state);
-      this.rerender(state);
+      this.initialize(state);
+      this.render(state);
     });
     this.emitter.makeSubscribe(
-      'model:thumbsValue-changed',
-      (state: IModelState) => {
-        this.rerender(state);
-      },
-    );
-    this.emitter.makeSubscribe(
-      'view:click-on-scale',
+      'view:click-on-progress-bar',
       (currentValue: number) => {
         this.emitter.emit('view:update-thumbs-position', currentValue);
       },
@@ -52,9 +44,28 @@ class View {
     );
   }
 
-  private rerender(state: IModelState): void {
-    this.scale.renderScale.call(this.scale, state, this.adapter);
-    this.thumbs.initializeThumbs.call(this.thumbs, state, this.adapter);
+  private initialize(state: IModelState) {
+    this.slider.innerHTML = '';
+    this.setAdapter(state.orientation);
+
+    this.progressBar = new ProgressBar(this.slider, this.emitter);
+    this.thumbs = new Thumbs(this.slider, this.emitter);
+    this.tooltips = new Tooltips(this.slider);
+  }
+
+  private render(state: IModelState): void {
+    this.progressBar.renderProgressBar.call(
+      this.progressBar,
+      state,
+      this.adapter,
+    );
+
+    const pointSize: number =
+      this.progressBar.progressBar[this.adapter.offsetLength] /
+      (state.max - state.min);
+
+    this.thumbs.renderThumbs.call(this.thumbs, state, this.adapter, pointSize);
+    this.progressBar.updateActiveRange();
     this.tooltips.renderTooltips.call(this.tooltips, state);
   }
 
@@ -62,8 +73,8 @@ class View {
     this.thumbs.setValuesThumbs(thumbsValues, null);
   }
 
-  private setAdapter(state: IModelState): void {
-    if (state.orientation === 'horizontal') {
+  private setAdapter(orientation: string): void {
+    if (orientation === 'horizontal') {
       this.adapter = {
         offsetDirection: 'offsetLeft',
         offsetAxis: 'offsetX',
@@ -74,7 +85,7 @@ class View {
         margin: 'marginLeft',
         length: 'width',
       };
-    } else if (state.orientation === 'vertical') {
+    } else if (orientation === 'vertical') {
       this.adapter = {
         offsetDirection: 'offsetTop',
         offsetAxis: 'offsetY',

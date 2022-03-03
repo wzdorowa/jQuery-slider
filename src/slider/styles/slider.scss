@@ -1,7 +1,7 @@
 @import './variables.scss';
 
 .slider {
-  &__scale {
+  &__progress-bar {
     box-sizing: border-box;
     position: absolute;
     width: calc(100% - 24px);

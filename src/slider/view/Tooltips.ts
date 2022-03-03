@@ -18,15 +18,11 @@ class Tooltips {
     if (state.isTooltip) {
       this.createTooltips(state.thumbsCount, state.orientation);
       this.setTooltipsValues(state.thumbsValues);
-    } else {
-      this.removeTooltips();
     }
   }
 
   /* createTooltips function adds tooltip elements to the main html slider structure */
   private createTooltips(thumbsCount: number, orientation: string): void {
-    this.removeTooltips();
-
     new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
       const tooltip: HTMLElement = createElement(
         'div',
@@ -46,18 +42,6 @@ class Tooltips {
       this.tooltipsElements.push(tooltip);
       this.textInTooltips.push(textInTooltips);
     });
-  }
-
-  private removeTooltips(): void {
-    this.tooltipsElements = [];
-    this.textInTooltips = [];
-    const tooltips = this.slider.querySelectorAll('.js-slider__tooltip');
-
-    if (tooltips !== null) {
-      tooltips.forEach(element => {
-        element.remove();
-      });
-    }
   }
 
   /* sets the default sliders for their respective tooltips */

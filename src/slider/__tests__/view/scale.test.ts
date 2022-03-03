@@ -1,4 +1,4 @@
-import Scale from '../../view/Scale';
+import ProgressBar from '../../view/ProgressBar';
 import EventEmitter from '../../EventEmitter';
 import { IModelState } from '../../interfaces/iModelState';
 
@@ -19,7 +19,7 @@ describe('Unit tests', () => {
   window.document.body.appendChild(element);
 
   const eventEmitter = new EventEmitter();
-  const scale = new Scale(element, eventEmitter);
+  const scale = new ProgressBar(element, eventEmitter);
 
   test('test vertical orientation', () => {
     state.orientation = 'vertical';
