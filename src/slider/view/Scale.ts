@@ -2,6 +2,7 @@ import EventEmitter from '../EventEmitter';
 import { IAdapter } from '../interfaces/IAdapter';
 import { IModelState } from '../interfaces/iModelState';
 import createElement from '../functions/createElement';
+import utilities from './utilities/utilities';
 
 class Scale {
   private slider: HTMLElement;
@@ -20,6 +21,12 @@ class Scale {
 
   private adapter!: IAdapter;
 
+  private coefficientPoint!: number;
+
+  private shiftToMinValue!: number;
+
+  private step!: number;
+
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
     this.emitter = emitter;
@@ -30,8 +37,16 @@ class Scale {
 
   public renderScale(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
+    this.step = state.step;
 
     this.createScale(state.orientation);
+
+    if (this.scale !== null) {
+      this.coefficientPoint =
+        this.scale[this.adapter.offsetLength] / (state.max - state.min);
+    }
+    this.shiftToMinValue = this.coefficientPoint * state.min;
+
     this.updateActiveRange();
 
     if (state.isScaleOfValues) {
@@ -148,7 +163,7 @@ class Scale {
       this.slider.append(scaleValueContainer);
       this.isCreatedScaleOfValue = true;
 
-      this.setSerifsInPlaces(min, max);
+      this.setSerifsInPlaces();
     }
   }
 
@@ -227,28 +242,23 @@ class Scale {
     return htmlFragment;
   }
 
-  private setSerifsInPlaces(min: number, max: number): void {
-    if (this.scale !== null) {
-      const coefficientPoint =
-        this.scale[this.adapter.offsetLength] / (max - min);
-
-      const shiftToMinValue = coefficientPoint * min;
-
-      this.serifsElements.forEach((element, i) => {
-        const serif = element;
-        let indentLeft = '';
-        if (i === this.serifsElements.length - 1) {
-          indentLeft = String(
-            coefficientPoint * this.valuesSerifs[i] - shiftToMinValue - 1,
-          );
-        } else {
-          indentLeft = String(
-            coefficientPoint * this.valuesSerifs[i] - shiftToMinValue,
-          );
-        }
-        serif.style[this.adapter.margin] = `${indentLeft}px`;
-      });
-    }
+  private setSerifsInPlaces(): void {
+    this.serifsElements.forEach((element, i) => {
+      const serif = element;
+      let indentLeft = '';
+      if (i === this.serifsElements.length - 1) {
+        indentLeft = String(
+          this.coefficientPoint * this.valuesSerifs[i] -
+            this.shiftToMinValue -
+            1,
+        );
+      } else {
+        indentLeft = String(
+          this.coefficientPoint * this.valuesSerifs[i] - this.shiftToMinValue,
+        );
+      }
+      serif.style[this.adapter.margin] = `${indentLeft}px`;
+    });
   }
 
   private removeElementsScaleValueContainer(): void {
@@ -273,7 +283,22 @@ class Scale {
   }
 
   private handleScaleClick(event: MouseEvent): void {
-    this.emitter.emit('view:click-on-scale', event);
+    if (this.scale !== null) {
+      let clickLocationAxis = 0;
+
+      const startAxis = this.scale.getBoundingClientRect();
+      const offsetX = event.clientX - startAxis.x;
+
+      clickLocationAxis = offsetX + this.shiftToMinValue;
+
+      const currentValue: number = utilities.calculateValueForClickOnScale(
+        clickLocationAxis,
+        this.coefficientPoint,
+        this.step,
+      );
+
+      this.emitter.emit('view:click-on-scale', currentValue);
+    }
   }
 
   private handleSerifScaleClick(index: number, valuesSerifs: number[]): void {

@@ -60,19 +60,6 @@ class Thumbs {
     this.currentValue = 0;
     this.min = 0;
     this.max = 100;
-
-    this.emitter.makeSubscribe(
-      'view:update-thumbs-position',
-      (event: MouseEvent) => {
-        this.setThumbToNewPosition(event);
-      },
-    );
-    this.emitter.makeSubscribe(
-      'view:update-thumbs-position-on-serif-scale',
-      (index: number, valuesSerifs: []) => {
-        this.findAndSetTheNearestThumb(valuesSerifs[index]);
-      },
-    );
   }
 
   public initializeThumbs(state: IModelState, adapter: IAdapter): void {
@@ -144,8 +131,6 @@ class Thumbs {
         }
       }
     });
-    // добавить эмит об обновлении позиций бегунков для обновления activeRange
-    // this.updateActiveRange(slider);
   }
 
   private updateThumbPositionOnScale(
@@ -171,78 +156,6 @@ class Thumbs {
         value: currentValue,
         index,
       });
-    }
-  }
-
-  /* method for setting the closest slider to the clicked position on the slider scale */
-  private setThumbToNewPosition(event: MouseEvent): void {
-    event.preventDefault();
-
-    let clickLocationAxis = 0;
-
-    const scale: HTMLElement | null = this.slider.querySelector(
-      '.js-slider__scale',
-    );
-    if (scale !== null) {
-      const startAxis = scale.getBoundingClientRect();
-
-      const offsetX = event.clientX - startAxis.x;
-
-      clickLocationAxis = offsetX + this.shiftToMinValue;
-    }
-
-    const currentValue: number = utilities.calculateValueForClickOnScale(
-      clickLocationAxis,
-      this.coefficientPoint,
-      this.step,
-    );
-
-    this.currentValue = currentValue;
-
-    this.findAndSetTheNearestThumb(currentValue);
-  }
-
-  private findAndSetTheNearestThumb(currentValue: number) {
-    const leftSpacing: number[] = [];
-    const rightSpacing: number[] = [];
-
-    this.thumbsValues.forEach((thumbValue: number) => {
-      const valueLeftSpacing = thumbValue - currentValue;
-      leftSpacing.push(Math.abs(valueLeftSpacing));
-
-      const valueRightSpacing = thumbValue + currentValue;
-      rightSpacing.push(Math.abs(valueRightSpacing));
-    });
-
-    let currentSpacingValue: number | null = null;
-    let currentThumbIndex: number | null = null;
-
-    const checkValueSpacing = (element: number, index: number) => {
-      if (currentSpacingValue === null) {
-        currentSpacingValue = element;
-      }
-      if (currentThumbIndex === null) {
-        currentThumbIndex = index;
-      }
-      if (element < currentSpacingValue) {
-        currentSpacingValue = element;
-        currentThumbIndex = index;
-      }
-    };
-    leftSpacing.forEach((element, index) => {
-      checkValueSpacing(element, index);
-    });
-    rightSpacing.forEach((element, index) => {
-      checkValueSpacing(element, index);
-    });
-
-    if (currentThumbIndex !== null) {
-      if (currentSpacingValue !== currentValue) {
-        this.emitter.emit('view:thumbValue-changed', {
-          value: currentValue,
-          index: currentThumbIndex,
-        });
-      }
     }
   }
 
@@ -422,11 +335,9 @@ class Thumbs {
           this.coefficientPoint * this.currentValue - this.shiftToMinValue;
 
         this.target.style[this.adapter?.direction] = `${indentLeft}px`;
-
-        // добавить эмит об обновлении позиций бегунков для обновления activeRange
-        // this.updateActiveRange(slider);
       }
     }
+    this.indexActiveThumb = null;
 
     document.removeEventListener('mousemove', this.handleThumbMove.bind(this));
     document.removeEventListener('mouseup', this.handleThumbStop.bind(this));
