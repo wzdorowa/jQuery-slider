@@ -25,7 +25,7 @@ class Controller {
     this.attachPublicMethods(this.model, eventEmitter);
 
     eventEmitter.makeSubscribe('view:thumbValue-changed', (data: IData) => {
-      this.model.setNewThumbValue(data.value, data.index);
+      this.model.requestThumbValueChange(data.value, data.index);
     });
   }
 

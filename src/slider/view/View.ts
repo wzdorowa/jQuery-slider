@@ -26,6 +26,13 @@ class View {
       this.initialize(state);
       this.render(state);
     });
+
+    this.emitter.makeSubscribe(
+      'model:thumbsValues-changed',
+      (thumbsValues: number[]) => {
+        this.update(thumbsValues);
+      },
+    );
   }
 
   private initialize(state: IModelState) {
@@ -55,6 +62,8 @@ class View {
 
   private update(thumbsValues: number[]): void {
     this.thumbs.setValuesThumbs(thumbsValues, null);
+    this.tooltips.setTooltipsValues(thumbsValues);
+    this.progressBar.updateActiveRange();
   }
 
   private setAdapter(orientation: string): void {

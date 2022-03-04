@@ -90,23 +90,21 @@ class ProgressBar {
     const firstThumb = $allThumbs[0];
     const lastThumb = $allThumbs[$allThumbs.length - 1];
 
+    let margin = 0;
+    let lengthActiveRange;
+
     if ($allThumbs.length === 1) {
-      const lengthActiveRange = String(
-        firstThumb[this.adapter.offsetDirection],
-      );
-      this.activeRange.style[this.adapter.margin] = `0px`;
-      this.activeRange.style[this.adapter.length] = `${lengthActiveRange}px`;
+      lengthActiveRange = firstThumb[this.adapter.offsetDirection];
     } else if ($allThumbs.length > 1) {
-      const margin = String(firstThumb[this.adapter.offsetDirection]);
+      margin = firstThumb[this.adapter.offsetDirection];
 
-      const lengthActiveRange = String(
+      lengthActiveRange =
         lastThumb[this.adapter.offsetDirection] -
-          firstThumb[this.adapter.offsetDirection],
-      );
-
-      this.activeRange.style[this.adapter.margin] = `${margin}px`;
-      this.activeRange.style[this.adapter.length] = `${lengthActiveRange}px`;
+        firstThumb[this.adapter.offsetDirection];
     }
+
+    this.activeRange.style[this.adapter.margin] = `${margin}px`;
+    this.activeRange.style[this.adapter.length] = `${lengthActiveRange}px`;
   }
 
   private renderDivisions(state: IModelState): void {
@@ -121,9 +119,8 @@ class ProgressBar {
       countSteps = maximumNumberOfDivisions;
     }
 
-    stepForScaleValue = step * Math.ceil(countSteps / step);
-
-    stepForScaleValue = Math.floor(stepForScaleValue * 100) / 10;
+    stepForScaleValue =
+      Math.floor(step * Math.ceil(countSteps / step) * 100) / 10;
 
     const fractionalPart = Math.ceil(stepForScaleValue) - stepForScaleValue;
 
@@ -228,16 +225,16 @@ class ProgressBar {
   private setDivisionsInPlaces(): void {
     this.divisionsElements.forEach((element, i) => {
       const serif = element;
-      let indentLeft = '';
+      let indentLeft;
+
       if (i === this.divisionsElements.length - 1) {
-        indentLeft = String(
-          this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue - 1,
-        );
+        indentLeft =
+          this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue - 1;
       } else {
-        indentLeft = String(
-          this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue,
-        );
+        indentLeft =
+          this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue;
       }
+
       serif.style[this.adapter.margin] = `${indentLeft}px`;
     });
   }

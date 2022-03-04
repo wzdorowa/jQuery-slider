@@ -45,7 +45,7 @@ class Tooltips {
   }
 
   /* sets the default sliders for their respective tooltips */
-  private setTooltipsValues(tooltipsValues: number[]): void {
+  public setTooltipsValues(tooltipsValues: number[]): void {
     tooltipsValues.forEach((element: number, i: number) => {
       this.textInTooltips[i].innerHTML = String(element);
     });

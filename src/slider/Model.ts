@@ -31,11 +31,8 @@ class Model {
     };
 
     this.emitter = eventEmitter;
-    this.setNewValueMin(this.state.min);
-    // this.setNewValueMax(this.state.max);
-    this.setNewValueCount(this.state.thumbsCount);
-    this.setNewValueStep(this.state.step);
-    this.checkThumbsValues(this.state.thumbsValues);
+    this.notifyStateChanged();
+    // this.checkThumbsValues(this.state.thumbsValues);
   }
 
   // set new min value
@@ -155,6 +152,7 @@ class Model {
           this.state.thumbsValues[i] - this.state.step;
       }
     }
+
     this.checkThumbsValues(this.state.thumbsValues);
   }
 
@@ -197,6 +195,14 @@ class Model {
       this.state.orientation = 'vertical';
     }
     this.notifyStateChanged();
+  }
+
+  public requestThumbValueChange(value: number, index: number): void {
+    const correctValue: number = Math.round(value);
+
+    if (correctValue !== this.state.thumbsValues[index]) {
+      this.setNewThumbValue(correctValue, index);
+    }
   }
 
   // Calculate thumbs values based on step size
@@ -276,12 +282,16 @@ class Model {
         this.state.thumbsValues[index] = value;
       }
 
-      this.notifyStateChanged();
+      this.notifyThumbsValuesChanged();
     });
   }
 
   private notifyStateChanged(): void {
     this.emitter.emit('model:state-changed', this.state);
+  }
+
+  private notifyThumbsValuesChanged(): void {
+    this.emitter.emit('model:thumbsValues-changed', this.state.thumbsValues);
   }
 }
 export default Model;
