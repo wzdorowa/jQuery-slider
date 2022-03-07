@@ -1,13 +1,14 @@
 import { IModelState } from '../../../slider/interfaces/iModelState';
-import { IHTMLElement } from '../../../slider/interfaces/iHTMLElement';
 import utilities from './utilities';
 
 class ConfigurationPanel {
   public isCreatedInput: boolean;
 
-  public slider: IHTMLElement;
+  public slider: HTMLElement;
 
   public sliderIndex: number;
+
+  public element: PlainObject<any>;
 
   public elements: {
     panel: HTMLElement | null;
@@ -23,10 +24,8 @@ class ConfigurationPanel {
     forms: HTMLElement[] | null;
   };
 
-  public state: IModelState;
-
   constructor(element: JQuery<HTMLElement>, index: number) {
-    this.slider = (element[0] as unknown) as IHTMLElement;
+    this.slider = (element[0] as unknown) as HTMLElement;
     this.isCreatedInput = false;
     this.sliderIndex = index;
     this.elements = {
@@ -42,7 +41,19 @@ class ConfigurationPanel {
       checkboxInputScaleOfValues: null,
       forms: null,
     };
-    this.state = this.slider.getState();
+
+    this.element = element.data();
+    this.element.update({
+      min: 10,
+      max: 100,
+      thumbsValues: [10, 22, 40, 50],
+      orientation: 'horizontal',
+      thumbsCount: 4,
+      step: 2,
+      isTooltip: true,
+      isScaleOfValues: true,
+    });
+    this.element.subscribe();
 
     this.initialize();
     this.findElements();
@@ -55,18 +66,6 @@ class ConfigurationPanel {
     this.listenOrientationSlider();
     this.listenCheckboxContainer();
     this.listenForm();
-
-    this.slider.subscribeToStateModel(
-      this.createInput,
-      this.isCreatedInput,
-      this.getCountInputs.bind(this),
-      this.changeCountInputs.bind(this),
-      this.setValueToInputFromModelState.bind(this),
-      this.setValueToStepFromModelState.bind(this),
-      this.setValueToMinInputFromModelState.bind(this),
-      this.setValueMaxInputFromModelState.bind(this),
-      this.setValueCountThumbsFromModelState.bind(this),
-    );
   }
 
   initialize(): void {
@@ -86,7 +85,7 @@ class ConfigurationPanel {
   }
 
   createInput(state: IModelState): void {
-    const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
+    const thumbsCurrentValuesList: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
 
@@ -117,7 +116,7 @@ class ConfigurationPanel {
   }
 
   setNewValueToNewInputs(state: IModelState): void {
-    const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
+    const thumbsCurrentValuesList: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
 
@@ -131,7 +130,7 @@ class ConfigurationPanel {
   }
 
   changeCountInputs(state: IModelState): void {
-    const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
+    const thumbsCurrentValuesList: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
     const $countInputs: HTMLElement[] = Array.from(
@@ -181,7 +180,7 @@ class ConfigurationPanel {
   }
 
   setValueToOrientationFromModelState(state: IModelState): void {
-    const configurationPanel: IHTMLElement[] = Array.from(
+    const configurationPanel: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
@@ -199,7 +198,7 @@ class ConfigurationPanel {
   }
 
   setValueToMinInputFromModelState(state: IModelState): void {
-    const configurationPanel: IHTMLElement[] = Array.from(
+    const configurationPanel: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-field__min-max'),
     );
 
@@ -212,7 +211,7 @@ class ConfigurationPanel {
   }
 
   setValueMaxInputFromModelState(state: IModelState): void {
-    const configurationPanel: IHTMLElement[] = Array.from(
+    const configurationPanel: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-field__min-max'),
     );
 
@@ -225,7 +224,7 @@ class ConfigurationPanel {
   }
 
   setValueCountThumbsFromModelState(state: IModelState): void {
-    const fieldCountThumbs: IHTMLElement[] = Array.from(
+    const fieldCountThumbs: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__field-count-thumb'),
     );
     const countThumbsInput: HTMLInputElement = fieldCountThumbs[
@@ -236,7 +235,7 @@ class ConfigurationPanel {
   }
 
   setValueToInputFromModelState(state: IModelState): void {
-    const thumbsCurrentValuesList: IHTMLElement[] = Array.from(
+    const thumbsCurrentValuesList: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
 
@@ -255,7 +254,7 @@ class ConfigurationPanel {
   }
 
   setValueToStepFromModelState(state: IModelState): void {
-    const configurationPanel: IHTMLElement[] = Array.from(
+    const configurationPanel: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__field-step-size'),
     );
 
@@ -269,7 +268,7 @@ class ConfigurationPanel {
   }
 
   setValueToCheckboxTooltipFromModelState(state: IModelState): void {
-    const configurationPanel: IHTMLElement[] = Array.from(
+    const configurationPanel: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
@@ -289,7 +288,7 @@ class ConfigurationPanel {
   }
 
   setValueToCheckboxScaleOfValuesFromModelState(state: IModelState): void {
-    const configurationPanel: IHTMLElement[] = Array.from(
+    const configurationPanel: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 

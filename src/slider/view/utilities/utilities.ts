@@ -28,15 +28,6 @@ const utilities = {
 
     return currentValue;
   },
-
-  calculateValueAxis(
-    value: number,
-    pointSize: number,
-    shiftToMinValue: number,
-  ): number {
-    const currentValueAxis: number = value * pointSize - shiftToMinValue;
-    return currentValueAxis;
-  },
 };
 
 export default utilities;

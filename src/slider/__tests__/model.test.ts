@@ -1,4 +1,4 @@
-import Model from '../Model';
+import Model from '../Model/Model';
 import { IModelState } from '../interfaces/iModelState';
 import EventEmitter from '../EventEmitter';
 

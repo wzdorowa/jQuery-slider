@@ -1,10 +1,9 @@
-import Controller from './Controller';
-import { IHTMLElement } from './interfaces/iHTMLElement';
+import Wrapper from './Wrapper';
 
 (function callSlider($) {
   const $jquery = $;
   $jquery.fn.slider = function renderSlider(): globalThis.JQuery<HTMLElement> {
-    const element = (this[0] as unknown) as IHTMLElement;
+    const element = (this[0] as unknown) as HTMLElement;
     const data = this.data();
     const settings = $.extend(
       true,
@@ -20,7 +19,9 @@ import { IHTMLElement } from './interfaces/iHTMLElement';
       },
       data,
     );
-    this.data('controller', new Controller(element, settings));
+    const wrapper = new Wrapper(element, settings);
+    this.data('update', wrapper.updateAction);
+    this.data('subscribe', wrapper.subscribeAction);
     return this;
   };
   $jquery.fn.extend($jquery.fn.slider);
