@@ -43,6 +43,9 @@ class ConfigurationPanel {
     };
 
     this.element = element.data();
+    this.element.subscribe(state => {
+      this.initialize(state);
+    });
     this.element.update({
       min: 10,
       max: 100,
@@ -53,9 +56,7 @@ class ConfigurationPanel {
       isTooltip: true,
       isScaleOfValues: true,
     });
-    this.element.subscribe();
 
-    this.initialize();
     this.findElements();
 
     this.listenMinValue();
@@ -68,23 +69,20 @@ class ConfigurationPanel {
     this.listenForm();
   }
 
-  initialize(): void {
-    this.getState();
-    this.createInput(this.state);
-    this.setValueToOrientationFromModelState(this.state);
-    this.setValueToStepFromModelState(this.state);
-    this.setValueToMinInputFromModelState(this.state);
-    this.setValueMaxInputFromModelState(this.state);
-    this.setValueCountThumbsFromModelState(this.state);
-    this.setValueToCheckboxTooltipFromModelState(this.state);
-    this.setValueToCheckboxScaleOfValuesFromModelState(this.state);
-  }
-
-  getState(): void {
-    this.state = this.slider.getState();
+  initialize(state: IModelState): void {
+    this.createInput(state);
+    this.setValueToOrientationFromModelState(state);
+    this.setValueToStepFromModelState(state);
+    this.setValueToMinInputFromModelState(state);
+    this.setValueMaxInputFromModelState(state);
+    this.setValueCountThumbsFromModelState(state);
+    this.setValueToCheckboxTooltipFromModelState(state);
+    this.setValueToCheckboxScaleOfValuesFromModelState(state);
   }
 
   createInput(state: IModelState): void {
+    console.log('state из createInput', state);
+
     const thumbsCurrentValuesList: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );

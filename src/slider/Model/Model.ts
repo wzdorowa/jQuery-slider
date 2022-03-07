@@ -25,8 +25,6 @@ class Model {
 
   public updateState(state: IModelState): void {
     this.state = state;
-    console.log('this.state', this.state);
-
     this.validate();
   }
 

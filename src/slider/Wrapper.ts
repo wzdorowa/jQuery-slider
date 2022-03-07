@@ -11,7 +11,7 @@ class Wrapper {
 
   public updateAction: (state: IModelState) => void;
 
-  public subscribeAction: () => void;
+  public subscribeAction: (handler: (state: IModelState) => void) => void;
 
   constructor(element: HTMLElement, props: IModelState) {
     this.slider = element;
@@ -19,18 +19,19 @@ class Wrapper {
     this.emitter = new EventEmitter();
     this.controller = new Controller(this.slider, this.emitter);
 
-    this.update(props);
     this.updateAction = this.update.bind(this);
     this.subscribeAction = this.subscribe.bind(this);
+
+    this.update(props);
   }
 
   private update(state: IModelState): void {
     this.controller.updateState(state);
   }
 
-  private subscribe(): void {
+  private subscribe(handler: (state: IModelState) => void): void {
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
-      return state;
+      handler(state);
     });
   }
 }
