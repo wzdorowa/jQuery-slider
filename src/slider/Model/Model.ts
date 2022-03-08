@@ -25,10 +25,66 @@ class Model {
 
   public updateState(state: IModelState): void {
     this.state = state;
-    this.validate();
+    this.normolizeState();
   }
 
-  public validate() {
+  private normolizeState() {
+    if (this.state.min < 0) {
+      this.state.min = defaultState.min;
+    }
+
+    if (this.state.step <= 0) {
+      this.state.step = 1;
+    }
+
+    if (this.state.thumbsCount <= 0) {
+      this.state.thumbsCount = 1;
+    }
+
+    if (!['horizontal', 'vertical'].includes(this.state.orientation)) {
+      this.state.orientation = defaultState.orientation;
+    }
+
+    if (!Number.isInteger(this.state.min)) {
+      this.state.min -= this.state.min - Math.floor(this.state.min);
+    }
+
+    if (!Number.isInteger(this.state.max)) {
+      this.state.max -= this.state.max - Math.floor(this.state.max);
+    }
+
+    if (!Number.isInteger(this.state.thumbsCount)) {
+      this.state.thumbsCount -=
+        this.state.thumbsCount - Math.floor(this.state.thumbsCount);
+    }
+
+    const minPossibleMaxValue =
+      this.state.min + this.state.step * (this.state.thumbsCount + 1);
+
+    if (this.state.max < minPossibleMaxValue) {
+      this.state.max = minPossibleMaxValue;
+    }
+
+    if (this.state.thumbsValues.length < this.state.thumbsCount) {
+      const missingQuantityThumbs =
+        this.state.thumbsCount - this.state.thumbsValues.length;
+      new Array(missingQuantityThumbs).fill(1).forEach(() => {
+        this.state.thumbsValues[this.state.thumbsValues.length] =
+          this.state.thumbsValues[this.state.thumbsValues.length - 1] +
+          this.state.step;
+      });
+    }
+    if (this.state.thumbsValues.length > this.state.thumbsCount) {
+      if (this.state.thumbsCount > 0) {
+        const excessThumbs =
+          this.state.thumbsValues.length - this.state.thumbsCount;
+        new Array(excessThumbs).fill(1).forEach(() => {
+          this.state.thumbsValues.splice(-1, 1);
+        });
+      }
+    }
+
+    this.checkThumbsValues(this.state.thumbsValues);
     this.notifyStateChanged();
   }
 
