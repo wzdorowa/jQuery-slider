@@ -11,7 +11,11 @@ class Wrapper {
 
   public updateAction: (state: IModelState) => void;
 
-  public subscribeAction: (handler: (state: IModelState) => void) => void;
+  public modelChangesAction: (handler: (state: IModelState) => void) => void;
+
+  public thumbsChangesAction: (
+    handler: (thumbsValues: number[]) => void,
+  ) => void;
 
   constructor(element: HTMLElement, props: IModelState) {
     this.slider = element;
@@ -20,7 +24,8 @@ class Wrapper {
     this.controller = new Controller(this.slider, this.emitter);
 
     this.updateAction = this.update.bind(this);
-    this.subscribeAction = this.subscribe.bind(this);
+    this.modelChangesAction = this.subscribeToModelChanges.bind(this);
+    this.thumbsChangesAction = this.subscribeToThumbsChanges.bind(this);
 
     this.update(props);
   }
@@ -29,10 +34,21 @@ class Wrapper {
     this.controller.updateState(state);
   }
 
-  private subscribe(handler: (state: IModelState) => void): void {
+  private subscribeToModelChanges(handler: (state: IModelState) => void): void {
     this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
       handler(state);
     });
+  }
+
+  private subscribeToThumbsChanges(
+    handler: (thumbsValues: number[]) => void,
+  ): void {
+    this.emitter.makeSubscribe(
+      'model:thumbsValues-changed',
+      (thumbsValues: number[]) => {
+        handler(thumbsValues);
+      },
+    );
   }
 }
 
