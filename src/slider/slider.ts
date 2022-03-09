@@ -1,4 +1,3 @@
-import { timeStamp } from 'console';
 import Wrapper from './Wrapper';
 
 (function callSlider($) {
