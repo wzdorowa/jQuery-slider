@@ -9,6 +9,8 @@ class Wrapper {
 
   private controller: Controller;
 
+  public getStateAction: () => void;
+
   public updateAction: (state: IModelState) => void;
 
   public modelChangesAction: (handler: (state: IModelState) => void) => void;
@@ -23,11 +25,16 @@ class Wrapper {
     this.emitter = new EventEmitter();
     this.controller = new Controller(this.slider, this.emitter);
 
+    this.getStateAction = this.getState.bind(this);
     this.updateAction = this.update.bind(this);
     this.modelChangesAction = this.subscribeToModelChanges.bind(this);
     this.thumbsChangesAction = this.subscribeToThumbsChanges.bind(this);
 
     this.update(props);
+  }
+
+  private getState(): IModelState {
+    return this.controller.getState();
   }
 
   private update(state: IModelState): void {

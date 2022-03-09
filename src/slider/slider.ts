@@ -1,3 +1,4 @@
+import { timeStamp } from 'console';
 import Wrapper from './Wrapper';
 
 (function callSlider($) {
@@ -20,6 +21,7 @@ import Wrapper from './Wrapper';
       data,
     );
     const wrapper = new Wrapper(element, settings);
+    this.data('getState', wrapper.getStateAction);
     this.data('update', wrapper.updateAction);
     this.data('subscribeToModelChanges', wrapper.modelChangesAction);
     this.data('subscribeToThumbsChanges', wrapper.thumbsChangesAction);

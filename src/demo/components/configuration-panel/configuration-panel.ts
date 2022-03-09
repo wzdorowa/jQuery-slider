@@ -39,7 +39,7 @@ class ConfigurationPanel {
     };
 
     this.connection.subscribeToModelChanges((state: IModelState) => {
-      this.initialize(state);
+      this.render(state);
     });
 
     this.connection.subscribeToThumbsChanges((thumbsValues: number[]) => {
@@ -48,9 +48,10 @@ class ConfigurationPanel {
 
     this.findElements();
     this.bindEventListeners();
+    this.render(this.connection.getState());
   }
 
-  initialize(state: IModelState): void {
+  render(state: IModelState): void {
     this.createInput(state);
     this.setValuesFromState(state);
   }

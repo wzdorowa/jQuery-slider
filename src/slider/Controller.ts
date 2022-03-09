@@ -25,6 +25,10 @@ class Controller {
     });
   }
 
+  public getState(): IModelState {
+    return this.model.state;
+  }
+
   public updateState(state: IModelState): void {
     this.model.updateState(state);
   }
