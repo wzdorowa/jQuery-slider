@@ -19,32 +19,31 @@ class ProgressBar {
 
   private adapter!: IAdapter;
 
-  private pointSize!: number;
-
-  private shiftToMinValue!: number;
-
   private step!: number;
 
   private thumbsValues!: number[];
+
+  private min: number;
+
+  private max: number;
 
   constructor(element: HTMLElement, emitter: EventEmitter) {
     this.slider = element;
     this.emitter = emitter;
     this.divisionsElements = [];
     this.valuesDivisions = [];
+    this.min = 0;
+    this.max = 0;
   }
 
   public renderProgressBar(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
     this.step = state.step;
     this.thumbsValues = state.thumbsValues;
+    this.min = state.min;
+    this.max = state.max;
 
     this.createProgressBar(state.orientation);
-
-    this.pointSize =
-      this.progressBar[this.adapter.offsetLength] / (state.max - state.min);
-
-    this.shiftToMinValue = this.pointSize * state.min;
 
     if (state.isScaleOfValues) {
       this.renderDivisions(state);
@@ -226,15 +225,18 @@ class ProgressBar {
 
   private setDivisionsInPlaces(): void {
     this.divisionsElements.forEach((element, i) => {
+      const pointSize =
+        this.progressBar[this.adapter.offsetLength] / (this.max - this.min);
+
+      const shiftToMinValue = pointSize * this.min;
+
       const serif = element;
       let indent;
 
       if (i === this.divisionsElements.length - 1) {
-        indent =
-          this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue - 1;
+        indent = pointSize * this.valuesDivisions[i] - shiftToMinValue - 1;
       } else {
-        indent =
-          this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue;
+        indent = pointSize * this.valuesDivisions[i] - shiftToMinValue;
       }
 
       const position = (indent * 100) / this.progressBar.clientWidth;
@@ -303,11 +305,15 @@ class ProgressBar {
     const startAxis = this.progressBar.getBoundingClientRect();
     const offsetX = event.clientX - startAxis.x;
 
-    clickLocationAxis = offsetX + this.shiftToMinValue;
+    const pointSize =
+      this.progressBar[this.adapter.offsetLength] / (this.max - this.min);
+    const shiftToMinValue = pointSize * this.min;
+
+    clickLocationAxis = offsetX + shiftToMinValue;
 
     const currentValue: number = utilities.calculateValueForClickOnScale(
       clickLocationAxis,
-      this.pointSize,
+      pointSize,
       this.step,
     );
 

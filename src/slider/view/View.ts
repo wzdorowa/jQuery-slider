@@ -51,11 +51,11 @@ class View {
       this.adapter,
     );
 
-    const pointSize: number =
-      this.progressBar.progressBar[this.adapter.offsetLength] /
-      (state.max - state.min);
+    // const pointSize: number =
+    //   this.progressBar.progressBar[this.adapter.offsetLength] /
+    //   (state.max - state.min);
 
-    this.thumbs.renderThumbs.call(this.thumbs, state, this.adapter, pointSize);
+    this.thumbs.renderThumbs.call(this.thumbs, state, this.adapter);
     this.progressBar.updateActiveRange(
       state.thumbsValues,
       state.min,

@@ -5,8 +5,7 @@ const utilities = {
     pointSize: number,
     shiftToMinValue: number,
   ): number {
-    const currentValue: number =
-      (currentValueAxis + shiftToMinValue) / pointSize;
+    const currentValue = (currentValueAxis + shiftToMinValue) / pointSize;
 
     return currentValue;
   },

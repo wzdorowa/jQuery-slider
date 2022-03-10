@@ -13,35 +13,31 @@ class Thumbs {
 
   private thumbs: HTMLElement[];
 
-  private pointSize: number;
-
-  private shiftToMinValue: number;
-
   private startMoveAxis: number;
 
   private target: HTMLElement | null;
 
   private indexActiveThumb: number | null;
 
+  private min: number;
+
+  private max: number;
+
   constructor(element: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = element;
     this.emitter = eventEmitter;
     this.thumbs = [];
-    this.pointSize = 0;
-    this.shiftToMinValue = 0;
     this.startMoveAxis = 0;
     this.target = null;
     this.indexActiveThumb = null;
+    this.min = 0;
+    this.max = 0;
   }
 
-  public renderThumbs(
-    state: IModelState,
-    adapter: IAdapter,
-    pointSize: number,
-  ): void {
+  public renderThumbs(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
-    this.pointSize = pointSize;
-    this.shiftToMinValue = this.pointSize * state.min;
+    this.min = state.min;
+    this.max = state.max;
 
     this.createThumbs(state.thumbsCount);
     this.listenThumbsEvents();
@@ -111,16 +107,26 @@ class Thumbs {
       const currentValueAxis =
         event[this.adapter?.pageAxis] - this.startMoveAxis;
 
-      const value = utilities.calculateValue(
-        currentValueAxis,
-        this.pointSize,
-        this.shiftToMinValue,
+      const progressBar: HTMLElement | null = this.slider.querySelector(
+        '.slider__progress-bar',
       );
 
-      this.emitter.emit('view:thumbValue-changed', {
-        value,
-        index: this.indexActiveThumb,
-      });
+      if (progressBar !== null) {
+        const pointSize =
+          progressBar[this.adapter.offsetLength] / (this.max - this.min);
+        const shiftToMinValue = pointSize * this.min;
+
+        const value = utilities.calculateValue(
+          currentValueAxis,
+          pointSize,
+          shiftToMinValue,
+        );
+
+        this.emitter.emit('view:thumbValue-changed', {
+          value,
+          index: this.indexActiveThumb,
+        });
+      }
     }
   }
 
