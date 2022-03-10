@@ -321,10 +321,7 @@ class ProgressBar {
   }
 
   private handleSerifScaleClick(index: number, valuesSerifs: number[]): void {
-    this.emitter.emit('view:thumbValue-changed', {
-      value: valuesSerifs[index],
-      index,
-    });
+    this.findAndSetTheNearestThumb(valuesSerifs[index]);
   }
 }
 export default ProgressBar;
