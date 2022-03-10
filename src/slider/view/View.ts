@@ -29,8 +29,8 @@ class View {
 
     this.emitter.makeSubscribe(
       'model:thumbsValues-changed',
-      (thumbsValues: number[]) => {
-        this.update(thumbsValues);
+      (state: IModelState) => {
+        this.update(state);
       },
     );
   }
@@ -56,14 +56,22 @@ class View {
       (state.max - state.min);
 
     this.thumbs.renderThumbs.call(this.thumbs, state, this.adapter, pointSize);
-    this.progressBar.updateActiveRange();
+    this.progressBar.updateActiveRange(
+      state.thumbsValues,
+      state.min,
+      state.max,
+    );
     this.tooltips.renderTooltips.call(this.tooltips, state);
   }
 
-  private update(thumbsValues: number[]): void {
-    this.thumbs.setValuesThumbs(thumbsValues, null);
-    this.tooltips.setTooltipsValues(thumbsValues);
-    this.progressBar.updateActiveRange();
+  private update(state: IModelState): void {
+    this.thumbs.setValuesThumbs(state.thumbsValues, state.min, state.max);
+    this.tooltips.setTooltipsValues(state.thumbsValues);
+    this.progressBar.updateActiveRange(
+      state.thumbsValues,
+      state.min,
+      state.max,
+    );
   }
 
   private setAdapter(orientation: string): void {

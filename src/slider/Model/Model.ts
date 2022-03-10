@@ -207,7 +207,7 @@ class Model {
   }
 
   private notifyThumbsValuesChanged(): void {
-    this.emitter.emit('model:thumbsValues-changed', this.state.thumbsValues);
+    this.emitter.emit('model:thumbsValues-changed', this.state);
   }
 }
 export default Model;

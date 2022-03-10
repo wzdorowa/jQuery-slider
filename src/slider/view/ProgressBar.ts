@@ -83,28 +83,30 @@ class ProgressBar {
     );
   }
 
-  public updateActiveRange(): void {
-    const $allThumbs: HTMLElement[] = Array.from(
-      $(this.slider).find('.js-slider__thumb'),
-    );
-    const firstThumb = $allThumbs[0];
-    const lastThumb = $allThumbs[$allThumbs.length - 1];
+  public updateActiveRange(
+    thumbsValues: number[],
+    min: number,
+    max: number,
+  ): void {
+    const firstThumb = thumbsValues[0];
+    const lastThumb = thumbsValues[thumbsValues.length - 1];
+
+    const firstThumbPosition = ((firstThumb - min) / (max - min)) * 100;
+    const lastThumbPosition = ((lastThumb - min) / (max - min)) * 100;
 
     let margin = 0;
     let lengthActiveRange;
 
-    if ($allThumbs.length === 1) {
-      lengthActiveRange = firstThumb[this.adapter.offsetDirection];
-    } else if ($allThumbs.length > 1) {
-      margin = firstThumb[this.adapter.offsetDirection];
+    if (thumbsValues.length === 1) {
+      lengthActiveRange = firstThumbPosition;
+    } else if (thumbsValues.length > 1) {
+      margin = firstThumbPosition;
 
-      lengthActiveRange =
-        lastThumb[this.adapter.offsetDirection] -
-        firstThumb[this.adapter.offsetDirection];
+      lengthActiveRange = lastThumbPosition - firstThumbPosition;
     }
 
-    this.activeRange.style[this.adapter.margin] = `${margin}px`;
-    this.activeRange.style[this.adapter.length] = `${lengthActiveRange}px`;
+    this.activeRange.style[this.adapter.margin] = `${margin}%`;
+    this.activeRange.style[this.adapter.length] = `${lengthActiveRange}%`;
   }
 
   private renderDivisions(state: IModelState): void {
@@ -225,17 +227,19 @@ class ProgressBar {
   private setDivisionsInPlaces(): void {
     this.divisionsElements.forEach((element, i) => {
       const serif = element;
-      let indentLeft;
+      let indent;
 
       if (i === this.divisionsElements.length - 1) {
-        indentLeft =
+        indent =
           this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue - 1;
       } else {
-        indentLeft =
+        indent =
           this.pointSize * this.valuesDivisions[i] - this.shiftToMinValue;
       }
 
-      serif.style[this.adapter.margin] = `${indentLeft}px`;
+      const position = (indent * 100) / this.progressBar.clientWidth;
+
+      serif.style[this.adapter.margin] = `${position}%`;
     });
   }
 

@@ -45,7 +45,7 @@ class Thumbs {
 
     this.createThumbs(state.thumbsCount);
     this.listenThumbsEvents();
-    this.setValuesThumbs(state.thumbsValues, null);
+    this.setValuesThumbs(state.thumbsValues, state.min, state.max);
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
@@ -74,17 +74,20 @@ class Thumbs {
   }
 
   /* places thumbs on the slider based on default values */
-  public setValuesThumbs(thumbsValues: number[], index: number | null): void {
+  public setValuesThumbs(
+    thumbsValues: number[],
+    min: number,
+    max: number,
+  ): void {
     this.thumbs.forEach((_element, i) => {
       if (this.adapter?.direction !== undefined) {
-        if (i !== index) {
-          const element = this.thumbs[i];
-          const indent = String(
-            this.pointSize * thumbsValues[i] - this.shiftToMinValue,
-          );
+        const element = this.thumbs[i];
 
-          element.style[this.adapter?.direction] = `${indent}px`;
-        }
+        const percent = ((thumbsValues[i] - min) / (max - min)) * 100;
+
+        element.style[
+          this.adapter?.direction
+        ] = `calc((${percent}%) - (24px * ${percent / 100}))`;
       }
     });
   }
