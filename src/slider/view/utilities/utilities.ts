@@ -16,7 +16,7 @@ const utilities = {
     stepSlider: number,
   ): number {
     let currentValue: number = currentValueAxis / pointSize;
-    const minValue: number = (currentValue / stepSlider) * stepSlider;
+    const minValue: number = Math.floor(currentValue / stepSlider) * stepSlider;
     const halfStep = minValue + stepSlider / 2;
 
     if (currentValue > halfStep) {
