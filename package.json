@@ -2,11 +2,11 @@
   "name": "jquery-slider",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "test": "jest --coverage",
     "dev": "parcel ./src/*.pug --open",
-    "build": "parcel build ./src/*.pug --out-dir build --public-url /jQuery-slider",
+    "build": "parcel build ./src/*.pug --out-dir build --public-url /jQuery-slider --no-source-maps",
     "deploy": "gh-pages -d build",
     "eslint": "eslint --cache --ext .js,.ts, src",
     "eslint:dump": "eslint --print-config ./.eslintrc.json",
