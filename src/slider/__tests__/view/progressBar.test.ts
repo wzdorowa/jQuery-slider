@@ -11,7 +11,7 @@ const state: IModelState = {
   thumbsCount: 4,
   step: 2,
   tooltipIsActive: true,
-  isScaleOfValues: true,
+  scaleValuesIsActive: true,
 };
 
 describe('Unit tests', () => {
@@ -56,10 +56,10 @@ describe('Unit tests', () => {
     state.max = 80;
     scale.renderProgressBar(state, adapter);
 
-    state.isScaleOfValues = false;
+    state.scaleValuesIsActive = false;
     scale.renderProgressBar(state, adapter);
 
-    state.isScaleOfValues = true;
+    state.scaleValuesIsActive = true;
     scale.renderProgressBar(state, adapter);
   });
 

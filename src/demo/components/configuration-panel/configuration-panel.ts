@@ -146,10 +146,10 @@ class ConfigurationPanel {
     }
 
     if (this.elements.checkboxInputScaleOfValues !== null) {
-      if (!state.isScaleOfValues) {
+      if (!state.scaleValuesIsActive) {
         this.elements.checkboxInputScaleOfValues[0].checked = false;
       }
-      if (state.isScaleOfValues) {
+      if (state.scaleValuesIsActive) {
         this.elements.checkboxInputScaleOfValues[0].checked = true;
       }
     }
@@ -292,7 +292,7 @@ class ConfigurationPanel {
       step: 0,
       thumbsCount: 0,
       thumbsValues: [],
-      isScaleOfValues: true,
+      scaleValuesIsActive: true,
       tooltipIsActive: true,
       orientation: 'horizontal',
     };
@@ -311,7 +311,7 @@ class ConfigurationPanel {
 
     if (this.elements.checkboxInputScaleOfValues !== null) {
       if (!this.elements.checkboxInputScaleOfValues[0].checked) {
-        state.isScaleOfValues = false;
+        state.scaleValuesIsActive = false;
       }
     }
 

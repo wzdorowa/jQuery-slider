@@ -16,7 +16,7 @@ class Model {
       thumbsCount: defaultState.thumbsCount,
       step: defaultState.step,
       tooltipIsActive: defaultState.tooltipIsActive,
-      isScaleOfValues: defaultState.isScaleOfValues,
+      scaleValuesIsActive: defaultState.scaleValuesIsActive,
     };
 
     this.emitter = eventEmitter;

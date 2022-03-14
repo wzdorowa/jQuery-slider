@@ -6,5 +6,5 @@ export interface IModelState {
   thumbsCount: number;
   step: number;
   tooltipIsActive: boolean;
-  isScaleOfValues: boolean;
+  scaleValuesIsActive: boolean;
 }

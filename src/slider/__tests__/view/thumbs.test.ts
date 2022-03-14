@@ -12,7 +12,7 @@ const state: IModelState = {
   thumbsCount: 4,
   step: 2,
   tooltipIsActive: true,
-  isScaleOfValues: true,
+  scaleValuesIsActive: true,
 };
 
 let adapter: IAdapter;

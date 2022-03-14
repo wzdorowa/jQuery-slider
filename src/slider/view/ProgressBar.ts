@@ -45,7 +45,7 @@ class ProgressBar {
 
     this.createProgressBar(state.orientation);
 
-    if (state.isScaleOfValues) {
+    if (state.scaleValuesIsActive) {
       this.renderDivisions(state);
     }
   }

@@ -15,7 +15,7 @@ import Wrapper from './Wrapper';
         thumbsCount: 4,
         step: 2,
         tooltipIsActive: true,
-        isScaleOfValues: true,
+        scaleValuesIsActive: true,
       },
       data,
     );
