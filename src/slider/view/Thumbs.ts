@@ -2,7 +2,6 @@ import EventEmitter from '../EventEmitter';
 import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IAdapter } from '../interfaces/IAdapter';
-import utilities from './utilities/utilities';
 
 class Thumbs {
   private slider: HTMLElement;
@@ -96,7 +95,7 @@ class Thumbs {
 
     const currentValueAxis = this.target[this.adapter?.offsetDirection];
 
-    this.startMoveAxis = event.pageX - currentValueAxis;
+    this.startMoveAxis = event[this.adapter?.pageAxis] - currentValueAxis;
 
     document.addEventListener('pointermove', this.handleThumbMove.bind(this));
     document.addEventListener('pointerup', this.handleThumbStop.bind(this));
@@ -114,13 +113,10 @@ class Thumbs {
       if (progressBar !== null) {
         const pointSize =
           progressBar[this.adapter.offsetLength] / (this.max - this.min);
+
         const shiftToMinValue = pointSize * this.min;
 
-        const value = utilities.calculateValue(
-          currentValueAxis,
-          pointSize,
-          shiftToMinValue,
-        );
+        const value = (currentValueAxis + shiftToMinValue) / pointSize;
 
         this.emitter.emit('view:thumbValue-changed', {
           value,

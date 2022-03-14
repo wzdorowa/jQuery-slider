@@ -5,6 +5,6 @@ export interface IAdapter {
   pageAxis: 'pageX' | 'pageY';
   currentAxis: 'currentX' | 'currentY';
   direction: 'left' | 'top';
-  margin: 'marginLeft' | 'marginTop';
+  position: 'left' | 'top';
   length: 'width' | 'height';
 }

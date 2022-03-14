@@ -1,15 +1,4 @@
 const utilities = {
-  /* the method calculates the current value of the thumb */
-  calculateValue(
-    currentValueAxis: number,
-    pointSize: number,
-    shiftToMinValue: number,
-  ): number {
-    const currentValue = (currentValueAxis + shiftToMinValue) / pointSize;
-
-    return currentValue;
-  },
-
   calculateValueForClickOnScale(
     currentValueAxis: number,
     pointSize: number,

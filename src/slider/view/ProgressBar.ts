@@ -104,7 +104,7 @@ class ProgressBar {
       lengthActiveRange = lastThumbPosition - firstThumbPosition;
     }
 
-    this.activeRange.style[this.adapter.margin] = `${margin}%`;
+    this.activeRange.style[this.adapter.position] = `${margin}%`;
     this.activeRange.style[this.adapter.length] = `${lengthActiveRange}%`;
   }
 
@@ -144,7 +144,7 @@ class ProgressBar {
     scaleValueContainer.append(htmlFragment);
     this.slider.append(scaleValueContainer);
 
-    this.setDivisionsInPlaces();
+    this.setDivisionsInPlaces(min, max);
   }
 
   private createElementsDivisions(
@@ -223,25 +223,13 @@ class ProgressBar {
     return htmlFragment;
   }
 
-  private setDivisionsInPlaces(): void {
+  private setDivisionsInPlaces(min: number, max: number): void {
     this.divisionsElements.forEach((element, i) => {
-      const pointSize =
-        this.progressBar[this.adapter.offsetLength] / (this.max - this.min);
-
-      const shiftToMinValue = pointSize * this.min;
+      const percent = ((this.valuesDivisions[i] - min) / (max - min)) * 100;
 
       const serif = element;
-      let indent;
 
-      if (i === this.divisionsElements.length - 1) {
-        indent = pointSize * this.valuesDivisions[i] - shiftToMinValue - 1;
-      } else {
-        indent = pointSize * this.valuesDivisions[i] - shiftToMinValue;
-      }
-
-      const position = (indent * 100) / this.progressBar.clientWidth;
-
-      serif.style[this.adapter.margin] = `${position}%`;
+      serif.style[this.adapter.position] = `${percent}%`;
     });
   }
 

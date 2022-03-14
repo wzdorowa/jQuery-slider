@@ -79,7 +79,7 @@ class View {
         pageAxis: 'pageX',
         currentAxis: 'currentX',
         direction: 'left',
-        margin: 'marginLeft',
+        position: 'left',
         length: 'width',
       };
     } else if (orientation === 'vertical') {
@@ -90,7 +90,7 @@ class View {
         pageAxis: 'pageY',
         currentAxis: 'currentY',
         direction: 'top',
-        margin: 'marginTop',
+        position: 'top',
         length: 'height',
       };
     }
