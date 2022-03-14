@@ -15,7 +15,7 @@ class Tooltips {
   }
 
   public renderTooltips(state: IModelState): void {
-    if (state.isTooltip) {
+    if (state.tooltipIsActive) {
       this.createTooltips(state.thumbsCount, state.orientation);
       this.setTooltipsValues(state.thumbsValues);
     }

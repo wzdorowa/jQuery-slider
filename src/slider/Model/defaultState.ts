@@ -7,7 +7,7 @@ const defaultState: IModelState = {
   orientation: 'horizontal',
   thumbsCount: 4,
   step: 2,
-  isTooltip: true,
+  tooltipIsActive: true,
   isScaleOfValues: true,
 };
 

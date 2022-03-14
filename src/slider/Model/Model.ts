@@ -15,7 +15,7 @@ class Model {
       orientation: defaultState.orientation,
       thumbsCount: defaultState.thumbsCount,
       step: defaultState.step,
-      isTooltip: defaultState.isTooltip,
+      tooltipIsActive: defaultState.tooltipIsActive,
       isScaleOfValues: defaultState.isScaleOfValues,
     };
 

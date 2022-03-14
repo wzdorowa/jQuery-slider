@@ -138,7 +138,7 @@ class ConfigurationPanel {
     }
 
     if (this.elements.checkboxInputTooltip !== null) {
-      if (!state.isTooltip) {
+      if (!state.tooltipIsActive) {
         this.elements.checkboxInputTooltip[0].checked = false;
       } else {
         this.elements.checkboxInputTooltip[0].checked = true;
@@ -293,7 +293,7 @@ class ConfigurationPanel {
       thumbsCount: 0,
       thumbsValues: [],
       isScaleOfValues: true,
-      isTooltip: true,
+      tooltipIsActive: true,
       orientation: 'horizontal',
     };
 
@@ -317,7 +317,7 @@ class ConfigurationPanel {
 
     if (this.elements.checkboxInputTooltip !== null) {
       if (!this.elements.checkboxInputTooltip[0].checked) {
-        state.isTooltip = false;
+        state.tooltipIsActive = false;
       }
     }
 

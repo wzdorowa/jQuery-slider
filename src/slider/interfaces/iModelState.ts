@@ -5,6 +5,6 @@ export interface IModelState {
   orientation: string;
   thumbsCount: number;
   step: number;
-  isTooltip: boolean;
+  tooltipIsActive: boolean;
   isScaleOfValues: boolean;
 }
