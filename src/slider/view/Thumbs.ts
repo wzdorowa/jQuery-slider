@@ -59,11 +59,11 @@ class Thumbs {
     this.slider.append(htmlFragment);
   }
 
-  /* hangs the 'mousedown' event handler for each created thumb */
+  /* hangs the 'pointerdown' event handler for each created thumb */
   private listenThumbsEvents(): void {
     this.thumbs.forEach((element: HTMLElement, i: number) => {
       element.addEventListener(
-        'mousedown',
+        'pointerdown',
         this.handleThumbStart.bind(this, i),
       );
     });
@@ -98,8 +98,8 @@ class Thumbs {
 
     this.startMoveAxis = event.pageX - currentValueAxis;
 
-    document.addEventListener('mousemove', this.handleThumbMove.bind(this));
-    document.addEventListener('mouseup', this.handleThumbStop.bind(this));
+    document.addEventListener('pointermove', this.handleThumbMove.bind(this));
+    document.addEventListener('pointerup', this.handleThumbStop.bind(this));
   }
 
   private processMove(event: MouseEvent): void {
@@ -134,8 +134,11 @@ class Thumbs {
     this.target = null;
     this.indexActiveThumb = null;
 
-    document.removeEventListener('mousemove', this.handleThumbMove.bind(this));
-    document.removeEventListener('mouseup', this.handleThumbStop.bind(this));
+    document.removeEventListener(
+      'pointermove',
+      this.handleThumbMove.bind(this),
+    );
+    document.removeEventListener('pointerup', this.handleThumbStop.bind(this));
   }
 
   private handleThumbStart(index: number, event: MouseEvent): void {
