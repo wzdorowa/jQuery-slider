@@ -114,9 +114,12 @@ class Model {
   }
 
   public requestThumbValueChange(value: number, index: number): void {
-    const correctValue: number = Math.round(value);
+    const correctValue: number = Math.round(value * 100) / 100;
 
-    if (correctValue !== this.state.thumbsValues[index]) {
+    if (
+      correctValue < this.state.thumbsValues[index] - this.state.step / 2 ||
+      correctValue > this.state.thumbsValues[index] + this.state.step / 2
+    ) {
       this.setNewThumbValue(correctValue, index);
     }
   }
@@ -197,9 +200,8 @@ class Model {
       if (value !== this.state.thumbsValues[index]) {
         this.state.thumbsValues[index] = value;
       }
-
-      this.notifyThumbsValuesChanged();
     });
+    this.notifyThumbsValuesChanged();
   }
 
   private notifyStateChanged(): void {
@@ -207,7 +209,7 @@ class Model {
   }
 
   private notifyThumbsValuesChanged(): void {
-    this.emitter.emit('model:thumbsValues-changed', this.state);
+    this.emitter.emit('model:thumbsValues-changed', this.state.thumbsValues);
   }
 }
 export default Model;

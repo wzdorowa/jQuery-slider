@@ -26,7 +26,7 @@ const setAdapter = (orientation: string): void => {
       pageAxis: 'pageX',
       currentAxis: 'currentX',
       direction: 'left',
-      margin: 'marginLeft',
+      position: 'left',
       length: 'width',
     };
   } else if (orientation === 'vertical') {
@@ -37,7 +37,7 @@ const setAdapter = (orientation: string): void => {
       pageAxis: 'pageY',
       currentAxis: 'currentY',
       direction: 'top',
-      margin: 'marginTop',
+      position: 'top',
       length: 'height',
     };
   }
@@ -72,7 +72,7 @@ describe('Unit tests', () => {
       $(slider).find('.js-slider__thumb'),
     );
 
-    const event = new MouseEvent('mousedown', {
+    const event = new MouseEvent('pointerdown', {
       bubbles: true,
       cancelable: true,
       clientX: 450,
@@ -90,7 +90,7 @@ describe('Unit tests', () => {
       $(slider).find('.js-slider__thumb'),
     );
 
-    const event = new MouseEvent('mousemove', {
+    const event = new MouseEvent('pointermove', {
       bubbles: true,
       cancelable: true,
       clientX: 450,
@@ -108,7 +108,7 @@ describe('Unit tests', () => {
       $(slider).find('.js-slider__thumb'),
     );
 
-    const event = new MouseEvent('mouseup', {
+    const event = new MouseEvent('pointerup', {
       bubbles: true,
       cancelable: true,
       clientX: 450,

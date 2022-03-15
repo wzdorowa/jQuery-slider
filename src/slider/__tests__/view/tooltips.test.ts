@@ -27,7 +27,7 @@ const setAdapter = (orientation: string): void => {
       pageAxis: 'pageX',
       currentAxis: 'currentX',
       direction: 'left',
-      margin: 'marginLeft',
+      position: 'left',
       length: 'width',
     };
   } else if (orientation === 'vertical') {
@@ -38,7 +38,7 @@ const setAdapter = (orientation: string): void => {
       pageAxis: 'pageY',
       currentAxis: 'currentY',
       direction: 'top',
-      margin: 'marginTop',
+      position: 'top',
       length: 'height',
     };
   }

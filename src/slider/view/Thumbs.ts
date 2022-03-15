@@ -40,7 +40,7 @@ class Thumbs {
 
     this.createThumbs(state.thumbsCount);
     this.listenThumbsEvents();
-    this.setValuesThumbs(state.thumbsValues, state.min, state.max);
+    this.setValuesThumbs(state.thumbsValues);
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
@@ -69,16 +69,13 @@ class Thumbs {
   }
 
   /* places thumbs on the slider based on default values */
-  public setValuesThumbs(
-    thumbsValues: number[],
-    min: number,
-    max: number,
-  ): void {
+  public setValuesThumbs(thumbsValues: number[]): void {
     this.thumbs.forEach((_element, i) => {
       if (this.adapter?.direction !== undefined) {
         const element = this.thumbs[i];
 
-        const percent = ((thumbsValues[i] - min) / (max - min)) * 100;
+        const percent =
+          ((thumbsValues[i] - this.min) / (this.max - this.min)) * 100;
 
         element.style[
           this.adapter?.direction

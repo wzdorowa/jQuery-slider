@@ -82,16 +82,14 @@ class ProgressBar {
     );
   }
 
-  public updateActiveRange(
-    thumbsValues: number[],
-    min: number,
-    max: number,
-  ): void {
+  public updateActiveRange(thumbsValues: number[]): void {
     const firstThumb = thumbsValues[0];
     const lastThumb = thumbsValues[thumbsValues.length - 1];
 
-    const firstThumbPosition = ((firstThumb - min) / (max - min)) * 100;
-    const lastThumbPosition = ((lastThumb - min) / (max - min)) * 100;
+    const firstThumbPosition =
+      ((firstThumb - this.min) / (this.max - this.min)) * 100;
+    const lastThumbPosition =
+      ((lastThumb - this.min) / (this.max - this.min)) * 100;
 
     let margin = 0;
     let lengthActiveRange;

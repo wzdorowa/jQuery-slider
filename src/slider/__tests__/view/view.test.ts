@@ -25,7 +25,7 @@ describe('test View', () => {
     eventEmitter.emit('model:state-changed', state);
 
     state.thumbsValues = [22, 32, 42, 52];
-    eventEmitter.emit('model:thumbsValues-changed', state);
+    eventEmitter.emit('model:thumbsValues-changed', state.thumbsValues);
 
     state.orientation = 'vertical';
     eventEmitter.emit('model:state-changed', state);
