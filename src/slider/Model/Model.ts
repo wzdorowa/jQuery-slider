@@ -111,6 +111,7 @@ class Model {
     }
 
     this.checkThumbsValues(this.state.thumbsValues);
+    this.notifyThumbsValuesChanged();
   }
 
   public requestThumbValueChange(value: number, index: number): void {
@@ -127,7 +128,7 @@ class Model {
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
     thumbsValues.forEach((element: number, index: number) => {
-      let value: number = Math.floor(element * 10) / 10;
+      let value: number = Math.round(element * 100) / 100;
 
       const minPossibleValue = this.state.min + index * this.state.step;
 
@@ -155,7 +156,7 @@ class Model {
       } else if (value >= maxPossibleValue) {
         value = maxPossibleValue;
       } else {
-        const valuesInterval = Math.round((value - this.state.min) * 10) / 10;
+        const valuesInterval = Math.round((value - this.state.min) * 100) / 100;
         const integer = Math.floor(valuesInterval / this.state.step);
 
         const getRemainderOfDivision = (interval: number, step: number) => {
@@ -175,8 +176,8 @@ class Model {
           currentValue = integer * this.state.step + this.state.min;
           const lastStep =
             Math.round(
-              ((this.state.max - this.state.min) % this.state.step) * 10,
-            ) / 10;
+              ((this.state.max - this.state.min) % this.state.step) * 100,
+            ) / 100;
           const beginningLastStep = this.state.max - lastStep;
 
           if (value > beginningLastStep && value < this.state.max) {
@@ -194,14 +195,13 @@ class Model {
         const stepOrZero =
           Math.round(remainderOfDivision / this.state.step) * this.state.step;
 
-        value = Math.round((stepOrZero + currentValue) * 10) / 10;
+        value = Math.round((stepOrZero + currentValue) * 100) / 100;
       }
 
       if (value !== this.state.thumbsValues[index]) {
         this.state.thumbsValues[index] = value;
       }
     });
-    this.notifyThumbsValuesChanged();
   }
 
   private notifyStateChanged(): void {

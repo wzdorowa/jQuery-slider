@@ -109,7 +109,6 @@ class ProgressBar {
   private renderDivisions(state: IModelState): void {
     const { max, min, step, orientation } = state;
 
-    let stepForScaleValue;
     const maximumNumberOfDivisions = 10;
 
     let countSteps = (max - min) / step;
@@ -118,16 +117,7 @@ class ProgressBar {
       countSteps = maximumNumberOfDivisions;
     }
 
-    stepForScaleValue =
-      Math.floor(step * Math.ceil(countSteps / step) * 100) / 10;
-
-    const fractionalPart = Math.ceil(stepForScaleValue) - stepForScaleValue;
-
-    if (fractionalPart >= 0.5) {
-      stepForScaleValue = Math.floor(stepForScaleValue) / 10;
-    } else {
-      stepForScaleValue = Math.ceil(stepForScaleValue) / 10;
-    }
+    const stepForScaleValue = step * Math.floor(countSteps / step);
 
     const scaleValueContainer: HTMLElement = createElement(
       'div',
@@ -161,36 +151,19 @@ class ProgressBar {
 
     let currentValueSerif: number = min;
 
-    const fractionalPartStep =
-      stepForScaleValue - Math.floor(stepForScaleValue);
-
     new Array(numberOfDivisions)
       .fill(1)
       .forEach((_element: number, index: number) => {
         if (index === 0) {
           this.valuesDivisions[index] = min;
           currentValueSerif += stepForScaleValue;
-          currentValueSerif = Math.ceil(currentValueSerif * 10) / 10;
         } else if (index === numberOfDivisions - 1) {
           this.valuesDivisions[index] = max;
         } else {
           this.valuesDivisions[index] = currentValueSerif;
-          currentValueSerif += stepForScaleValue;
 
-          if (fractionalPartStep === 0) {
-            currentValueSerif = Math.ceil(currentValueSerif * 10) / 10;
-          } else {
-            let newValue = Math.floor(currentValueSerif * 100) / 10;
-
-            const fractionalValuePart = Math.ceil(newValue) - newValue;
-
-            if (fractionalValuePart >= 0.5) {
-              newValue = Math.floor(newValue) / 10;
-            } else {
-              newValue = Math.ceil(newValue) / 10;
-            }
-            currentValueSerif = newValue;
-          }
+          currentValueSerif =
+            Math.round((currentValueSerif + stepForScaleValue) * 100) / 100;
         }
       });
 
@@ -212,7 +185,7 @@ class ProgressBar {
           'slider__scale-value-with-number_vertical',
         );
       }
-      valueWithNumber.innerHTML = String(Math.floor(element * 10) / 10);
+      valueWithNumber.innerHTML = String(element);
       scaleValue.append(valueWithNumber);
       htmlFragment.append(scaleValue);
       this.divisionsElements.push(scaleValue);
@@ -276,12 +249,10 @@ class ProgressBar {
     });
 
     if (currentThumbIndex !== null) {
-      if (currentSpacingValue !== currentValue) {
-        this.emitter.emit('view:thumbValue-changed', {
-          value: currentValue,
-          index: currentThumbIndex,
-        });
-      }
+      this.emitter.emit('view:thumbValue-changed', {
+        value: currentValue,
+        index: currentThumbIndex,
+      });
     }
   }
 
