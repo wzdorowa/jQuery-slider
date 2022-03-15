@@ -130,6 +130,10 @@ class Model {
     thumbsValues.forEach((element: number, index: number) => {
       let value: number = Math.round(element * 100) / 100;
 
+      if (value > thumbsValues[index + 1]) {
+        value = thumbsValues[index + 1];
+      }
+
       const minPossibleValue = this.state.min + index * this.state.step;
 
       const lastStep =
