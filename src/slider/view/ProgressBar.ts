@@ -109,15 +109,11 @@ class ProgressBar {
   private renderDivisions(state: IModelState): void {
     const { max, min, step, orientation } = state;
 
-    const maximumNumberOfDivisions = 10;
+    const maximumNumberOfDivisions = 5;
 
-    let countSteps = (max - min) / step;
+    const stepSize = (max - min) / maximumNumberOfDivisions;
 
-    if (countSteps > maximumNumberOfDivisions) {
-      countSteps = maximumNumberOfDivisions;
-    }
-
-    const stepForScaleValue = step * Math.floor(countSteps / step);
+    const stepForScaleValue = Math.floor(stepSize / step) * step;
 
     const scaleValueContainer: HTMLElement = createElement(
       'div',
