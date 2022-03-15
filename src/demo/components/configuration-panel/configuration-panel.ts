@@ -2,7 +2,7 @@ import { IModelState } from '../../../slider/interfaces/iModelState';
 import utilities from './utilities';
 
 class ConfigurationPanel {
-  public connection: PlainObject<any>;
+  public connection: JQuery.PlainObject<any>;
 
   public sliderIndex: number;
 
