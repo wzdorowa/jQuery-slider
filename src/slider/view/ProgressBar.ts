@@ -2,7 +2,6 @@ import EventEmitter from '../EventEmitter';
 import { IAdapter } from '../interfaces/IAdapter';
 import { IModelState } from '../interfaces/iModelState';
 import createElement from '../functions/createElement';
-import utilities from './utilities/utilities';
 
 class ProgressBar {
   private slider: HTMLElement;
@@ -264,11 +263,15 @@ class ProgressBar {
 
     clickLocationAxis = offsetX + shiftToMinValue;
 
-    const currentValue: number = utilities.calculateValueForClickOnScale(
-      clickLocationAxis,
-      pointSize,
-      this.step,
-    );
+    let currentValue: number = clickLocationAxis / pointSize;
+    const minValue: number = Math.floor(currentValue / this.step) * this.step;
+    const halfStep = minValue + this.step / 2;
+
+    if (currentValue > halfStep) {
+      currentValue = minValue + this.step;
+    } else {
+      currentValue = minValue;
+    }
 
     this.findAndSetTheNearestThumb(currentValue);
   }
