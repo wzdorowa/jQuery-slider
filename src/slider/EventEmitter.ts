@@ -31,17 +31,13 @@ class EventEmitter {
     };
   }
 
-  public emit(
-    eventName: string,
-    data: IModelState | IData | number | number[] | MouseEvent,
-    value?: number[],
-  ): void {
+  public emit(eventName: string, data: IModelState | IData | number[]): void {
     const handlers: CallbackFunctionVariadic[] = this.handlersByEvent[
       eventName
     ];
     if (handlers) {
       handlers.forEach(fn => {
-        fn.call(null, data, value);
+        fn.call(null, data);
       });
     }
   }
