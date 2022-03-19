@@ -110,9 +110,15 @@ class ProgressBar {
 
     const maximumNumberOfDivisions = 5;
 
-    const stepSize = (max - min) / maximumNumberOfDivisions;
+    const numberOfDivisions = Math.round((max - min) / step);
 
-    const stepForScaleValue = Math.floor(stepSize / step) * step;
+    let stepSize = (max - min) / numberOfDivisions;
+
+    if (numberOfDivisions > maximumNumberOfDivisions) {
+      stepSize = (max - min) / maximumNumberOfDivisions;
+    }
+
+    const stepForScaleValue = Math.round(stepSize / step) * step;
 
     const scaleValueContainer: HTMLElement = createElement(
       'div',
