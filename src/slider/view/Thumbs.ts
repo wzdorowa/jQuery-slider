@@ -38,15 +38,15 @@ class Thumbs {
     this.min = state.min;
     this.max = state.max;
 
-    this.createThumbs(state.thumbsCount);
+    this.createThumbs(state.thumbsValues);
     this.listenThumbsEvents();
     this.setValuesThumbs(state.thumbsValues);
   }
 
   /* the CreateSlider function adds sliders to the parent of the slider */
-  private createThumbs(thumbsCount: number): void {
+  private createThumbs(thumbsValues: number[]): void {
     const htmlFragment = document.createDocumentFragment();
-    new Array(thumbsCount).fill(1).forEach(() => {
+    thumbsValues.forEach(() => {
       const thumb: HTMLElement = createElement(
         'div',
         'slider__thumb js-slider__thumb',

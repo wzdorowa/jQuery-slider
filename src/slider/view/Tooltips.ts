@@ -16,14 +16,14 @@ class Tooltips {
 
   public renderTooltips(state: IModelState): void {
     if (state.tooltipIsActive) {
-      this.createTooltips(state.thumbsCount, state.orientation);
+      this.createTooltips(state.thumbsValues, state.orientation);
       this.setTooltipsValues(state.thumbsValues);
     }
   }
 
   /* createTooltips function adds tooltip elements to the main html slider structure */
-  private createTooltips(thumbsCount: number, orientation: string): void {
-    new Array(thumbsCount).fill(1).forEach((_element: number, i: number) => {
+  private createTooltips(thumbsValues: number[], orientation: string): void {
+    thumbsValues.forEach((_element: number, i: number) => {
       const tooltip: HTMLElement = createElement(
         'div',
         'slider__tooltip js-slider__tooltip',
@@ -38,7 +38,7 @@ class Tooltips {
 
       tooltip.append(textInTooltips);
       const thumbs = this.slider.querySelectorAll('.js-slider__thumb');
-      thumbs[thumbs.length - (thumbsCount - i)].append(tooltip);
+      thumbs[i].append(tooltip);
       this.tooltipsElements.push(tooltip);
       this.textInTooltips.push(textInTooltips);
     });

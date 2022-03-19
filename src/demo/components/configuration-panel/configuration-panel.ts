@@ -130,7 +130,9 @@ class ConfigurationPanel {
     }
 
     if (this.elements.countSliderThumbs !== null) {
-      this.elements.countSliderThumbs[0].value = String(state.thumbsCount);
+      this.elements.countSliderThumbs[0].value = String(
+        state.thumbsValues.length,
+      );
     }
 
     if (this.elements.stepSize !== null) {
@@ -164,24 +166,22 @@ class ConfigurationPanel {
 
     const fragmentCurrentValueList = document.createDocumentFragment();
 
-    new Array(state.thumbsCount)
-      .fill(1)
-      .forEach((_element: number, i: number) => {
-        const currentValueItem: HTMLElement = utilities.createElement(
-          'li',
-          'configuration__thumbs-item js-configuration__thumbs-item',
-        );
-        const currentValueInput: HTMLElement = utilities.createElement(
-          'input',
-          'configuration__thumbs-value js-configuration__thumb-value',
-        );
-        currentValueInput.setAttribute('type', 'number');
-        currentValueInput.setAttribute('step', 'any');
-        currentValueInput.setAttribute('value', String(state.thumbsValues[i]));
+    state.thumbsValues.forEach((_element: number, i: number) => {
+      const currentValueItem: HTMLElement = utilities.createElement(
+        'li',
+        'configuration__thumbs-item js-configuration__thumbs-item',
+      );
+      const currentValueInput: HTMLElement = utilities.createElement(
+        'input',
+        'configuration__thumbs-value js-configuration__thumb-value',
+      );
+      currentValueInput.setAttribute('type', 'number');
+      currentValueInput.setAttribute('step', 'any');
+      currentValueInput.setAttribute('value', String(state.thumbsValues[i]));
 
-        currentValueItem.append(currentValueInput);
-        fragmentCurrentValueList.append(currentValueItem);
-      });
+      currentValueItem.append(currentValueInput);
+      fragmentCurrentValueList.append(currentValueItem);
+    });
     thumbsCurrentValuesList[this.sliderIndex].append(fragmentCurrentValueList);
 
     this.elements.inputsSliderThumbs = Array.from(
@@ -290,7 +290,6 @@ class ConfigurationPanel {
       min: Number(this.elements.minValue?.value),
       max: Number(this.elements.maxValue?.value),
       step: 0,
-      thumbsCount: 0,
       thumbsValues: [],
       scaleValuesIsActive: true,
       tooltipIsActive: true,
@@ -301,13 +300,29 @@ class ConfigurationPanel {
       state.step = Number(this.elements.stepSize[0].value);
     }
 
-    if (this.elements.countSliderThumbs !== null) {
-      state.thumbsCount = Number(this.elements.countSliderThumbs[0].value);
-    }
-
     this.elements.inputsSliderThumbs?.forEach((element, i) => {
       state.thumbsValues[i] = Number(element.value);
     });
+
+    if (this.elements.countSliderThumbs !== null) {
+      const thumbsCount = Number(this.elements.countSliderThumbs[0].value);
+
+      if (thumbsCount > state.thumbsValues.length) {
+        const missingNumber = thumbsCount - state.thumbsValues.length;
+        new Array(missingNumber).fill(1).forEach(() => {
+          const lastThumbIndex = state.thumbsValues.length - 1;
+          const nextThumbIndex = state.thumbsValues.length;
+          state.thumbsValues[nextThumbIndex] =
+            state.thumbsValues[lastThumbIndex] + state.step;
+        });
+      }
+
+      if (thumbsCount < state.thumbsValues.length) {
+        const excessNumber = state.thumbsValues.length - thumbsCount;
+        const lastThumbIndex = state.thumbsValues.length - excessNumber;
+        state.thumbsValues.splice(lastThumbIndex, excessNumber);
+      }
+    }
 
     if (this.elements.checkboxInputScaleOfValues !== null) {
       if (!this.elements.checkboxInputScaleOfValues[0].checked) {

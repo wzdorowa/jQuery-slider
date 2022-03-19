@@ -13,7 +13,6 @@ class Model {
       max: defaultState.max,
       thumbsValues: defaultState.thumbsValues,
       orientation: defaultState.orientation,
-      thumbsCount: defaultState.thumbsCount,
       step: defaultState.step,
       tooltipIsActive: defaultState.tooltipIsActive,
       scaleValuesIsActive: defaultState.scaleValuesIsActive,
@@ -37,8 +36,8 @@ class Model {
       this.state.step = 1;
     }
 
-    if (this.state.thumbsCount <= 0) {
-      this.state.thumbsCount = 1;
+    if (this.state.thumbsValues.length === 0) {
+      this.state.thumbsValues[0] = this.state.min;
     }
 
     if (!['horizontal', 'vertical'].includes(this.state.orientation)) {
@@ -53,34 +52,11 @@ class Model {
       this.state.max -= Math.floor(this.state.max);
     }
 
-    if (!Number.isInteger(this.state.thumbsCount)) {
-      this.state.thumbsCount -= Math.floor(this.state.thumbsCount);
-    }
-
     const minPossibleMaxValue =
-      this.state.min + this.state.step * (this.state.thumbsCount + 1);
+      this.state.min + this.state.step * (this.state.thumbsValues.length + 1);
 
     if (this.state.max < minPossibleMaxValue) {
       this.state.max = minPossibleMaxValue;
-    }
-
-    if (this.state.thumbsValues.length < this.state.thumbsCount) {
-      const missingQuantityThumbs =
-        this.state.thumbsCount - this.state.thumbsValues.length;
-      new Array(missingQuantityThumbs).fill(1).forEach(() => {
-        this.state.thumbsValues[this.state.thumbsValues.length] =
-          this.state.thumbsValues[this.state.thumbsValues.length - 1] +
-          this.state.step;
-      });
-    }
-    if (this.state.thumbsValues.length > this.state.thumbsCount) {
-      if (this.state.thumbsCount > 0) {
-        const excessThumbs =
-          this.state.thumbsValues.length - this.state.thumbsCount;
-        new Array(excessThumbs).fill(1).forEach(() => {
-          this.state.thumbsValues.splice(-1, 1);
-        });
-      }
     }
 
     this.checkThumbsValues(this.state.thumbsValues);

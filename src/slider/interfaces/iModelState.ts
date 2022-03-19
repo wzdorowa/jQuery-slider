@@ -3,7 +3,6 @@ export interface IModelState {
   max: number;
   thumbsValues: number[];
   orientation: string;
-  thumbsCount: number;
   step: number;
   tooltipIsActive: boolean;
   scaleValuesIsActive: boolean;
