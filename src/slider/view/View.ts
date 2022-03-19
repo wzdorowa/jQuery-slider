@@ -21,21 +21,9 @@ class View {
   constructor(slider: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = slider;
     this.emitter = eventEmitter;
-
-    this.emitter.makeSubscribe('model:state-changed', (state: IModelState) => {
-      this.initialize(state);
-      this.render(state);
-    });
-
-    this.emitter.makeSubscribe(
-      'model:thumbsValues-changed',
-      (thumbsValues: number[]) => {
-        this.update(thumbsValues);
-      },
-    );
   }
 
-  private initialize(state: IModelState) {
+  public initialize(state: IModelState): void {
     this.slider.innerHTML = '';
     this.setAdapter(state.orientation);
 
@@ -44,7 +32,7 @@ class View {
     this.tooltips = new Tooltips(this.slider);
   }
 
-  private render(state: IModelState): void {
+  public render(state: IModelState): void {
     this.progressBar.renderProgressBar.call(
       this.progressBar,
       state,
@@ -56,7 +44,7 @@ class View {
     this.tooltips.renderTooltips.call(this.tooltips, state);
   }
 
-  private update(thumbsValues: number[]): void {
+  public update(thumbsValues: number[]): void {
     this.thumbs.setValuesThumbs(thumbsValues);
     this.tooltips.setTooltipsValues(thumbsValues);
     this.progressBar.updateActiveRange(thumbsValues);

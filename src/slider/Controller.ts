@@ -9,16 +9,30 @@ interface IData {
 }
 
 class Controller {
-  public slider: HTMLElement;
+  private slider: HTMLElement;
 
-  public model: Model;
+  private model: Model;
+
+  private view: View;
 
   constructor(element: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = element;
     this.slider.classList.add('slider');
 
-    new View(this.slider, eventEmitter);
+    this.view = new View(this.slider, eventEmitter);
     this.model = new Model(eventEmitter);
+
+    eventEmitter.makeSubscribe('model:state-changed', (state: IModelState) => {
+      this.view.initialize(state);
+      this.view.render(state);
+    });
+
+    eventEmitter.makeSubscribe(
+      'model:thumbsValues-changed',
+      (thumbsValues: number[]) => {
+        this.view.update(thumbsValues);
+      },
+    );
 
     eventEmitter.makeSubscribe('view:thumbPosition-changed', (data: IData) => {
       this.model.requestThumbValueChange(data.value, data.index);
