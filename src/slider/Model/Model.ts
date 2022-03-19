@@ -46,16 +46,15 @@ class Model {
     }
 
     if (!Number.isInteger(this.state.min)) {
-      this.state.min -= this.state.min - Math.floor(this.state.min);
+      this.state.min -= Math.floor(this.state.min);
     }
 
     if (!Number.isInteger(this.state.max)) {
-      this.state.max -= this.state.max - Math.floor(this.state.max);
+      this.state.max -= Math.floor(this.state.max);
     }
 
     if (!Number.isInteger(this.state.thumbsCount)) {
-      this.state.thumbsCount -=
-        this.state.thumbsCount - Math.floor(this.state.thumbsCount);
+      this.state.thumbsCount -= Math.floor(this.state.thumbsCount);
     }
 
     const minPossibleMaxValue =
