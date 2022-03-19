@@ -24,10 +24,10 @@ class Model {
 
   public updateState(state: IModelState): void {
     this.state = state;
-    this.normolizeState();
+    this.normalizeState();
   }
 
-  private normolizeState() {
+  private normalizeState() {
     if (this.state.min < 0) {
       this.state.min = defaultState.min;
     }
