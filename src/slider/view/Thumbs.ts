@@ -94,8 +94,8 @@ class Thumbs {
 
     this.startMoveAxis = event[this.adapter?.pageAxis] - currentValueAxis;
 
-    document.addEventListener('pointermove', this.handleThumbMove.bind(this));
-    document.addEventListener('pointerup', this.handleThumbStop.bind(this));
+    document.addEventListener('pointermove', this.handleThumbMove);
+    document.addEventListener('pointerup', this.handleThumbStop);
   }
 
   private processMove(event: MouseEvent): void {
@@ -127,23 +127,20 @@ class Thumbs {
     this.target = null;
     this.indexActiveThumb = null;
 
-    document.removeEventListener(
-      'pointermove',
-      this.handleThumbMove.bind(this),
-    );
-    document.removeEventListener('pointerup', this.handleThumbStop.bind(this));
+    document.removeEventListener('pointermove', this.handleThumbMove);
+    document.removeEventListener('pointerup', this.handleThumbStop);
   }
 
   private handleThumbStart(index: number, event: MouseEvent): void {
     this.processStart(event, index);
   }
 
-  private handleThumbMove(event: MouseEvent): void {
+  private handleThumbMove = (event: MouseEvent): void => {
     this.processMove(event);
-  }
+  };
 
-  private handleThumbStop(): void {
+  private handleThumbStop = (): void => {
     this.processStop.call(this);
-  }
+  };
 }
 export default Thumbs;

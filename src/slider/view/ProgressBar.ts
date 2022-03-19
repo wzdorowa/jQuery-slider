@@ -76,7 +76,7 @@ class ProgressBar {
   private listenProgressBarClick(): void {
     this.progressBar.addEventListener(
       'click',
-      this.handleProgressBarClick.bind(this),
+      this.handleProgressBarClick,
       true,
     );
   }
@@ -251,7 +251,7 @@ class ProgressBar {
     }
   }
 
-  private handleProgressBarClick(event: MouseEvent): void {
+  private handleProgressBarClick = (event: MouseEvent): void => {
     let clickLocationAxis = 0;
 
     const startAxis = this.progressBar.getBoundingClientRect();
@@ -274,7 +274,7 @@ class ProgressBar {
     }
 
     this.findAndSetTheNearestThumb(currentValue);
-  }
+  };
 
   private handleSerifScaleClick(index: number, valuesSerifs: number[]): void {
     this.findAndSetTheNearestThumb(valuesSerifs[index]);

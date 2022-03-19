@@ -205,14 +205,14 @@ class ConfigurationPanel {
   listenMinValue(): void {
     this.elements.minValue?.addEventListener(
       'blur',
-      this.handleElementClickOrBlur.bind(this),
+      this.handleElementClickOrBlur,
     );
   }
 
   listenMaxValue(): void {
     this.elements.maxValue?.addEventListener(
       'blur',
-      this.handleElementClickOrBlur.bind(this),
+      this.handleElementClickOrBlur,
     );
   }
 
@@ -220,7 +220,7 @@ class ConfigurationPanel {
     if (this.elements.countSliderThumbs !== null) {
       this.elements.countSliderThumbs[0].addEventListener(
         'blur',
-        this.handleElementClickOrBlur.bind(this),
+        this.handleElementClickOrBlur,
       );
     }
   }
@@ -229,53 +229,41 @@ class ConfigurationPanel {
     if (this.elements.stepSize !== null) {
       this.elements.stepSize[0].addEventListener(
         'blur',
-        this.handleElementClickOrBlur.bind(this),
+        this.handleElementClickOrBlur,
       );
     }
   }
 
   listenInputsSliderThumbs(): void {
     this.elements.inputsSliderThumbs?.forEach(element => {
-      element.addEventListener(
-        'blur',
-        this.handleElementClickOrBlur.bind(this),
-      );
+      element.addEventListener('blur', this.handleElementClickOrBlur);
     });
   }
 
   listenOrientationSlider(): void {
     this.elements.orientationButtons?.forEach(element => {
-      element.addEventListener(
-        'click',
-        this.handleElementClickOrBlur.bind(this),
-      );
+      element.addEventListener('click', this.handleElementClickOrBlur);
     });
   }
 
   listenCheckboxContainer(): void {
     this.elements.checkboxContainer?.forEach(element => {
-      element.addEventListener(
-        'click',
-        this.handleElementClickOrBlur.bind(this),
-      );
+      element.addEventListener('click', this.handleElementClickOrBlur);
     });
   }
 
   listenForm(): void {
     if (this.elements.forms !== null) {
       this.elements.forms.forEach((elementForm: HTMLElement) => {
-        elementForm.addEventListener(
-          'submit',
-          this.handleElementFormSubmit.bind(this),
-        );
+        elementForm.addEventListener('submit', this.handleElementFormSubmit);
       });
     }
   }
 
-  handleElementClickOrBlur(): void {
+  handleElementClickOrBlur = (): void => {
     const state = this.getValuesFromAllInputs();
     this.connection.update(state);
-  }
+  };
 
   handleElementFormSubmit: (event: Event) => void = (event): void => {
     const currentEvent: Event = event;

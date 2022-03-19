@@ -20,10 +20,10 @@ import Wrapper from './Wrapper';
       data,
     );
     const wrapper = new Wrapper(element, settings);
-    this.data('getState', wrapper.getStateAction);
-    this.data('update', wrapper.updateAction);
-    this.data('subscribeToModelChanges', wrapper.modelChangesAction);
-    this.data('subscribeToThumbsChanges', wrapper.thumbsChangesAction);
+    this.data('getState', wrapper.getState);
+    this.data('update', wrapper.update);
+    this.data('subscribeToModelChanges', wrapper.subscribeToModelChanges);
+    this.data('subscribeToThumbsChanges', wrapper.subscribeToThumbsChanges);
     return this;
   };
   $jquery.fn.extend($jquery.fn.slider);
