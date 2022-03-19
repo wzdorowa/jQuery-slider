@@ -244,7 +244,7 @@ class ProgressBar {
     });
 
     if (currentThumbIndex !== null) {
-      this.emitter.emit('view:thumbValue-changed', {
+      this.emitter.emit('view:thumbPosition-changed', {
         value: currentValue,
         index: currentThumbIndex,
       });

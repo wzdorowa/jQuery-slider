@@ -20,7 +20,7 @@ class Controller {
     new View(this.slider, eventEmitter);
     this.model = new Model(eventEmitter);
 
-    eventEmitter.makeSubscribe('view:thumbValue-changed', (data: IData) => {
+    eventEmitter.makeSubscribe('view:thumbPosition-changed', (data: IData) => {
       this.model.requestThumbValueChange(data.value, data.index);
     });
   }

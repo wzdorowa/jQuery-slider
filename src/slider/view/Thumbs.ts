@@ -115,7 +115,7 @@ class Thumbs {
 
         const value = (currentValueAxis + shiftToMinValue) / pointSize;
 
-        this.emitter.emit('view:thumbValue-changed', {
+        this.emitter.emit('view:thumbPosition-changed', {
           value,
           index: this.indexActiveThumb,
         });
