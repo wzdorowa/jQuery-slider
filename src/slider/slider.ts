@@ -14,8 +14,8 @@ import Wrapper from './Wrapper';
         orientation: 'horizontal',
         thumbsCount: 4,
         step: 2,
-        tooltipIsActive: true,
-        scaleValuesIsActive: true,
+        hasTooltips: true,
+        hasScaleValues: true,
       },
       data,
     );

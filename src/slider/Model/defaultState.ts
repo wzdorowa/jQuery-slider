@@ -6,8 +6,8 @@ const defaultState: IModelState = {
   thumbsValues: [20, 32, 44, 60],
   orientation: 'horizontal',
   step: 2,
-  tooltipIsActive: true,
-  scaleValuesIsActive: true,
+  hasTooltips: true,
+  hasScaleValues: true,
 };
 
 export default defaultState;

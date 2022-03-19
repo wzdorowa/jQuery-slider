@@ -67,7 +67,7 @@ https://wzdorowa.github.io/jQuery-slider/
 * orientation - ориентация слайдера
 * thumbsCount - количество бегунков слайдера
 * step - размер шага слайдера
-* tooltipIsActive - наличие тултипов слайдера
+* hasTooltips - наличие тултипов слайдера
 
 Предоставляет доступ к методам:
 

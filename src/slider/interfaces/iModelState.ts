@@ -4,6 +4,6 @@ export interface IModelState {
   thumbsValues: number[];
   orientation: string;
   step: number;
-  tooltipIsActive: boolean;
-  scaleValuesIsActive: boolean;
+  hasTooltips: boolean;
+  hasScaleValues: boolean;
 }

@@ -10,8 +10,8 @@ const state: IModelState = {
   orientation: 'horizontal',
   thumbsCount: 4,
   step: 2,
-  tooltipIsActive: true,
-  scaleValuesIsActive: true,
+  hasTooltips: true,
+  hasScaleValues: true,
 };
 
 describe('Unit tests', () => {
@@ -56,10 +56,10 @@ describe('Unit tests', () => {
     state.max = 80;
     scale.renderProgressBar(state, adapter);
 
-    state.scaleValuesIsActive = false;
+    state.hasScaleValues = false;
     scale.renderProgressBar(state, adapter);
 
-    state.scaleValuesIsActive = true;
+    state.hasScaleValues = true;
     scale.renderProgressBar(state, adapter);
   });
 

@@ -14,8 +14,8 @@ class Model {
       thumbsValues: defaultState.thumbsValues,
       orientation: defaultState.orientation,
       step: defaultState.step,
-      tooltipIsActive: defaultState.tooltipIsActive,
-      scaleValuesIsActive: defaultState.scaleValuesIsActive,
+      hasTooltips: defaultState.hasTooltips,
+      hasScaleValues: defaultState.hasScaleValues,
     };
 
     this.emitter = eventEmitter;

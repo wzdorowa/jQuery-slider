@@ -140,7 +140,7 @@ class ConfigurationPanel {
     }
 
     if (this.elements.checkboxInputTooltip !== null) {
-      if (!state.tooltipIsActive) {
+      if (!state.hasTooltips) {
         this.elements.checkboxInputTooltip[0].checked = false;
       } else {
         this.elements.checkboxInputTooltip[0].checked = true;
@@ -148,10 +148,10 @@ class ConfigurationPanel {
     }
 
     if (this.elements.checkboxInputScaleOfValues !== null) {
-      if (!state.scaleValuesIsActive) {
+      if (!state.hasScaleValues) {
         this.elements.checkboxInputScaleOfValues[0].checked = false;
       }
-      if (state.scaleValuesIsActive) {
+      if (state.hasScaleValues) {
         this.elements.checkboxInputScaleOfValues[0].checked = true;
       }
     }
@@ -291,8 +291,8 @@ class ConfigurationPanel {
       max: Number(this.elements.maxValue?.value),
       step: 0,
       thumbsValues: [],
-      scaleValuesIsActive: true,
-      tooltipIsActive: true,
+      hasScaleValues: true,
+      hasTooltips: true,
       orientation: 'horizontal',
     };
 
@@ -326,13 +326,13 @@ class ConfigurationPanel {
 
     if (this.elements.checkboxInputScaleOfValues !== null) {
       if (!this.elements.checkboxInputScaleOfValues[0].checked) {
-        state.scaleValuesIsActive = false;
+        state.hasScaleValues = false;
       }
     }
 
     if (this.elements.checkboxInputTooltip !== null) {
       if (!this.elements.checkboxInputTooltip[0].checked) {
-        state.tooltipIsActive = false;
+        state.hasTooltips = false;
       }
     }
 
