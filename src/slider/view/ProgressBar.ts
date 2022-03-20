@@ -261,15 +261,18 @@ class ProgressBar {
     let clickLocationAxis = 0;
 
     const startAxis = this.progressBar.getBoundingClientRect();
-    const offsetX = event.clientX - startAxis.x;
+    const offset =
+      event[this.adapter.clientAxis] - startAxis[this.adapter.clientRect];
 
     const pointSize =
       this.progressBar[this.adapter.offsetLength] / (this.max - this.min);
+
     const shiftToMinValue = pointSize * this.min;
 
-    clickLocationAxis = offsetX + shiftToMinValue;
+    clickLocationAxis = offset + shiftToMinValue;
 
     let currentValue: number = clickLocationAxis / pointSize;
+
     const minValue: number = Math.floor(currentValue / this.step) * this.step;
     const halfStep = minValue + this.step / 2;
 
