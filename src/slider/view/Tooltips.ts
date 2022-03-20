@@ -33,6 +33,7 @@ class Tooltips {
         'slider__tooltip-text js-slider__tooltip-text',
       );
       if (orientation === 'vertical') {
+        tooltip.classList.add('slider__tooltip_vertical');
         textInTooltips.classList.add('slider__tooltip-text_vertical');
       }
 
