@@ -105,6 +105,12 @@ class Model {
     thumbsValues.forEach((element: number, index: number) => {
       let value: number = Math.round(element * 100) / 100;
 
+      value =
+        Math.round((value - this.state.min) / this.state.step) *
+          this.state.step +
+        this.state.min;
+      value = Math.round(value * 100) / 100;
+
       if (value > thumbsValues[index + 1]) {
         value = thumbsValues[index + 1];
       }
@@ -134,47 +140,6 @@ class Model {
         value = minPossibleValue;
       } else if (value >= maxPossibleValue) {
         value = maxPossibleValue;
-      } else {
-        const valuesInterval = Math.round((value - this.state.min) * 100) / 100;
-        const integer = Math.floor(valuesInterval / this.state.step);
-
-        const getRemainderOfDivision = (interval: number, step: number) => {
-          return Math.abs(
-            Math.round((interval - integer * step) * 10000) / 10000,
-          );
-        };
-
-        const remainderOfDivision = getRemainderOfDivision(
-          valuesInterval,
-          this.state.step,
-        );
-
-        let currentValue;
-
-        if (remainderOfDivision > 0) {
-          currentValue = integer * this.state.step + this.state.min;
-          const lastStep =
-            Math.round(
-              ((this.state.max - this.state.min) % this.state.step) * 100,
-            ) / 100;
-          const beginningLastStep = this.state.max - lastStep;
-
-          if (value > beginningLastStep && value < this.state.max) {
-            const halfStep = lastStep / 2;
-            if (value > beginningLastStep + halfStep) {
-              currentValue = this.state.max;
-            } else {
-              currentValue = beginningLastStep;
-            }
-          }
-        } else {
-          currentValue = integer * this.state.step + this.state.min;
-        }
-
-        const stepOrZero =
-          Math.round(remainderOfDivision / this.state.step) * this.state.step;
-
-        value = Math.round((stepOrZero + currentValue) * 100) / 100;
       }
 
       if (value !== this.state.thumbsValues[index]) {
