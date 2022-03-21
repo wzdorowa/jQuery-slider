@@ -19,7 +19,6 @@ class Model {
     };
 
     this.emitter = eventEmitter;
-    this.notifyStateChanged();
   }
 
   public updateState(state: IModelState): void {

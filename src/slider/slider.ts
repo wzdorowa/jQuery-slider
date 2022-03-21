@@ -1,4 +1,5 @@
 import Wrapper from './Wrapper';
+import Controller from './Controller';
 
 (function callSlider($) {
   const $jquery = $;
@@ -19,7 +20,8 @@ import Wrapper from './Wrapper';
       },
       data,
     );
-    const wrapper = new Wrapper(element, settings);
+    const controller = new Controller(element, settings);
+    const wrapper = new Wrapper(controller);
     this.data('getState', wrapper.getState);
     this.data('update', wrapper.update);
     this.data('subscribeToModelChanges', wrapper.subscribeToModelChanges);
