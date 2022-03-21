@@ -1,3 +1,4 @@
+import './styles/slider.scss';
 import Wrapper from './Wrapper';
 import Controller from './Controller';
 
