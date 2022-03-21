@@ -8,7 +8,6 @@ let state: IModelState = {
   max: 100,
   thumbsValues: [20, 32, 44, 60],
   orientation: 'horizontal',
-  thumbsCount: 4,
   step: 2,
   hasTooltips: true,
   hasScaleValues: true,
@@ -21,24 +20,21 @@ describe('Model testing', () => {
   test('update state', () => {
     state.min = -5;
     state.step = 0;
-    state.thumbsCount = 0;
+    state.thumbsValues = [];
     state.orientation = 'vert';
 
     model.updateState(state);
     expect(model.state.min).toBe(0);
     expect(model.state.step).toBe(1);
-    expect(model.state.thumbsCount).toBe(1);
     expect(model.state.thumbsValues.length).toBe(1);
     expect(model.state.orientation).toBe('horizontal');
 
     state.min = 10.5;
     state.max = 10.8;
-    state.thumbsCount = 3.4;
 
     model.updateState(state);
     expect(model.state.min).toBe(10);
-    expect(model.state.max).toBe(14);
-    expect(model.state.thumbsCount).toBe(3);
+    expect(model.state.max).toBe(12);
   });
 
   test('set new value ThumbsValues', () => {

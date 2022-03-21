@@ -7,7 +7,6 @@ const state: IModelState = {
   max: 100,
   thumbsValues: [20, 30, 40, 50],
   orientation: 'horizontal',
-  thumbsCount: 4,
   step: 2,
   hasTooltips: true,
   hasScaleValues: true,
@@ -19,15 +18,15 @@ describe('test View', () => {
   window.document.body.appendChild(slider);
 
   const eventEmitter = new EventEmitter();
-  new View(slider, eventEmitter);
+  const view = new View(slider, eventEmitter);
 
   test('checking subscriptions', () => {
-    eventEmitter.emit('model:state-changed', state);
-
-    state.thumbsValues = [22, 32, 42, 52];
-    eventEmitter.emit('model:thumbsValues-changed', state.thumbsValues);
+    view.initialize(state);
 
     state.orientation = 'vertical';
-    eventEmitter.emit('model:state-changed', state);
+    view.render(state);
+
+    state.thumbsValues = [22, 32, 42, 52];
+    view.update(state.thumbsValues);
   });
 });

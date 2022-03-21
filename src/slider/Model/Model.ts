@@ -44,11 +44,11 @@ class Model {
     }
 
     if (!Number.isInteger(this.state.min)) {
-      this.state.min -= Math.floor(this.state.min);
+      this.state.min = Math.floor(this.state.min);
     }
 
     if (!Number.isInteger(this.state.max)) {
-      this.state.max -= Math.floor(this.state.max);
+      this.state.max = Math.floor(this.state.max);
     }
 
     const minPossibleMaxValue =

@@ -10,7 +10,6 @@ const state: IModelState = {
   max: 100,
   thumbsValues: [20, 30, 40, 50],
   orientation: 'horizontal',
-  thumbsCount: 4,
   step: 2,
   hasTooltips: true,
   hasScaleValues: true,
@@ -26,6 +25,8 @@ const setAdapter = (orientation: string): void => {
       offsetLength: 'offsetWidth',
       pageAxis: 'pageX',
       currentAxis: 'currentX',
+      clientAxis: 'clientX',
+      clientRect: 'x',
       direction: 'left',
       position: 'left',
       length: 'width',
@@ -37,6 +38,8 @@ const setAdapter = (orientation: string): void => {
       offsetLength: 'offsetHeight',
       pageAxis: 'pageY',
       currentAxis: 'currentY',
+      clientAxis: 'clientY',
+      clientRect: 'y',
       direction: 'top',
       position: 'top',
       length: 'height',
@@ -69,11 +72,9 @@ describe('Unit tests', () => {
       '.js-slider__thumb',
     );
 
-    expect(tooltipsElements.length).toBe(state.thumbsCount);
     tooltipsElements.forEach(element => {
       expect(element.className).toContain('js-slider__tooltip');
     });
-    expect(textInTooltipsElements.length).toBe(state.thumbsCount);
     textInTooltipsElements.forEach(element => {
       expect(element.className).toContain('js-slider__tooltip-text');
     });
