@@ -21,6 +21,12 @@ class Tooltips {
     }
   }
 
+  public setTooltipsValues(tooltipsValues: number[]): void {
+    tooltipsValues.forEach((element: number, i: number) => {
+      this.textInTooltips[i].innerHTML = String(element);
+    });
+  }
+
   private createTooltips(thumbsValues: number[], orientation: string): void {
     thumbsValues.forEach((_element: number, i: number) => {
       const tooltip: HTMLElement = createElement(
@@ -41,12 +47,6 @@ class Tooltips {
       thumbs[i].append(tooltip);
       this.tooltipsElements.push(tooltip);
       this.textInTooltips.push(textInTooltips);
-    });
-  }
-
-  public setTooltipsValues(tooltipsValues: number[]): void {
-    tooltipsValues.forEach((element: number, i: number) => {
-      this.textInTooltips[i].innerHTML = String(element);
     });
   }
 }

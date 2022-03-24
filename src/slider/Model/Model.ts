@@ -26,6 +26,41 @@ class Model {
     this.normalizeState();
   }
 
+  public requestThumbValueChange(value: number, index: number): void {
+    const correctValue: number = Math.round(value * 100) / 100;
+
+    const lastStep =
+      Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
+      10;
+    const penultimateStep = this.state.max - lastStep;
+
+    const isValueLastStep =
+      correctValue > penultimateStep + lastStep / 2 ||
+      (correctValue < penultimateStep + lastStep / 2 &&
+        correctValue > penultimateStep);
+
+    const isHalfStep =
+      correctValue < this.state.thumbsValues[index] - this.state.step / 2 ||
+      correctValue > this.state.thumbsValues[index] + this.state.step / 2;
+
+    if (lastStep > 0) {
+      if (isValueLastStep) {
+        this.setNewThumbValue(correctValue, index);
+      } else if (isHalfStep) {
+        this.setNewThumbValue(correctValue, index);
+      }
+    } else if (isHalfStep) {
+      this.setNewThumbValue(correctValue, index);
+    }
+  }
+
+  public setNewThumbValue(thumbValue: number, index: number): void {
+    this.state.thumbsValues[index] = thumbValue;
+
+    this.checkThumbsValuesIntersection(index);
+    this.notifyThumbsValuesChanged();
+  }
+
   private normalizeState() {
     if (this.state.min < 0) {
       this.state.min = defaultState.min;
@@ -60,41 +95,6 @@ class Model {
 
     this.checkThumbsValuesIntersection(null);
     this.notifyStateChanged();
-  }
-
-  public setNewThumbValue(thumbValue: number, index: number): void {
-    this.state.thumbsValues[index] = thumbValue;
-
-    this.checkThumbsValuesIntersection(index);
-    this.notifyThumbsValuesChanged();
-  }
-
-  public requestThumbValueChange(value: number, index: number): void {
-    const correctValue: number = Math.round(value * 100) / 100;
-
-    const lastStep =
-      Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
-      10;
-    const penultimateStep = this.state.max - lastStep;
-
-    const isValueLastStep =
-      correctValue > penultimateStep + lastStep / 2 ||
-      (correctValue < penultimateStep + lastStep / 2 &&
-        correctValue > penultimateStep);
-
-    const isHalfStep =
-      correctValue < this.state.thumbsValues[index] - this.state.step / 2 ||
-      correctValue > this.state.thumbsValues[index] + this.state.step / 2;
-
-    if (lastStep > 0) {
-      if (isValueLastStep) {
-        this.setNewThumbValue(correctValue, index);
-      } else if (isHalfStep) {
-        this.setNewThumbValue(correctValue, index);
-      }
-    } else if (isHalfStep) {
-      this.setNewThumbValue(correctValue, index);
-    }
   }
 
   private checkThumbsValuesIntersection(thumbIndex: number | null): void {

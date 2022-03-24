@@ -8,11 +8,11 @@ class ProgressBar {
 
   public progressBar!: HTMLElement;
 
+  public divisionsElements: HTMLElement[];
+
   private activeRange!: HTMLElement;
 
   private emitter: EventEmitter;
-
-  public divisionsElements: HTMLElement[];
 
   private valuesDivisions: number[];
 
@@ -49,6 +49,72 @@ class ProgressBar {
     }
   }
 
+  public updateActiveRange(thumbsValues: number[]): void {
+    const firstThumb = thumbsValues[0];
+    const lastThumb = thumbsValues[thumbsValues.length - 1];
+
+    const firstThumbPosition =
+      ((firstThumb - this.min) / (this.max - this.min)) * 100;
+    const lastThumbPosition =
+      ((lastThumb - this.min) / (this.max - this.min)) * 100;
+
+    let margin = 0;
+    let lengthActiveRange;
+
+    if (thumbsValues.length === 1) {
+      lengthActiveRange = firstThumbPosition;
+    } else if (thumbsValues.length > 1) {
+      margin = firstThumbPosition;
+
+      lengthActiveRange = lastThumbPosition - firstThumbPosition;
+    }
+
+    this.activeRange.style[this.adapter.position] = `${margin}%`;
+    this.activeRange.style[this.adapter.length] = `${lengthActiveRange}%`;
+  }
+
+  public findAndSetTheNearestThumb(currentValue: number): void {
+    const leftSpacing: number[] = [];
+    const rightSpacing: number[] = [];
+
+    this.thumbsValues.forEach((thumbValue: number) => {
+      const valueLeftSpacing = thumbValue - currentValue;
+      leftSpacing.push(Math.abs(valueLeftSpacing));
+
+      const valueRightSpacing = thumbValue + currentValue;
+      rightSpacing.push(Math.abs(valueRightSpacing));
+    });
+
+    let currentSpacingValue: number | null = null;
+    let currentThumbIndex: number | null = null;
+
+    const checkValueSpacing = (element: number, index: number) => {
+      if (currentSpacingValue === null) {
+        currentSpacingValue = element;
+      }
+      if (currentThumbIndex === null) {
+        currentThumbIndex = index;
+      }
+      if (element < currentSpacingValue) {
+        currentSpacingValue = element;
+        currentThumbIndex = index;
+      }
+    };
+    leftSpacing.forEach((element, index) => {
+      checkValueSpacing(element, index);
+    });
+    rightSpacing.forEach((element, index) => {
+      checkValueSpacing(element, index);
+    });
+
+    if (currentThumbIndex !== null) {
+      this.emitter.emit('view:thumbPosition-changed', {
+        value: currentValue,
+        index: currentThumbIndex,
+      });
+    }
+  }
+
   private createProgressBar(orientation: string): void {
     const progressBar: HTMLElement = createElement(
       'div',
@@ -78,30 +144,6 @@ class ProgressBar {
       this.handleProgressBarClick,
       true,
     );
-  }
-
-  public updateActiveRange(thumbsValues: number[]): void {
-    const firstThumb = thumbsValues[0];
-    const lastThumb = thumbsValues[thumbsValues.length - 1];
-
-    const firstThumbPosition =
-      ((firstThumb - this.min) / (this.max - this.min)) * 100;
-    const lastThumbPosition =
-      ((lastThumb - this.min) / (this.max - this.min)) * 100;
-
-    let margin = 0;
-    let lengthActiveRange;
-
-    if (thumbsValues.length === 1) {
-      lengthActiveRange = firstThumbPosition;
-    } else if (thumbsValues.length > 1) {
-      margin = firstThumbPosition;
-
-      lengthActiveRange = lastThumbPosition - firstThumbPosition;
-    }
-
-    this.activeRange.style[this.adapter.position] = `${margin}%`;
-    this.activeRange.style[this.adapter.length] = `${lengthActiveRange}%`;
   }
 
   private renderDivisions(state: IModelState): void {
@@ -212,48 +254,6 @@ class ProgressBar {
         true,
       );
     });
-  }
-
-  public findAndSetTheNearestThumb(currentValue: number): void {
-    const leftSpacing: number[] = [];
-    const rightSpacing: number[] = [];
-
-    this.thumbsValues.forEach((thumbValue: number) => {
-      const valueLeftSpacing = thumbValue - currentValue;
-      leftSpacing.push(Math.abs(valueLeftSpacing));
-
-      const valueRightSpacing = thumbValue + currentValue;
-      rightSpacing.push(Math.abs(valueRightSpacing));
-    });
-
-    let currentSpacingValue: number | null = null;
-    let currentThumbIndex: number | null = null;
-
-    const checkValueSpacing = (element: number, index: number) => {
-      if (currentSpacingValue === null) {
-        currentSpacingValue = element;
-      }
-      if (currentThumbIndex === null) {
-        currentThumbIndex = index;
-      }
-      if (element < currentSpacingValue) {
-        currentSpacingValue = element;
-        currentThumbIndex = index;
-      }
-    };
-    leftSpacing.forEach((element, index) => {
-      checkValueSpacing(element, index);
-    });
-    rightSpacing.forEach((element, index) => {
-      checkValueSpacing(element, index);
-    });
-
-    if (currentThumbIndex !== null) {
-      this.emitter.emit('view:thumbPosition-changed', {
-        value: currentValue,
-        index: currentThumbIndex,
-      });
-    }
   }
 
   private handleProgressBarClick = (event: MouseEvent): void => {

@@ -43,6 +43,21 @@ class Thumbs {
     this.setValuesThumbs(state.thumbsValues);
   }
 
+  public setValuesThumbs(thumbsValues: number[]): void {
+    this.thumbs.forEach((_element, i) => {
+      if (this.adapter?.direction !== undefined) {
+        const element = this.thumbs[i];
+
+        const percent =
+          ((thumbsValues[i] - this.min) / (this.max - this.min)) * 100;
+
+        element.style[
+          this.adapter?.direction
+        ] = `calc((${percent}%) - (24px * ${percent / 100}))`;
+      }
+    });
+  }
+
   private createThumbs(thumbsValues: number[]): void {
     const htmlFragment = document.createDocumentFragment();
     thumbsValues.forEach(() => {
@@ -63,21 +78,6 @@ class Thumbs {
         'pointerdown',
         this.handleThumbStart.bind(this, i),
       );
-    });
-  }
-
-  public setValuesThumbs(thumbsValues: number[]): void {
-    this.thumbs.forEach((_element, i) => {
-      if (this.adapter?.direction !== undefined) {
-        const element = this.thumbs[i];
-
-        const percent =
-          ((thumbsValues[i] - this.min) / (this.max - this.min)) * 100;
-
-        element.style[
-          this.adapter?.direction
-        ] = `calc((${percent}%) - (24px * ${percent / 100}))`;
-      }
     });
   }
 

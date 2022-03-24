@@ -51,19 +51,19 @@ class ConfigurationPanel {
     this.render(this.connection.getState());
   }
 
-  render(state: IModelState): void {
+  private render(state: IModelState): void {
     this.createInput(state);
     this.setValuesFromState(state);
   }
 
-  updateThumbsValues(thumbsValues: number[]): void {
+  private updateThumbsValues(thumbsValues: number[]): void {
     this.elements.inputsSliderThumbs?.forEach((element, i) => {
       const thumb = element;
       thumb.value = String(thumbsValues[i]);
     });
   }
 
-  findElements(): void {
+  private findElements(): void {
     const configurationPanels = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
@@ -112,7 +112,7 @@ class ConfigurationPanel {
     ) as HTMLElement[];
   }
 
-  setValuesFromState(state: IModelState): void {
+  private setValuesFromState(state: IModelState): void {
     if (this.elements.orientationButtons !== null) {
       if (state.orientation === 'horizontal') {
         this.elements.orientationButtons[0].checked = true;
@@ -157,7 +157,7 @@ class ConfigurationPanel {
     }
   }
 
-  createInput(state: IModelState): void {
+  private createInput(state: IModelState): void {
     const thumbsCurrentValuesList: HTMLElement[] = Array.from(
       document.querySelectorAll('.js-configuration__thumbs-current-value-list'),
     );
@@ -192,7 +192,7 @@ class ConfigurationPanel {
     this.listenInputsSliderThumbs();
   }
 
-  bindEventListeners(): void {
+  private bindEventListeners(): void {
     this.listenMinValue();
     this.listenMaxValue();
     this.listenThumbsCount();
@@ -202,21 +202,21 @@ class ConfigurationPanel {
     this.listenForm();
   }
 
-  listenMinValue(): void {
+  private listenMinValue(): void {
     this.elements.minValue?.addEventListener(
       'blur',
       this.handleElementClickOrBlur,
     );
   }
 
-  listenMaxValue(): void {
+  private listenMaxValue(): void {
     this.elements.maxValue?.addEventListener(
       'blur',
       this.handleElementClickOrBlur,
     );
   }
 
-  listenThumbsCount(): void {
+  private listenThumbsCount(): void {
     if (this.elements.countSliderThumbs !== null) {
       this.elements.countSliderThumbs[0].addEventListener(
         'blur',
@@ -225,7 +225,7 @@ class ConfigurationPanel {
     }
   }
 
-  listenStepSize(): void {
+  private listenStepSize(): void {
     if (this.elements.stepSize !== null) {
       this.elements.stepSize[0].addEventListener(
         'blur',
@@ -234,25 +234,25 @@ class ConfigurationPanel {
     }
   }
 
-  listenInputsSliderThumbs(): void {
+  private listenInputsSliderThumbs(): void {
     this.elements.inputsSliderThumbs?.forEach(element => {
       element.addEventListener('blur', this.handleElementClickOrBlur);
     });
   }
 
-  listenOrientationSlider(): void {
+  private listenOrientationSlider(): void {
     this.elements.orientationButtons?.forEach(element => {
       element.addEventListener('click', this.handleElementClickOrBlur);
     });
   }
 
-  listenCheckboxContainer(): void {
+  private listenCheckboxContainer(): void {
     this.elements.checkboxContainer?.forEach(element => {
       element.addEventListener('click', this.handleElementClickOrBlur);
     });
   }
 
-  listenForm(): void {
+  private listenForm(): void {
     if (this.elements.forms !== null) {
       this.elements.forms.forEach((elementForm: HTMLElement) => {
         elementForm.addEventListener('submit', this.handleElementFormSubmit);
@@ -260,12 +260,12 @@ class ConfigurationPanel {
     }
   }
 
-  handleElementClickOrBlur = (): void => {
+  private handleElementClickOrBlur = (): void => {
     const state = this.getValuesFromAllInputs();
     this.connection.update(state);
   };
 
-  handleElementFormSubmit: (event: Event) => void = (event): void => {
+  private handleElementFormSubmit: (event: Event) => void = (event): void => {
     const currentEvent: Event = event;
     currentEvent.preventDefault();
 
@@ -273,7 +273,7 @@ class ConfigurationPanel {
     this.connection.update(state);
   };
 
-  getValuesFromAllInputs(): IModelState {
+  private getValuesFromAllInputs(): IModelState {
     const state: IModelState = {
       min: Number(this.elements.minValue?.value),
       max: Number(this.elements.maxValue?.value),
