@@ -62,10 +62,6 @@ class Model {
   }
 
   private normalizeState() {
-    if (this.state.min < 0) {
-      this.state.min = defaultState.min;
-    }
-
     if (this.state.step <= 0) {
       this.state.step = 1;
     }
