@@ -37,7 +37,7 @@ class EventEmitter {
     ];
     if (handlers) {
       handlers.forEach(fn => {
-        fn.call(null, data);
+        fn(data);
       });
     }
   }

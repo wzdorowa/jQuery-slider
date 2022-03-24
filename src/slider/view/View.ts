@@ -33,15 +33,11 @@ class View {
   }
 
   public render(state: IModelState): void {
-    this.progressBar.renderProgressBar.call(
-      this.progressBar,
-      state,
-      this.adapter,
-    );
+    this.progressBar.renderProgressBar(state, this.adapter);
 
-    this.thumbs.renderThumbs.call(this.thumbs, state, this.adapter);
+    this.thumbs.renderThumbs(state, this.adapter);
     this.progressBar.updateActiveRange(state.thumbsValues);
-    this.tooltips.renderTooltips.call(this.tooltips, state);
+    this.tooltips.renderTooltips(state);
   }
 
   public update(thumbsValues: number[]): void {

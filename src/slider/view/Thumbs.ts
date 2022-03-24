@@ -137,7 +137,7 @@ class Thumbs {
   };
 
   private handleThumbStop = (): void => {
-    this.processStop.call(this);
+    this.processStop();
   };
 }
 export default Thumbs;
