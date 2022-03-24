@@ -1,29 +1,30 @@
 import EventEmitter from '../EventEmitter';
+import { IThumbData } from '../interfaces/IThumbData';
 
 interface StateValue {
   values: number[];
 }
-interface IData {
-  value: number;
-  index: number;
-}
+
 const eventEmitter = new EventEmitter();
 
 const stateValue: StateValue = {
   values: [0, 0],
 };
-const stateData: IData = {
+const stateData: IThumbData = {
   value: 20,
   index: 0,
 };
-const assignValues = (state: IData): void => {
+const assignValues = (state: IThumbData): void => {
   stateValue.values[state.index] = state.value;
 };
 
 test('testing subscription method', () => {
-  eventEmitter.makeSubscribe('eventEmitter-verification', (state: IData) => {
-    assignValues(state);
-  });
+  eventEmitter.makeSubscribe(
+    'eventEmitter-verification',
+    (state: IThumbData) => {
+      assignValues(state);
+    },
+  );
   expect(eventEmitter.handlersByEvent['eventEmitter-verification'].length).toBe(
     1,
   );

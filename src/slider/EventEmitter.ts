@@ -1,9 +1,6 @@
 import { IModelState } from './interfaces/iModelState';
+import { IThumbData } from './interfaces/IThumbData';
 
-interface IData {
-  value: number;
-  index: number;
-}
 type CallbackFunctionVariadic = (...args: any[]) => void;
 interface StringArray {
   [index: string]: CallbackFunctionVariadic[];
@@ -31,7 +28,10 @@ class EventEmitter {
     };
   }
 
-  public emit(eventName: string, data: IModelState | IData | number[]): void {
+  public emit(
+    eventName: string,
+    data: IModelState | IThumbData | number[],
+  ): void {
     const handlers: CallbackFunctionVariadic[] = this.handlersByEvent[
       eventName
     ];

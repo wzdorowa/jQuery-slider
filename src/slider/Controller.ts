@@ -1,12 +1,8 @@
 import { IModelState } from './interfaces/iModelState';
+import { IThumbData } from './interfaces/IThumbData';
 import Model from './Model/Model';
 import View from './view/View';
 import EventEmitter from './EventEmitter';
-
-interface IData {
-  value: number;
-  index: number;
-}
 
 class Controller {
   private slider: HTMLElement;
@@ -50,9 +46,12 @@ class Controller {
       },
     );
 
-    this.emitter.makeSubscribe('view:thumbPosition-changed', (data: IData) => {
-      this.model.requestThumbValueChange(data.value, data.index);
-    });
+    this.emitter.makeSubscribe(
+      'view:thumbPosition-changed',
+      (data: IThumbData) => {
+        this.model.requestThumbValueChange(data.value, data.index);
+      },
+    );
   }
 }
 export default Controller;
