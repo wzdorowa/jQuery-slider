@@ -91,10 +91,27 @@ class Model {
   public requestThumbValueChange(value: number, index: number): void {
     const correctValue: number = Math.round(value * 100) / 100;
 
-    if (
+    const lastStep =
+      Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
+      10;
+    const penultimateStep = this.state.max - lastStep;
+
+    const isValueLastStep =
+      correctValue > penultimateStep + lastStep / 2 ||
+      (correctValue < penultimateStep + lastStep / 2 &&
+        correctValue > penultimateStep);
+
+    const isHalfStep =
       correctValue < this.state.thumbsValues[index] - this.state.step / 2 ||
-      correctValue > this.state.thumbsValues[index] + this.state.step / 2
-    ) {
+      correctValue > this.state.thumbsValues[index] + this.state.step / 2;
+
+    if (lastStep > 0) {
+      if (isValueLastStep) {
+        this.setNewThumbValue(correctValue, index);
+      } else if (isHalfStep) {
+        this.setNewThumbValue(correctValue, index);
+      }
+    } else if (isHalfStep) {
       this.setNewThumbValue(correctValue, index);
     }
   }
@@ -102,12 +119,27 @@ class Model {
   // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
     thumbsValues.forEach((element: number, index: number) => {
+      const lastStep =
+        Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
+        10;
+
+      const previousLastStep = this.state.max - lastStep;
+
       let value: number = Math.round(element * 100) / 100;
 
-      value =
-        Math.round((value - this.state.min) / this.state.step) *
-          this.state.step +
-        this.state.min;
+      if (lastStep > 0 && value > previousLastStep + lastStep / 2) {
+        value =
+          Math.round((value - this.state.min) / this.state.step) *
+            this.state.step +
+          this.state.min +
+          lastStep;
+      } else {
+        value =
+          Math.round((value - this.state.min) / this.state.step) *
+            this.state.step +
+          this.state.min;
+      }
+
       value = Math.round(value * 100) / 100;
 
       if (value > thumbsValues[index + 1]) {
@@ -115,10 +147,6 @@ class Model {
       }
 
       const minPossibleValue = this.state.min + index * this.state.step;
-
-      const lastStep =
-        Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
-        10;
 
       let maxPossibleValue;
       if (lastStep > 0) {
