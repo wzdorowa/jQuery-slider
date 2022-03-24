@@ -21,7 +21,6 @@ class Tooltips {
     }
   }
 
-  /* createTooltips function adds tooltip elements to the main html slider structure */
   private createTooltips(thumbsValues: number[], orientation: string): void {
     thumbsValues.forEach((_element: number, i: number) => {
       const tooltip: HTMLElement = createElement(
@@ -45,7 +44,6 @@ class Tooltips {
     });
   }
 
-  /* sets the default sliders for their respective tooltips */
   public setTooltipsValues(tooltipsValues: number[]): void {
     tooltipsValues.forEach((element: number, i: number) => {
       this.textInTooltips[i].innerHTML = String(element);

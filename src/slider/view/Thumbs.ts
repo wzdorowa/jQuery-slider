@@ -43,7 +43,6 @@ class Thumbs {
     this.setValuesThumbs(state.thumbsValues);
   }
 
-  /* the CreateSlider function adds sliders to the parent of the slider */
   private createThumbs(thumbsValues: number[]): void {
     const htmlFragment = document.createDocumentFragment();
     thumbsValues.forEach(() => {
@@ -58,7 +57,6 @@ class Thumbs {
     this.slider.append(htmlFragment);
   }
 
-  /* hangs the 'pointerdown' event handler for each created thumb */
   private listenThumbsEvents(): void {
     this.thumbs.forEach((element: HTMLElement, i: number) => {
       element.addEventListener(
@@ -68,7 +66,6 @@ class Thumbs {
     });
   }
 
-  /* places thumbs on the slider based on default values */
   public setValuesThumbs(thumbsValues: number[]): void {
     this.thumbs.forEach((_element, i) => {
       if (this.adapter?.direction !== undefined) {

@@ -49,7 +49,6 @@ class ProgressBar {
     }
   }
 
-  /* function createProgressBar adds scale elements to the main html slider structure */
   private createProgressBar(orientation: string): void {
     const progressBar: HTMLElement = createElement(
       'div',

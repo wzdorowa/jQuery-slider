@@ -62,7 +62,6 @@ class Model {
     this.notifyStateChanged();
   }
 
-  // set a new value for the thumb state
   public setNewThumbValue(thumbValue: number, index: number): void {
     if (this.state.thumbsValues[index] === thumbValue) {
       return;
@@ -116,7 +115,6 @@ class Model {
     }
   }
 
-  // Calculate thumbs values based on step size
   private checkThumbsValues(thumbsValues: number[]): void {
     thumbsValues.forEach((element: number, index: number) => {
       const lastStep =
