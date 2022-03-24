@@ -58,32 +58,14 @@ class Model {
       this.state.max = minPossibleMaxValue;
     }
 
-    this.checkThumbsValues(this.state.thumbsValues);
+    this.checkThumbsValuesIntersection(null);
     this.notifyStateChanged();
   }
 
   public setNewThumbValue(thumbValue: number, index: number): void {
-    if (this.state.thumbsValues[index] === thumbValue) {
-      return;
-    }
-
     this.state.thumbsValues[index] = thumbValue;
 
-    for (let i = index; i < this.state.thumbsValues.length; i += 1) {
-      if (this.state.thumbsValues[i] >= this.state.thumbsValues[i + 1]) {
-        this.state.thumbsValues[i + 1] =
-          this.state.thumbsValues[i] + this.state.step;
-      }
-    }
-
-    for (let i = index; i > 0; i -= 1) {
-      if (this.state.thumbsValues[i] <= this.state.thumbsValues[i - 1]) {
-        this.state.thumbsValues[i - 1] =
-          this.state.thumbsValues[i] - this.state.step;
-      }
-    }
-
-    this.checkThumbsValues(this.state.thumbsValues);
+    this.checkThumbsValuesIntersection(index);
     this.notifyThumbsValuesChanged();
   }
 
@@ -115,62 +97,57 @@ class Model {
     }
   }
 
-  private checkThumbsValues(thumbsValues: number[]): void {
-    thumbsValues.forEach((element: number, index: number) => {
-      const lastStep =
-        Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
-        10;
-
-      const previousLastStep = this.state.max - lastStep;
-
-      let value: number = Math.round(element * 100) / 100;
-
-      if (lastStep > 0 && value > previousLastStep + lastStep / 2) {
-        value =
-          Math.round((value - this.state.min) / this.state.step) *
-            this.state.step +
-          this.state.min +
-          lastStep;
-      } else {
-        value =
-          Math.round((value - this.state.min) / this.state.step) *
-            this.state.step +
-          this.state.min;
+  private checkThumbsValuesIntersection(thumbIndex: number | null): void {
+    let index = thumbIndex;
+    if (index === null) {
+      index = 0;
+    }
+    for (let i = index; i < this.state.thumbsValues.length; i += 1) {
+      this.normalizeThumbValue(this.state.thumbsValues[i], i);
+      if (this.state.thumbsValues[i] > this.state.thumbsValues[i + 1]) {
+        this.state.thumbsValues[i + 1] = this.state.thumbsValues[i];
       }
+    }
 
-      value = Math.round(value * 100) / 100;
-
-      if (value > thumbsValues[index + 1]) {
-        value = thumbsValues[index + 1];
+    for (let i = index; i > 0; i -= 1) {
+      this.normalizeThumbValue(this.state.thumbsValues[i], i);
+      if (this.state.thumbsValues[i] < this.state.thumbsValues[i - 1]) {
+        this.state.thumbsValues[i - 1] = this.state.thumbsValues[i];
       }
+    }
+  }
 
-      const minPossibleValue = this.state.min + index * this.state.step;
+  private normalizeThumbValue(thumbsValue: number, index: number): void {
+    const lastStep =
+      Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
+      10;
 
-      let maxPossibleValue;
-      if (lastStep > 0) {
-        if (index === thumbsValues.length - 1) {
-          maxPossibleValue = this.state.max;
-        } else {
-          maxPossibleValue =
-            this.state.max -
-            (thumbsValues.length - index - 2) * this.state.step -
-            lastStep;
-        }
-      } else {
-        maxPossibleValue =
-          this.state.max - (thumbsValues.length - index - 1) * this.state.step;
-      }
+    const previousLastStep = this.state.max - lastStep;
 
-      if (value < minPossibleValue) {
-        value = minPossibleValue;
-      } else if (value >= maxPossibleValue) {
-        value = maxPossibleValue;
-      }
+    let value: number = Math.round(thumbsValue * 100) / 100;
 
-      if (value !== this.state.thumbsValues[index]) {
-        this.state.thumbsValues[index] = value;
-      }
-    });
+    if (lastStep > 0 && value > previousLastStep + lastStep / 2) {
+      value =
+        Math.round((value - this.state.min) / this.state.step) *
+          this.state.step +
+        this.state.min +
+        lastStep;
+    } else {
+      value =
+        Math.round((value - this.state.min) / this.state.step) *
+          this.state.step +
+        this.state.min;
+    }
+
+    value = Math.round(value * 100) / 100;
+
+    if (value < this.state.min) {
+      value = this.state.min;
+    } else if (value >= this.state.max) {
+      value = this.state.max;
+    }
+
+    this.state.thumbsValues[index] = value;
   }
 
   private notifyStateChanged(): void {
