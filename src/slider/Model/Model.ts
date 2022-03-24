@@ -52,7 +52,7 @@ class Model {
     }
 
     const minPossibleMaxValue =
-      this.state.min + this.state.step * (this.state.thumbsValues.length + 1);
+      this.state.min + this.state.step * this.state.thumbsValues.length;
 
     if (this.state.max < minPossibleMaxValue) {
       this.state.max = minPossibleMaxValue;
