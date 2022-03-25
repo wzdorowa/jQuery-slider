@@ -4,10 +4,7 @@
   padding: 0;
 
   &__legend {
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 22px;
+    font: 18px/22px "Fire Sans", Arial, sans-serif;
     color: $Nobel;
     text-align: left;
   }

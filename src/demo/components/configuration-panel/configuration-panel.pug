@@ -9,35 +9,28 @@ mixin configuration-panel()
         .configuration__field
             +fieldset('Вид:', 'view')
                 +radio-button({
-                  text: 'Горизонтальный',
-                  groupName: 'view',
-                  checked: 'checked'
+                  value: 'Горизонтальный',
+                  name: 'view'
                 })
                 +radio-button({
-                  text: 'Вертикальный',
-                  groupName: 'view'
+                  value: 'Вертикальный',
+                  name: 'view'
                   })
         .configuration__field
             +fieldset('min и max значения слайдера:', 'min-max')
                 +input({
-                  text: 'от:',
-                  value: '0',
-                  width: '60',
-                  type: 'number',
+                  title: 'от:',
+                  name: 'min'
                   })
                 +input({
-                  text:'до:',
-                  value: '100',
-                  width: '60',
-                  type: 'number',
+                  title:'до:',
+                  name: 'max'
                 })
         .configuration__field
           .configuration__field-count-thumb.js-configuration__field-count-thumb
             +input({
-              text: 'Количество ползунков:',
-              value: '4',
-              width: '15',
-              type: 'number',
+              title: 'Количество:',
+              name: 'count'
               })
         .configuration__field
             +fieldset('Знечения ползунков:', 'thumbs-values')
@@ -45,22 +38,18 @@ mixin configuration-panel()
         .configuration__field
           .configuration__field-step-size.js-configuration__field-step-size
             +input({
-              text: 'Размер шага:',
-              value: '2',
-              width: '15',
-              type: 'number',
+              title: 'Шаг:',
+              name: 'step',
               step: 'any'
               })
         .configuration__field
             +checkbox-button({
               value: 'Наличие тултипа',
-              checked: true,
               name: 'tooltip',
               })
         .configuration__field
             +checkbox-button({
               value: 'Наличие шкалы значений',
-              checked: true,
               name: 'scale-of-values',
               })
         input.configuration__update(type='submit')

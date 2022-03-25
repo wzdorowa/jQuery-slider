@@ -1,15 +1,8 @@
 .checkbox-button {
   position: relative;
   display: flex;
-  font-family: "Fire Sans", Arial, sans-serif;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
+  font: 15px/20px "Fire Sans", Arial, sans-serif;
   color: $Valhalla50;
-
-  &_hide {
-    display: none;
-  }
 
   &__content {
     display: none;
@@ -43,10 +36,6 @@
   }
 
   &__description {
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: normal;
-    font-size: 15px;
-    line-height: 20px;
     padding-left: 28px;
     cursor: pointer;
   }

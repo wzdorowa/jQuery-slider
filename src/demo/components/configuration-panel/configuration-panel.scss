@@ -1,3 +1,17 @@
+@mixin thumbs-value {
+  color: $Nero;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  vertical-align: baseline;
+  outline: none;
+  font: 16px/30px "Fire Sans", Arial, sans-serif;
+  margin-top: 5px;
+  padding-left: 5px;
+
+  &:focus {
+    border-color: $PaleCornflowerBlue;
+  }
+}
 .configuration {
   &__wrapper {
     min-width: 320px;
@@ -16,6 +30,11 @@
     margin-bottom: 0;
   }
 
+  &__field-step-size,
+  &__field-count-thumb {
+    width: 50%;
+  }
+
   &__thumbs-current-value-list {
     width: 20%;
     margin: 0;
@@ -28,21 +47,7 @@
 
   &__thumbs-value {
     width: 85%;
-    color: $Nero;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 30px;
-    margin-top: 5px;
-    padding-left: 5px;
-
-    &:focus {
-      border-color: $PaleCornflowerBlue;
-    }
+    @include thumbs-value();
   }
 
   &__thumbs-set {
@@ -52,39 +57,11 @@
 
   &__thumbs-value-from {
     width: 40%;
-    color: $Nero;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 30px;
-    margin-top: 5px;
-    padding-left: 5px;
-
-    &:focus {
-      border-color: $PaleCornflowerBlue;
-    }
+    @include thumbs-value();
   }
 
   &__thumbs-value-to {
     width: 40%;
-    color: $Nero;
-    border: 1px solid #eee;
-    border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 30px;
-    margin-top: 5px;
-    padding-left: 5px;
-
-    &:focus {
-      border-color: $PaleCornflowerBlue;
-    }
+    @include thumbs-value();
   }
 }

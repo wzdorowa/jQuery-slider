@@ -1,10 +1,7 @@
 .input {
-  &__description {
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 18px;
+  &__title {
+    font: 18px/35px "Fire Sans", Arial, sans-serif;
     padding-right: 5px;
-    line-height: 35px;
     color: $Nobel;
     text-align: left;
   }
@@ -15,45 +12,18 @@
     overflow: hidden;
     height: 35px;
     background: #fff;
-
-    &_width60 {
-      width: 60%;
-    }
   }
 
   &__value {
     color: $Nero;
     border: 1px solid #eee;
     border-radius: 2px;
-    vertical-align: baseline;
-    outline: none;
-    font-family: "Fire Sans", Arial, sans-serif;
-    font-weight: 400;
-    font-size: 16px;
+    font: 16px "Fire Sans", Arial, sans-serif;
     padding-left: 5px;
+    width: 50%;
 
     &:focus {
       border-color: $PaleCornflowerBlue;
     }
-
-    &_width60 {
-      width: 100%;
-    }
-
-    &_width15 {
-      width: 15%;
-    }
-
-    &_width12 {
-      width: 12%;
-    }
-  }
-}
-.input-min-max {
-  &__wrapper {
-    display: flex;
-    width: 50%;
-    overflow: hidden;
-    height: 35px;
   }
 }

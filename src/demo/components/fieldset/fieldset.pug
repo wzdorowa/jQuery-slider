@@ -1,5 +1,5 @@
-mixin fieldset(text = 'text', fieldName = 'default-element')
-    fieldset.field
-        legend.field__legend= text
-        div(class=`field__${fieldName} js-field__${fieldName}`)
-            block
+mixin fieldset(value, fieldName)
+  fieldset.field
+    legend.field__legend= value
+    div(class=`field__${fieldName} js-field__${fieldName}`)
+      block
