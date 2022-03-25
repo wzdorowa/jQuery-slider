@@ -1,6 +1,6 @@
-mixin checkbox-button({text = 'текст', checked = checked, elementName = 'default-element'} = {text, checked, elementName})
+mixin checkbox-button({ value, name, checked = false })
     label.checkbox-button.js-checkbox-button
-        input(class=`checkbox-button__${elementName} js-checkbox-button__${elementName}`)(type='checkbox',
-            name=`checkbox-button__${elementName}`, checked=checked)
+        input(class=`checkbox-button__content js-checkbox-button__content`)(type='checkbox',
+            name=name, value=value, checked=checked)
         span.checkbox-button__indicator
-        span.checkbox-button__description=text
+        span.checkbox-button__description=value

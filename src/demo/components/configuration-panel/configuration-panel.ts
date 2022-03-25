@@ -100,12 +100,14 @@ class ConfigurationPanel {
     this.elements.checkboxContainer = Array.from(
       $(this.elements.panel).find('.js-checkbox-button'),
     ) as HTMLInputElement[];
-    this.elements.checkboxInputTooltip = Array.from(
-      $(this.elements.panel).find('.js-checkbox-button__tooltip'),
-    ) as HTMLInputElement[];
-    this.elements.checkboxInputScaleOfValues = Array.from(
-      $(this.elements.panel).find('.js-checkbox-button__scale-of-values'),
-    ) as HTMLInputElement[];
+
+    this.elements.checkboxInputTooltip = ($(this.elements.panel).find(
+      '[name = "tooltip"]',
+    ) as unknown) as HTMLInputElement[];
+
+    this.elements.checkboxInputScaleOfValues = ($(this.elements.panel).find(
+      '[name = "scale-of-values"]',
+    ) as unknown) as HTMLInputElement[];
 
     this.elements.forms = Array.from(
       document.querySelectorAll('.js-configuration'),

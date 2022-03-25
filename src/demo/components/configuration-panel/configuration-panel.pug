@@ -53,14 +53,14 @@ mixin configuration-panel()
               })
         .configuration__field
             +checkbox-button({
-              text: 'Наличие тултипа',
-              checked:'checked',
-              elementName: 'tooltip',
+              value: 'Наличие тултипа',
+              checked: true,
+              name: 'tooltip',
               })
         .configuration__field
             +checkbox-button({
-              text: 'Наличие шкалы значений',
-              checked:'checked',
-              elementName: 'scale-of-values',
+              value: 'Наличие шкалы значений',
+              checked: true,
+              name: 'scale-of-values',
               })
         input.configuration__update(type='submit')
