@@ -12,7 +12,7 @@ class Wrapper {
     return this.controller.getState();
   };
 
-  public update = (state: IModelState): void => {
+  public update = (state: unknown): void => {
     this.controller.updateState(state);
   };
 
