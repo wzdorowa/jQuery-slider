@@ -35,12 +35,18 @@ class Thumbs {
 
   public renderThumbs(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
-    this.min = state.min;
-    this.max = state.max;
+    if (state.min !== undefined) {
+      this.min = state.min;
+    }
+    if (state.max !== undefined) {
+      this.max = state.max;
+    }
 
-    this.createThumbs(state.thumbsValues);
-    this.listenThumbsEvents();
-    this.setValuesThumbs(state.thumbsValues);
+    if (state.thumbsValues !== undefined) {
+      this.createThumbs(state.thumbsValues);
+      this.listenThumbsEvents();
+      this.setValuesThumbs(state.thumbsValues);
+    }
   }
 
   public setValuesThumbs(thumbsValues: number[]): void {

@@ -67,7 +67,7 @@ class Model {
   }
 
   public setNewThumbValue(thumbValue: number, index: number): void {
-    if (this.state.thumbsValues !== undefined && this.state.min) {
+    if (this.state.thumbsValues !== undefined && this.state.min !== undefined) {
       this.state.thumbsValues[index] = thumbValue;
 
       if (this.state.max !== undefined && this.state.step !== undefined) {

@@ -16,8 +16,10 @@ class Tooltips {
 
   public renderTooltips(state: IModelState): void {
     if (state.hasTooltips) {
-      this.createTooltips(state.thumbsValues, state.orientation);
-      this.setTooltipsValues(state.thumbsValues);
+      if (state.thumbsValues !== undefined && state.orientation !== undefined) {
+        this.createTooltips(state.thumbsValues, state.orientation);
+        this.setTooltipsValues(state.thumbsValues);
+      }
     }
   }
 

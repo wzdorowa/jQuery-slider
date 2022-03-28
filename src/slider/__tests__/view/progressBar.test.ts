@@ -54,7 +54,9 @@ describe('Unit tests', () => {
   };
 
   test('render ProgressBar', () => {
-    setAdapter(state.orientation);
+    if (state.orientation !== undefined) {
+      setAdapter(state.orientation);
+    }
     state.min = 20;
     state.max = 80;
     scale.renderProgressBar(state, adapter);

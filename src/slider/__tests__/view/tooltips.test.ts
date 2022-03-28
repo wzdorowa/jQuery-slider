@@ -56,7 +56,9 @@ describe('Unit tests', () => {
   new View(slider, eventEmitter);
   const tooltips = new Tooltips(slider);
   const thumbs = new Thumbs(slider, eventEmitter);
-  setAdapter(state.orientation);
+  if (state.orientation !== undefined) {
+    setAdapter(state.orientation);
+  }
 
   test('render tooltips', () => {
     thumbs.renderThumbs(state, adapter);
