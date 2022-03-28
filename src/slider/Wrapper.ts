@@ -16,7 +16,7 @@ class Wrapper {
     this.controller.updateState(state);
   };
 
-  public subscribeToModelChanges = (
+  public subscribeToStateChanges = (
     handler: (state: IModelState) => void,
   ): void => {
     this.controller.emitter.makeSubscribe(

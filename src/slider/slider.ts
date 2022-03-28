@@ -11,7 +11,7 @@ import Controller from './Controller';
     const wrapper = new Wrapper(controller);
     this.data('getState', wrapper.getState);
     this.data('update', wrapper.update);
-    this.data('subscribeToModelChanges', wrapper.subscribeToModelChanges);
+    this.data('subscribeToStateChanges', wrapper.subscribeToStateChanges);
     this.data('subscribeToThumbsChanges', wrapper.subscribeToThumbsChanges);
     return this;
   };
