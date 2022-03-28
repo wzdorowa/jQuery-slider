@@ -3,7 +3,6 @@ import { IThumbData } from './interfaces/IThumbData';
 import Model from './Model/Model';
 import View from './view/View';
 import EventEmitter from './EventEmitter';
-import defaultState from './Model/defaultState';
 
 class Controller {
   private slider: HTMLElement;
@@ -14,7 +13,7 @@ class Controller {
 
   private view: View;
 
-  constructor(element: HTMLElement, props: IModelState) {
+  constructor(element: HTMLElement, props: unknown) {
     this.slider = element;
     this.slider.classList.add('slider');
 
