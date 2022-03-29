@@ -37,22 +37,12 @@ class ProgressBar {
 
   public renderProgressBar(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
-    if (state.step !== undefined) {
-      this.step = state.step;
-    }
-    if (state.thumbsValues !== undefined) {
-      this.thumbsValues = state.thumbsValues;
-    }
-    if (state.min !== undefined) {
-      this.min = state.min;
-    }
-    if (state.max !== undefined) {
-      this.max = state.max;
-    }
+    this.step = state.step;
+    this.thumbsValues = state.thumbsValues;
+    this.min = state.min;
+    this.max = state.max;
 
-    if (state.orientation !== undefined) {
-      this.createProgressBar(state.orientation);
-    }
+    this.createProgressBar(state.orientation);
 
     if (state.hasScaleValues) {
       this.renderDivisions(state);
@@ -161,37 +151,30 @@ class ProgressBar {
 
     const maximumNumberOfDivisions = 5;
 
-    if (min !== undefined && max !== undefined) {
-      if (step !== undefined) {
-        const numberOfDivisions = Math.round((max - min) / step);
+    const numberOfDivisions = Math.round((max - min) / step);
 
-        let stepSize = (max - min) / numberOfDivisions;
+    let stepSize = (max - min) / numberOfDivisions;
 
-        if (numberOfDivisions > maximumNumberOfDivisions) {
-          stepSize = (max - min) / maximumNumberOfDivisions;
-        }
-
-        const stepForScaleValue = Math.round(stepSize / step) * step;
-
-        const scaleValueContainer: HTMLElement = createElement(
-          'div',
-          'slider__scale-value-container js-slider__scale-value-container',
-        );
-        if (orientation === 'vertical') {
-          scaleValueContainer.classList.add(
-            'slider__scale-value-container_vertical',
-          );
-        }
-        const htmlFragment = this.createElementsDivisions(
-          stepForScaleValue,
-          state,
-        );
-        scaleValueContainer.append(htmlFragment);
-        this.slider.append(scaleValueContainer);
-
-        this.setDivisionsInPlaces(min, max);
-      }
+    if (numberOfDivisions > maximumNumberOfDivisions) {
+      stepSize = (max - min) / maximumNumberOfDivisions;
     }
+
+    const stepForScaleValue = Math.round(stepSize / step) * step;
+
+    const scaleValueContainer: HTMLElement = createElement(
+      'div',
+      'slider__scale-value-container js-slider__scale-value-container',
+    );
+    if (orientation === 'vertical') {
+      scaleValueContainer.classList.add(
+        'slider__scale-value-container_vertical',
+      );
+    }
+    const htmlFragment = this.createElementsDivisions(stepForScaleValue, state);
+    scaleValueContainer.append(htmlFragment);
+    this.slider.append(scaleValueContainer);
+
+    this.setDivisionsInPlaces(min, max);
   }
 
   private createElementsDivisions(
@@ -200,59 +183,56 @@ class ProgressBar {
   ): DocumentFragment {
     const { max, min, step, orientation } = state;
     const htmlFragment = document.createDocumentFragment();
-    if (min !== undefined && max !== undefined) {
-      if (step !== undefined) {
-        const lastStep = max - min - ((max - min) / step) * step;
 
-        let numberOfDivisions: number =
-          Math.ceil((max - min) / stepForScaleValue) + 1;
+    const lastStep = max - min - ((max - min) / step) * step;
 
-        if (lastStep > 0) {
-          numberOfDivisions += 1;
-        }
+    let numberOfDivisions: number =
+      Math.ceil((max - min) / stepForScaleValue) + 1;
 
-        let currentValueSerif: number = min;
-
-        new Array(numberOfDivisions)
-          .fill(1)
-          .forEach((_element: number, index: number) => {
-            if (index === 0) {
-              this.valuesDivisions[index] = min;
-              currentValueSerif += stepForScaleValue;
-            } else if (index === numberOfDivisions - 1) {
-              this.valuesDivisions[index] = max;
-            } else {
-              this.valuesDivisions[index] = currentValueSerif;
-
-              currentValueSerif =
-                Math.round((currentValueSerif + stepForScaleValue) * 100) / 100;
-            }
-          });
-
-        this.valuesDivisions.forEach(element => {
-          const scaleValue: HTMLElement = createElement(
-            'div',
-            'slider__scale-value js-slider__scale-value',
-          );
-
-          const valueWithNumber: HTMLElement = createElement(
-            'span',
-            'slider__scale-value-with-number js-slider__scale-value-with-number',
-          );
-
-          if (orientation === 'vertical') {
-            scaleValue.classList.add('slider__scale-value_vertical');
-            valueWithNumber.classList.add(
-              'slider__scale-value-with-number_vertical',
-            );
-          }
-          valueWithNumber.innerHTML = String(element);
-          scaleValue.append(valueWithNumber);
-          htmlFragment.append(scaleValue);
-          this.divisionsElements.push(scaleValue);
-        });
-      }
+    if (lastStep > 0) {
+      numberOfDivisions += 1;
     }
+
+    let currentValueSerif: number = min;
+
+    new Array(numberOfDivisions)
+      .fill(1)
+      .forEach((_element: number, index: number) => {
+        if (index === 0) {
+          this.valuesDivisions[index] = min;
+          currentValueSerif += stepForScaleValue;
+        } else if (index === numberOfDivisions - 1) {
+          this.valuesDivisions[index] = max;
+        } else {
+          this.valuesDivisions[index] = currentValueSerif;
+
+          currentValueSerif =
+            Math.round((currentValueSerif + stepForScaleValue) * 100) / 100;
+        }
+      });
+
+    this.valuesDivisions.forEach(element => {
+      const scaleValue: HTMLElement = createElement(
+        'div',
+        'slider__scale-value js-slider__scale-value',
+      );
+
+      const valueWithNumber: HTMLElement = createElement(
+        'span',
+        'slider__scale-value-with-number js-slider__scale-value-with-number',
+      );
+
+      if (orientation === 'vertical') {
+        scaleValue.classList.add('slider__scale-value_vertical');
+        valueWithNumber.classList.add(
+          'slider__scale-value-with-number_vertical',
+        );
+      }
+      valueWithNumber.innerHTML = String(element);
+      scaleValue.append(valueWithNumber);
+      htmlFragment.append(scaleValue);
+      this.divisionsElements.push(scaleValue);
+    });
 
     this.listenScaleValueEvents();
     return htmlFragment;

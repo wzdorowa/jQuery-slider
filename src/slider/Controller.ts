@@ -3,6 +3,7 @@ import { IThumbData } from './interfaces/IThumbData';
 import Model from './Model/Model';
 import View from './view/View';
 import EventEmitter from './EventEmitter';
+import validateState from './functions/validateState';
 
 class Controller {
   private slider: HTMLElement;
@@ -30,9 +31,8 @@ class Controller {
   }
 
   public updateState(state: unknown): void {
-    if (typeof state === 'object' && state !== null) {
-      this.model.updateState(state);
-    }
+    const newState: IModelState = validateState(state, this.model.state);
+    this.model.updateState(newState);
   }
 
   private subscribeToEvents(): void {

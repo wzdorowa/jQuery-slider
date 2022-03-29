@@ -35,32 +35,24 @@ class Thumbs {
 
   public renderThumbs(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
-    if (state.min !== undefined) {
-      this.min = state.min;
-    }
-    if (state.max !== undefined) {
-      this.max = state.max;
-    }
+    this.min = state.min;
+    this.max = state.max;
 
-    if (state.thumbsValues !== undefined) {
-      this.createThumbs(state.thumbsValues);
-      this.listenThumbsEvents();
-      this.setValuesThumbs(state.thumbsValues);
-    }
+    this.createThumbs(state.thumbsValues);
+    this.listenThumbsEvents();
+    this.setValuesThumbs(state.thumbsValues);
   }
 
   public setValuesThumbs(thumbsValues: number[]): void {
     this.thumbs.forEach((_element, i) => {
-      if (this.adapter?.direction !== undefined) {
-        const element = this.thumbs[i];
+      const element = this.thumbs[i];
 
-        const percent =
-          ((thumbsValues[i] - this.min) / (this.max - this.min)) * 100;
+      const percent =
+        ((thumbsValues[i] - this.min) / (this.max - this.min)) * 100;
 
-        element.style[
-          this.adapter?.direction
-        ] = `calc((${percent}%) - (24px * ${percent / 100}))`;
-      }
+      element.style[this.adapter?.direction] = `calc((${percent}%) - (24px * ${
+        percent / 100
+      }))`;
     });
   }
 

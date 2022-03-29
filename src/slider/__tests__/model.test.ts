@@ -26,9 +26,7 @@ describe('Model testing', () => {
     model.updateState(state);
     expect(model.state.min).toBe(-5);
     expect(model.state.step).toBe(1);
-    if (model.state.thumbsValues !== undefined) {
-      expect(model.state.thumbsValues.length).toBe(1);
-    }
+    expect(model.state.thumbsValues.length).toBe(1);
     expect(model.state.orientation).toBe('vertical');
 
     state.min = 10.5;
@@ -43,19 +41,15 @@ describe('Model testing', () => {
     state = defaultState;
     model.updateState(state);
 
-    if (model.state.thumbsValues !== undefined) {
-      model.setNewThumbValue(44, 2);
-      expect(model.state.thumbsValues[2]).toBe(44);
-    }
+    model.setNewThumbValue(44, 2);
+    expect(model.state.thumbsValues[2]).toBe(44);
   });
 
   test('request thumb value change', () => {
     state = defaultState;
     model.updateState(state);
 
-    if (model.state.thumbsValues !== undefined) {
-      model.requestThumbValueChange(45.3, 2);
-      expect(model.state.thumbsValues[2]).toBe(46);
-    }
+    model.requestThumbValueChange(45.3, 2);
+    expect(model.state.thumbsValues[2]).toBe(46);
   });
 });

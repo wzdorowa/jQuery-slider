@@ -59,9 +59,7 @@ describe('Unit tests', () => {
   const thumbs = new Thumbs(slider, eventEmitter);
 
   test('renderThumbs', () => {
-    if (state.orientation !== undefined) {
-      setAdapter(state.orientation);
-    }
+    setAdapter(state.orientation);
     thumbs.renderThumbs(state, adapter);
 
     const slidersElements = window.document.querySelectorAll(

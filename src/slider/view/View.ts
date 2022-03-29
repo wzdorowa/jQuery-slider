@@ -25,9 +25,7 @@ class View {
 
   public initialize(state: IModelState): void {
     this.slider.innerHTML = '';
-    if (state.orientation !== undefined) {
-      this.setAdapter(state.orientation);
-    }
+    this.setAdapter(state.orientation);
 
     this.progressBar = new ProgressBar(this.slider, this.emitter);
     this.thumbs = new Thumbs(this.slider, this.emitter);
@@ -38,9 +36,7 @@ class View {
     this.progressBar.renderProgressBar(state, this.adapter);
 
     this.thumbs.renderThumbs(state, this.adapter);
-    if (state.thumbsValues !== undefined) {
-      this.progressBar.updateActiveRange(state.thumbsValues);
-    }
+    this.progressBar.updateActiveRange(state.thumbsValues);
     this.tooltips.renderTooltips(state);
   }
 

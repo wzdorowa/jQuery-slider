@@ -59,74 +59,43 @@ const checkThumbsValuesIntersection = (
   return values;
 };
 
-const validateState = (state: IModelState) => {
-  const newState: IModelState = {};
-
-  Object.keys(defaultState).forEach(key => {
-    if (!(key in state)) {
-      newState[key] = defaultState[key];
-      if (key === 'thumbsValues') {
-        if (defaultState.thumbsValues !== undefined) {
-          newState.thumbsValues = Array.from(defaultState.thumbsValues);
-        }
-      }
-    } else {
-      newState[key] = state[key];
-    }
-  });
-
-  return newState;
-};
-
 const normalizeState = (state: IModelState): IModelState => {
-  const newState: IModelState = validateState(state);
+  const newState: IModelState = state;
 
-  if (newState.step !== undefined) {
-    if (newState.step <= 0) {
-      newState.step = 1;
-    }
+  if (newState.step <= 0) {
+    newState.step = 1;
   }
 
-  if (newState.thumbsValues !== undefined && newState.min !== undefined) {
-    if (newState.thumbsValues.length === 0) {
-      newState.thumbsValues[0] = newState.min;
-    }
+  if (newState.thumbsValues.length === 0) {
+    newState.thumbsValues[0] = newState.min;
   }
 
-  if (newState.orientation !== undefined) {
-    if (!['horizontal', 'vertical'].includes(newState.orientation)) {
-      newState.orientation = defaultState.orientation;
-    }
+  if (!['horizontal', 'vertical'].includes(newState.orientation)) {
+    newState.orientation = defaultState.orientation;
   }
 
-  if (newState.min !== undefined && newState.max !== undefined) {
-    if (!Number.isInteger(newState.min)) {
-      newState.min = Math.floor(newState.min);
-    }
-
-    if (!Number.isInteger(newState.max)) {
-      newState.max = Math.floor(newState.max);
-    }
-
-    if (newState.step !== undefined && newState.thumbsValues !== undefined) {
-      const minPossibleMaxValue =
-        newState.min + newState.step * newState.thumbsValues.length;
-
-      if (newState.max < minPossibleMaxValue) {
-        newState.max = minPossibleMaxValue;
-      }
-    }
-
-    if (newState.thumbsValues !== undefined && newState.step !== undefined) {
-      newState.thumbsValues = checkThumbsValuesIntersection(
-        null,
-        newState.thumbsValues,
-        newState.min,
-        newState.max,
-        newState.step,
-      );
-    }
+  if (!Number.isInteger(newState.min)) {
+    newState.min = Math.floor(newState.min);
   }
+
+  if (!Number.isInteger(newState.max)) {
+    newState.max = Math.floor(newState.max);
+  }
+
+  const minPossibleMaxValue =
+    newState.min + newState.step * newState.thumbsValues.length;
+
+  if (newState.max < minPossibleMaxValue) {
+    newState.max = minPossibleMaxValue;
+  }
+
+  newState.thumbsValues = checkThumbsValuesIntersection(
+    null,
+    newState.thumbsValues,
+    newState.min,
+    newState.max,
+    newState.step,
+  );
 
   return newState;
 };

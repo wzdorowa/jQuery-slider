@@ -30,57 +30,43 @@ class Model {
   public requestThumbValueChange(value: number, index: number): void {
     const correctValue: number = Math.round(value * 100) / 100;
 
-    let lastStep;
-    if (this.state.max !== undefined && this.state.min !== undefined) {
-      if (this.state.step !== undefined) {
-        lastStep =
-          Math.round(
-            ((this.state.max - this.state.min) % this.state.step) * 10,
-          ) / 10;
+    const lastStep =
+      Math.round(((this.state.max - this.state.min) % this.state.step) * 10) /
+      10;
 
-        const penultimateStep = this.state.max - lastStep;
+    const penultimateStep = this.state.max - lastStep;
 
-        const isValueLastStep =
-          correctValue > penultimateStep + lastStep / 2 ||
-          (correctValue < penultimateStep + lastStep / 2 &&
-            correctValue > penultimateStep);
+    const isValueLastStep =
+      correctValue > penultimateStep + lastStep / 2 ||
+      (correctValue < penultimateStep + lastStep / 2 &&
+        correctValue > penultimateStep);
 
-        let isHalfStep;
-        if (this.state.thumbsValues !== undefined) {
-          isHalfStep =
-            correctValue <
-              this.state.thumbsValues[index] - this.state.step / 2 ||
-            correctValue > this.state.thumbsValues[index] + this.state.step / 2;
-        }
+    const isHalfStep =
+      correctValue < this.state.thumbsValues[index] - this.state.step / 2 ||
+      correctValue > this.state.thumbsValues[index] + this.state.step / 2;
 
-        if (lastStep > 0) {
-          if (isValueLastStep) {
-            this.setNewThumbValue(correctValue, index);
-          } else if (isHalfStep) {
-            this.setNewThumbValue(correctValue, index);
-          }
-        } else if (isHalfStep) {
-          this.setNewThumbValue(correctValue, index);
-        }
+    if (lastStep > 0) {
+      if (isValueLastStep) {
+        this.setNewThumbValue(correctValue, index);
+      } else if (isHalfStep) {
+        this.setNewThumbValue(correctValue, index);
       }
+    } else if (isHalfStep) {
+      this.setNewThumbValue(correctValue, index);
     }
   }
 
   public setNewThumbValue(thumbValue: number, index: number): void {
-    if (this.state.thumbsValues !== undefined && this.state.min !== undefined) {
-      this.state.thumbsValues[index] = thumbValue;
+    this.state.thumbsValues[index] = thumbValue;
 
-      if (this.state.max !== undefined && this.state.step !== undefined) {
-        this.state.thumbsValues = checkThumbsValuesIntersection(
-          index,
-          this.state.thumbsValues,
-          this.state.min,
-          this.state.max,
-          this.state.step,
-        );
-      }
-      this.notifyThumbsValuesChanged();
-    }
+    this.state.thumbsValues = checkThumbsValuesIntersection(
+      index,
+      this.state.thumbsValues,
+      this.state.min,
+      this.state.max,
+      this.state.step,
+    );
+    this.notifyThumbsValuesChanged();
   }
 
   private notifyStateChanged(): void {
@@ -88,9 +74,7 @@ class Model {
   }
 
   private notifyThumbsValuesChanged(): void {
-    if (this.state.thumbsValues !== undefined) {
-      this.emitter.emit('model:thumbsValues-changed', this.state.thumbsValues);
-    }
+    this.emitter.emit('model:thumbsValues-changed', this.state.thumbsValues);
   }
 }
 export default Model;
