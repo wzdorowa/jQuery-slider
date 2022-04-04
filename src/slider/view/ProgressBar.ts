@@ -277,7 +277,12 @@ class ProgressBar {
     const minValue: number = Math.floor(currentValue / this.step) * this.step;
     const halfStep = minValue + this.step / 2;
 
-    if (currentValue > halfStep) {
+    const lastStep = Math.round(((this.max - this.min) % this.step) * 10) / 10;
+    const halfLastStep = this.max - lastStep / 2;
+
+    if (currentValue > halfLastStep) {
+      currentValue = minValue + lastStep;
+    } else if (currentValue > halfStep) {
       currentValue = minValue + this.step;
     } else {
       currentValue = minValue;

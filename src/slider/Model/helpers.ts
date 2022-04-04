@@ -82,8 +82,7 @@ const normalizeState = (state: IModelState): IModelState => {
     newState.max = Math.floor(newState.max);
   }
 
-  const minPossibleMaxValue =
-    newState.min + newState.step * newState.thumbsValues.length;
+  const minPossibleMaxValue = newState.min + newState.step;
 
   if (newState.max < minPossibleMaxValue) {
     newState.max = minPossibleMaxValue;

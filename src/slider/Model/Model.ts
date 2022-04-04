@@ -39,18 +39,14 @@ class Model {
     const isValueLastStep =
       correctValue > penultimateStep + lastStep / 2 ||
       (correctValue < penultimateStep + lastStep / 2 &&
-        correctValue > penultimateStep);
+        correctValue >= penultimateStep);
 
     const isHalfStep =
       correctValue < this.state.thumbsValues[index] - this.state.step / 2 ||
       correctValue > this.state.thumbsValues[index] + this.state.step / 2;
 
-    if (lastStep > 0) {
-      if (isValueLastStep) {
-        this.setNewThumbValue(correctValue, index);
-      } else if (isHalfStep) {
-        this.setNewThumbValue(correctValue, index);
-      }
+    if (lastStep > 0 && isValueLastStep) {
+      this.setNewThumbValue(correctValue, index);
     } else if (isHalfStep) {
       this.setNewThumbValue(correctValue, index);
     }
