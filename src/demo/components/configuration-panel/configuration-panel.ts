@@ -92,6 +92,7 @@ class ConfigurationPanel {
     const $checkboxInputTooltip = ($(panel).find(
       '[name = "tooltip"]',
     ) as unknown) as HTMLInputElement[];
+    console.log('$checkboxInputTooltip', $checkboxInputTooltip);
 
     const $checkboxInputScaleOfValues = ($(panel).find(
       '[name = "scale-of-values"]',
@@ -136,14 +137,9 @@ class ConfigurationPanel {
 
     this.elements.stepSize[0].value = String(state.step);
 
-    this.elements.checkboxInputTooltip[0].checked = state.hasScaleValues;
+    this.elements.checkboxInputTooltip[0].checked = state.hasTooltips;
 
-    if (!state.hasScaleValues) {
-      this.elements.checkboxInputScaleOfValues[0].checked = false;
-    }
-    if (state.hasScaleValues) {
-      this.elements.checkboxInputScaleOfValues[0].checked = true;
-    }
+    this.elements.checkboxInputScaleOfValues[0].checked = state.hasScaleValues;
   }
 
   private createInput(state: IModelState): void {
