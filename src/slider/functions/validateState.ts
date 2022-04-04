@@ -1,5 +1,16 @@
 import { IModelState } from '../interfaces/iModelState';
 
+type orientation = 'horizontal' | 'vertical';
+export type state = {
+  min?: number;
+  max?: number;
+  thumbsValues?: number[];
+  orientation?: orientation;
+  step?: number;
+  hasTooltips?: boolean;
+  hasScaleValues?: boolean;
+};
+
 const validateState = (
   newState: unknown,
   currentState: IModelState,
@@ -8,33 +19,33 @@ const validateState = (
   state.thumbsValues = Array.from(currentState.thumbsValues);
 
   if (typeof newState === 'object' && newState !== null) {
-    const newModelState = newState as IModelState;
+    const newModelState: state = newState;
 
-    if ('min' in newModelState) {
+    if (newModelState.min !== undefined) {
       state.min = newModelState.min;
     }
 
-    if ('max' in newModelState) {
+    if (newModelState.max !== undefined) {
       state.max = newModelState.max;
     }
 
-    if ('thumbsValues' in newModelState) {
+    if (newModelState.thumbsValues !== undefined) {
       state.thumbsValues = Array.from(newModelState.thumbsValues);
     }
 
-    if ('orientation' in newModelState) {
+    if (newModelState.orientation !== undefined) {
       state.orientation = newModelState.orientation;
     }
 
-    if ('step' in newModelState) {
+    if (newModelState.step !== undefined) {
       state.step = newModelState.step;
     }
 
-    if ('hasTooltips' in newModelState) {
+    if (newModelState.hasTooltips !== undefined) {
       state.hasTooltips = newModelState.hasTooltips;
     }
 
-    if ('hasScaleValues' in newModelState) {
+    if (newModelState.hasScaleValues !== undefined) {
       state.hasScaleValues = newModelState.hasScaleValues;
     }
   }
