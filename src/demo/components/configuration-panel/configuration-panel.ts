@@ -1,42 +1,31 @@
 import { IModelState } from '../../../slider/interfaces/iModelState';
 import utilities from './utilities';
 
+type panelElements = {
+  panel: HTMLElement;
+  minValue: HTMLInputElement;
+  maxValue: HTMLInputElement;
+  countSliderThumbs: HTMLInputElement[];
+  inputsSliderThumbs: HTMLInputElement[];
+  stepSize: HTMLInputElement[];
+  orientationButtons: HTMLInputElement[];
+  checkboxContainer: HTMLInputElement[];
+  checkboxInputTooltip: HTMLInputElement[];
+  checkboxInputScaleOfValues: HTMLInputElement[];
+  forms: HTMLElement[];
+};
 class ConfigurationPanel {
   public connection: JQuery.PlainObject<any>;
 
   public sliderIndex: number;
 
-  public elements: {
-    panel: HTMLElement | null;
-    minValue: HTMLInputElement | null;
-    maxValue: HTMLInputElement | null;
-    countSliderThumbs: HTMLInputElement[] | null;
-    inputsSliderThumbs: HTMLInputElement[] | null;
-    stepSize: HTMLInputElement[] | null;
-    orientationButtons: HTMLInputElement[] | null;
-    checkboxContainer: HTMLInputElement[] | null;
-    checkboxInputTooltip: HTMLInputElement[] | null;
-    checkboxInputScaleOfValues: HTMLInputElement[] | null;
-    forms: HTMLElement[] | null;
-  };
+  public elements: panelElements;
 
   constructor(element: JQuery<HTMLElement>, index: number) {
     this.connection = element.data();
     this.sliderIndex = index;
 
-    this.elements = {
-      panel: null,
-      minValue: null,
-      maxValue: null,
-      countSliderThumbs: null,
-      inputsSliderThumbs: null,
-      stepSize: null,
-      orientationButtons: null,
-      checkboxContainer: null,
-      checkboxInputTooltip: null,
-      checkboxInputScaleOfValues: null,
-      forms: null,
-    };
+    this.elements = this.findElements();
 
     this.connection.subscribeToStateChanges((state: IModelState) => {
       this.render(state);
@@ -46,7 +35,6 @@ class ConfigurationPanel {
       this.updateThumbsValues(thumbsValues);
     });
 
-    this.findElements();
     this.bindEventListeners();
     this.render(this.connection.getState());
   }
@@ -63,101 +51,98 @@ class ConfigurationPanel {
     });
   }
 
-  private findElements(): void {
+  private findElements(): panelElements {
     const configurationPanels = Array.from(
       document.querySelectorAll('.js-configuration'),
     );
 
-    this.elements.panel = configurationPanels[this.sliderIndex] as HTMLElement;
+    const panel = configurationPanels[this.sliderIndex] as HTMLElement;
 
     const $minMaxContainer = $('.js-field__min-max');
     const $minMaxValues: HTMLInputElement[] = Array.from(
       $($minMaxContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
-    [this.elements.minValue, this.elements.maxValue] = $minMaxValues;
+    const [$minValue, $maxValue] = $minMaxValues;
 
     const $countThumbsContainer = $('.js-configuration__field-count-thumb');
-    this.elements.countSliderThumbs = Array.from(
+    const $countSliderThumbs = Array.from(
       $($countThumbsContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
     const $thumbsValuesContainer = $('.js-field__thumbs-values');
-    this.elements.inputsSliderThumbs = Array.from(
+    const $inputsSliderThumbs = Array.from(
       $thumbsValuesContainer[this.sliderIndex].querySelectorAll(
         '.js-configuration__thumb-value',
       ),
-    );
+    ) as HTMLInputElement[];
 
     const $stepSizeContainer = $('.js-configuration__field-step-size');
-    this.elements.stepSize = Array.from(
+    const $stepSize = Array.from(
       $($stepSizeContainer[this.sliderIndex]).find('.js-input__value'),
     ) as HTMLInputElement[];
 
-    this.elements.orientationButtons = Array.from(
-      $(this.elements.panel).find('.js-radio-button__content'),
+    const $orientationButtons = Array.from(
+      $(panel).find('.js-radio-button__content'),
     ) as HTMLInputElement[];
 
-    this.elements.checkboxContainer = Array.from(
-      $(this.elements.panel).find('.js-checkbox-button'),
+    const $checkboxContainer = Array.from(
+      $(panel).find('.js-checkbox-button'),
     ) as HTMLInputElement[];
 
-    this.elements.checkboxInputTooltip = ($(this.elements.panel).find(
+    const $checkboxInputTooltip = ($(panel).find(
       '[name = "tooltip"]',
     ) as unknown) as HTMLInputElement[];
 
-    this.elements.checkboxInputScaleOfValues = ($(this.elements.panel).find(
+    const $checkboxInputScaleOfValues = ($(panel).find(
       '[name = "scale-of-values"]',
     ) as unknown) as HTMLInputElement[];
 
-    this.elements.forms = Array.from(
+    const $forms = Array.from(
       document.querySelectorAll('.js-configuration'),
     ) as HTMLElement[];
+
+    const panelElements: panelElements = {
+      panel,
+      minValue: $minValue,
+      maxValue: $maxValue,
+      countSliderThumbs: $countSliderThumbs,
+      inputsSliderThumbs: $inputsSliderThumbs,
+      stepSize: $stepSize,
+      orientationButtons: $orientationButtons,
+      checkboxContainer: $checkboxContainer,
+      checkboxInputTooltip: $checkboxInputTooltip,
+      checkboxInputScaleOfValues: $checkboxInputScaleOfValues,
+      forms: $forms,
+    };
+
+    return panelElements;
   }
 
   private setValuesFromState(state: IModelState): void {
-    if (this.elements.orientationButtons !== null) {
-      if (state.orientation === 'horizontal') {
-        this.elements.orientationButtons[0].checked = true;
-      }
-      if (state.orientation === 'vertical') {
-        this.elements.orientationButtons[1].checked = true;
-      }
+    if (state.orientation === 'horizontal') {
+      this.elements.orientationButtons[0].checked = true;
+    }
+    if (state.orientation === 'vertical') {
+      this.elements.orientationButtons[1].checked = true;
     }
 
-    if (this.elements.minValue !== null) {
-      this.elements.minValue.value = String(state.min);
-    }
-    if (this.elements.maxValue !== null) {
-      this.elements.maxValue.value = String(state.max);
-    }
+    this.elements.minValue.value = String(state.min);
 
-    if (this.elements.countSliderThumbs !== null) {
-      if (state.thumbsValues !== undefined) {
-        this.elements.countSliderThumbs[0].value = String(
-          state.thumbsValues.length,
-        );
-      }
-    }
+    this.elements.maxValue.value = String(state.max);
 
-    if (this.elements.stepSize !== null) {
-      this.elements.stepSize[0].value = String(state.step);
-    }
+    this.elements.countSliderThumbs[0].value = String(
+      state.thumbsValues.length,
+    );
 
-    if (this.elements.checkboxInputTooltip !== null) {
-      if (!state.hasTooltips) {
-        this.elements.checkboxInputTooltip[0].checked = false;
-      } else {
-        this.elements.checkboxInputTooltip[0].checked = true;
-      }
-    }
+    this.elements.stepSize[0].value = String(state.step);
 
-    if (this.elements.checkboxInputScaleOfValues !== null) {
-      if (!state.hasScaleValues) {
-        this.elements.checkboxInputScaleOfValues[0].checked = false;
-      }
-      if (state.hasScaleValues) {
-        this.elements.checkboxInputScaleOfValues[0].checked = true;
-      }
+    this.elements.checkboxInputTooltip[0].checked = state.hasScaleValues;
+
+    if (!state.hasScaleValues) {
+      this.elements.checkboxInputScaleOfValues[0].checked = false;
+    }
+    if (state.hasScaleValues) {
+      this.elements.checkboxInputScaleOfValues[0].checked = true;
     }
   }
 
@@ -170,29 +155,22 @@ class ConfigurationPanel {
 
     const fragmentCurrentValueList = document.createDocumentFragment();
 
-    if (state.thumbsValues !== undefined) {
-      state.thumbsValues.forEach((_element: number, i: number) => {
-        const currentValueItem: HTMLElement = utilities.createElement(
-          'li',
-          'configuration__thumbs-item js-configuration__thumbs-item',
-        );
-        const currentValueInput: HTMLElement = utilities.createElement(
-          'input',
-          'configuration__thumbs-value js-configuration__thumb-value',
-        );
-        currentValueInput.setAttribute('type', 'number');
-        currentValueInput.setAttribute('step', 'any');
-        if (state.thumbsValues !== undefined) {
-          currentValueInput.setAttribute(
-            'value',
-            String(state.thumbsValues[i]),
-          );
-        }
+    state.thumbsValues.forEach((_element: number, i: number) => {
+      const currentValueItem: HTMLElement = utilities.createElement(
+        'li',
+        'configuration__thumbs-item js-configuration__thumbs-item',
+      );
+      const currentValueInput: HTMLElement = utilities.createElement(
+        'input',
+        'configuration__thumbs-value js-configuration__thumb-value',
+      );
+      currentValueInput.setAttribute('type', 'number');
+      currentValueInput.setAttribute('step', 'any');
+      currentValueInput.setAttribute('value', String(state.thumbsValues[i]));
 
-        currentValueItem.append(currentValueInput);
-        fragmentCurrentValueList.append(currentValueItem);
-      });
-    }
+      currentValueItem.append(currentValueInput);
+      fragmentCurrentValueList.append(currentValueItem);
+    });
     thumbsCurrentValuesList[this.sliderIndex].append(fragmentCurrentValueList);
 
     this.elements.inputsSliderThumbs = Array.from(
@@ -214,61 +192,55 @@ class ConfigurationPanel {
   }
 
   private listenMinValue(): void {
-    this.elements.minValue?.addEventListener(
+    this.elements.minValue.addEventListener(
       'blur',
       this.handleElementClickOrBlur,
     );
   }
 
   private listenMaxValue(): void {
-    this.elements.maxValue?.addEventListener(
+    this.elements.maxValue.addEventListener(
       'blur',
       this.handleElementClickOrBlur,
     );
   }
 
   private listenThumbsCount(): void {
-    if (this.elements.countSliderThumbs !== null) {
-      this.elements.countSliderThumbs[0].addEventListener(
-        'blur',
-        this.handleElementClickOrBlur,
-      );
-    }
+    this.elements.countSliderThumbs[0].addEventListener(
+      'blur',
+      this.handleElementClickOrBlur,
+    );
   }
 
   private listenStepSize(): void {
-    if (this.elements.stepSize !== null) {
-      this.elements.stepSize[0].addEventListener(
-        'blur',
-        this.handleElementClickOrBlur,
-      );
-    }
+    this.elements.stepSize[0].addEventListener(
+      'blur',
+      this.handleElementClickOrBlur,
+    );
   }
 
   private listenInputsSliderThumbs(): void {
-    this.elements.inputsSliderThumbs?.forEach(element => {
+    this.elements.inputsSliderThumbs.forEach(element => {
       element.addEventListener('blur', this.handleElementClickOrBlur);
     });
   }
 
   private listenOrientationSlider(): void {
-    this.elements.orientationButtons?.forEach(element => {
+    this.elements.orientationButtons.forEach(element => {
       element.addEventListener('click', this.handleElementClickOrBlur);
     });
   }
 
   private listenCheckboxContainer(): void {
-    this.elements.checkboxContainer?.forEach(element => {
+    this.elements.checkboxContainer.forEach(element => {
       element.addEventListener('click', this.handleElementClickOrBlur);
     });
   }
 
   private listenForm(): void {
-    if (this.elements.forms !== null) {
-      this.elements.forms.forEach((elementForm: HTMLElement) => {
-        elementForm.addEventListener('submit', this.handleElementFormSubmit);
-      });
-    }
+    this.elements.forms.forEach((elementForm: HTMLElement) => {
+      elementForm.addEventListener('submit', this.handleElementFormSubmit);
+    });
   }
 
   private handleElementClickOrBlur = (): void => {
@@ -295,56 +267,40 @@ class ConfigurationPanel {
       orientation: 'horizontal',
     };
 
-    if (this.elements.stepSize !== null) {
-      state.step = Number(this.elements.stepSize[0].value);
-    }
+    state.step = Number(this.elements.stepSize[0].value);
 
     this.elements.inputsSliderThumbs?.forEach((element, i) => {
-      if (state.thumbsValues !== undefined) {
-        state.thumbsValues[i] = Number(element.value);
-      }
+      state.thumbsValues[i] = Number(element.value);
     });
 
-    if (this.elements.countSliderThumbs !== null) {
-      const thumbsCount = Number(this.elements.countSliderThumbs[0].value);
+    const thumbsCount = Number(this.elements.countSliderThumbs[0].value);
 
-      if (state.thumbsValues !== undefined) {
-        if (thumbsCount > state.thumbsValues.length) {
-          const missingNumber = thumbsCount - state.thumbsValues.length;
-          new Array(missingNumber).fill(1).forEach(() => {
-            if (state.thumbsValues !== undefined && state.step !== undefined) {
-              const lastThumbIndex = state.thumbsValues.length - 1;
-              const nextThumbIndex = state.thumbsValues.length;
-              state.thumbsValues[nextThumbIndex] =
-                state.thumbsValues[lastThumbIndex] + state.step;
-            }
-          });
-        }
-
-        if (thumbsCount < state.thumbsValues.length) {
-          const excessNumber = state.thumbsValues.length - thumbsCount;
-          const lastThumbIndex = state.thumbsValues.length - excessNumber;
-          state.thumbsValues.splice(lastThumbIndex, excessNumber);
-        }
-      }
+    if (thumbsCount > state.thumbsValues.length) {
+      const missingNumber = thumbsCount - state.thumbsValues.length;
+      new Array(missingNumber).fill(1).forEach(() => {
+        const lastThumbIndex = state.thumbsValues.length - 1;
+        const nextThumbIndex = state.thumbsValues.length;
+        state.thumbsValues[nextThumbIndex] =
+          state.thumbsValues[lastThumbIndex] + state.step;
+      });
     }
 
-    if (this.elements.checkboxInputScaleOfValues !== null) {
-      if (!this.elements.checkboxInputScaleOfValues[0].checked) {
-        state.hasScaleValues = false;
-      }
+    if (thumbsCount < state.thumbsValues.length) {
+      const excessNumber = state.thumbsValues.length - thumbsCount;
+      const lastThumbIndex = state.thumbsValues.length - excessNumber;
+      state.thumbsValues.splice(lastThumbIndex, excessNumber);
     }
 
-    if (this.elements.checkboxInputTooltip !== null) {
-      if (!this.elements.checkboxInputTooltip[0].checked) {
-        state.hasTooltips = false;
-      }
+    if (!this.elements.checkboxInputScaleOfValues[0].checked) {
+      state.hasScaleValues = false;
     }
 
-    if (this.elements.orientationButtons !== null) {
-      if (this.elements.orientationButtons[1].checked === true) {
-        state.orientation = 'vertical';
-      }
+    if (!this.elements.checkboxInputTooltip[0].checked) {
+      state.hasTooltips = false;
+    }
+
+    if (this.elements.orientationButtons[1].checked === true) {
+      state.orientation = 'vertical';
     }
 
     return state;
