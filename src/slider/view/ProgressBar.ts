@@ -73,7 +73,7 @@ class ProgressBar {
     this.activeRange.style[this.adapter.length] = `${lengthActiveRange}%`;
   }
 
-  public findAndSetTheNearestThumb(currentValue: number): void {
+  private findAndSetTheNearestThumb(currentValue: number): void {
     const leftSpacing: number[] = [];
     const rightSpacing: number[] = [];
 
