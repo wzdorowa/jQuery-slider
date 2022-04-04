@@ -92,7 +92,6 @@ class ConfigurationPanel {
     const $checkboxInputTooltip = ($(panel).find(
       '[name = "tooltip"]',
     ) as unknown) as HTMLInputElement[];
-    console.log('$checkboxInputTooltip', $checkboxInputTooltip);
 
     const $checkboxInputScaleOfValues = ($(panel).find(
       '[name = "scale-of-values"]',
