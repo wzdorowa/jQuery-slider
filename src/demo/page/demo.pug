@@ -9,9 +9,9 @@ html
         meta(name="description" content="Плагин для jQuery, который реализовывает функционал «бегунка» (также называемого слайдером) — специальный контрол, который позволяет перетягиванием задавать какое-то числовое значение.")
         title Document
         link(rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
-        link(rel="stylesheet", href="./demo/page/demo.scss")
-        link(rel="shortcut icon" href="./demo/page/images/favicon.ico" type="image/x-icon")
-        link(rel='mask-icon' href="./demo/page/images/favicon-safari.svg" color="blue")
+        link(rel="stylesheet", href="./page/demo.scss")
+        link(rel="shortcut icon" href="./page/images/favicon.ico" type="image/x-icon")
+        link(rel='mask-icon' href="./page/images/favicon-safari.svg" color="blue")
     body
         block content
             +slider-container()
@@ -22,6 +22,6 @@ html
               .slider-test.js-slider-test(data-step='3', data-has-scale-values='false')
         block scripts
             script(src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous")
-            script(src="./slider/slider.ts")
-            script(src="./demo/components/configuration-panel/configuration-panel.ts")
-            script(src="./demo/page/demo.ts")
+            script(src="../slider/slider.ts")
+            script(src="./components/configuration-panel/configuration-panel.ts")
+            script(src="./page/demo.ts")
