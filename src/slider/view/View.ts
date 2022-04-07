@@ -3,7 +3,6 @@ import { IAdapter } from '../interfaces/IAdapter';
 import { IModelState } from '../interfaces/iModelState';
 import ProgressBar from './ProgressBar';
 import Thumbs from './Thumbs';
-import Tooltips from './Tooltips';
 
 class View {
   private slider: HTMLElement;
@@ -13,8 +12,6 @@ class View {
   private progressBar!: ProgressBar;
 
   private thumbs!: Thumbs;
-
-  private tooltips!: Tooltips;
 
   private adapter!: IAdapter;
 
@@ -29,20 +26,16 @@ class View {
 
     this.progressBar = new ProgressBar(this.slider, this.emitter);
     this.thumbs = new Thumbs(this.slider, this.emitter);
-    this.tooltips = new Tooltips(this.slider);
   }
 
   public render(state: IModelState): void {
     this.progressBar.renderProgressBar(state, this.adapter);
-
     this.thumbs.renderThumbs(state, this.adapter);
     this.progressBar.updateActiveRange(state.thumbsValues);
-    this.tooltips.renderTooltips(state);
   }
 
   public update(thumbsValues: number[]): void {
     this.thumbs.setValuesThumbs(thumbsValues);
-    this.tooltips.setTooltipsValues(thumbsValues);
     this.progressBar.updateActiveRange(thumbsValues);
   }
 

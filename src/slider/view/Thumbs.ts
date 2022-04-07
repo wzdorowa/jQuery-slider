@@ -2,6 +2,7 @@ import EventEmitter from '../EventEmitter';
 import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IAdapter } from '../interfaces/IAdapter';
+import Tooltips from './Tooltips';
 
 class Thumbs {
   private slider: HTMLElement;
@@ -18,6 +19,8 @@ class Thumbs {
 
   private indexActiveThumb: number | null;
 
+  private tooltips: Tooltips | null;
+
   private min: number;
 
   private max: number;
@@ -26,6 +29,7 @@ class Thumbs {
     this.slider = element;
     this.emitter = eventEmitter;
     this.thumbs = [];
+    this.tooltips = null;
     this.startMoveAxis = 0;
     this.target = null;
     this.indexActiveThumb = null;
@@ -41,6 +45,11 @@ class Thumbs {
     this.createThumbs(state.thumbsValues);
     this.listenThumbsEvents();
     this.setValuesThumbs(state.thumbsValues);
+
+    if (state.hasTooltips) {
+      this.tooltips = new Tooltips(this.slider);
+      this.tooltips.renderTooltips(state);
+    }
   }
 
   public setValuesThumbs(thumbsValues: number[]): void {
@@ -54,6 +63,10 @@ class Thumbs {
         percent / 100
       }))`;
     });
+
+    if (this.tooltips !== null) {
+      this.tooltips.setTooltipsValues(thumbsValues);
+    }
   }
 
   private createThumbs(thumbsValues: number[]): void {
