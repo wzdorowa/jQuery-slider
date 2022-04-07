@@ -4,4 +4,3 @@ dist
 build-demo
 .DS_Store
 .vscode
-package-lock.json
