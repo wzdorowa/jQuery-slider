@@ -1,16 +1,5 @@
 import { IModelState } from '../interfaces/iModelState';
 
-type orientation = 'horizontal' | 'vertical';
-export type state = {
-  min?: number;
-  max?: number;
-  thumbsValues?: number[];
-  orientation?: orientation;
-  step?: number;
-  hasTooltips?: boolean;
-  hasScaleValues?: boolean;
-};
-
 const validateState = (
   newState: unknown,
   currentState: IModelState,
@@ -19,33 +8,58 @@ const validateState = (
   state.thumbsValues = Array.from(currentState.thumbsValues);
 
   if (typeof newState === 'object' && newState !== null) {
-    const newModelState: state = newState;
+    const newModelState = newState as Record<string, unknown>;
 
-    if (newModelState.min !== undefined) {
+    if (
+      newModelState.min !== undefined &&
+      typeof newModelState.min === 'number'
+    ) {
       state.min = newModelState.min;
     }
 
-    if (newModelState.max !== undefined) {
+    if (
+      newModelState.max !== undefined &&
+      typeof newModelState.max === 'number'
+    ) {
       state.max = newModelState.max;
     }
 
-    if (newModelState.thumbsValues !== undefined) {
+    if (
+      newModelState.thumbsValues !== undefined &&
+      Array.isArray(newModelState.thumbsValues)
+    ) {
       state.thumbsValues = Array.from(newModelState.thumbsValues);
     }
 
-    if (newModelState.orientation !== undefined) {
-      state.orientation = newModelState.orientation;
+    if (
+      newModelState.orientation !== undefined &&
+      typeof newModelState.orientation === 'string'
+    ) {
+      if (
+        newModelState.orientation === 'horizontal' ||
+        newModelState.orientation === 'vertical'
+      )
+        state.orientation = newModelState.orientation;
     }
 
-    if (newModelState.step !== undefined) {
+    if (
+      newModelState.step !== undefined &&
+      typeof newModelState.step === 'number'
+    ) {
       state.step = newModelState.step;
     }
 
-    if (newModelState.hasTooltips !== undefined) {
+    if (
+      newModelState.hasTooltips !== undefined &&
+      typeof newModelState.hasTooltips === 'boolean'
+    ) {
       state.hasTooltips = newModelState.hasTooltips;
     }
 
-    if (newModelState.hasScaleValues !== undefined) {
+    if (
+      newModelState.hasScaleValues !== undefined &&
+      typeof newModelState.hasScaleValues === 'boolean'
+    ) {
       state.hasScaleValues = newModelState.hasScaleValues;
     }
   }
