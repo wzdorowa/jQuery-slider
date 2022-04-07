@@ -58,22 +58,18 @@ describe('Unit tests', () => {
 
     state.min = 20;
     state.max = 80;
-    scale.renderProgressBar(state, adapter);
+    scale.renderProgressBar({ state, adapter });
 
     state.hasScaleValues = false;
-    scale.renderProgressBar(state, adapter);
+    scale.renderProgressBar({ state, adapter });
 
     state.hasScaleValues = true;
-    scale.renderProgressBar(state, adapter);
-  });
-
-  test('find and set the nearest thumb', () => {
-    scale.findAndSetTheNearestThumb(26);
+    scale.renderProgressBar({ state, adapter });
   });
 
   test('test vertical orientation', () => {
     state.orientation = 'vertical';
     setAdapter(state.orientation);
-    scale.renderProgressBar(state, adapter);
+    scale.renderProgressBar({ state, adapter });
   });
 });

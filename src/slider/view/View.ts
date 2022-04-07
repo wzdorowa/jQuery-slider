@@ -2,7 +2,7 @@ import EventEmitter from '../EventEmitter';
 import { IAdapter } from '../interfaces/IAdapter';
 import { IModelState } from '../interfaces/iModelState';
 import ProgressBar from './ProgressBar';
-import Thumbs from './Thumbs';
+import Thumb from './Thumb';
 
 class View {
   private slider: HTMLElement;
@@ -11,31 +11,40 @@ class View {
 
   private progressBar!: ProgressBar;
 
-  private thumbs!: Thumbs;
+  private thumbs!: Thumb[];
 
   private adapter!: IAdapter;
 
   constructor(slider: HTMLElement, eventEmitter: EventEmitter) {
     this.slider = slider;
     this.emitter = eventEmitter;
+    this.thumbs = [];
   }
 
   public initialize(state: IModelState): void {
     this.slider.innerHTML = '';
+    this.thumbs = [];
     this.setAdapter(state.orientation);
 
     this.progressBar = new ProgressBar(this.slider, this.emitter);
-    this.thumbs = new Thumbs(this.slider, this.emitter);
+    state.thumbsValues.forEach((_element, index) => {
+      this.thumbs.push(new Thumb(this.slider, this.emitter, index));
+    });
   }
 
   public render(state: IModelState): void {
-    this.progressBar.renderProgressBar(state, this.adapter);
-    this.thumbs.renderThumbs(state, this.adapter);
+    this.progressBar.renderProgressBar({ state, adapter: this.adapter });
+
+    this.thumbs.forEach(thumb => {
+      thumb.renderThumb(state, this.adapter);
+    });
     this.progressBar.updateActiveRange(state.thumbsValues);
   }
 
   public update(thumbsValues: number[]): void {
-    this.thumbs.setValuesThumbs(thumbsValues);
+    this.thumbs.forEach((thumb, index) => {
+      thumb.setValueThumb(thumbsValues[index]);
+    });
     this.progressBar.updateActiveRange(thumbsValues);
   }
 

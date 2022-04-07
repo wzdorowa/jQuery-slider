@@ -1,5 +1,5 @@
 import View from '../../view/View';
-import Thumbs from '../../view/Thumbs';
+import Thumb from '../../view/Thumb';
 import EventEmitter from '../../EventEmitter';
 import { IModelState } from '../../interfaces/iModelState';
 import { IAdapter } from '../../interfaces/IAdapter';
@@ -56,11 +56,11 @@ describe('Unit tests', () => {
   const eventEmitter = new EventEmitter();
 
   new View(slider, eventEmitter);
-  const thumbs = new Thumbs(slider, eventEmitter);
+  const thumb = new Thumb(slider, eventEmitter, 0);
 
   test('renderThumbs', () => {
     setAdapter(state.orientation);
-    thumbs.renderThumbs(state, adapter);
+    thumb.renderThumb(state, adapter);
 
     const slidersElements = window.document.querySelectorAll(
       '.js-slider__thumb',

@@ -4,6 +4,7 @@ import { IModelState } from '../interfaces/iModelState';
 import createElement from '../functions/createElement';
 import findNearestThumb from '../functions/findNearestThumb';
 import Scale from './Scale';
+import getPointSize from '../functions/getPointSize';
 
 class ProgressBar {
   private slider: HTMLElement;
@@ -31,7 +32,13 @@ class ProgressBar {
     this.max = 0;
   }
 
-  public renderProgressBar(state: IModelState, adapter: IAdapter): void {
+  public renderProgressBar({
+    state,
+    adapter,
+  }: {
+    state: IModelState;
+    adapter: IAdapter;
+  }): void {
     this.adapter = adapter;
     this.step = state.step;
     this.thumbsValues = state.thumbsValues;
@@ -108,33 +115,39 @@ class ProgressBar {
     const offset =
       event[this.adapter.clientAxis] - startAxis[this.adapter.clientRect];
 
-    const pointSize =
-      this.progressBar[this.adapter.offsetLength] / (this.max - this.min);
+    const pointSize = getPointSize(
+      this.slider,
+      this.adapter,
+      this.min,
+      this.max,
+    );
 
-    const shiftToMinValue = pointSize * this.min;
+    if (pointSize !== null) {
+      const shiftToMinValue = pointSize * this.min;
+      clickLocationAxis = offset + shiftToMinValue;
 
-    clickLocationAxis = offset + shiftToMinValue;
+      let currentValue: number = clickLocationAxis / pointSize;
 
-    let currentValue: number = clickLocationAxis / pointSize;
+      const minValue: number = Math.floor(currentValue / this.step) * this.step;
+      const halfStep = minValue + this.step / 2;
 
-    const minValue: number = Math.floor(currentValue / this.step) * this.step;
-    const halfStep = minValue + this.step / 2;
+      const lastStep =
+        Math.round(((this.max - this.min) % this.step) * 10) / 10;
+      const halfLastStep = this.max - lastStep / 2;
 
-    const lastStep = Math.round(((this.max - this.min) % this.step) * 10) / 10;
-    const halfLastStep = this.max - lastStep / 2;
+      if (currentValue > halfLastStep) {
+        currentValue = minValue + lastStep;
+      } else if (currentValue > halfStep) {
+        currentValue = minValue + this.step;
+      } else {
+        currentValue = minValue;
+      }
 
-    if (currentValue > halfLastStep) {
-      currentValue = minValue + lastStep;
-    } else if (currentValue > halfStep) {
-      currentValue = minValue + this.step;
-    } else {
-      currentValue = minValue;
-    }
+      const nearestThumb = findNearestThumb(currentValue, this.thumbsValues);
 
-    const nearestThumb = findNearestThumb(currentValue, this.thumbsValues);
-
-    if (nearestThumb !== null) {
-      this.emitter.emit('view:thumbPosition-changed', nearestThumb);
+      if (nearestThumb !== null) {
+        this.emitter.emit('view:thumbPosition-changed', nearestThumb);
+      }
     }
   };
 }

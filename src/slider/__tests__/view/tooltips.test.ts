@@ -1,8 +1,7 @@
 import EventEmitter from '../../EventEmitter';
-import { IAdapter } from '../../interfaces/IAdapter';
+import createElement from '../../functions/createElement';
 import { IModelState } from '../../interfaces/iModelState';
-import Thumbs from '../../view/Thumbs';
-import Tooltips from '../../view/Tooltips';
+import Tooltip from '../../view/Tooltip';
 import View from '../../view/View';
 
 const state: IModelState = {
@@ -15,38 +14,6 @@ const state: IModelState = {
   hasScaleValues: true,
 };
 
-let adapter: IAdapter;
-
-const setAdapter = (orientation: string): void => {
-  if (orientation === 'horizontal') {
-    adapter = {
-      offsetDirection: 'offsetLeft',
-      offsetAxis: 'offsetX',
-      offsetLength: 'offsetWidth',
-      pageAxis: 'pageX',
-      currentAxis: 'currentX',
-      clientAxis: 'clientX',
-      clientRect: 'x',
-      direction: 'left',
-      position: 'left',
-      length: 'width',
-    };
-  } else if (orientation === 'vertical') {
-    adapter = {
-      offsetDirection: 'offsetTop',
-      offsetAxis: 'offsetY',
-      offsetLength: 'offsetHeight',
-      pageAxis: 'pageY',
-      currentAxis: 'currentY',
-      clientAxis: 'clientY',
-      clientRect: 'y',
-      direction: 'top',
-      position: 'top',
-      length: 'height',
-    };
-  }
-};
-
 describe('Unit tests', () => {
   const slider = window.document.createElement('div');
   slider.className = 'js-slider-test';
@@ -54,13 +21,14 @@ describe('Unit tests', () => {
 
   const eventEmitter = new EventEmitter();
   new View(slider, eventEmitter);
-  const tooltips = new Tooltips(slider);
-  const thumbs = new Thumbs(slider, eventEmitter);
-  setAdapter(state.orientation);
+  const tooltip = new Tooltip();
 
   test('render tooltips', () => {
-    thumbs.renderThumbs(state, adapter);
-    tooltips.renderTooltips(state);
+    const thumb: HTMLElement = createElement(
+      'div',
+      'slider__thumb js-slider__thumb',
+    );
+    tooltip.renderTooltip(thumb, 30, state.orientation);
 
     const tooltipsElements = window.document.querySelectorAll(
       '.js-slider__tooltip',
