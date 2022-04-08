@@ -28,7 +28,7 @@ describe('Unit tests', () => {
       'div',
       'slider__thumb js-slider__thumb',
     );
-    tooltip.renderTooltip(thumb, 30, state.orientation);
+    tooltip.createTooltip(thumb, state.orientation);
 
     const tooltipsElements = window.document.querySelectorAll(
       '.js-slider__tooltip',

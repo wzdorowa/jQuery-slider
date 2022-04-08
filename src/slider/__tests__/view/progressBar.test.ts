@@ -19,7 +19,7 @@ describe('Unit tests', () => {
   window.document.body.appendChild(element);
 
   const eventEmitter = new EventEmitter();
-  const scale = new ProgressBar(element, eventEmitter);
+  const progressBar = new ProgressBar(element, eventEmitter);
 
   let adapter: IAdapter;
 
@@ -58,18 +58,36 @@ describe('Unit tests', () => {
 
     state.min = 20;
     state.max = 80;
-    scale.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar({ state, adapter });
 
     state.hasScaleValues = false;
-    scale.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar({ state, adapter });
 
     state.hasScaleValues = true;
-    scale.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar({ state, adapter });
   });
 
   test('test vertical orientation', () => {
     state.orientation = 'vertical';
     setAdapter(state.orientation);
-    scale.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar({ state, adapter });
+  });
+
+  test('test click on progress bar', () => {
+    const progressBar: HTMLElement | null = element.querySelector(
+      '.js-slider__progress-bar',
+    );
+
+    const event = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 450,
+      clientY: 100,
+      movementX: 500,
+    });
+
+    if (progressBar !== null) {
+      progressBar.dispatchEvent(event);
+    }
   });
 });

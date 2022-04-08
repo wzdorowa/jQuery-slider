@@ -54,13 +54,18 @@ describe('Unit tests', () => {
   window.document.body.appendChild(slider);
 
   const eventEmitter = new EventEmitter();
-
   new View(slider, eventEmitter);
-  const thumb = new Thumb(slider, eventEmitter, 0);
+
+  const thumbs: Thumb[] = [];
+  state.thumbsValues.forEach((_thumb, index) => {
+    thumbs.push(new Thumb(slider, eventEmitter, index));
+  });
 
   test('renderThumbs', () => {
     setAdapter(state.orientation);
-    thumb.renderThumb(state, adapter);
+    thumbs.forEach(thumb => {
+      thumb.renderThumb(state, adapter);
+    });
 
     const slidersElements = window.document.querySelectorAll(
       '.js-slider__thumb',
