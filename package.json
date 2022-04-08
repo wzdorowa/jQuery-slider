@@ -7,7 +7,7 @@
     "test": "jest --coverage",
     "dev": "parcel ./src/demo/*.pug --open",
     "build-slider": "parcel build ./src/slider/slider.ts --out-dir build-slider --public-url /jQuery-slider --no-source-maps",
-    "build-demo": "parcel build ./src/*.pug --out-dir build-demo --public-url /jQuery-slider --no-source-maps",
+    "build-demo": "parcel build ./src/demo/*.pug --out-dir build-demo --public-url /jQuery-slider --no-source-maps",
     "deploy": "gh-pages -d build-demo",
     "eslint": "eslint --cache --ext .js,.ts, src",
     "eslint:dump": "eslint --print-config ./.eslintrc.json",
