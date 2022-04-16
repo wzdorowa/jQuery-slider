@@ -6,9 +6,9 @@ import findNearestThumb from '../functions/findNearestThumb';
 import Scale from './Scale';
 
 class ProgressBar {
-  private slider: HTMLElement;
-
   public progressBar!: HTMLElement;
+
+  private slider: HTMLElement;
 
   private activeRange!: HTMLElement;
 
@@ -31,13 +31,7 @@ class ProgressBar {
     this.max = 0;
   }
 
-  public renderProgressBar({
-    state,
-    adapter,
-  }: {
-    state: IModelState;
-    adapter: IAdapter;
-  }): void {
+  public renderProgressBar(state: IModelState, adapter: IAdapter): void {
     this.adapter = adapter;
     this.step = state.step;
     this.thumbsValues = state.thumbsValues;

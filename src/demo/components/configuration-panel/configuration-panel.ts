@@ -89,13 +89,13 @@ class ConfigurationPanel {
       $(panel).find('.js-checkbox-button'),
     ) as HTMLInputElement[];
 
-    const $checkboxInputTooltip = ($(panel).find(
+    const $checkboxInputTooltip = $(panel).find(
       '[name = "tooltip"]',
-    ) as unknown) as HTMLInputElement[];
+    ) as unknown as HTMLInputElement[];
 
-    const $checkboxInputScaleOfValues = ($(panel).find(
+    const $checkboxInputScaleOfValues = $(panel).find(
       '[name = "scale-of-values"]',
-    ) as unknown) as HTMLInputElement[];
+    ) as unknown as HTMLInputElement[];
 
     const $forms = Array.from(
       document.querySelectorAll('.js-configuration'),

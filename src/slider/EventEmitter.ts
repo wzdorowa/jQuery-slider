@@ -32,9 +32,8 @@ class EventEmitter {
     eventName: string,
     data: IModelState | IThumbData | number[],
   ): void {
-    const handlers: CallbackFunctionVariadic[] = this.handlersByEvent[
-      eventName
-    ];
+    const handlers: CallbackFunctionVariadic[] =
+      this.handlersByEvent[eventName];
     if (handlers) {
       handlers.forEach(fn => {
         fn(data);

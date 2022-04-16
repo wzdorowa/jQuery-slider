@@ -5,7 +5,7 @@ import Controller from './Controller';
 (function callSlider($) {
   const $jquery = $;
   $jquery.fn.slider = function renderSlider(): globalThis.JQuery<HTMLElement> {
-    const element = (this[0] as unknown) as HTMLElement;
+    const element = this[0] as unknown as HTMLElement;
     const data = this.data();
     const controller = new Controller(element, data);
     const wrapper = new Wrapper(controller);
