@@ -4,7 +4,6 @@ import { IModelState } from '../interfaces/iModelState';
 import createElement from '../functions/createElement';
 import findNearestThumb from '../functions/findNearestThumb';
 import Scale from './Scale';
-import getPointSize from '../functions/getPointSize';
 
 class ProgressBar {
   private slider: HTMLElement;
@@ -77,6 +76,16 @@ class ProgressBar {
     this.activeRange.style[this.adapter.length] = `${lengthActiveRange}%`;
   }
 
+  public getPointSize(min: number, max: number): number | null {
+    const progressBar: HTMLElement | null = this.slider.querySelector(
+      '.slider__progress-bar',
+    );
+    if (progressBar !== null) {
+      return progressBar[this.adapter.offsetLength] / (max - min);
+    }
+    return null;
+  }
+
   private createProgressBar(orientation: string): void {
     const progressBar: HTMLElement = createElement(
       'div',
@@ -115,12 +124,7 @@ class ProgressBar {
     const offset =
       event[this.adapter.clientAxis] - startAxis[this.adapter.clientRect];
 
-    const pointSize = getPointSize(
-      this.slider,
-      this.adapter,
-      this.min,
-      this.max,
-    );
+    const pointSize = this.getPointSize(this.min, this.max);
 
     if (pointSize !== null) {
       const shiftToMinValue = pointSize * this.min;

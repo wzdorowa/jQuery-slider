@@ -35,8 +35,9 @@ class View {
   public render(state: IModelState): void {
     this.progressBar.renderProgressBar({ state, adapter: this.adapter });
 
+    const { getPointSize } = this.progressBar;
     this.thumbs.forEach(thumb => {
-      thumb.renderThumb(state, this.adapter);
+      thumb.renderThumb(state, this.adapter, getPointSize);
     });
     this.progressBar.updateActiveRange(state.thumbsValues);
   }

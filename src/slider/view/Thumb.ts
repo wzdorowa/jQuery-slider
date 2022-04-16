@@ -3,7 +3,6 @@ import createElement from '../functions/createElement';
 import { IModelState } from '../interfaces/iModelState';
 import { IAdapter } from '../interfaces/IAdapter';
 import Tooltip from './Tooltip';
-import getPointSize from '../functions/getPointSize';
 
 class Thumb {
   private slider: HTMLElement;
@@ -24,6 +23,8 @@ class Thumb {
 
   private index: number;
 
+  private getPointSize: ((min: number, max: number) => number | null) | null;
+
   constructor(element: HTMLElement, eventEmitter: EventEmitter, index: number) {
     this.slider = element;
     this.emitter = eventEmitter;
@@ -33,12 +34,18 @@ class Thumb {
     this.min = 0;
     this.max = 0;
     this.index = index;
+    this.getPointSize = null;
   }
 
-  public renderThumb(state: IModelState, adapter: IAdapter): void {
+  public renderThumb(
+    state: IModelState,
+    adapter: IAdapter,
+    getPointSize: ((min: number, max: number) => number | null) | null,
+  ): void {
     this.adapter = adapter;
     this.min = state.min;
     this.max = state.max;
+    this.getPointSize = getPointSize;
 
     this.createThumb();
 
@@ -96,22 +103,19 @@ class Thumb {
 
   private processMove(event: MouseEvent): void {
     const currentValueAxis = event[this.adapter?.pageAxis] - this.startMoveAxis;
-    const pointSize = getPointSize(
-      this.slider,
-      this.adapter,
-      this.min,
-      this.max,
-    );
 
-    if (pointSize !== null) {
-      const shiftToMinValue = pointSize * this.min;
+    if (this.getPointSize !== null) {
+      const pointSize = this.getPointSize(this.min, this.max);
 
-      const value = (currentValueAxis + shiftToMinValue) / pointSize;
+      if (pointSize !== null) {
+        const shiftToMinValue = pointSize * this.min;
+        const value = (currentValueAxis + shiftToMinValue) / pointSize;
 
-      this.emitter.emit('view:thumbPosition-changed', {
-        value,
-        index: this.index,
-      });
+        this.emitter.emit('view:thumbPosition-changed', {
+          value,
+          index: this.index,
+        });
+      }
     }
   }
 
