@@ -3,6 +3,7 @@ import Thumb from '../../view/Thumb';
 import EventEmitter from '../../EventEmitter';
 import { IModelState } from '../../interfaces/iModelState';
 import { IAdapter } from '../../interfaces/IAdapter';
+import ProgressBar from '../../view/ProgressBar';
 
 const state: IModelState = {
   min: 0,
@@ -47,14 +48,13 @@ const setAdapter = (orientation: string): void => {
 };
 
 describe('Unit tests', () => {
-  const slider = (window.document.createElement(
-    'div',
-  ) as unknown) as HTMLElement;
+  const slider = window.document.createElement('div') as unknown as HTMLElement;
   slider.className = 'js-slider-test';
   window.document.body.appendChild(slider);
 
   const eventEmitter = new EventEmitter();
   new View(slider, eventEmitter);
+  const progressBar = new ProgressBar(slider, eventEmitter);
 
   const thumbs: Thumb[] = [];
   state.thumbsValues.forEach((_thumb, index) => {
@@ -63,13 +63,13 @@ describe('Unit tests', () => {
 
   test('renderThumbs', () => {
     setAdapter(state.orientation);
+    const { getPointSize } = progressBar;
     thumbs.forEach(thumb => {
-      thumb.renderThumb(state, adapter);
+      thumb.renderThumb(state, adapter, getPointSize);
     });
 
-    const slidersElements = window.document.querySelectorAll(
-      '.js-slider__thumb',
-    );
+    const slidersElements =
+      window.document.querySelectorAll('.js-slider__thumb');
     slidersElements.forEach(element => {
       expect(slider.childNodes).toContain(element);
     });
