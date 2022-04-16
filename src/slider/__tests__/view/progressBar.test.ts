@@ -58,19 +58,19 @@ describe('Unit tests', () => {
 
     state.min = 20;
     state.max = 80;
-    progressBar.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar(state, adapter);
 
     state.hasScaleValues = false;
-    progressBar.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar(state, adapter);
 
     state.hasScaleValues = true;
-    progressBar.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar(state, adapter);
   });
 
   test('test vertical orientation', () => {
     state.orientation = 'vertical';
     setAdapter(state.orientation);
-    progressBar.renderProgressBar({ state, adapter });
+    progressBar.renderProgressBar(state, adapter);
   });
 
   test('test click on progress bar', () => {

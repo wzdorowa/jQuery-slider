@@ -36,9 +36,8 @@ describe('Unit tests', () => {
     const textInTooltipsElements = window.document.querySelectorAll(
       '.js-slider__tooltip-text',
     );
-    const slidersElements = window.document.querySelectorAll(
-      '.js-slider__thumb',
-    );
+    const slidersElements =
+      window.document.querySelectorAll('.js-slider__thumb');
 
     tooltipsElements.forEach(element => {
       expect(element.className).toContain('js-slider__tooltip');
